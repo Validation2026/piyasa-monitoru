@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Türkiye Makro Verileri — Piyasa Monitörü</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a class="nav-brand" href="index.html">📊 Piyasa Monitörü</a>
+    <div class="nav-links">
+        <a href="index.html">Ana Sayfa</a>
+        <a href="emtia-enerji.html">Enerji</a>
+        <a href="emtia-metaller.html">Madenler</a>
+        <a href="emtia-tarim.html">Tarım</a>
+        <a href="kurlar.html">Döviz</a>
+        <a href="tahviller.html">Tahvil</a>
+        <a href="endeksler.html">Endeksler</a>
+        <a href="makro.html" class="active">Makro</a>
+    </div>
+    <div class="nav-right">
+        <span class="nav-clock" id="clock"></span>
+        <button class="theme-btn" id="themeToggle">🌙</button>
+    </div>
+</nav>
+
+<div class="page-container">
+
+    <div class="page-header">
+        <div class="breadcrumb"><a href="index.html">Ana Sayfa</a> › Türkiye Makro</div>
+        <h1>🏦 Türkiye Makro Verileri</h1>
+        <div class="subtitle">TÜFE, faiz oranları, tüketici güveni, TCMB döviz kurları — EVDS verisi</div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="summary-row" id="summaryCards"></div>
+
+    <!-- Charts -->
+    <div class="charts-grid" id="chartsGrid"></div>
+
+    <!-- Data Table -->
+    <div class="data-table" id="dataTable"></div>
+
+    <div class="footer">
+        <span>Piyasa Monitörü © 2026</span>
+        <a href="index.html">Ana Sayfa</a>
+        <span style="color:var(--text-muted)">Kaynak: TCMB EVDS</span>
+    </div>
+</div>
+
+<script src="assets/js/app.js"></script>
+<script>
+(function() {
+    'use strict';
+
+    PM.fetchJSON('macro_turkey.json').then(function(data) {
+        if (!data || !data.series || !data.series.length) {
+            document.getElementById('summaryCards').innerHTML =
+                '<div class="summary-card"><div class="s-name">Veri bulunamadı. TCMB collector\'ı çalıştırın.</div></div>';
+            return;
+        }
+
+        var allSeries = data.series;
+
+        // Summary cards (EVDS formatı biraz farklı)
+        var cardsHtml = '';
+        allSeries.forEach(function(s) {
+            var changes = '';
+            if (s.change_prev_pct != null) changes += PM.formatChange(s.change_prev_pct) + '<span class="s-chg-label">Önceki</span> ';
+            if (s.change_ytd_pct != null) changes += PM.formatChange(s.change_ytd_pct) + '<span class="s-chg-label">YTD</span> ';
+            if (s.change_yoy_pct != null) changes += PM.formatChange(s.change_yoy_pct) + '<span class="s-chg-label">YoY</span> ';
+
+            cardsHtml += '<div class="summary-card">' +
+                '<div class="s-name">' + s.name + '</div>' +
+                '<div class="s-price">' + PM.formatPrice(s.current, 2) + '</div>' +
+                '<div class="s-changes">' + changes + '</div>' +
+                '<div class="s-range">Son veri: ' + s.latest_date + ' · Kategori: ' + s.category + '</div>' +
+                '</div>';
+        });
+        document.getElementById('summaryCards').innerHTML = cardsHtml;
+
+        // Charts
+        var grid = document.getElementById('chartsGrid');
+        grid.innerHTML = '';
+
+        allSeries.forEach(function(s, i) {
+            var canvasId = 'chart-macro-' + i;
+            var card = document.createElement('div');
+            card.className = 'chart-card';
+            card.innerHTML =
+                '<div class="chart-title">' + s.name + '</div>' +
+                '<div class="chart-subtitle">' + s.category + ' · Son: ' + PM.formatPrice(s.current) + ' (' + s.latest_date + ')</div>' +
+                '<canvas id="' + canvasId + '"></canvas>';
+            grid.appendChild(card);
+
+            // EVDS verisi aynı formatta: {date, value}
+            PM.createLineChart(canvasId, {
+                name: s.name,
+                unit: '',
+                data: s.data
+            }, { color: PM.getColor(i), period: 'all' });
+        });
+
+        // Simple table
+        var tableHtml = '<table><thead><tr>' +
+            '<th>Seri</th><th>Kategori</th><th style="text-align:right">Son Değer</th>' +
+            '<th style="text-align:right">Son Tarih</th>' +
+            '<th style="text-align:right">Önceki Döneme Göre</th>' +
+            '<th style="text-align:right">Veri Sayısı</th>' +
+            '</tr></thead><tbody>';
+
+        allSeries.forEach(function(s) {
+            var chgCls = PM.changeClass(s.change_prev_pct);
+            var chgStr = s.change_prev_pct != null ? (s.change_prev_pct >= 0 ? '+' : '') + s.change_prev_pct.toFixed(2) + '%' : '—';
+
+            tableHtml += '<tr>' +
+                '<td>' + s.name + '</td>' +
+                '<td style="color:var(--text-secondary)">' + s.category + '</td>' +
+                '<td class="mono" style="text-align:right">' + PM.formatPrice(s.current) + '</td>' +
+                '<td class="mono" style="text-align:right;color:var(--text-muted)">' + s.latest_date + '</td>' +
+                '<td class="mono ' + chgCls + '" style="text-align:right">' + chgStr + '</td>' +
+                '<td class="mono" style="text-align:right;color:var(--text-muted)">' + s.data.length + '</td>' +
+                '</tr>';
+        });
+
+        tableHtml += '</tbody></table>';
+        document.getElementById('dataTable').innerHTML = tableHtml;
+    });
+
+})();
+</script>
+</body>
+</html>

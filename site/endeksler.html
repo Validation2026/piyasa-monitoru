@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Borsa Endeksleri — Piyasa Monitörü</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a class="nav-brand" href="index.html">📊 Piyasa Monitörü</a>
+    <div class="nav-links">
+        <a href="index.html">Ana Sayfa</a>
+        <a href="emtia-enerji.html">Enerji</a>
+        <a href="emtia-metaller.html">Madenler</a>
+        <a href="emtia-tarim.html">Tarım</a>
+        <a href="kurlar.html">Döviz</a>
+        <a href="tahviller.html">Tahvil</a>
+        <a href="endeksler.html" class="active">Endeksler</a>
+        <a href="makro.html">Makro</a>
+    </div>
+    <div class="nav-right">
+        <span class="nav-clock" id="clock"></span>
+        <button class="theme-btn" id="themeToggle">🌙</button>
+    </div>
+</nav>
+
+<div class="page-container">
+
+    <div class="page-header">
+        <div class="breadcrumb"><a href="index.html">Ana Sayfa</a> › Endeksler</div>
+        <h1>⛽ Borsa Endeksleri</h1>
+        <div class="subtitle">BIST 100, S&amp;P 500, NASDAQ, Dow Jones, FTSE, Nikkei fiyatları — Yahoo Finance verisi</div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="summary-row" id="summaryCards"></div>
+
+    <!-- Period Selector -->
+    <div class="period-selector" id="periodSelector">
+        <button class="period-btn" data-period="1m">1A</button>
+        <button class="period-btn" data-period="3m">3A</button>
+        <button class="period-btn" data-period="6m">6A</button>
+        <button class="period-btn active" data-period="1y">1Y</button>
+        <button class="period-btn" data-period="ytd">YTD</button>
+    </div>
+
+    <!-- Charts -->
+    <div class="charts-grid" id="chartsGrid"></div>
+
+    <!-- Data Table -->
+    <div class="data-table" id="dataTable"></div>
+
+    <div class="footer">
+        <span>Piyasa Monitörü © 2026</span>
+        <a href="index.html">Ana Sayfa</a>
+        <span style="color:var(--text-muted)">Kaynak: Yahoo Finance</span>
+    </div>
+</div>
+
+<script src="assets/js/app.js"></script>
+<script>
+(function() {
+    'use strict';
+
+    var DATA_FILE = 'indices.json';
+    var currentPeriod = '1y';
+    var allSeries = [];
+    var charts = [];
+
+    PM.fetchJSON(DATA_FILE).then(function(data) {
+        if (!data || !data.series || !data.series.length) {
+            document.getElementById('summaryCards').innerHTML =
+                '<div class="summary-card"><div class="s-name">Veri bulunamadı. Lütfen collector\'ı çalıştırın.</div></div>';
+            return;
+        }
+
+        allSeries = data.series;
+
+        // Summary cards
+        PM.buildSummaryCards('summaryCards', allSeries);
+
+        // Charts
+        buildCharts(currentPeriod);
+
+        // Data table
+        PM.buildDataTable('dataTable', allSeries);
+    });
+
+    function buildCharts(period) {
+        var grid = document.getElementById('chartsGrid');
+        grid.innerHTML = '';
+        charts = [];
+
+        allSeries.forEach(function(s, i) {
+            var cardId = 'chart-card-' + i;
+            var canvasId = 'chart-' + i;
+
+            var card = document.createElement('div');
+            card.className = 'chart-card';
+            card.innerHTML =
+                '<div class="chart-title">' + s.name + '</div>' +
+                '<div class="chart-subtitle">' + PM.formatPrice(s.current) + ' ' + s.unit +
+                (s.change_1d_pct != null ? ' · ' + PM.formatChange(s.change_1d_pct) + ' bugün' : '') + '</div>' +
+                '<canvas id="' + canvasId + '"></canvas>';
+
+            grid.appendChild(card);
+
+            var chart = PM.createLineChart(canvasId, s, {
+                color: PM.getColor(i),
+                period: period
+            });
+            if (chart) charts.push(chart);
+        });
+    }
+
+    // Period selector
+    document.getElementById('periodSelector').addEventListener('click', function(e) {
+        if (!e.target.classList.contains('period-btn')) return;
+
+        document.querySelectorAll('.period-btn').forEach(function(b) { b.classList.remove('active'); });
+        e.target.classList.add('active');
+
+        currentPeriod = e.target.getAttribute('data-period');
+
+        // Destroy old charts and rebuild
+        charts.forEach(function(c) { c.destroy(); });
+        buildCharts(currentPeriod);
+    });
+
+})();
+</script>
+</body>
+</html>
