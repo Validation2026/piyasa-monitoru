@@ -4,678 +4,347 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Piyasa Monitörü — Canlı Veri Paneli</title>
-
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- Chart.js -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
-
     <style>
-        /* ═══════════════════════════════════════════════
-           CSS Variables — Dark Financial Theme
-           ═══════════════════════════════════════════════ */
-        :root {
-            --bg-body: #06080d;
-            --bg-card: #0d1117;
-            --bg-card-hover: #151b25;
-            --bg-sidebar: #0a0e14;
-            --bg-ticker: #080b10;
-            --border: #1b2433;
-            --border-subtle: #141c28;
+        :root{
+            --bg:#06080d;--bg2:#0c1018;--card:#0f1419;--card2:#141b23;
+            --border:#1a2332;--border2:#0f1720;
+            --t1:#e8edf5;--t2:#8a99b2;--t3:#4a5873;
+            --green:#00d68f;--red:#ff4757;--blue:#3b82f6;--cyan:#22d3ee;
+            --gold:#fbbf24;--purple:#a78bfa;
+            --gbg:rgba(0,214,143,.07);--rbg:rgba(255,71,87,.07);
+            --fm:'Outfit',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;
+            --r:12px;--rs:6px;
+        }
+        [data-theme=light]{
+            --bg:#f0f4f8;--bg2:#e8edf2;--card:#fff;--card2:#f8fafc;
+            --border:#dde4ed;--border2:#e8edf2;
+            --t1:#0f172a;--t2:#475569;--t3:#94a3b8;
+            --gbg:rgba(0,214,143,.1);--rbg:rgba(255,71,87,.1);
+        }
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        html{scroll-behavior:smooth}
+        body{font-family:var(--fm);background:var(--bg);color:var(--t1);line-height:1.6;overflow-x:hidden}
 
-            --text-primary: #e2e8f0;
-            --text-secondary: #8b9ab5;
-            --text-muted: #4a5568;
+        /* ── NAV ── */
+        .nav{position:sticky;top:0;z-index:100;background:var(--card);border-bottom:1px solid var(--border);height:54px;display:flex;align-items:center;padding:0 20px;gap:16px;backdrop-filter:blur(16px)}
+        .nav-brand{font-size:1.15rem;font-weight:800;background:linear-gradient(135deg,var(--blue),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-decoration:none;letter-spacing:-.5px;white-space:nowrap}
+        .nav-links{display:flex;gap:2px;margin-left:24px}
+        .nav-links a{color:var(--t2);text-decoration:none;font-size:.78rem;font-weight:500;padding:6px 12px;border-radius:var(--rs);transition:.2s}
+        .nav-links a:hover,.nav-links a.active{color:var(--blue);background:rgba(59,130,246,.08)}
+        .nav-spacer{flex:1}
+        .nav-clock{font-family:var(--mono);font-size:.75rem;color:var(--t3);white-space:nowrap}
+        .theme-btn{background:none;border:1px solid var(--border);border-radius:var(--rs);color:var(--t2);cursor:pointer;padding:5px 9px;font-size:.85rem;transition:.2s}
+        .theme-btn:hover{border-color:var(--blue);color:var(--blue)}
 
-            --accent-green: #10b981;
-            --accent-red: #ef4444;
-            --accent-blue: #3b82f6;
-            --accent-gold: #f59e0b;
-            --accent-purple: #8b5cf6;
-            --accent-cyan: #06b6d4;
+        /* ── TICKER ── */
+        .ticker{background:var(--bg2);border-bottom:1px solid var(--border2);height:38px;overflow:hidden;position:relative}
+        .ticker::before,.ticker::after{content:'';position:absolute;top:0;bottom:0;width:60px;z-index:2;pointer-events:none}
+        .ticker::before{left:0;background:linear-gradient(90deg,var(--bg2),transparent)}
+        .ticker::after{right:0;background:linear-gradient(270deg,var(--bg2),transparent)}
+        .ticker-track{display:flex;align-items:center;animation:scroll 80s linear infinite;white-space:nowrap;height:100%}
+        .ticker-track:hover{animation-play-state:paused}
+        .ti{display:inline-flex;align-items:center;gap:6px;padding:0 16px;font-size:.77rem;height:100%;border-right:1px solid var(--border2)}
+        .ti-n{color:var(--t2);font-weight:500}.ti-p{color:var(--t1);font-family:var(--mono);font-weight:600}
+        .ti-c{font-family:var(--mono);font-size:.7rem;font-weight:600}
+        .ti-c.u{color:var(--green)}.ti-c.d{color:var(--red)}
+        @keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
-            --green-bg: rgba(16,185,129,0.08);
-            --red-bg: rgba(239,68,68,0.08);
+        /* ── CONTAINER ── */
+        .container{max-width:1440px;margin:0 auto;padding:20px 24px}
 
-            --font-body: 'Outfit', -apple-system, sans-serif;
-            --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+        /* ── HERO ── */
+        .hero{text-align:center;padding:36px 0 28px}
+        .hero h1{font-size:2rem;font-weight:800;letter-spacing:-1px;line-height:1.2}
+        .hero h1 span{background:linear-gradient(135deg,var(--blue),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .hero p{color:var(--t2);font-size:.95rem;margin-top:6px}
 
-            --radius: 10px;
-            --radius-sm: 6px;
-        }
+        /* ── KPI ROW ── */
+        .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px}
+        .kpi{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;position:relative;overflow:hidden;transition:all .25s;cursor:default}
+        .kpi:hover{border-color:var(--blue);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.15)}
+        .kpi-top{display:flex;justify-content:space-between;align-items:flex-start}
+        .kpi-label{font-size:.72rem;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;font-weight:600}
+        .kpi-badge{font-family:var(--mono);font-size:.7rem;font-weight:700;padding:2px 7px;border-radius:4px}
+        .kpi-badge.u{color:var(--green);background:var(--gbg)}.kpi-badge.d{color:var(--red);background:var(--rbg)}
+        .kpi-val{font-size:1.65rem;font-weight:700;font-family:var(--mono);margin:6px 0 2px;letter-spacing:-.5px}
+        .kpi-sub{font-size:.72rem;color:var(--t3)}
+        .kpi-spark{height:40px;margin-top:8px}
+        .kpi-spark canvas{width:100%!important;height:40px!important}
 
-        [data-theme="light"] {
-            --bg-body: #f1f5f9;
-            --bg-card: #ffffff;
-            --bg-card-hover: #f8fafc;
-            --bg-sidebar: #ffffff;
-            --bg-ticker: #f8fafc;
-            --border: #e2e8f0;
-            --border-subtle: #edf2f7;
-            --text-primary: #1e293b;
-            --text-secondary: #64748b;
-            --text-muted: #94a3b8;
-        }
+        /* ── SECTION TITLES ── */
+        .sec-title{font-size:1rem;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+        .sec-title::after{content:'';flex:1;height:1px;background:var(--border)}
 
-        /* ═══════════════════════════════════════════════
-           Reset & Base
-           ═══════════════════════════════════════════════ */
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
-        body {
-            font-family: var(--font-body);
-            background: var(--bg-body);
-            color: var(--text-primary);
-            line-height: 1.6;
-            min-height: 100vh;
-        }
+        /* ── MOVERS ── */
+        .movers-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px}
+        .movers-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+        .movers-header{padding:12px 16px;font-size:.82rem;font-weight:700;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px}
+        .movers-header .dot{width:8px;height:8px;border-radius:50%}
+        .movers-header .dot.g{background:var(--green)}.movers-header .dot.r{background:var(--red)}
+        .mover-item{display:grid;grid-template-columns:1fr auto auto;align-items:center;padding:9px 16px;border-bottom:1px solid var(--border2);font-size:.82rem;transition:.15s}
+        .mover-item:hover{background:var(--card2)}
+        .mover-item:last-child{border-bottom:none}
+        .mover-name{color:var(--t2);font-weight:500}
+        .mover-val{font-family:var(--mono);font-weight:600;text-align:right}
+        .mover-chg{font-family:var(--mono);font-size:.75rem;font-weight:700;text-align:right;padding-left:12px;min-width:70px}
+        .mover-chg.u{color:var(--green)}.mover-chg.d{color:var(--red)}
 
-        /* ═══════════════════════════════════════════════
-           Top Navbar
-           ═══════════════════════════════════════════════ */
-        .top-nav {
-            position: sticky; top: 0; z-index: 100;
-            background: var(--bg-sidebar);
-            border-bottom: 1px solid var(--border);
-            padding: 0 24px;
-            display: flex; align-items: center; justify-content: space-between;
-            height: 56px;
-            backdrop-filter: blur(12px);
-        }
-        .nav-brand {
-            font-size: 1.25rem; font-weight: 700;
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            letter-spacing: -0.5px;
-        }
-        .nav-right { display: flex; align-items: center; gap: 16px; }
-        .nav-clock {
-            font-family: var(--font-mono); font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-        .theme-btn {
-            background: none; border: 1px solid var(--border); border-radius: var(--radius-sm);
-            color: var(--text-secondary); cursor: pointer; padding: 6px 10px; font-size: 0.9rem;
-            transition: all 0.2s;
-        }
-        .theme-btn:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
+        /* ── CATEGORIES ── */
+        .cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:32px}
+        .cat{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;text-decoration:none;color:inherit;transition:.25s;position:relative;overflow:hidden}
+        .cat::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--blue),var(--cyan));transform:scaleX(0);transition:.3s;transform-origin:left}
+        .cat:hover{border-color:var(--blue);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.12)}
+        .cat:hover::before{transform:scaleX(1)}
+        .cat-icon{font-size:1.6rem;margin-bottom:6px}
+        .cat-name{font-size:.92rem;font-weight:700}
+        .cat-desc{font-size:.78rem;color:var(--t2);margin-top:2px;line-height:1.4}
+        .cat-tag{display:inline-block;margin-top:8px;font-size:.65rem;font-family:var(--mono);font-weight:600;color:var(--cyan);background:rgba(34,211,238,.08);padding:2px 8px;border-radius:4px}
 
-        /* ═══════════════════════════════════════════════
-           Ticker Bar (canlı fiyat bandı)
-           ═══════════════════════════════════════════════ */
-        .ticker-bar {
-            background: var(--bg-ticker);
-            border-bottom: 1px solid var(--border-subtle);
-            overflow: hidden; position: relative;
-            height: 42px;
-        }
-        .ticker-track {
-            display: flex; align-items: center;
-            animation: tickerScroll 60s linear infinite;
-            white-space: nowrap; height: 100%;
-        }
-        .ticker-item {
-            display: inline-flex; align-items: center; gap: 8px;
-            padding: 0 20px; font-size: 0.82rem;
-            border-right: 1px solid var(--border-subtle);
-            height: 100%;
-        }
-        .ticker-name { color: var(--text-secondary); font-weight: 500; }
-        .ticker-price { color: var(--text-primary); font-family: var(--font-mono); font-weight: 600; }
-        .ticker-change { font-family: var(--font-mono); font-size: 0.75rem; font-weight: 600; }
-        .ticker-change.up { color: var(--accent-green); }
-        .ticker-change.down { color: var(--accent-red); }
+        /* ── PRICE TABLES ── */
+        .tables-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px}
+        .ptable{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+        .ptable-header{padding:12px 16px;font-size:.85rem;font-weight:700;border-bottom:1px solid var(--border);background:var(--bg2)}
+        .prow{display:grid;grid-template-columns:1fr auto auto;align-items:center;padding:8px 16px;border-bottom:1px solid var(--border2);font-size:.82rem;transition:.15s}
+        .prow:hover{background:var(--card2)}.prow:last-child{border-bottom:none}
+        .prow-n{color:var(--t2);font-weight:500}
+        .prow-v{font-family:var(--mono);font-weight:600;text-align:right}
+        .prow-c{font-family:var(--mono);font-size:.73rem;font-weight:700;text-align:right;padding-left:10px}
+        .prow-c.u{color:var(--green)}.prow-c.d{color:var(--red)}
 
-        @keyframes tickerScroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
+        /* ── ACTIVITY ── */
+        .activity{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;margin-bottom:32px}
+        .act-item{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--border2);font-size:.8rem}
+        .act-item:last-child{border-bottom:none}
+        .act-dot{width:7px;height:7px;border-radius:50%;background:var(--blue);margin-top:6px;flex-shrink:0}
+        .act-time{color:var(--t3);font-size:.7rem;margin-top:2px}
 
-        /* ═══════════════════════════════════════════════
-           Main Layout
-           ═══════════════════════════════════════════════ */
-        .main-container {
-            max-width: 1400px; margin: 0 auto;
-            padding: 24px;
-        }
+        /* ── FOOTER ── */
+        .footer{text-align:center;padding:28px 0;border-top:1px solid var(--border);color:var(--t3);font-size:.78rem}
+        .footer a{color:var(--t2);text-decoration:none;margin:0 10px;transition:.2s}
+        .footer a:hover{color:var(--blue)}
 
-        /* ═══════════════════════════════════════════════
-           Hero
-           ═══════════════════════════════════════════════ */
-        .hero {
-            text-align: center; padding: 48px 0 32px;
-        }
-        .hero h1 {
-            font-size: 2.2rem; font-weight: 700;
-            letter-spacing: -1px;
-            background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        .hero p {
-            color: var(--text-secondary); font-size: 1.05rem;
-            margin-top: 8px; max-width: 600px; margin-inline: auto;
-        }
+        /* ── RESPONSIVE ── */
+        @media(max-width:1024px){.kpi-row{grid-template-columns:repeat(2,1fr)}.movers-row,.tables-row{grid-template-columns:1fr}}
+        @media(max-width:768px){.nav-links{display:none}.container{padding:16px}.hero h1{font-size:1.4rem}}
+        @media(max-width:480px){.kpi-row{grid-template-columns:1fr}.cat-grid{grid-template-columns:1fr}}
 
-        /* ═══════════════════════════════════════════════
-           KPI Cards
-           ═══════════════════════════════════════════════ */
-        .kpi-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px; margin-bottom: 32px;
-        }
-        .kpi-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 20px; text-align: center;
-            transition: border-color 0.2s;
-        }
-        .kpi-card:hover { border-color: var(--accent-blue); }
-        .kpi-label { font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
-        .kpi-value { font-size: 1.8rem; font-weight: 700; font-family: var(--font-mono); margin: 4px 0; }
-        .kpi-sub { font-size: 0.78rem; color: var(--text-secondary); }
-        .kpi-value.green { color: var(--accent-green); }
-        .kpi-value.red { color: var(--accent-red); }
-        .kpi-value.blue { color: var(--accent-blue); }
-        .kpi-value.gold { color: var(--accent-gold); }
-
-        /* ═══════════════════════════════════════════════
-           Section Headers
-           ═══════════════════════════════════════════════ */
-        .section-header {
-            font-size: 1.1rem; font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 16px; padding-bottom: 8px;
-            border-bottom: 2px solid var(--accent-blue);
-            display: inline-block;
-        }
-
-        /* ═══════════════════════════════════════════════
-           Category Grid
-           ═══════════════════════════════════════════════ */
-        .cat-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 16px; margin-bottom: 40px;
-        }
-        .cat-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 20px;
-            text-decoration: none; color: inherit;
-            transition: all 0.25s;
-            position: relative; overflow: hidden;
-        }
-        .cat-card::before {
-            content: '';
-            position: absolute; top: 0; left: 0; right: 0; height: 3px;
-            background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
-            opacity: 0; transition: opacity 0.25s;
-        }
-        .cat-card:hover { border-color: var(--accent-blue); transform: translateY(-2px); }
-        .cat-card:hover::before { opacity: 1; }
-        .cat-icon { font-size: 1.8rem; margin-bottom: 8px; }
-        .cat-name { font-size: 1rem; font-weight: 600; margin-bottom: 4px; }
-        .cat-desc { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5; }
-        .cat-badge {
-            display: inline-block; margin-top: 10px;
-            font-size: 0.7rem; font-family: var(--font-mono);
-            color: var(--accent-cyan); background: rgba(6,182,212,0.1);
-            padding: 2px 8px; border-radius: 4px;
-        }
-
-        /* ═══════════════════════════════════════════════
-           Quick Price Table
-           ═══════════════════════════════════════════════ */
-        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 40px; }
-        @media (max-width: 768px) { .two-col { grid-template-columns: 1fr; } }
-
-        .price-table {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            overflow: hidden;
-        }
-        .price-table-header {
-            padding: 14px 20px;
-            font-weight: 600; font-size: 0.95rem;
-            border-bottom: 1px solid var(--border);
-            display: flex; align-items: center; gap: 8px;
-        }
-        .price-row {
-            display: grid;
-            grid-template-columns: 1fr auto auto;
-            align-items: center;
-            padding: 10px 20px;
-            border-bottom: 1px solid var(--border-subtle);
-            font-size: 0.85rem;
-            transition: background 0.15s;
-        }
-        .price-row:hover { background: var(--bg-card-hover); }
-        .price-row:last-child { border-bottom: none; }
-        .price-name { color: var(--text-secondary); }
-        .price-val { font-family: var(--font-mono); font-weight: 600; text-align: right; }
-        .price-chg { font-family: var(--font-mono); font-size: 0.78rem; text-align: right; font-weight: 600; padding-left: 12px; }
-        .price-chg.up { color: var(--accent-green); }
-        .price-chg.down { color: var(--accent-red); }
-
-        /* ═══════════════════════════════════════════════
-           Activity Feed
-           ═══════════════════════════════════════════════ */
-        .activity-feed {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 16px 20px; margin-bottom: 40px;
-        }
-        .activity-item {
-            display: flex; align-items: flex-start; gap: 10px;
-            padding: 8px 0;
-            border-bottom: 1px solid var(--border-subtle);
-            font-size: 0.82rem;
-        }
-        .activity-item:last-child { border-bottom: none; }
-        .activity-dot {
-            width: 8px; height: 8px; border-radius: 50%;
-            margin-top: 6px; flex-shrink: 0;
-            background: var(--accent-blue);
-        }
-        .activity-dot.green { background: var(--accent-green); }
-        .activity-time { color: var(--text-muted); font-size: 0.75rem; }
-
-        /* ═══════════════════════════════════════════════
-           Footer
-           ═══════════════════════════════════════════════ */
-        .footer {
-            text-align: center; padding: 32px 0;
-            border-top: 1px solid var(--border);
-            color: var(--text-muted); font-size: 0.8rem;
-        }
-        .footer a { color: var(--text-secondary); text-decoration: none; margin: 0 12px; }
-        .footer a:hover { color: var(--accent-blue); }
-
-        /* ═══════════════════════════════════════════════
-           Loading States
-           ═══════════════════════════════════════════════ */
-        .loading-skeleton {
-            background: linear-gradient(90deg, var(--border-subtle) 25%, var(--border) 50%, var(--border-subtle) 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-            border-radius: 4px; height: 20px;
-        }
-        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-
-        /* Responsive */
-        @media (max-width: 640px) {
-            .main-container { padding: 16px; }
-            .hero h1 { font-size: 1.5rem; }
-            .kpi-row { grid-template-columns: repeat(2, 1fr); }
-            .cat-grid { grid-template-columns: 1fr; }
-        }
+        /* ── ANIMATION ── */
+        .fade-in{opacity:0;transform:translateY(12px);animation:fadeIn .5s ease forwards}
+        @keyframes fadeIn{to{opacity:1;transform:none}}
+        .fade-in:nth-child(1){animation-delay:.05s}.fade-in:nth-child(2){animation-delay:.1s}
+        .fade-in:nth-child(3){animation-delay:.15s}.fade-in:nth-child(4){animation-delay:.2s}
     </style>
 </head>
 <body>
 
-<!-- ═══ Top Nav ═══ -->
-<nav class="top-nav">
-    <div class="nav-brand">📊 Piyasa Monitörü</div>
-    <div class="nav-right">
-        <span class="nav-clock" id="clock"></span>
-        <button class="theme-btn" id="themeToggle" title="Tema değiştir">🌙</button>
+<!-- NAV -->
+<nav class="nav">
+    <a class="nav-brand" href="index.html">📊 Piyasa Monitörü</a>
+    <div class="nav-links">
+        <a href="index.html" class="active">Panel</a>
+        <a href="emtia-enerji.html">Enerji</a>
+        <a href="emtia-metaller.html">Madenler</a>
+        <a href="emtia-tarim.html">Tarım</a>
+        <a href="kurlar.html">Döviz</a>
+        <a href="tahviller.html">Tahvil</a>
+        <a href="endeksler.html">Endeksler</a>
+        <a href="makro.html">Makro</a>
     </div>
+    <div class="nav-spacer"></div>
+    <span class="nav-clock" id="clock"></span>
+    <button class="theme-btn" id="themeToggle">🌙</button>
 </nav>
 
-<!-- ═══ Ticker Bar ═══ -->
-<div class="ticker-bar">
-    <div class="ticker-track" id="tickerTrack">
-        <span class="ticker-item"><span class="ticker-name">Veri yükleniyor...</span></span>
-    </div>
+<!-- TICKER -->
+<div class="ticker"><div class="ticker-track" id="tickerTrack"></div></div>
+
+<div class="container">
+
+<!-- HERO -->
+<div class="hero">
+    <h1>Tüm Piyasa Verileri <span>Tek Panelde</span></h1>
+    <p>Emtia, döviz, tahvil, endeks ve Türkiye makro verileri — anlık güncellenen grafikler</p>
 </div>
 
-<div class="main-container">
-
-    <!-- ═══ Hero ═══ -->
-    <div class="hero">
-        <h1>Piyasa Verileri Tek Panelde</h1>
-        <p>Emtia, döviz, tahvil, endeks ve Türkiye makro verileri — canlı güncellenen grafikler</p>
-    </div>
-
-    <!-- ═══ KPI Cards ═══ -->
-    <div class="kpi-row" id="kpiRow">
-        <div class="kpi-card">
-            <div class="kpi-label">USD/TRY</div>
-            <div class="kpi-value" id="kpi-usdtry">—</div>
-            <div class="kpi-sub" id="kpi-usdtry-chg">yükleniyor...</div>
-        </div>
-        <div class="kpi-card">
-            <div class="kpi-label">Altın (USD/oz)</div>
-            <div class="kpi-value gold" id="kpi-gold">—</div>
-            <div class="kpi-sub" id="kpi-gold-chg">yükleniyor...</div>
-        </div>
-        <div class="kpi-card">
-            <div class="kpi-label">Brent Petrol</div>
-            <div class="kpi-value" id="kpi-brent">—</div>
-            <div class="kpi-sub" id="kpi-brent-chg">yükleniyor...</div>
-        </div>
-        <div class="kpi-card">
-            <div class="kpi-label">BIST 100</div>
-            <div class="kpi-value blue" id="kpi-bist">—</div>
-            <div class="kpi-sub" id="kpi-bist-chg">yükleniyor...</div>
-        </div>
-        <div class="kpi-card">
-            <div class="kpi-label">Son Güncelleme</div>
-            <div class="kpi-value" id="kpi-update" style="font-size:1.2rem">—</div>
-            <div class="kpi-sub">otomatik güncellenir</div>
-        </div>
-    </div>
-
-    <!-- ═══ Category Grid ═══ -->
-    <div class="section-header">Veri Kategorileri</div>
-    <div class="cat-grid">
-        <a class="cat-card" href="emtia-enerji.html">
-            <div class="cat-icon">⛽</div>
-            <div class="cat-name">Enerji</div>
-            <div class="cat-desc">Brent, WTI, Doğalgaz, TTF fiyatları ve grafikler</div>
-            <div class="cat-badge">4 seri</div>
-        </a>
-        <a class="cat-card" href="emtia-metaller.html">
-            <div class="cat-icon">🥇</div>
-            <div class="cat-name">Kıymetli Madenler</div>
-            <div class="cat-desc">Altın, Gümüş, Platin, Paladyum, Bakır, Alüminyum</div>
-            <div class="cat-badge">6 seri</div>
-        </a>
-        <a class="cat-card" href="emtia-tarim.html">
-            <div class="cat-icon">🌾</div>
-            <div class="cat-name">Tarım Emtiaları</div>
-            <div class="cat-desc">Buğday, Mısır, Soya, Pamuk, Kahve, Şeker, Kakao</div>
-            <div class="cat-badge">7 seri</div>
-        </a>
-        <a class="cat-card" href="kurlar.html">
-            <div class="cat-icon">💱</div>
-            <div class="cat-name">Döviz Kurları</div>
-            <div class="cat-desc">USD/TRY, EUR/TRY, çapraz kurlar, DXY</div>
-            <div class="cat-badge">9 seri</div>
-        </a>
-        <a class="cat-card" href="tahviller.html">
-            <div class="cat-icon">📜</div>
-            <div class="cat-name">Tahvil Faizleri</div>
-            <div class="cat-desc">ABD 3M, 5Y, 10Y, 30Y tahvil getirileri</div>
-            <div class="cat-badge">4 seri</div>
-        </a>
-        <a class="cat-card" href="endeksler.html">
-            <div class="cat-icon">📈</div>
-            <div class="cat-name">Borsa Endeksleri</div>
-            <div class="cat-desc">BIST 100/30, S&P 500, NASDAQ, Dow, FTSE, Nikkei</div>
-            <div class="cat-badge">8 seri</div>
-        </a>
-        <a class="cat-card" href="makro.html">
-            <div class="cat-icon">🏦</div>
-            <div class="cat-name">Türkiye Makro</div>
-            <div class="cat-desc">TÜFE, faiz, tüketici güveni, TCMB verileri</div>
-            <div class="cat-badge">6 seri (EVDS)</div>
-        </a>
-    </div>
-
-    <!-- ═══ Quick Price Tables ═══ -->
-    <div class="section-header">Anlık Fiyatlar</div>
-    <div class="two-col">
-        <!-- Sol: Emtia & Kıymetli Madenler -->
-        <div class="price-table">
-            <div class="price-table-header">⛽ Emtia & Madenler</div>
-            <div id="priceTableCommodities">
-                <div class="price-row"><div class="loading-skeleton" style="width:100%"></div></div>
-            </div>
-        </div>
-
-        <!-- Sağ: Döviz & Endeksler -->
-        <div class="price-table">
-            <div class="price-table-header">💱 Döviz & Endeksler</div>
-            <div id="priceTableForex">
-                <div class="price-row"><div class="loading-skeleton" style="width:100%"></div></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ═══ Activity Feed ═══ -->
-    <div class="section-header">Son Güncellemeler</div>
-    <div class="activity-feed" id="activityFeed">
-        <div class="activity-item"><div class="loading-skeleton" style="width:100%"></div></div>
-    </div>
-
-    <!-- ═══ Footer ═══ -->
-    <div class="footer">
-        <span>Piyasa Monitörü © 2026</span>
-        <a href="#">Hakkında</a>
-        <a href="#">Veri Kaynakları</a>
-    </div>
+<!-- KPI -->
+<div class="kpi-row" id="kpiRow">
+    <div class="kpi fade-in" id="kpi-usdtry"><div class="kpi-top"><span class="kpi-label">USD/TRY</span><span class="kpi-badge" id="kpi-usdtry-badge">—</span></div><div class="kpi-val" id="kpi-usdtry-val">—</div><div class="kpi-sub">TCMB Döviz Kuru</div><div class="kpi-spark"><canvas id="spark-usdtry"></canvas></div></div>
+    <div class="kpi fade-in" id="kpi-gold"><div class="kpi-top"><span class="kpi-label">ALTIN</span><span class="kpi-badge" id="kpi-gold-badge">—</span></div><div class="kpi-val" id="kpi-gold-val" style="color:var(--gold)">—</div><div class="kpi-sub">USD/oz — Spot</div><div class="kpi-spark"><canvas id="spark-gold"></canvas></div></div>
+    <div class="kpi fade-in" id="kpi-brent"><div class="kpi-top"><span class="kpi-label">BRENT PETROL</span><span class="kpi-badge" id="kpi-brent-badge">—</span></div><div class="kpi-val" id="kpi-brent-val">—</div><div class="kpi-sub">USD/bbl — ICE</div><div class="kpi-spark"><canvas id="spark-brent"></canvas></div></div>
+    <div class="kpi fade-in" id="kpi-bist"><div class="kpi-top"><span class="kpi-label">BIST 100</span><span class="kpi-badge" id="kpi-bist-badge">—</span></div><div class="kpi-val" id="kpi-bist-val" style="color:var(--blue)">—</div><div class="kpi-sub">Borsa İstanbul</div><div class="kpi-spark"><canvas id="spark-bist"></canvas></div></div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════
-     JAVASCRIPT — Data Loading & Rendering
-     ═══════════════════════════════════════════════════ -->
+<!-- MOVERS -->
+<div class="sec-title">📈 En Çok Değişenler (Günlük)</div>
+<div class="movers-row" id="moversRow">
+    <div class="movers-card"><div class="movers-header"><span class="dot g"></span> En Çok Yükselenler</div><div id="moversUp"></div></div>
+    <div class="movers-card"><div class="movers-header"><span class="dot r"></span> En Çok Düşenler</div><div id="moversDown"></div></div>
+</div>
+
+<!-- CATEGORIES -->
+<div class="sec-title">📦 Veri Kategorileri</div>
+<div class="cat-grid">
+    <a class="cat" href="emtia-enerji.html"><div class="cat-icon">⛽</div><div class="cat-name">Enerji</div><div class="cat-desc">Brent, WTI, Doğalgaz, TTF</div><div class="cat-tag">4 seri</div></a>
+    <a class="cat" href="emtia-metaller.html"><div class="cat-icon">🥇</div><div class="cat-name">Kıymetli Madenler</div><div class="cat-desc">Altın, Gümüş, Platin, Bakır</div><div class="cat-tag">6 seri</div></a>
+    <a class="cat" href="emtia-tarim.html"><div class="cat-icon">🌾</div><div class="cat-name">Tarım Emtiaları</div><div class="cat-desc">Buğday, Mısır, Kahve, Kakao</div><div class="cat-tag">7 seri</div></a>
+    <a class="cat" href="kurlar.html"><div class="cat-icon">💱</div><div class="cat-name">Döviz Kurları</div><div class="cat-desc">USD/TRY, EUR/TRY, DXY</div><div class="cat-tag">9 seri</div></a>
+    <a class="cat" href="tahviller.html"><div class="cat-icon">📜</div><div class="cat-name">Tahvil Faizleri</div><div class="cat-desc">ABD 3M, 5Y, 10Y, 30Y</div><div class="cat-tag">4 seri</div></a>
+    <a class="cat" href="endeksler.html"><div class="cat-icon">📈</div><div class="cat-name">Borsa Endeksleri</div><div class="cat-desc">BIST, S&P 500, NASDAQ</div><div class="cat-tag">8 seri</div></a>
+    <a class="cat" href="makro.html"><div class="cat-icon">🏦</div><div class="cat-name">Türkiye Makro</div><div class="cat-desc">TÜFE, faiz, güven endeksi</div><div class="cat-tag">EVDS</div></a>
+</div>
+
+<!-- PRICE TABLES -->
+<div class="sec-title">💹 Anlık Fiyatlar</div>
+<div class="tables-row">
+    <div class="ptable"><div class="ptable-header">⛽ Emtia & Kıymetli Madenler</div><div id="tblCommodities"></div></div>
+    <div class="ptable"><div class="ptable-header">💱 Döviz & Endeksler & Tahvil</div><div id="tblForex"></div></div>
+</div>
+
+<!-- ACTIVITY -->
+<div class="sec-title">🔔 Son Güncellemeler</div>
+<div class="activity" id="actFeed"></div>
+
+<!-- FOOTER -->
+<div class="footer">
+    <span>Piyasa Monitörü © 2026</span>
+    <a href="#">Hakkında</a>
+    <a href="#">Veri Kaynakları</a>
+    <a href="#">GitHub</a>
+</div>
+
+</div>
+
 <script>
-(function() {
-    'use strict';
+(function(){
+'use strict';
+var D='data/';
 
-    // ── DATA_DIR: Netlify'da /data/, lokal'de data/ ──
-    var DATA_DIR = 'data/';
+// ── Helpers ──
+function fj(f){return fetch(D+f+'?t='+Date.now()).then(function(r){return r.json()}).catch(function(){return null})}
+function fp(v,d){if(v==null)return'—';d=d!=null?d:2;return Number(v).toLocaleString('tr-TR',{minimumFractionDigits:d,maximumFractionDigits:d})}
+function fs(d,id){if(!d||!d.series)return null;for(var i=0;i<d.series.length;i++)if(d.series[i].id===id)return d.series[i];return null}
+function cc(p){return p>=0?'u':'d'}
 
-    // ── Clock ──
-    function updateClock() {
-        var now = new Date();
-        var months = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
-        var days = ['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
-        var el = document.getElementById('clock');
-        if (el) {
-            el.textContent = now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear() +
-                ', ' + days[now.getDay()] + '  ' +
-                String(now.getHours()).padStart(2,'0') + ':' +
-                String(now.getMinutes()).padStart(2,'0') + ':' +
-                String(now.getSeconds()).padStart(2,'0');
-        }
+// ── Clock ──
+var MO=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+var DA=['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
+function uc(){var n=new Date(),e=document.getElementById('clock');if(e)e.textContent=n.getDate()+' '+MO[n.getMonth()]+' '+n.getFullYear()+', '+DA[n.getDay()]+'  '+String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')+':'+String(n.getSeconds()).padStart(2,'0')}
+setInterval(uc,1000);uc();
+
+// ── Theme ──
+var tb=document.getElementById('themeToggle');
+var sv=localStorage.getItem('theme');
+if(sv){document.documentElement.setAttribute('data-theme',sv);tb.textContent=sv==='dark'?'🌙':'☀️'}
+tb.addEventListener('click',function(){var c=document.documentElement.getAttribute('data-theme');var nx=c==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',nx);tb.textContent=nx==='dark'?'🌙':'☀️';localStorage.setItem('theme',nx)});
+
+// ── Sparkline ──
+function spark(cid,data,color){
+    var c=document.getElementById(cid);if(!c||!data||data.length<2)return;
+    var pts=data.slice(-30).map(function(d){return d.value});
+    var isDark=document.documentElement.getAttribute('data-theme')!=='light';
+    new Chart(c,{type:'line',data:{labels:pts.map(function(){return''}),datasets:[{data:pts,borderColor:color,backgroundColor:color+'18',fill:true,tension:.4,pointRadius:0,borderWidth:1.5}]},options:{responsive:true,maintainAspectRatio:false,animation:{duration:800},plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{display:false},y:{display:false}}}});
+}
+
+// ── KPI Card ──
+function setKPI(key,series,color){
+    if(!series)return;
+    var val=document.getElementById('kpi-'+key+'-val');
+    var badge=document.getElementById('kpi-'+key+'-badge');
+    if(val)val.textContent=fp(series.current);
+    if(badge&&series.change_1d_pct!=null){
+        var p=series.change_1d_pct;
+        badge.textContent=(p>=0?'+':'')+p.toFixed(2)+'%';
+        badge.className='kpi-badge '+cc(p);
     }
-    setInterval(updateClock, 1000);
-    updateClock();
+    if(series.data)spark('spark-'+key,series.data,color||'#3b82f6');
+}
 
-    // ── Theme Toggle ──
-    var themeBtn = document.getElementById('themeToggle');
-    themeBtn.addEventListener('click', function() {
-        var html = document.documentElement;
-        var current = html.getAttribute('data-theme');
-        var next = current === 'dark' ? 'light' : 'dark';
-        html.setAttribute('data-theme', next);
-        themeBtn.textContent = next === 'dark' ? '🌙' : '☀️';
-        localStorage.setItem('theme', next);
+// ── Ticker ──
+function buildTicker(all){
+    var t=document.getElementById('tickerTrack');if(!t)return;
+    var h='';
+    all.forEach(function(s){if(!s)return;
+        var p=s.change_1d_pct;var cls=p!=null?(p>=0?'u':'d'):'';
+        var sign=p!=null?(p>=0?'+':''):'';
+        h+='<span class="ti"><span class="ti-n">'+s.name+'</span><span class="ti-p">'+fp(s.current)+'</span><span class="ti-c '+cls+'">'+sign+(p!=null?p.toFixed(2)+'%':'')+'</span></span>';
     });
-    var saved = localStorage.getItem('theme');
-    if (saved) {
-        document.documentElement.setAttribute('data-theme', saved);
-        themeBtn.textContent = saved === 'dark' ? '🌙' : '☀️';
+    t.innerHTML=h+h;
+}
+
+// ── Movers ──
+function buildMovers(all){
+    var sorted=all.filter(function(s){return s&&s.change_1d_pct!=null}).sort(function(a,b){return b.change_1d_pct-a.change_1d_pct});
+    var top5=sorted.slice(0,5);
+    var bot5=sorted.slice(-5).reverse();
+
+    function renderList(id,items){
+        var el=document.getElementById(id);if(!el)return;
+        el.innerHTML=items.map(function(s){
+            var p=s.change_1d_pct;var sign=p>=0?'+':'';
+            return'<div class="mover-item"><div class="mover-name">'+s.name+'</div><div class="mover-val">'+fp(s.current)+'</div><div class="mover-chg '+cc(p)+'">'+sign+p.toFixed(2)+'%</div></div>';
+        }).join('');
     }
+    renderList('moversUp',top5);
+    renderList('moversDown',bot5);
+}
 
-    // ── Fetch JSON ──
-    function fetchJSON(file) {
-        return fetch(DATA_DIR + file + '?t=' + Date.now())
-            .then(function(r) { return r.json(); })
-            .catch(function() { return null; });
-    }
+// ── Price Table ──
+function buildTable(id,items){
+    var el=document.getElementById(id);if(!el)return;
+    el.innerHTML=items.map(function(s){if(!s)return'';
+        var p=s.change_1d_pct;var cls=p!=null?cc(p):'';
+        var sign=p!=null?(p>=0?'+':''):'';
+        var chg=p!=null?sign+p.toFixed(2)+'%':'—';
+        return'<div class="prow"><div class="prow-n">'+s.name+'</div><div class="prow-v">'+fp(s.current)+' <small style="color:var(--t3)">'+( s.unit||'')+'</small></div><div class="prow-c '+cls+'">'+chg+'</div></div>';
+    }).join('');
+}
 
-    // ── Format helpers ──
-    function formatPrice(val, decimals) {
-        if (val == null) return '—';
-        return Number(val).toLocaleString('tr-TR', { minimumFractionDigits: decimals || 2, maximumFractionDigits: decimals || 2 });
-    }
-    function formatChange(pct) {
-        if (pct == null) return '';
-        var sign = pct >= 0 ? '+' : '';
-        var cls = pct >= 0 ? 'up' : 'down';
-        return '<span class="price-chg ' + cls + '">' + sign + pct.toFixed(2) + '%</span>';
-    }
+// ── Activity ──
+function buildAct(data){
+    var el=document.getElementById('actFeed');if(!el||!data||!data.activities)return;
+    el.innerHTML=data.activities.slice(0,6).map(function(a){
+        var d=new Date(a.timestamp);var now=new Date();var diff=Math.floor((now-d)/864e5);
+        var t=diff===0?'bugün':diff===1?'dün':diff+' gün önce';
+        return'<div class="act-item"><div class="act-dot"></div><div><strong>'+a.title+'</strong> '+a.text+'<div class="act-time">'+t+'</div></div></div>';
+    }).join('');
+}
 
-    // ── Find series by symbol id ──
-    function findSeries(data, id) {
-        if (!data || !data.series) return null;
-        for (var i = 0; i < data.series.length; i++) {
-            if (data.series[i].id === id) return data.series[i];
-        }
-        return null;
-    }
+// ═══ LOAD ═══
+Promise.all([fj('currencies.json'),fj('commodities_energy.json'),fj('commodities_metals.json'),fj('commodities_agriculture.json'),fj('bonds.json'),fj('indices.json'),fj('activities.json')]).then(function(r){
+    var cur=r[0],ener=r[1],met=r[2],agri=r[3],bonds=r[4],idx=r[5],act=r[6];
 
-    // ── KPI Cards ──
-    function updateKPI(id, series) {
-        if (!series) return;
-        var el = document.getElementById('kpi-' + id);
-        var chgEl = document.getElementById('kpi-' + id + '-chg');
-        if (el) el.textContent = formatPrice(series.current);
-        if (chgEl && series.change_1d_pct != null) {
-            var pct = series.change_1d_pct;
-            var sign = pct >= 0 ? '+' : '';
-            chgEl.textContent = sign + pct.toFixed(2) + '% (1G)';
-            chgEl.style.color = pct >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
-        }
-    }
+    // KPIs
+    setKPI('usdtry',fs(cur,'USDTRY=X'),'#3b82f6');
+    setKPI('gold',fs(met,'GC=F'),'#fbbf24');
+    setKPI('brent',fs(ener,'BZ=F'),'#22d3ee');
+    setKPI('bist',fs(idx,'XU100.IS'),'#a78bfa');
 
-    // ── Ticker Bar ──
-    function buildTicker(allSeries) {
-        var track = document.getElementById('tickerTrack');
-        if (!track) return;
+    // Ticker
+    var all=[];
+    [cur,ener,met,idx,bonds].forEach(function(d){if(d&&d.series)d.series.forEach(function(s){all.push(s)})});
+    buildTicker(all);
 
-        var html = '';
-        allSeries.forEach(function(s) {
-            if (!s) return;
-            var pct = s.change_1d_pct;
-            var cls = (pct != null && pct >= 0) ? 'up' : 'down';
-            var sign = (pct != null && pct >= 0) ? '+' : '';
-            var chgStr = pct != null ? sign + pct.toFixed(2) + '%' : '';
+    // Movers (include agri too)
+    var allMovers=[];
+    [cur,ener,met,agri,idx,bonds].forEach(function(d){if(d&&d.series)d.series.forEach(function(s){allMovers.push(s)})});
+    buildMovers(allMovers);
 
-            html += '<span class="ticker-item">' +
-                '<span class="ticker-name">' + s.name + '</span>' +
-                '<span class="ticker-price">' + formatPrice(s.current) + '</span>' +
-                '<span class="ticker-change ' + cls + '">' + chgStr + '</span>' +
-                '</span>';
-        });
+    // Tables
+    var commItems=[];
+    [ener,met,agri].forEach(function(d){if(d&&d.series)d.series.forEach(function(s){commItems.push(s)})});
+    buildTable('tblCommodities',commItems);
 
-        // Duplicate for seamless scroll
-        track.innerHTML = html + html;
-    }
+    var fxItems=[];
+    [cur,idx,bonds].forEach(function(d){if(d&&d.series)d.series.forEach(function(s){fxItems.push(s)})});
+    buildTable('tblForex',fxItems);
 
-    // ── Price Table ──
-    function buildPriceTable(containerId, seriesList) {
-        var container = document.getElementById(containerId);
-        if (!container) return;
-
-        var html = '';
-        seriesList.forEach(function(s) {
-            if (!s) return;
-            var chgHtml = formatChange(s.change_1d_pct);
-            html += '<div class="price-row">' +
-                '<div class="price-name">' + s.name + '</div>' +
-                '<div class="price-val">' + formatPrice(s.current) + ' <small style="color:var(--text-muted)">' + (s.unit || '') + '</small></div>' +
-                chgHtml +
-                '</div>';
-        });
-
-        container.innerHTML = html || '<div class="price-row"><div class="price-name">Veri yok</div></div>';
-    }
-
-    // ── Activities ──
-    function renderActivities(activities) {
-        var feed = document.getElementById('activityFeed');
-        if (!feed || !activities) return;
-
-        var months = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
-        function timeAgo(ts) {
-            var d = new Date(ts);
-            var now = new Date();
-            var diff = Math.floor((now - d) / 86400000);
-            if (diff === 0) return 'bugün';
-            if (diff === 1) return 'dün';
-            if (diff < 7) return diff + ' gün önce';
-            return d.getDate() + ' ' + months[d.getMonth()];
-        }
-
-        var html = '';
-        activities.slice(0, 8).forEach(function(a) {
-            html += '<div class="activity-item">' +
-                '<div class="activity-dot green"></div>' +
-                '<div><strong>' + a.title + '</strong> ' + a.text +
-                '<div class="activity-time">' + timeAgo(a.timestamp) + '</div></div></div>';
-        });
-
-        feed.innerHTML = html || '<div class="activity-item">Henüz aktivite yok</div>';
-    }
-
-    // ── Last Update KPI ──
-    function updateLastKPI(data) {
-        var el = document.getElementById('kpi-update');
-        if (!el || !data || !data.meta) return;
-        var d = new Date(data.meta.updated_at);
-        var months = ['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
-        el.textContent = d.getDate() + ' ' + months[d.getMonth()] + ' ' +
-            String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
-    }
-
-    // ═══ Load Everything ═══
-    Promise.all([
-        fetchJSON('currencies.json'),
-        fetchJSON('commodities_energy.json'),
-        fetchJSON('commodities_metals.json'),
-        fetchJSON('commodities_agriculture.json'),
-        fetchJSON('bonds.json'),
-        fetchJSON('indices.json'),
-        fetchJSON('activities.json'),
-    ]).then(function(results) {
-        var currencies = results[0];
-        var energy     = results[1];
-        var metals     = results[2];
-        var agri       = results[3];
-        var bonds      = results[4];
-        var indices    = results[5];
-        var activities = results[6];
-
-        // KPI
-        updateKPI('usdtry', findSeries(currencies, 'USDTRY=X'));
-        updateKPI('gold', findSeries(metals, 'GC=F'));
-        updateKPI('brent', findSeries(energy, 'BZ=F'));
-        updateKPI('bist', findSeries(indices, 'XU100.IS'));
-
-        // Last update
-        updateLastKPI(currencies || energy || metals);
-
-        // Ticker
-        var tickerItems = [];
-        [currencies, energy, metals, indices, bonds].forEach(function(d) {
-            if (d && d.series) {
-                d.series.forEach(function(s) { tickerItems.push(s); });
-            }
-        });
-        buildTicker(tickerItems);
-
-        // Price tables
-        var commoditySeries = [];
-        [energy, metals, agri].forEach(function(d) {
-            if (d && d.series) d.series.forEach(function(s) { commoditySeries.push(s); });
-        });
-        buildPriceTable('priceTableCommodities', commoditySeries);
-
-        var forexSeries = [];
-        [currencies, indices, bonds].forEach(function(d) {
-            if (d && d.series) d.series.forEach(function(s) { forexSeries.push(s); });
-        });
-        buildPriceTable('priceTableForex', forexSeries);
-
-        // Activities
-        if (activities && activities.activities) {
-            renderActivities(activities.activities);
-        }
-    });
-
+    // Activity
+    buildAct(act);
+});
 })();
 </script>
-
 </body>
 </html>
