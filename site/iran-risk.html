@@ -28,6 +28,9 @@
         .hurmuz-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;display:flex;align-items:center;gap:14px}
         .hz-dot{width:16px;height:16px;border-radius:50%;flex-shrink:0;animation:pulse 2s infinite}
         @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+        .strike-pulse{animation:strikePulse 2s ease-in-out infinite}
+        @keyframes strikePulse{0%,100%{stroke-opacity:1;fill-opacity:.45}50%{stroke-opacity:.4;fill-opacity:.2}}
         .hz-status{font-size:1rem;font-weight:800}
         .hz-sub{font-size:.7rem;color:var(--t3);margin-top:2px}
 
@@ -121,10 +124,10 @@
 <div class="map-wrap">
     <h3>🗺️ Çatışma Haritası</h3>
     <div class="map-legend">
-        <span><div class="leg-dot" style="background:#ff4757"></div> İran</span>
-        <span><div class="leg-dot" style="background:#3b82f6"></div> ABD/Koalisyon Üssü</span>
+        <span><div class="leg-dot" style="background:#2ed573"></div> İran Üssü</span>
+        <span><div class="leg-dot" style="background:#3b82f6"></div> ABD/Koalisyon</span>
         <span><div class="leg-dot" style="background:#fbbf24"></div> İsrail</span>
-        <span><div class="leg-dot" style="background:#ff6348"></div> Saldırı Noktası</span>
+        <span><div class="leg-dot" style="background:#ff4757"></div> Saldırı Noktası</span>
         <span><div class="leg-dot" style="background:#a78bfa"></div> Kritik Geçiş</span>
     </div>
     <div id="warMap"></div>
@@ -263,7 +266,7 @@ var bases = [
     {lat:30.45,lon:32.35,name:'Süveyş Kanalı',type:'critical',info:'Küresel ticaret'},
 ];
 
-var iconColors = {iran:'#ff4757',us:'#3b82f6',israel:'#fbbf24',critical:'#a78bfa'};
+var iconColors = {iran:'#2ed573',us:'#3b82f6',israel:'#fbbf24',critical:'#a78bfa'};
 bases.forEach(function(b){
     L.circleMarker([b.lat,b.lon],{
         radius: b.type==='critical'?10:7,
@@ -324,16 +327,42 @@ function buildCommodities(datasets){
 
 // ═══ NEWS + MAP STRIKES ═══
 var NEWS_KW = {
+    // İran
     'tahran':[35.68,51.38],'isfahan':[32.65,51.66],'natanz':[33.97,51.92],'buşehr':[28.83,50.84],
-    'tel aviv':[32.08,34.78],'kudüs':[31.76,35.21],'haifa':[32.79,34.99],
+    'meşhed':[36.26,59.61],'tebriz':[38.07,46.29],'şiraz':[29.59,52.58],'abadan':[30.28,48.25],
+    'bandar abbas':[27.15,56.28],'çahbahar':[25.29,60.64],'kirman':[30.28,57.08],'ahvaz':[31.32,48.67],
+    'harg':[29.23,50.32],'bushehr':[28.83,50.84],'parchin':[35.52,51.77],'fordow':[34.88,51.0],
+    // İsrail
+    'tel aviv':[32.08,34.78],'kudüs':[31.76,35.21],'haifa':[32.79,34.99],'nevatim':[30.62,34.82],
+    'dimona':[31.07,35.14],'eilat':[29.55,34.95],'jerusalem':[31.76,35.21],'israel':[31.5,34.8],
+    // Lübnan / Hizbullah
     'beyrut':[33.89,35.50],'lübnan':[33.89,35.50],'hizbullah':[33.89,35.50],
+    'bekaa':[33.99,36.14],'baalbek':[34.0,36.21],'trablus':[34.43,35.84],'sayda':[33.56,35.37],
+    // Suriye
     'şam':[33.51,36.29],'halep':[36.20,37.13],'suriye':[33.51,36.29],
+    'lazkiye':[35.52,35.79],'humus':[34.73,36.72],'deir ez zor':[35.33,40.14],'idlib':[35.93,36.63],
+    // Irak
     'bağdat':[33.31,44.36],'erbil':[36.19,44.01],'irak':[33.31,44.36],
+    'kerkük':[35.47,44.39],'basra':[30.51,47.81],'musul':[36.34,43.15],'süleymaniye':[35.56,45.43],
+    // Yemen / Husi
     'sanaa':[15.36,44.19],'yemen':[15.36,44.19],'husi':[14.79,42.95],
-    'kızıldeniz':[15.00,41.50],'hürmüz':[26.56,56.24],
-    'bandar abbas':[27.15,56.28],'abadan':[30.28,48.25],'cidde':[21.43,39.17],
-    'nevatim':[30.62,34.82],'golan':[33.01,35.75]
+    'aden':[12.79,45.01],'marib':[15.46,45.32],'hudayde':[14.80,42.95],
+    // Deniz / Geçişler
+    'kızıldeniz':[15.00,41.50],'hürmüz':[26.56,56.24],'süveyş':[30.45,32.35],
+    'bab el mandeb':[12.58,43.33],'aden körfezi':[12.80,45.00],'basra körfezi':[27.0,51.0],
+    // Diğer
+    'cidde':[21.43,39.17],'golan':[33.01,35.75],'gazze':[31.50,34.47],'ramallah':[31.90,35.20],
+    'amman':[31.95,35.93],'kahire':[30.04,31.24],'riyad':[24.71,46.67],'doha':[25.29,51.53]
 };
+
+function addStrike(lat,lon,title){
+    // Büyük kırmızı pulsing marker
+    var m = L.circleMarker([lat,lon],{radius:14,color:'#ff4757',fillColor:'#ff4757',fillOpacity:.45,weight:3,className:'strike-pulse'})
+        .addTo(strikeLayer)
+        .bindPopup('<b style="color:#ff4757">🔴 SALDIRI BÖLGESİ</b><br><span style="font-size:11px">'+title.substring(0,100)+'</span>');
+    // İkinci halka
+    L.circleMarker([lat,lon],{radius:22,color:'#ff4757',fillColor:'transparent',fillOpacity:0,weight:1.5,opacity:.3}).addTo(strikeLayer);
+}
 
 function loadNews(){
     var queries=['İran savaş','İran İsrail saldırı','Hürmüz Boğazı','Orta Doğu füze','Yemen Husi'];
@@ -366,15 +395,14 @@ function renderNews(allNews){
     strikeLayer.clearLayers();
     unique.forEach(function(n){
         var lower=n.title.toLowerCase();
+        var matched={};
         for(var kw in NEWS_KW){
-            if(lower.indexOf(kw)>-1){
+            if(lower.indexOf(kw)>-1 && !matched[NEWS_KW[kw][0]+','+NEWS_KW[kw][1]]){
                 var coords=NEWS_KW[kw];
-                var jlat=coords[0]+(Math.random()*.15-.075);
-                var jlon=coords[1]+(Math.random()*.15-.075);
-                L.circleMarker([jlat,jlon],{radius:12,color:'#ff6348',fillColor:'#ff6348',fillOpacity:.5,weight:2})
-                    .addTo(strikeLayer)
-                    .bindPopup('<b style="color:#ff6348">🔴 '+kw.toUpperCase()+'</b><br><span style="font-size:11px">'+n.title.substring(0,80)+'...</span>');
-                break;
+                var jlat=coords[0]+(Math.random()*.12-.06);
+                var jlon=coords[1]+(Math.random()*.12-.06);
+                addStrike(jlat,jlon,n.title);
+                matched[coords[0]+','+coords[1]]=1;
             }
         }
     });
