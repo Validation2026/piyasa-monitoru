@@ -1,414 +1,233 @@
 <!DOCTYPE html>
 <html lang="tr" data-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>İran Risk Monitörü — Piyasa Monitörü</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔴</text></svg>">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <style>
-        /* War counter */
-        .war-banner{background:linear-gradient(135deg,#1a0000,#330000);border:2px solid #660000;border-radius:var(--r);padding:20px;text-align:center;margin-bottom:18px}
-        .war-day{font-size:3rem;font-weight:900;font-family:var(--mono);color:#ff4757;line-height:1}
-        .war-label{font-size:.72rem;color:#ff6b6b;text-transform:uppercase;letter-spacing:2px;margin-top:4px}
-        .war-date{font-size:.65rem;color:#993333;margin-top:6px}
-
-        /* Risk + Hurmuz row */
-        .top-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
-        .gauge-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;text-align:center}
-        .gauge-score{font-size:2.8rem;font-weight:900;font-family:var(--mono);line-height:1}
-        .gauge-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-top:4px}
-        .gauge-bar{height:6px;border-radius:3px;background:var(--border);margin-top:10px;overflow:hidden}
-        .gauge-fill{height:100%;border-radius:3px;transition:width .6s}
-
-        .hurmuz-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;display:flex;align-items:center;gap:14px}
-        .hz-dot{width:16px;height:16px;border-radius:50%;flex-shrink:0;animation:pulse 2s infinite}
-        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-
-        .strike-pulse{animation:strikePulse 2s ease-in-out infinite}
-        @keyframes strikePulse{0%,100%{stroke-opacity:1;fill-opacity:.45}50%{stroke-opacity:.4;fill-opacity:.2}}
-        .hz-status{font-size:1rem;font-weight:800}
-        .hz-sub{font-size:.7rem;color:var(--t3);margin-top:2px}
-
-        /* Map */
-        .map-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:18px}
-        .map-wrap h3{padding:14px 18px 8px;font-size:.9rem;font-weight:700}
-        .map-legend{padding:4px 18px 10px;display:flex;gap:14px;flex-wrap:wrap;font-size:.65rem;color:var(--t3)}
-        .map-legend span{display:flex;align-items:center;gap:4px}
-        .leg-dot{width:10px;height:10px;border-radius:50%;display:inline-block}
-        #warMap{height:480px;z-index:1}
-
-        /* Commodities */
-        .commod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-bottom:18px}
-        .cm-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center;transition:.2s}
-        .cm-card:hover{border-color:var(--blue)}
-        .cm-name{font-size:.63rem;color:var(--t3);font-weight:700;text-transform:uppercase}
-        .cm-val{font-size:.95rem;font-family:var(--mono);font-weight:700;margin:3px 0 1px}
-        .cm-chg{font-size:.68rem;font-family:var(--mono);font-weight:700}
-        .cm-chg.u{color:var(--green)}.cm-chg.d{color:var(--red)}
-
-        /* News */
-        .news-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;margin-bottom:18px;max-height:400px;overflow-y:auto}
-        .nw-item{padding:8px 0;border-bottom:1px solid var(--border2);font-size:.78rem}
-        .nw-item:last-child{border-bottom:none}
-        .nw-item a{color:var(--t1);text-decoration:none}.nw-item a:hover{color:var(--blue)}
-        .nw-time{font-size:.62rem;color:var(--t3);margin-top:2px}
-
-        /* Admin */
-        
-        
-        
-        
-        .admin-panel h3{font-size:.85rem;font-weight:800;margin-bottom:12px;color:#ff4757}
-        .adm-group{margin-bottom:12px}
-        .adm-label{font-size:.65rem;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
-        .adm-input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--rs);padding:8px 10px;color:var(--t1);font-family:var(--mono);font-size:.82rem;outline:none}
-        .adm-input:focus{border-color:var(--blue)}
-        .adm-select{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--rs);padding:8px;color:var(--t1);font-size:.82rem;outline:none}
-        .adm-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-        .adm-save{width:100%;background:#ff4757;color:#fff;border:none;border-radius:var(--rs);padding:10px;font-weight:800;font-size:.8rem;cursor:pointer;margin-top:8px;transition:.2s}
-        .adm-save:hover{background:#e83e4e}
-        .adm-pin{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--rs);padding:8px;color:var(--t1);font-family:var(--mono);text-align:center;margin-bottom:8px;outline:none}
-
-        @media(max-width:768px){
-            .top-row{grid-template-columns:1fr}
-            #warMap{height:320px}
-            .commod-grid{grid-template-columns:repeat(3,1fr)}
-            .admin-panel{width:calc(100vw - 40px);right:20px;left:20px}
-            .war-day{font-size:2.2rem}
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>İran Risk Monitörü — Piyasa Monitörü</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔴</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+.war-banner{background:linear-gradient(135deg,#1a0000,#330000);border:2px solid #660000;border-radius:12px;padding:20px;text-align:center;margin-bottom:16px}
+.war-day{font-size:3rem;font-weight:900;font-family:'JetBrains Mono',monospace;color:#ff4757;line-height:1}
+.war-label{font-size:.7rem;color:#ff6b6b;text-transform:uppercase;letter-spacing:2px;margin-top:4px}
+.top-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.g-card{background:#fff;border:1px solid #dde4ed;border-radius:12px;padding:16px;text-align:center}
+.g-score{font-size:2.5rem;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1}
+.g-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-top:4px;color:#64748b}
+.g-bar{height:6px;border-radius:3px;background:#e2e8f0;margin-top:10px;overflow:hidden}
+.g-fill{height:100%;border-radius:3px;transition:width .5s}
+.hz-card{background:#fff;border:1px solid #dde4ed;border-radius:12px;padding:16px;display:flex;align-items:center;gap:12px}
+.hz-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0}
+.hz-txt{font-size:.95rem;font-weight:800}
+.ai-box{background:#fff;border:1px solid #dde4ed;border-radius:12px;padding:16px 18px;margin-bottom:16px;position:relative;overflow:hidden}
+.ai-box::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#ff4757,#fbbf24,#ff4757)}
+.ai-body{font-size:.8rem;color:#475569;line-height:1.7;white-space:pre-wrap}
+.cm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:7px;margin-bottom:16px}
+.cm{background:#fff;border:1px solid #dde4ed;border-radius:8px;padding:9px;text-align:center}
+.cm-n{font-size:.62rem;color:#94a3b8;font-weight:700;text-transform:uppercase}.cm-v{font-size:.9rem;font-family:'JetBrains Mono',monospace;font-weight:700;margin:2px 0}
+.cm-c{font-size:.67rem;font-family:'JetBrains Mono',monospace;font-weight:700}
+.cm-c.u{color:#00d68f}.cm-c.d{color:#ff4757}
+.map-box{background:#fff;border:1px solid #dde4ed;border-radius:12px;overflow:hidden;margin-bottom:16px}
+.map-box h3{padding:12px 16px 6px;font-size:.88rem;font-weight:700}
+.map-leg{padding:2px 16px 8px;display:flex;gap:12px;flex-wrap:wrap;font-size:.62rem;color:#94a3b8}
+.map-leg span{display:flex;align-items:center;gap:4px}
+.ld{width:9px;height:9px;border-radius:50%;display:inline-block}
+#warMap{height:450px;z-index:1}
+.news-box{background:#fff;border:1px solid #dde4ed;border-radius:12px;padding:14px 16px;margin-bottom:16px;max-height:380px;overflow-y:auto}
+.nw{padding:7px 0;border-bottom:1px solid #e8edf2;font-size:.77rem}
+.nw:last-child{border-bottom:none}
+.nw a{color:#0f172a;text-decoration:none}.nw a:hover{color:#3b82f6}
+.nw-t{font-size:.6rem;color:#94a3b8;margin-top:1px}
+@media(max-width:768px){.top-row{grid-template-columns:1fr}#warMap{height:300px}.cm-grid{grid-template-columns:repeat(3,1fr)}.war-day{font-size:2.2rem}}
+</style>
 </head>
 <body>
 <script src="assets/js/sidebar.js"></script>
 <div class="page">
+<div class="page-head"><h1>🔴 İran Risk Monitörü</h1></div>
 
-<div class="page-head">
-    <h1>🔴 İran Risk Monitörü</h1>
-</div>
-
-<!-- War Day Counter -->
 <div class="war-banner">
-    <div class="war-label">Savaşın Başlangıcından Bu Yana</div>
-    <div class="war-day" id="warDay">—</div>
-    <div class="war-label">GÜN</div>
-    <div class="war-date">Başlangıç: 28 Şubat 2026</div>
+<div class="war-label">Savaşın Başlangıcından Bu Yana</div>
+<div class="war-day" id="warDay">—</div>
+<div class="war-label">GÜN</div>
+<div style="font-size:.6rem;color:#993333;margin-top:6px">Başlangıç: 28 Şubat 2026</div>
 </div>
 
-<!-- AI Durum Analizi -->
-<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;margin-bottom:18px;position:relative;overflow:hidden">
-    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#ff4757,#fbbf24,#ff4757)"></div>
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="font-size:.85rem;font-weight:700">🤖 AI Durum Analizi</span><span style="font-size:.58rem;font-family:var(--mono);font-weight:700;background:rgba(255,71,87,.15);color:#ff4757;padding:2px 8px;border-radius:4px">Gemini · İran</span></div>
-    <div id="iranAiAnalysis" style="font-size:.82rem;color:var(--t2);line-height:1.7;white-space:pre-wrap"><span style="color:var(--t3);font-style:italic">Jeopolitik analiz yükleniyor...</span></div>
-</div>
-
-<!-- Risk + Hurmuz -->
 <div class="top-row">
-    <div class="gauge-card">
-        <div class="gauge-label" id="riskLabel">RİSK SEVİYESİ</div>
-        <div class="gauge-score" id="riskScore">—</div>
-        <div class="gauge-bar"><div class="gauge-fill" id="riskFill"></div></div>
-    </div>
-    <div class="hurmuz-card">
-        <div class="hz-dot" id="hzDot" style="background:#00d68f"></div>
-        <div>
-            <div class="hz-status" id="hzStatus">AÇIK / GÜVENLİ</div>
-            <div class="hz-sub">Hürmüz Boğazı — Dünya petrol ticaretinin %20'si</div>
-        </div>
-    </div>
+<div class="g-card"><div class="g-label" id="rLabel">RİSK SEVİYESİ</div><div class="g-score" id="rScore">—</div><div class="g-bar"><div class="g-fill" id="rFill"></div></div></div>
+<div class="hz-card"><div class="hz-dot" id="hDot" style="background:#00d68f"></div><div><div class="hz-txt" id="hTxt">AÇIK / GÜVENLİ</div><div style="font-size:.68rem;color:#94a3b8;margin-top:2px">Hürmüz Boğazı — Dünya petrolünün %20'si</div></div></div>
 </div>
 
-<!-- Affected Commodities -->
+<div class="ai-box"><div style="font-size:.82rem;font-weight:700;margin-bottom:8px">🤖 Durum Analizi</div><div class="ai-body" id="aiBox">Yükleniyor...</div></div>
+
 <div class="sec-title">⛽ Bölgeden Etkilenen Emtialar</div>
-<div class="commod-grid" id="commodGrid"></div>
+<div class="cm-grid" id="cmGrid"></div>
 
-<!-- Map -->
-<div class="map-wrap">
-    <h3>🗺️ Çatışma Haritası</h3>
-    <div class="map-legend">
-        <span><div class="leg-dot" style="background:#2ed573"></div> İran Üssü</span>
-        <span><div class="leg-dot" style="background:#3b82f6"></div> ABD/Koalisyon</span>
-        <span><div class="leg-dot" style="background:#fbbf24"></div> İsrail</span>
-        <span><div class="leg-dot" style="background:#ff4757"></div> Saldırı Noktası</span>
-        <span><div class="leg-dot" style="background:#a78bfa"></div> Kritik Geçiş</span>
-    </div>
-    <div id="warMap"></div>
+<div class="map-box">
+<h3>🗺️ Çatışma Haritası</h3>
+<div class="map-leg">
+<span><div class="ld" style="background:#2ed573"></div> İran Üssü</span>
+<span><div class="ld" style="background:#3b82f6"></div> ABD/Koalisyon</span>
+<span><div class="ld" style="background:#fbbf24"></div> İsrail</span>
+<span><div class="ld" style="background:#ff4757"></div> Saldırı Noktası</span>
+<span><div class="ld" style="background:#a78bfa"></div> Kritik Geçiş</span>
+</div>
+<div id="warMap"></div>
 </div>
 
-<!-- News -->
-<div class="sec-title">📰 Son Haberler (Canlı)</div>
-<div class="news-box" id="newsFeed"><div class="nw-item">Haberler yükleniyor...</div></div>
+<div class="sec-title">📰 Son Haberler</div>
+<div class="news-box" id="newsBox"><div class="nw">Haberler yükleniyor...</div></div>
 
 <div class="footer">Piyasa Monitörü © 2026</div>
 </div>
 
-<!-- Admin Toggle -->
-
-        <input type="number" class="adm-input" id="admRisk" min="0" max="100" value="50">
-    </div>
-
-                <button type="button" id="addCustomBtn" style="background:var(--blue);color:#fff;border:none;border-radius:4px;padding:3px 8px;font-size:.65rem;font-weight:700;cursor:pointer">+ YENİ EKLE</button>
-        </div>
-        
-    </div>
-
-    
-</div>
-
 <script>
 (function(){
-'use strict';
+// WAR DAY
+var days=Math.floor((new Date()-new Date('2026-02-28T00:00:00+03:00'))/864e5);
+document.getElementById('warDay').textContent=days>0?days:0;
 
-// ═══ WAR DAY COUNTER ═══
-var WAR_START = new Date('2026-02-28T00:00:00+03:00');
-function updateWarDay(){
-    var now = new Date();
-    var diff = Math.floor((now - WAR_START) / 864e5);
-    var el = document.getElementById('warDay');
-    if(el) el.textContent = diff > 0 ? diff : 0;
-}
-updateWarDay(); setInterval(updateWarDay, 60000);
+// STATE
+var S;
+try{S=JSON.parse(localStorage.getItem('iran_risk_state'))||{}}catch(e){S={}}
+var score=S.riskScore||50;
+var hurmuz=S.hurmuzStatus||'AÇIK / GÜVENLİ';
 
-// ═══ LOCAL STORAGE STATE ═══
-var STATE_KEY = 'iran_risk_state';
-var DEFAULT_STATE = {
-    riskScore: 50,
-    hurmuzStatus: 'AÇIK / GÜVENLİ',
-    manualCommodities: {}
-};
+// RISK
+var el=document.getElementById('rScore'),fl=document.getElementById('rFill'),lb=document.getElementById('rLabel');
+el.textContent=score;
+fl.style.width=score+'%';
+if(score>75){fl.style.background='#ff4757';el.style.color='#ff4757';lb.textContent='🚨 KRİTİK'}
+else if(score>50){fl.style.background='#fbbf24';el.style.color='#f59e0b';lb.textContent='⚠️ YÜKSEK RİSK'}
+else if(score>25){fl.style.background='#22d3ee';el.style.color='#0ea5e9';lb.textContent='ℹ️ ORTA RİSK'}
+else{fl.style.background='#00d68f';el.style.color='#00d68f';lb.textContent='✅ DÜŞÜK RİSK'}
 
-function loadState(){
-    try { return JSON.parse(localStorage.getItem(STATE_KEY)) || DEFAULT_STATE; }
-    catch(e){ return DEFAULT_STATE; }
-}
-function saveState(s){ localStorage.setItem(STATE_KEY, JSON.stringify(s)); }
+// HURMUZ
+var colors={'AÇIK / GÜVENLİ':'#00d68f','RİSKLİ':'#fbbf24','KISMEN KAPALI':'#f97316','KAPALI':'#ff4757'};
+document.getElementById('hDot').style.background=colors[hurmuz]||'#00d68f';
+document.getElementById('hTxt').textContent=hurmuz;
 
-// ═══ RISK DISPLAY ═══
-function setRisk(score){
-    var el=document.getElementById('riskScore'), fill=document.getElementById('riskFill'), label=document.getElementById('riskLabel');
-    if(el) el.textContent = score;
-    if(!fill) return;
-    fill.style.width = score+'%';
-    if(score>75){fill.style.background='#ff4757';el.style.color='#ff4757';label.textContent='🚨 KRİTİK'}
-    else if(score>50){fill.style.background='#fbbf24';el.style.color='#fbbf24';label.textContent='⚠️ YÜKSEK RİSK'}
-    else if(score>25){fill.style.background='#22d3ee';el.style.color='#22d3ee';label.textContent='ℹ️ ORTA RİSK'}
-    else{fill.style.background='#00d68f';el.style.color='#00d68f';label.textContent='✅ DÜŞÜK RİSK'}
-}
+// AI ANALYSIS
+fetch('/api/ai-analysis?cat=iran-risk').then(function(r){return r.json()}).then(function(d){
+    if(d.analysis)document.getElementById('aiBox').textContent=d.analysis;
+}).catch(function(){document.getElementById('aiBox').textContent='Analiz yüklenemiyor.'});
 
-function setHurmuz(status){
-    var dot=document.getElementById('hzDot'), txt=document.getElementById('hzStatus');
-    var colors={'AÇIK / GÜVENLİ':'#00d68f','RİSKLİ':'#fbbf24','KISMEN KAPALI':'#f97316','KAPALI':'#ff4757'};
-    if(dot) dot.style.background = colors[status]||'#00d68f';
-    if(txt) txt.textContent = status;
-}
-
-// ═══ MAP ═══
-var map = L.map('warMap',{scrollWheelZoom:false}).setView([30,50],5);
-// CartoDB Voyager — Latince etiketler (Arapça değil)
-L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{maxZoom:12,attribution:''}).addTo(map);
-
-// İran sınırı (basitleştirilmiş polygon)
-var iranBorder = [[39.78,44.77],[39.40,47.80],[38.41,48.87],[37.33,49.11],[36.65,52.76],[37.36,54.83],[37.07,57.37],[35.14,61.16],[31.30,61.70],[29.86,60.87],[26.12,61.60],[25.06,61.50],[25.38,57.79],[26.36,55.34],[27.09,56.18],[26.56,56.34],[26.65,55.07],[27.82,52.00],[29.24,50.08],[30.98,48.01],[32.47,45.44],[35.82,45.83],[37.15,44.56],[38.27,44.28],[39.78,44.77]];
-L.polygon(iranBorder,{color:'#ff4757',weight:2,fillColor:'#ff4757',fillOpacity:0.08,dashArray:'6,4'}).addTo(map);
-
-// Üsler ve kritik noktalar
-var bases = [
-    // İran askeri
-    {lat:35.68,lon:51.38,name:'Tahran',type:'iran',info:'İran başkenti / Komuta merkezi'},
-    {lat:32.65,lon:51.66,name:'Isfahan',type:'iran',info:'Nükleer tesis'},
-    {lat:33.97,lon:51.92,name:'Natanz',type:'iran',info:'Uranyum zenginleştirme'},
-    {lat:28.83,lon:50.84,name:'Buşehr',type:'iran',info:'Nükleer santral'},
-    {lat:30.28,lon:48.25,name:'Abadan',type:'iran',info:'Petrol rafinerisi'},
-    {lat:27.15,lon:56.28,name:'Bandar Abbas',type:'iran',info:'Deniz üssü / Hürmüz'},
-    {lat:36.26,lon:59.61,name:'Meşhed',type:'iran',info:'Askeri üs'},
-    {lat:29.47,lon:60.84,name:'Çahbahar',type:'iran',info:'Deniz üssü'},
-    // ABD / Koalisyon
-    {lat:29.23,lon:47.97,name:'Ali Al Salem (ABD)',type:'us',info:'Kuveyt / Hava üssü'},
-    {lat:25.93,lon:50.59,name:'İsa (ABD 5. Filo)',type:'us',info:'Bahreyn / Deniz üssü'},
-    {lat:25.12,lon:56.33,name:'Al Dhafra (ABD)',type:'us',info:'BAE / Hava üssü'},
-    {lat:24.43,lon:54.65,name:'Abu Dabi (ABD)',type:'us',info:'BAE / Lojistik'},
-    {lat:25.29,lon:51.34,name:'Al Udeid (ABD)',type:'us',info:'Katar / Ana hava üssü'},
-    {lat:21.43,lon:39.17,name:'Cidde (ABD)',type:'us',info:'S.Arabistan / Deniz'},
-    {lat:36.19,lon:44.01,name:'Erbil',type:'us',info:'Irak / ABD üssü'},
-    {lat:33.31,lon:44.36,name:'Bağdat',type:'us',info:'Irak / Yeşil Bölge'},
-    // İsrail
-    {lat:32.08,lon:34.78,name:'Tel Aviv',type:'israel',info:'İsrail / Komuta'},
-    {lat:31.76,lon:35.21,name:'Kudüs',type:'israel',info:'İsrail başkenti'},
-    {lat:30.62,lon:34.82,name:'Nevatim (İsrail)',type:'israel',info:'F-35 hava üssü'},
-    {lat:31.29,lon:34.27,name:'Hatzerim (İsrail)',type:'israel',info:'Hava üssü'},
-    // Kritik geçişler
-    {lat:26.56,lon:56.24,name:'Hürmüz Boğazı',type:'critical',info:'Dünya petrolünün %20\'si'},
-    {lat:12.58,lon:43.33,name:'Bab el-Mandeb',type:'critical',info:'Kızıldeniz girişi'},
-    {lat:30.45,lon:32.35,name:'Süveyş Kanalı',type:'critical',info:'Küresel ticaret'},
+// COMMODITIES
+var COMMS=[
+    {id:'BZ=F',f:'commodities_energy.json',n:'BZ (Brent)',w:'İran petrol ihracatı'},
+    {id:'CL=F',f:'commodities_energy.json',n:'CL (WTI)',w:'Küresel arz'},
+    {id:'NG=F',f:'commodities_energy.json',n:'NG (Doğalgaz)',w:'LNG rotaları'},
+    {id:'MTF=F',f:'commodities_energy.json',n:'TTF (Avrupa Gaz)',w:'Enerji güvenliği'},
+    {id:'HO=F',f:'commodities_energy.json',n:'HO (Isıtma Yağı)',w:'Rafineri'},
+    {id:'RB=F',f:'commodities_energy.json',n:'RB (Benzin)',w:'Rafineri'},
+    {id:'GC=F',f:'commodities_metals.json',n:'XAU (Altın)',w:'Güvenli liman'},
+    {id:'SI=F',f:'commodities_metals.json',n:'XAG (Gümüş)',w:'Güvenli liman'},
+    {id:'HG=F',f:'commodities_metals.json',n:'HG (Bakır)',w:'Sanayi'},
+    {id:'ZW=F',f:'commodities_agriculture.json',n:'ZW (Buğday)',w:'Gıda güvenliği'},
+    {id:'ZC=F',f:'commodities_agriculture.json',n:'ZC (Mısır)',w:'Gıda arzı'},
+    {id:'ZS=F',f:'commodities_agriculture.json',n:'ZS (Soya)',w:'Navlun'}
 ];
 
-var iconColors = {iran:'#2ed573',us:'#3b82f6',israel:'#fbbf24',critical:'#a78bfa'};
-bases.forEach(function(b){
-    L.circleMarker([b.lat,b.lon],{
-        radius: b.type==='critical'?10:7,
-        color: iconColors[b.type],
-        fillColor: iconColors[b.type],
-        fillOpacity: .7, weight: 2
-    }).addTo(map).bindPopup('<b>'+b.name+'</b><br><span style="font-size:11px">'+b.info+'</span>');
-});
-
-// Saldırı noktaları (haberlerden gelecek)
-var strikeLayer = L.layerGroup().addTo(map);
-
-// ═══ COMMODITIES ═══
-var AFFECTED_COMMODITIES = [
-    {id:'BZ=F',file:'commodities_energy.json',name:'Brent Petrol',why:'İran petrol ihracatı'},
-    {id:'CL=F',file:'commodities_energy.json',name:'WTI Petrol',why:'Küresel arz endişesi'},
-    {id:'NG=F',file:'commodities_energy.json',name:'Doğalgaz',why:'LNG rotaları'},
-    {id:'MTF=F',file:'commodities_energy.json',name:'Avrupa Doğalgaz',why:'Enerji güvenliği'},
-    {id:'HO=F',file:'commodities_energy.json',name:'Isıtma Yağı',why:'Rafineri kapasitesi'},
-    {id:'RB=F',file:'commodities_energy.json',name:'Benzin',why:'Rafineri akışı'},
-    {id:'GC=F',file:'commodities_metals.json',name:'Altın',why:'Güvenli liman'},
-    {id:'SI=F',file:'commodities_metals.json',name:'Gümüş',why:'Güvenli liman'},
-    {id:'HG=F',file:'commodities_metals.json',name:'Bakır',why:'Sanayi talebi'},
-    {id:'ZW=F',file:'commodities_agriculture.json',name:'Buğday',why:'Gıda güvenliği'},
-    {id:'ZC=F',file:'commodities_agriculture.json',name:'Mısır',why:'Gıda arz zinciri'},
-    {id:'ZS=F',file:'commodities_agriculture.json',name:'Soya',why:'Navlun maliyeti'},
-];
-
-function fp(v,d){if(v==null)return'—';d=d!=null?d:2;return Number(v).toLocaleString('tr-TR',{minimumFractionDigits:d,maximumFractionDigits:d})}
+function fp(v){if(v==null)return'—';return Number(v).toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2})}
 function fs(d,id){if(!d||!d.series)return null;for(var i=0;i<d.series.length;i++)if(d.series[i].id===id)return d.series[i];return null}
+
 var D='data/';
 function fj(f){return fetch(D+f+'?t='+Date.now()).then(function(r){return r.json()}).catch(function(){return null})}
 
-function buildCommodities(datasets){
-    var el=document.getElementById('commodGrid');if(!el)return;
-    var state=loadState();
+Promise.all([fj('commodities_energy.json'),fj('commodities_metals.json'),fj('commodities_agriculture.json')]).then(function(r){
+    var datasets=r;
+    var g=document.getElementById('cmGrid');
+    var mc=S.manualCommodities||{};
     var html='';
-    AFFECTED_COMMODITIES.forEach(function(c){
+    COMMS.forEach(function(c){
         var s=null;
         for(var i=0;i<datasets.length;i++){s=fs(datasets[i],c.id);if(s)break}
-        var val=s?s.current:0, chg=s?s.change_1d_pct:null;
-        if(state.manualCommodities&&state.manualCommodities[c.id]){
-            val=state.manualCommodities[c.id].value||val;
-            chg=state.manualCommodities[c.id].change!=null?state.manualCommodities[c.id].change:chg;
-        }
+        var val=s?s.current:0,chg=s?s.change_1d_pct:null;
+        if(mc[c.id]){if(mc[c.id].value)val=mc[c.id].value;if(mc[c.id].change!=null)chg=mc[c.id].change}
         var cls=chg!=null?(chg>=0?'u':'d'):'';
         var sign=chg!=null?(chg>=0?'+':''):'';
-        html+='<div class="cm-card" title="'+c.why+'"><div class="cm-name">'+c.name+'</div><div class="cm-val">'+fp(val)+'</div><div class="cm-chg '+cls+'">'+sign+(chg!=null?chg.toFixed(2)+'%':'—')+'</div></div>';
+        html+='<div class="cm" title="'+c.w+'"><div class="cm-n">'+c.n+'</div><div class="cm-v">'+fp(val)+'</div><div class="cm-c '+cls+'">'+sign+(chg!=null?chg.toFixed(2)+'%':'—')+'</div></div>';
     });
     // Özel metrikler
-    (state.customMetrics||[]).forEach(function(m){
-        var cls=m.change!=null?(m.change>=0?'u':'d'):'';
-        var sign=m.change!=null?(m.change>=0?'+':''):'';
-        html+='<div class="cm-card" style="border-color:var(--purple)"><div class="cm-name">'+m.name+(m.unit?' ('+m.unit+')':'')+'</div><div class="cm-val">'+fp(m.value)+'</div><div class="cm-chg '+cls+'">'+sign+(m.change!=null?m.change.toFixed(2)+'%':'—')+'</div></div>';
+    (S.customMetrics||[]).forEach(function(m){
+        var cls=m.change>=0?'u':'d';
+        html+='<div class="cm" style="border-color:#a78bfa"><div class="cm-n">'+m.name+(m.unit?' ('+m.unit+')':'')+'</div><div class="cm-v">'+fp(m.value)+'</div><div class="cm-c '+cls+'">'+(m.change>=0?'+':'')+m.change.toFixed(2)+'%</div></div>';
     });
-    el.innerHTML=html;
-}
+    g.innerHTML=html;
+});
 
-// ═══ NEWS + MAP STRIKES ═══
-var NEWS_KW = {
-    // İran
-    'tahran':[35.68,51.38],'isfahan':[32.65,51.66],'natanz':[33.97,51.92],'buşehr':[28.83,50.84],
-    'meşhed':[36.26,59.61],'tebriz':[38.07,46.29],'şiraz':[29.59,52.58],'abadan':[30.28,48.25],
-    'bandar abbas':[27.15,56.28],'çahbahar':[25.29,60.64],'kirman':[30.28,57.08],'ahvaz':[31.32,48.67],
-    'harg':[29.23,50.32],'bushehr':[28.83,50.84],'parchin':[35.52,51.77],'fordow':[34.88,51.0],
-    // İsrail
-    'tel aviv':[32.08,34.78],'kudüs':[31.76,35.21],'haifa':[32.79,34.99],'nevatim':[30.62,34.82],
-    'dimona':[31.07,35.14],'eilat':[29.55,34.95],'jerusalem':[31.76,35.21],'israel':[31.5,34.8],
-    // Lübnan / Hizbullah
-    'beyrut':[33.89,35.50],'lübnan':[33.89,35.50],'hizbullah':[33.89,35.50],
-    'bekaa':[33.99,36.14],'baalbek':[34.0,36.21],'trablus':[34.43,35.84],'sayda':[33.56,35.37],
-    // Suriye
-    'şam':[33.51,36.29],'halep':[36.20,37.13],'suriye':[33.51,36.29],
-    'lazkiye':[35.52,35.79],'humus':[34.73,36.72],'deir ez zor':[35.33,40.14],'idlib':[35.93,36.63],
-    // Irak
-    'bağdat':[33.31,44.36],'erbil':[36.19,44.01],'irak':[33.31,44.36],
-    'kerkük':[35.47,44.39],'basra':[30.51,47.81],'musul':[36.34,43.15],'süleymaniye':[35.56,45.43],
-    // Yemen / Husi
-    'sanaa':[15.36,44.19],'yemen':[15.36,44.19],'husi':[14.79,42.95],
-    'aden':[12.79,45.01],'marib':[15.46,45.32],'hudayde':[14.80,42.95],
-    // Deniz / Geçişler
-    'kızıldeniz':[15.00,41.50],'hürmüz':[26.56,56.24],'süveyş':[30.45,32.35],
-    'bab el mandeb':[12.58,43.33],'aden körfezi':[12.80,45.00],'basra körfezi':[27.0,51.0],
-    // Diğer
-    'cidde':[21.43,39.17],'golan':[33.01,35.75],'gazze':[31.50,34.47],'ramallah':[31.90,35.20],
-    'amman':[31.95,35.93],'kahire':[30.04,31.24],'riyad':[24.71,46.67],'doha':[25.29,51.53]
-};
+// MAP
+var map=L.map('warMap',{scrollWheelZoom:false}).setView([30,50],5);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{maxZoom:12}).addTo(map);
 
-function addStrike(lat,lon,title){
-    // Büyük kırmızı pulsing marker
-    var m = L.circleMarker([lat,lon],{radius:14,color:'#ff4757',fillColor:'#ff4757',fillOpacity:.45,weight:3,className:'strike-pulse'})
-        .addTo(strikeLayer)
-        .bindPopup('<b style="color:#ff4757">🔴 SALDIRI BÖLGESİ</b><br><span style="font-size:11px">'+title.substring(0,100)+'</span>');
-    // İkinci halka
-    L.circleMarker([lat,lon],{radius:22,color:'#ff4757',fillColor:'transparent',fillOpacity:0,weight:1.5,opacity:.3}).addTo(strikeLayer);
-}
+// İran sınırı
+L.polygon([[39.78,44.77],[39.4,47.8],[38.41,48.87],[37.33,49.11],[36.65,52.76],[37.36,54.83],[37.07,57.37],[35.14,61.16],[31.3,61.7],[29.86,60.87],[26.12,61.6],[25.06,61.5],[25.38,57.79],[26.36,55.34],[27.09,56.18],[26.56,56.34],[26.65,55.07],[27.82,52],[29.24,50.08],[30.98,48.01],[32.47,45.44],[35.82,45.83],[37.15,44.56],[38.27,44.28],[39.78,44.77]],{color:'#ff4757',weight:2,fillColor:'#ff4757',fillOpacity:.06,dashArray:'6,4'}).addTo(map);
 
-function loadNews(){
-    var queries=['İran savaş','İran İsrail saldırı','Hürmüz Boğazı','Orta Doğu füze','Yemen Husi'];
-    var allNews=[]; var loaded=0; var total=queries.length;
+// Üsler
+var bases=[
+{lat:35.68,lon:51.38,n:'Tahran',t:'iran'},{lat:32.65,lon:51.66,n:'Isfahan',t:'iran'},{lat:33.97,lon:51.92,n:'Natanz',t:'iran'},{lat:28.83,lon:50.84,n:'Buşehr',t:'iran'},{lat:27.15,lon:56.28,n:'Bandar Abbas',t:'iran'},{lat:36.26,lon:59.61,n:'Meşhed',t:'iran'},{lat:30.28,lon:48.25,n:'Abadan',t:'iran'},{lat:29.47,lon:60.84,n:'Çahbahar',t:'iran'},
+{lat:25.29,lon:51.34,n:'Al Udeid (ABD)',t:'us'},{lat:25.12,lon:56.33,n:'Al Dhafra (ABD)',t:'us'},{lat:29.23,lon:47.97,n:'Ali Al Salem (ABD)',t:'us'},{lat:25.93,lon:50.59,n:'İsa (ABD 5. Filo)',t:'us'},{lat:36.19,lon:44.01,n:'Erbil (ABD)',t:'us'},{lat:33.31,lon:44.36,n:'Bağdat (ABD)',t:'us'},{lat:21.43,lon:39.17,n:'Cidde (ABD)',t:'us'},
+{lat:32.08,lon:34.78,n:'Tel Aviv',t:'il'},{lat:31.76,lon:35.21,n:'Kudüs',t:'il'},{lat:30.62,lon:34.82,n:'Nevatim',t:'il'},{lat:31.29,lon:34.27,n:'Hatzerim',t:'il'},
+{lat:26.56,lon:56.24,n:'Hürmüz Boğazı',t:'cr'},{lat:12.58,lon:43.33,n:'Bab el-Mandeb',t:'cr'},{lat:30.45,lon:32.35,n:'Süveyş Kanalı',t:'cr'}
+];
+var tc={iran:'#2ed573',us:'#3b82f6',il:'#fbbf24',cr:'#a78bfa'};
+bases.forEach(function(b){L.circleMarker([b.lat,b.lon],{radius:b.t==='cr'?10:7,color:tc[b.t],fillColor:tc[b.t],fillOpacity:.7,weight:2}).addTo(map).bindPopup('<b>'+b.n+'</b>')});
 
-    queries.forEach(function(q,i){
-        setTimeout(function(){
-            fetch('/api/rss-proxy?q='+encodeURIComponent(q))
-                .then(function(r){return r.json()})
-                .then(function(data){
-                    (data.items||[]).forEach(function(item){
-                        allNews.push({title:item.title,link:item.link,date:item.date?new Date(item.date):new Date()});
-                    });
-                })
-                .catch(function(){})
-                .finally(function(){
-                    loaded++;
-                    if(loaded>=total)renderNews(allNews);
-                });
-        },i*500);
-    });
-}
+// NEWS + STRIKES
+var strikeLayer=L.layerGroup().addTo(map);
+var KW={'tahran':[35.68,51.38],'isfahan':[32.65,51.66],'natanz':[33.97,51.92],'iran':[35.68,51.38],'tel aviv':[32.08,34.78],'kudüs':[31.76,35.21],'haifa':[32.79,34.99],'israil':[31.5,34.8],'beyrut':[33.89,35.5],'lübnan':[33.89,35.5],'hizbullah':[33.89,35.5],'şam':[33.51,36.29],'halep':[36.2,37.13],'suriye':[33.51,36.29],'bağdat':[33.31,44.36],'erbil':[36.19,44.01],'irak':[33.31,44.36],'sanaa':[15.36,44.19],'yemen':[15.36,44.19],'husi':[14.79,42.95],'kızıldeniz':[15,41.5],'hürmüz':[26.56,56.24],'bandar abbas':[27.15,56.28],'golan':[33.01,35.75],'gazze':[31.5,34.47],'cidde':[21.43,39.17],'nevatim':[30.62,34.82],'hayfa':[32.79,34.99],'füze':[32.08,34.78],'saldırı':[35.68,51.38]};
 
-function renderNews(allNews){
-    allNews.sort(function(a,b){return b.date-a.date});
-    var unique=[],seen={};
-    allNews.forEach(function(n){if(!seen[n.title]){seen[n.title]=1;unique.push(n)}});
+var queries=['İran savaş','İran İsrail saldırı','Hürmüz Boğazı','Orta Doğu füze','Yemen Husi'];
+var allNews=[];var loaded=0;
 
-    // Haberlere göre haritada saldırı noktaları işaretle
+queries.forEach(function(q,i){
+    setTimeout(function(){
+        fetch('/api/rss-proxy?q='+encodeURIComponent(q)).then(function(r){return r.json()}).then(function(d){
+            (d.items||[]).forEach(function(it){allNews.push(it)});
+        }).catch(function(){}).finally(function(){
+            loaded++;
+            if(loaded>=queries.length)renderAll();
+        });
+    },i*600);
+});
+
+function renderAll(){
+    // Dedupe
+    var seen={},uniq=[];
+    allNews.sort(function(a,b){return new Date(b.date)-new Date(a.date)});
+    allNews.forEach(function(n){if(!seen[n.title]){seen[n.title]=1;uniq.push(n)}});
+
+    // Strikes
     strikeLayer.clearLayers();
-    unique.forEach(function(n){
-        var lower=n.title.toLowerCase();
-        var matched={};
-        for(var kw in NEWS_KW){
-            if(lower.indexOf(kw)>-1 && !matched[NEWS_KW[kw][0]+','+NEWS_KW[kw][1]]){
-                var coords=NEWS_KW[kw];
-                var jlat=coords[0]+(Math.random()*.12-.06);
-                var jlon=coords[1]+(Math.random()*.12-.06);
-                addStrike(jlat,jlon,n.title);
-                matched[coords[0]+','+coords[1]]=1;
+    var struck={};
+    uniq.forEach(function(n){
+        var low=n.title.toLowerCase();
+        for(var kw in KW){
+            if(low.indexOf(kw)>-1){
+                var key=KW[kw][0]+','+KW[kw][1];
+                if(!struck[key]){
+                    struck[key]=1;
+                    var jlat=KW[kw][0]+(Math.random()*.1-.05);
+                    var jlon=KW[kw][1]+(Math.random()*.1-.05);
+                    L.circleMarker([jlat,jlon],{radius:13,color:'#ff4757',fillColor:'#ff4757',fillOpacity:.4,weight:3}).addTo(strikeLayer).bindPopup('<b style="color:#ff4757">🔴 SALDIRI</b><br><small>'+n.title.substring(0,80)+'...</small>');
+                    L.circleMarker([jlat,jlon],{radius:20,color:'#ff4757',fillOpacity:0,weight:1.5,opacity:.25}).addTo(strikeLayer);
+                }
             }
         }
     });
 
-    var el=document.getElementById('newsFeed');if(!el)return;
-    el.innerHTML=unique.slice(0,15).map(function(n){
-        var h=Math.floor((Date.now()-n.date.getTime())/36e5);
+    // News list
+    var nb=document.getElementById('newsBox');
+    nb.innerHTML=uniq.slice(0,15).map(function(n){
+        var h=Math.floor((Date.now()-new Date(n.date).getTime())/36e5);
         var t=h<1?'az önce':h<24?h+' saat önce':Math.floor(h/24)+' gün önce';
-        return'<div class="nw-item"><a href="'+n.link+'" target="_blank" rel="noopener">'+n.title+'</a><div class="nw-time">'+t+'</div></div>';
-    }).join('')||'<div class="nw-item">Haber bulunamadı</div>';
+        return'<div class="nw"><a href="'+n.link+'" target="_blank">'+n.title+'</a><div class="nw-t">'+t+'</div></div>';
+    }).join('')||'<div class="nw">Haber bulunamadı</div>';
 }
-
-// ═══ INIT ═══
-applyState();
-
-Promise.all([fj('commodities_energy.json'),fj('commodities_metals.json'),fj('commodities_agriculture.json')]).then(function(r){
-    buildCommodities(r);
-});
-
-loadNews();
-
-// AI Analiz
-fetch('/api/ai-analysis?cat=iran-risk').then(function(r){return r.json()}).then(function(d){
-    var el=document.getElementById('iranAiAnalysis');if(el&&d.analysis)el.textContent=d.analysis;
-}).catch(function(){});
-
 })();
 </script>
 </body>

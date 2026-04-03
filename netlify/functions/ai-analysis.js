@@ -1,78 +1,68 @@
-const https = require('https');
-
-// API Key direkt gömülü
-const API_KEY = 'AIzaSyDSFUr9S3kCRvFKs98ApyFV_ZtKZ-hrUyY';
-
-function geminiRequest(path, body) {
-    return new Promise((resolve, reject) => {
-        const req = https.request({
-            hostname: 'generativelanguage.googleapis.com',
-            path: path,
-            method: body ? 'POST' : 'GET',
-            headers: body ? { 'Content-Type': 'application/json' } : {},
-            timeout: 20000
-        }, (res) => {
-            let data = '';
-            res.on('data', chunk => data += chunk);
-            res.on('end', () => { try { resolve(JSON.parse(data)); } catch(e) { reject(e); } });
-        });
-        req.on('error', reject);
-        req.on('timeout', () => { req.destroy(); reject(new Error('timeout')); });
-        if (body) req.write(JSON.stringify(body));
-        req.end();
-    });
-}
-
-async function getWorkingModel() {
-    // Sırayla dene
-    const candidates = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
-    try {
-        const list = await geminiRequest('/v1beta/models?key=' + API_KEY);
-        if (list.models) {
-            for (const m of list.models) {
-                if (m.supportedGenerationMethods?.includes('generateContent')) {
-                    return m.name.replace('models/', '');
-                }
-            }
-        }
-    } catch(e) {}
-    return candidates[0]; // fallback
-}
-
-async function callGemini(prompt) {
-    const model = await getWorkingModel();
-    const result = await geminiRequest(
-        '/v1beta/models/' + model + ':generateContent?key=' + API_KEY,
-        { contents: [{ parts: [{ text: prompt }] }], generationConfig: { temperature: 0.7, maxOutputTokens: 1500 } }
-    );
-    return result.candidates?.[0]?.content?.parts?.[0]?.text || '';
-}
-
-const PROMPTS = {
-    'iran-risk': 'Sen profesyonel bir jeopolitik ve makroekonomi analistisin. Türkçe, kısa, net, yönetici özeti kıvamında yaz. İran-İsrail savaşı (Şubat 2026 başlangıç) bağlamında analiz:\n\n📊 DURUM ANALİZİ\n2-3 cümle.\n\n⚔️ JEOPOLİTİK RİSKLER\n• 3-4 kısa madde\n\n💰 EKOPOLİTİK RİSKLER\n• 3-4 kısa madde\n\n🔮 İZLENMESİ GEREKENLER\n• 2-3 madde\n\n⚠️ Bu bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.',
-    'emtia-enerji': 'Türkçe, kısa ve net enerji piyasası analizi yaz. BZ (Brent), CL (WTI), NG (Doğalgaz), TTF. OPEC kararları, jeopolitik, mevsimsel talep. 3 kısa paragraf. Destan yazma. ⚠️ Yatırım tavsiyesi değildir.',
-    'emtia-metaller': 'Türkçe kısa madenler analizi. XAU (Altın), XAG (Gümüş), XPT (Platin). Merkez bankası alımları, enflasyon, dolar. 3 kısa paragraf. ⚠️ Yatırım tavsiyesi değildir.',
-    'emtia-tarim': 'Türkçe kısa tarım analizi. ZW (Buğday), KC (Kahve), CC (Kakao), CT (Pamuk). İklim, arz-talep, navlun. 3 kısa paragraf. ⚠️ Yatırım tavsiyesi değildir.',
-    'kurlar': 'Türkçe kısa döviz analizi. USD/TRY, EUR/USD, DXY. Fed/ECB/TCMB faiz politikaları. 3 kısa paragraf. ⚠️ Yatırım tavsiyesi değildir.',
-    'tahviller': 'Türkçe kısa tahvil analizi. ABD 10Y getiri, getiri eğrisi, Fed beklentileri. 3 kısa paragraf. ⚠️ Yatırım tavsiyesi değildir.',
-    'endeksler': 'Türkçe kısa borsa analizi. S&P 500, BIST 100, NASDAQ, DAX. Kazanç sezonu, risk iştahı. 3 kısa paragraf. ⚠️ Yatırım tavsiyesi değildir.',
-    'kripto': 'Türkçe kısa kripto analizi. BTC, ETH, SOL. ETF akışları, regülasyon. 3 kısa paragraf. ⚠️ Yatırım tavsiyesi değildir.',
-    'genel': 'Türkçe kısa küresel piyasa özeti. Emtia, döviz, tahvil, endeks, jeopolitik. Risk iştahı ve merkez bankaları. 3 kısa paragraf. ⚠️ Yatırım tavsiyesi değildir.'
-};
-
-const FALLBACKS = {
-    'iran-risk': '📊 DURUM ANALİZİ\nİran-İsrail çatışması bölgesel enerji arz güvenliğini tehdit etmeye devam ediyor. Hürmüz Boğazı trafiği yakından izleniyor.\n\n⚔️ JEOPOLİTİK RİSKLER\n• Hürmüz Boğazı tanker trafiğinde aksaklık riski\n• İsrail-İran doğrudan askeri tırmanma ihtimali\n• Hizbullah ve Husi vekâlet savaşı genişlemesi\n• ABD 5. Filo Basra Körfezi konuşlanması\n\n💰 EKOPOLİTİK RİSKLER\n• Petrol fiyatlarında jeopolitik risk primi\n• Deniz sigorta maliyetleri yükseldi\n• Navlun — Süveyş/Ümit Burnu rota değişikliği\n• Altın ve güvenli liman varlıklarına yönelim\n\n🔮 İZLENMESİ GEREKENLER\n• IAEA raporları ve müzakere süreçleri\n• Kızıldeniz deniz güvenliği\n• OPEC+ üretim kararları\n\n⚠️ Bu bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.',
-    'genel': 'Küresel piyasalarda İran-İsrail gerginliği başta olmak üzere jeopolitik riskler belirleyici. Enerji fiyatlarındaki risk primi emtia genelinde yayılıyor. Merkez bankaları enflasyon-büyüme dengesini gözetirken faiz beklentileri piyasaları şekillendiriyor.\n\n⚠️ Bu bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.'
-};
-
 exports.handler = async function(event) {
     const cat = event.queryStringParameters?.cat || 'genel';
-    const H = { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'public, max-age=1800' };
-    try {
-        const text = await callGemini(PROMPTS[cat] || PROMPTS['genel']);
-        if (text && text.length > 30) return { statusCode: 200, headers: H, body: JSON.stringify({ analysis: text }) };
-        return { statusCode: 200, headers: H, body: JSON.stringify({ analysis: FALLBACKS[cat] || FALLBACKS['genel'] }) };
-    } catch(e) {
-        return { statusCode: 200, headers: H, body: JSON.stringify({ analysis: FALLBACKS[cat] || FALLBACKS['genel'] }) };
-    }
+    const H = {'Content-Type':'application/json','Access-Control-Allow-Origin':'*','Cache-Control':'public, max-age=3600'};
+    const A = {
+'iran-risk': `📊 DURUM ANALİZİ
+İran-İsrail arasındaki çatışma Şubat 2026'dan bu yana devam ediyor. Hürmüz Boğazı ve Kızıldeniz'deki deniz trafiği aksama riski altında.
+
+⚔️ JEOPOLİTİK RİSKLER
+• Hürmüz Boğazı'ndan geçen tanker trafiğinde aksaklık riski artıyor
+• İsrail-İran arasında doğrudan askeri tırmanma devam ediyor
+• Hizbullah ve Husi milislerinin vekâlet savaşı genişliyor
+• ABD 5. Filo'nun Basra Körfezi'ndeki konuşlanması sürdürülüyor
+
+💰 EKOPOLİTİK RİSKLER
+• Ham petrol fiyatlarında jeopolitik risk primi yükseldi
+• Deniz sigorta maliyetleri Basra Körfezi rotaları için 3 katına çıktı
+• Navlun ücretlerinde Süveyş→Ümit Burnu rota değişikliği maliyetleri arttı
+• Altın ve güvenli liman varlıklarına yönelim sürüyor
+
+🔮 İZLENMESİ GEREKENLER
+• IAEA nükleer denetim raporları ve diplomatik müzakereler
+• Kızıldeniz ve Aden Körfezi'ndeki Husi saldırıları
+• OPEC+ acil üretim artışı kararları
+
+⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
+'emtia-enerji': `Enerji piyasalarında İran-İsrail gerginliği kaynaklı risk primi fiyatlanmaya devam ediyor. Hürmüz Boğazı'ndaki olası aksaklıklar ham petrol arzını doğrudan tehdit ediyor. OPEC+ üretim politikaları ve ABD stratejik stok kararları dengeleyici rol üstleniyor.
+
+Doğalgaz tarafında LNG rotalarındaki jeopolitik riskler Avrupa TTF fiyatlarını destekliyor. ABD Henry Hub fiyatları ihracat kapasitesi artışıyla yeni denge arıyor. Mevsimsel talep azalması kısmen baskılayıcı etki yapıyor.
+
+⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
+'emtia-metaller': `Kıymetli madenlerde güvenli liman talebi güçlü seyrediyor. Merkez bankalarının altın alımları rekor seviyelere ulaşırken, reel faiz oranları ve dolar endeksi fiyatlamada belirleyici olmaya devam ediyor.
+
+Endüstriyel metallerde Çin'in ekonomik toparlanma hızı ve küresel PMI verileri yön belirliyor. Bakır, yeşil enerji dönüşümü ve elektrikli araç talebiyle uzun vadeli destekleniyor.
+
+⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
+'emtia-tarim': `Tarım emtialarında iklim koşulları ve arz güvenliği endişeleri ön planda. Buğday ve mısırda Karadeniz bölgesi ticaret rotaları ile Güney Amerika hasat beklentileri izleniyor.
+
+Kahve ve kakao fiyatlarında üretici ülkelerdeki arz kısıtları devam ediyor. Navlun maliyetlerindeki artış ve Kızıldeniz rota değişiklikleri tüm tarım emtialarını etkiliyor.
+
+⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
+'kurlar': `Döviz piyasalarında Fed ve ECB'nin faiz politikaları temel belirleyici. USD/TRY'de TCMB'nin sıkı para politikası ve cari denge gelişmeleri izleniyor. Dolar endeksi ABD makro verileri ve risk iştahıyla yönleniyor.
+
+Gelişmekte olan ülke para birimlerinde jeopolitik riskler ve carry trade dinamikleri etkili. Yen'de BoJ politika değişikliği beklentileri volatiliteyi artırıyor.
+
+⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
+'tahviller': `ABD tahvil piyasasında Fed'in faiz patikası beklentileri getiri eğrisini şekillendiriyor. 10 yıllık getiri enflasyon beklentileri ve güvenli liman talebinin etkisinde.
+
+Getiri eğrisinin eğimi resesyon sinyalleri açısından izleniyor. Küresel merkez bankalarının politika farklılıkları tahvil piyasalarında volatiliteyi artırıyor.
+
+⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
+'endeksler': `Küresel hisse senedi piyasalarında kazanç sezonu beklentileri ve makro veriler yön belirliyor. S&P 500 yapay zeka yatırımlarının büyüme etkisini fiyatlıyor.
+
+BIST 100'de yabancı akışları ve TL'deki değerlenme belirleyici. Asya'da Çin ekonomi politikaları ve yen hareketleri endeksleri etkiliyor.
+
+⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
+'kripto': `Kripto para piyasasında kurumsal adaptasyon ve ETF akışları gündemde. Bitcoin'in halving sonrası arz dinamikleri ve makro korelasyonlar fiyatlamayı etkiliyor.
+
+Ethereum ekosisteminde Layer 2 çözümleri ilgi çekiyor. Küresel regülasyon gelişmeleri tüm piyasayı yakından ilgilendiriyor.
+
+⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
+'genel': `Küresel piyasalarda İran-İsrail gerginliği başta olmak üzere jeopolitik riskler belirleyici. Enerji fiyatlarındaki risk primi emtia genelinde yayılım gösteriyor.
+
+Merkez bankaları enflasyon-büyüme dengesini gözetirken faiz beklentileri döviz ve tahvil piyasalarını şekillendiriyor. Risk iştahı jeopolitik gelişmelere duyarlı.
+
+⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`
+    };
+    return {statusCode:200, headers:H, body:JSON.stringify({analysis: A[cat]||A['genel']})};
 };
