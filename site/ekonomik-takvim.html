@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ekonomik Takvim — Piyasa Monitörü</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .ai-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;margin-bottom:22px;position:relative;overflow:hidden}
+        .ai-box::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--purple),var(--blue),var(--cyan))}
+        .ai-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+        .ai-header span{font-size:.82rem;font-weight:700}
+        .ai-badge{font-size:.58rem;font-family:var(--mono);font-weight:700;background:rgba(167,139,250,.15);color:var(--purple);padding:2px 8px;border-radius:4px}
+        .ai-body{font-size:.82rem;color:var(--t2);line-height:1.7;white-space:pre-wrap}
+
+        .cal-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:18px}
+        .cal-header{padding:12px 18px;font-size:.85rem;font-weight:700;border-bottom:1px solid var(--border);background:var(--bg2)}
+        .cal-item{display:grid;grid-template-columns:90px 1fr auto;align-items:center;padding:10px 18px;border-bottom:1px solid var(--border2);font-size:.82rem;gap:12px;transition:.15s}
+        .cal-item:hover{background:var(--card2)}
+        .cal-item:last-child{border-bottom:none}
+        .cal-date{font-family:var(--mono);font-weight:700;font-size:.75rem;color:var(--blue)}
+        .cal-name{font-weight:600}
+        .cal-desc{font-size:.7rem;color:var(--t3);margin-top:1px}
+        .cal-impact{font-size:.6rem;font-weight:800;padding:2px 8px;border-radius:4px;text-transform:uppercase}
+        .cal-impact.high{background:rgba(255,71,87,.15);color:#ff4757}
+        .cal-impact.med{background:rgba(251,191,36,.15);color:#fbbf24}
+        .cal-impact.low{background:rgba(0,214,143,.15);color:#00d68f}
+
+        .cal-today{border-left:3px solid var(--blue);background:rgba(59,130,246,.04)}
+        .cal-past{opacity:.5}
+        @media(max-width:600px){.cal-item{grid-template-columns:70px 1fr;gap:8px}.cal-impact{display:none}}
+    </style>
+</head>
+<body>
+<script src="assets/js/sidebar.js"></script>
+<div class="page">
+    <div class="page-head">
+        <h1>📅 Ekonomik Takvim</h1>
+        <div class="sub">Merkez bankası kararları, TÜFE açıklamaları, önemli ekonomik veriler</div>
+    </div>
+
+    <div class="ai-box"><div class="ai-header"><span>🤖 AI Takvim Analizi</span><span class="ai-badge">Gemini</span></div><div class="ai-body" id="aiAnalysis"><span style="color:var(--t3);font-style:italic">Analiz yükleniyor...</span></div></div>
+
+    <div class="cal-card">
+        <div class="cal-header">🏛️ Merkez Bankası Faiz Kararları — 2026</div>
+        <div id="cbEvents"></div>
+    </div>
+
+    <div class="cal-card">
+        <div class="cal-header">📊 Önemli Ekonomik Veriler</div>
+        <div id="ecoEvents"></div>
+    </div>
+
+    <div class="footer">Piyasa Monitörü © 2026</div>
+</div>
+<script>
+(function(){
+var today = new Date().toISOString().split('T')[0];
+
+var cbDates = [
+    {date:'2026-01-29',name:'Fed Faiz Kararı',desc:'FOMC toplantısı',impact:'high'},
+    {date:'2026-01-30',name:'ECB Faiz Kararı',desc:'Euro Bölgesi',impact:'high'},
+    {date:'2026-02-06',name:'BoE Faiz Kararı',desc:'İngiltere',impact:'med'},
+    {date:'2026-02-20',name:'TCMB Faiz Kararı',desc:'Türkiye',impact:'high'},
+    {date:'2026-03-11',name:'BoJ Faiz Kararı',desc:'Japonya',impact:'med'},
+    {date:'2026-03-18',name:'Fed Faiz Kararı',desc:'FOMC + dot plot',impact:'high'},
+    {date:'2026-03-19',name:'TCMB Faiz Kararı',desc:'Türkiye',impact:'high'},
+    {date:'2026-04-09',name:'ECB Faiz Kararı',desc:'Euro Bölgesi',impact:'high'},
+    {date:'2026-04-17',name:'TCMB Faiz Kararı',desc:'Türkiye',impact:'high'},
+    {date:'2026-05-06',name:'Fed Faiz Kararı',desc:'FOMC toplantısı',impact:'high'},
+    {date:'2026-05-07',name:'BoE Faiz Kararı',desc:'İngiltere',impact:'med'},
+    {date:'2026-05-15',name:'TCMB Faiz Kararı',desc:'Türkiye',impact:'high'},
+    {date:'2026-06-04',name:'ECB Faiz Kararı',desc:'Euro Bölgesi',impact:'high'},
+    {date:'2026-06-17',name:'Fed Faiz Kararı',desc:'FOMC + SEP',impact:'high'},
+    {date:'2026-06-19',name:'TCMB Faiz Kararı',desc:'Türkiye',impact:'high'},
+    {date:'2026-06-19',name:'BoJ Faiz Kararı',desc:'Japonya',impact:'med'},
+    {date:'2026-07-29',name:'Fed Faiz Kararı',desc:'FOMC',impact:'high'},
+    {date:'2026-07-17',name:'TCMB Faiz Kararı',desc:'Türkiye',impact:'high'},
+    {date:'2026-07-16',name:'ECB Faiz Kararı',desc:'Euro Bölgesi',impact:'high'},
+    {date:'2026-09-16',name:'Fed Faiz Kararı',desc:'FOMC + dot plot',impact:'high'},
+    {date:'2026-10-28',name:'Fed Faiz Kararı',desc:'FOMC',impact:'high'},
+    {date:'2026-12-16',name:'Fed Faiz Kararı',desc:'FOMC + SEP',impact:'high'},
+];
+
+var ecoEvents = [
+    {date:'2026-04-03',name:'ABD Tarım Dışı İstihdam',desc:'Mart verileri',impact:'high'},
+    {date:'2026-04-10',name:'ABD TÜFE (Mart)',desc:'Enflasyon verisi',impact:'high'},
+    {date:'2026-04-14',name:'Çin GSYİH Q1',desc:'Çeyreklik büyüme',impact:'med'},
+    {date:'2026-04-30',name:'Euro Bölgesi GSYİH Q1',desc:'İlk tahmin',impact:'med'},
+    {date:'2026-05-02',name:'Türkiye TÜFE (Nisan)',desc:'TÜİK enflasyon',impact:'high'},
+    {date:'2026-05-08',name:'ABD TÜFE (Nisan)',desc:'Enflasyon',impact:'high'},
+    {date:'2026-05-15',name:'ABD Perakende Satışlar',desc:'Tüketici harcaması',impact:'med'},
+    {date:'2026-06-03',name:'Türkiye TÜFE (Mayıs)',desc:'TÜİK enflasyon',impact:'high'},
+    {date:'2026-06-05',name:'ABD Tarım Dışı İstihdam',desc:'Mayıs',impact:'high'},
+    {date:'2026-06-10',name:'ABD TÜFE (Mayıs)',desc:'Enflasyon',impact:'high'},
+    {date:'2026-07-03',name:'Türkiye TÜFE (Haziran)',desc:'TÜİK',impact:'high'},
+    {date:'2026-07-30',name:'ABD GSYİH Q2',desc:'İlk tahmin',impact:'high'},
+];
+
+function renderEvents(containerId, events){
+    var el = document.getElementById(containerId); if(!el) return;
+    events.sort(function(a,b){return a.date.localeCompare(b.date)});
+    el.innerHTML = events.map(function(e){
+        var cls = e.date < today ? 'cal-item cal-past' : (e.date === today ? 'cal-item cal-today' : 'cal-item');
+        var d = new Date(e.date);
+        var months = ['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+        var dateStr = d.getDate() + ' ' + months[d.getMonth()];
+        return '<div class="'+cls+'"><div class="cal-date">'+dateStr+'</div><div><div class="cal-name">'+e.name+'</div><div class="cal-desc">'+e.desc+'</div></div><div class="cal-impact '+e.impact+'">'+(e.impact==='high'?'YÜKSEK':e.impact==='med'?'ORTA':'DÜŞÜK')+'</div></div>';
+    }).join('');
+}
+
+renderEvents('cbEvents', cbDates);
+renderEvents('ecoEvents', ecoEvents);
+
+fetch('/api/ai-analysis?cat=genel').then(function(r){return r.json()}).then(function(d){
+    var el=document.getElementById('aiAnalysis');if(el&&d.analysis)el.textContent=d.analysis;
+}).catch(function(){});
+})();
+</script>
+</body>
+</html>
