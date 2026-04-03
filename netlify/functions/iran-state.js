@@ -1,8 +1,4 @@
-// netlify/functions/iran-state.js
-// İran Risk admin state — GET ile oku, POST ile yaz
-// Netlify Blobs kullanarak tüm cihazlarda aynı veri
-
-const { getStore } = require('@netlify/blobs');
+const { getStore, connectLambda } = require('@netlify/blobs');
 
 const DEFAULT = {
     riskScore: 50,
@@ -11,7 +7,10 @@ const DEFAULT = {
     customMetrics: []
 };
 
-exports.handler = async function(event, context) {
+exports.handler = async function(event) {
+    // Bu satır ZORUNLU — Netlify Blobs kimlik doğrulaması için
+    connectLambda(event);
+
     const headers = {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
@@ -24,25 +23,20 @@ exports.handler = async function(event, context) {
     }
 
     try {
-        const store = getStore({ name: 'iran-risk', siteID: process.env.SITE_ID, token: process.env.NETLIFY_API_TOKEN || process.env.BLOB_TOKEN });
+        const store = getStore("iran-risk");
 
         if (event.httpMethod === 'GET') {
-            let data;
-            try {
-                data = await store.get('state', { type: 'json' });
-            } catch(e) {
-                data = null;
-            }
-            return { statusCode: 200, headers, body: JSON.stringify(data || DEFAULT) };
+            let data = await store.get("state", { type: "json" });
+            if (!data) data = DEFAULT;
+            return { statusCode: 200, headers, body: JSON.stringify(data) };
         }
 
         if (event.httpMethod === 'POST') {
-            let body;
+            let payload = event.body;
             if (event.isBase64Encoded) {
-                body = JSON.parse(Buffer.from(event.body, 'base64').toString('utf-8'));
-            } else {
-                body = JSON.parse(event.body);
+                payload = Buffer.from(event.body, 'base64').toString('utf-8');
             }
+            const body = JSON.parse(payload);
 
             if (body.pin !== 'isedes') {
                 return { statusCode: 403, headers, body: JSON.stringify({ error: 'Yanlış PIN' }) };
@@ -56,13 +50,12 @@ exports.handler = async function(event, context) {
                 updatedAt: new Date().toISOString()
             };
 
-            await store.setJSON('state', state);
+            await store.setJSON("state", state);
             return { statusCode: 200, headers, body: JSON.stringify({ success: true }) };
         }
 
         return { statusCode: 405, headers, body: 'Method Not Allowed' };
-    } catch(e) {
-        // Blobs yoksa localStorage fallback mesajı
-        return { statusCode: 200, headers, body: JSON.stringify(DEFAULT) };
+    } catch (error) {
+        return { statusCode: 500, headers, body: JSON.stringify({ error: error.message }) };
     }
 };
