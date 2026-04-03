@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Türkiye Makro — Piyasa Monitörü</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+</head>
+<body>
+<script src="assets/js/sidebar.js"></script>
+<div class="page">
+    <div class="page-head">
+        <h1>🏦 Türkiye Makro Verileri</h1>
+        <div class="sub">TÜFE, enflasyon, faiz, GSYİH, sanayi üretimi, işsizlik, dış ticaret</div>
+        <div class="update-info" id="updateInfo"></div>
+    </div>
+    <div class="summary-row" id="summaryCards"></div>
+    <div class="charts" id="chartsGrid"></div>
+    <div class="dtable" id="dataTable"></div>
+    <div class="footer">Piyasa Monitörü © 2026</div>
+</div>
+<script src="assets/js/app.js"></script>
+<script>
+(function(){
+    PM.fj('macro_turkey.json').then(function(data){
+        if(!data||!data.series||!data.series.length){document.getElementById('summaryCards').innerHTML='<div class="scard"><div class="scard-name">Veri bulunamadı. FRED collector çalıştırın.</div></div>';return}
+        var all=data.series;
+        var ui=document.getElementById('updateInfo');
+        if(ui&&data.meta)ui.textContent='Son güncelleme: '+new Date(data.meta.updated_at).toLocaleString('tr-TR')+' · '+data.meta.series_count+' seri';
+
+        var h='';
+        all.forEach(function(s,i){
+            var chgs='';
+            if(s.change_prev_pct!=null)chgs+=PM.fc(s.change_prev_pct)+'<span class="chg-label">Önceki</span> ';
+            if(s.change_ytd_pct!=null)chgs+=PM.fc(s.change_ytd_pct)+'<span class="chg-label">YTD</span> ';
+            if(s.change_yoy_pct!=null)chgs+=PM.fc(s.change_yoy_pct)+'<span class="chg-label">YoY</span> ';
+            var sid='ms-'+i;
+            h+='<div class="scard fade-in" style="animation-delay:'+(.05*i)+'s"><div class="scard-name">'+s.name+'</div><div class="scard-price">'+PM.fp(s.current,2)+'</div><div class="scard-chgs">'+chgs+'</div><div class="scard-range">'+s.category+' · Son: '+s.latest_date+'</div><div class="scard-spark"><canvas id="'+sid+'"></canvas></div></div>';
+        });
+        document.getElementById('summaryCards').innerHTML=h;
+        setTimeout(function(){all.forEach(function(s,i){if(s&&s.data)PM.miniSpark('ms-'+i,s.data,PM.gc(i))})},50);
+
+        var grid=document.getElementById('chartsGrid');grid.innerHTML='';
+        all.forEach(function(s,i){
+            var cid='cm-'+i;var card=document.createElement('div');card.className='chrt fade-in';card.style.animationDelay=(.05*i)+'s';
+            card.innerHTML='<div class="chrt-title">'+s.name+'</div><div class="chrt-sub"><span class="live">'+PM.fp(s.current)+' — '+s.category+'</span></div><canvas id="'+cid+'"></canvas>';
+            grid.appendChild(card);
+            PM.makeChart(cid,{name:s.name,unit:'',data:s.data},{color:PM.gc(i),period:'all'});
+        });
+
+        var th='<table><thead><tr><th>Seri</th><th>Kategori</th><th class="r">Son Değer</th><th class="r">Son Tarih</th><th class="r">Önceki</th><th class="r">Veri</th></tr></thead><tbody>';
+        all.forEach(function(s){
+            var cls=PM.cc(s.change_prev_pct);var chg=s.change_prev_pct!=null?(s.change_prev_pct>=0?'+':'')+s.change_prev_pct.toFixed(2)+'%':'—';
+            th+='<tr><td>'+s.name+'</td><td class="dim">'+s.category+'</td><td class="mono r">'+PM.fp(s.current)+'</td><td class="mono r dim">'+s.latest_date+'</td><td class="mono r '+cls+'">'+chg+'</td><td class="mono r dim">'+s.data.length+'</td></tr>';
+        });
+        th+='</tbody></table>';document.getElementById('dataTable').innerHTML=th;
+    });
+})();
+</script>
+</body>
+</html>
