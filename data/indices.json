@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Endeksler",
-    "updated_at": "2026-04-03T10:17:40Z",
+    "updated_at": "2026-04-03T10:27:14Z",
     "symbol_count": 17,
     "errors": []
   },
@@ -11,13 +11,13 @@
       "id": "XU100.IS",
       "name": "BIST 100",
       "unit": "TRY",
-      "current": 12994.2402,
-      "change_1d_pct": -0.44,
-      "change_1w_pct": 2.33,
-      "change_1m_pct": 0.47,
-      "change_3m_pct": 15.81,
-      "change_ytd_pct": 13.01,
-      "change_1y_pct": 37.01,
+      "current": 12980.6797,
+      "change_1d_pct": -0.54,
+      "change_1w_pct": 2.22,
+      "change_1m_pct": 0.37,
+      "change_3m_pct": 15.69,
+      "change_ytd_pct": 12.89,
+      "change_1y_pct": 36.86,
       "high_52w": 14339.2998,
       "low_52w": 9008.9004,
       "data": [
@@ -1027,7 +1027,7 @@
         },
         {
           "date": "2026-04-03",
-          "value": 12994.2402
+          "value": 12980.6797
         }
       ]
     },
@@ -1035,13 +1035,13 @@
       "id": "XU030.IS",
       "name": "BIST 30",
       "unit": "TRY",
-      "current": 14815.9697,
-      "change_1d_pct": -0.44,
-      "change_1w_pct": 2.51,
-      "change_1m_pct": 1.08,
-      "change_3m_pct": 21.41,
-      "change_ytd_pct": 18.4,
-      "change_1y_pct": 43.39,
+      "current": 14794.8604,
+      "change_1d_pct": -0.58,
+      "change_1w_pct": 2.36,
+      "change_1m_pct": 0.94,
+      "change_3m_pct": 21.24,
+      "change_ytd_pct": 18.23,
+      "change_1y_pct": 43.19,
       "high_52w": 15828.2002,
       "low_52w": 9900.0996,
       "data": [
@@ -2051,7 +2051,7 @@
         },
         {
           "date": "2026-04-03",
-          "value": 14815.9697
+          "value": 14794.8604
         }
       ]
     },
