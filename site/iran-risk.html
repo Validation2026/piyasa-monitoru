@@ -225,7 +225,8 @@ function setHurmuz(status){
 
 // ═══ MAP ═══
 var map = L.map('warMap',{scrollWheelZoom:false}).setView([30,50],5);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:12,attribution:''}).addTo(map);
+// CartoDB Voyager — Latince etiketler (Arapça değil)
+L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{maxZoom:12,attribution:''}).addTo(map);
 
 // İran sınırı (basitleştirilmiş polygon)
 var iranBorder = [[39.78,44.77],[39.40,47.80],[38.41,48.87],[37.33,49.11],[36.65,52.76],[37.36,54.83],[37.07,57.37],[35.14,61.16],[31.30,61.70],[29.86,60.87],[26.12,61.60],[25.06,61.50],[25.38,57.79],[26.36,55.34],[27.09,56.18],[26.56,56.34],[26.65,55.07],[27.82,52.00],[29.24,50.08],[30.98,48.01],[32.47,45.44],[35.82,45.83],[37.15,44.56],[38.27,44.28],[39.78,44.77]];
@@ -335,44 +336,25 @@ var NEWS_KW = {
 };
 
 function loadNews(){
-    var queries=['İran+savaş','İran+İsrail+saldırı','Hürmüz+Boğazı','Orta+Doğu+füze','Yemen+Husi'];
-    // Birden fazla CORS proxy — biri rate limit yerse diğerini dene
-    var proxies=[
-        'https://corsproxy.io/?url=',
-        'https://api.allorigins.win/raw?url=',
-        'https://api.codetabs.com/v1/proxy?quest='
-    ];
+    var queries=['İran savaş','İran İsrail saldırı','Hürmüz Boğazı','Orta Doğu füze','Yemen Husi'];
     var allNews=[]; var loaded=0; var total=queries.length;
 
-    function fetchWithFallback(url, proxyIdx){
-        if(proxyIdx>=proxies.length) return Promise.resolve('');
-        return fetch(proxies[proxyIdx]+encodeURIComponent(url),{signal:AbortSignal.timeout(8000)})
-            .then(function(r){if(!r.ok)throw new Error(r.status);return r.text()})
-            .catch(function(){return fetchWithFallback(url,proxyIdx+1)});
-    }
-
-    function processQuery(q,delay){
+    queries.forEach(function(q,i){
         setTimeout(function(){
-            var url='https://news.google.com/rss/search?q='+q+'&hl=tr&gl=TR&ceid=TR:tr';
-            fetchWithFallback(url,0).then(function(xml){
-                if(!xml)return;
-                try{
-                    var doc=(new DOMParser()).parseFromString(xml,'text/xml');
-                    doc.querySelectorAll('item').forEach(function(item,i){
-                        if(i>=6)return;
-                        var t=item.querySelector('title'),l=item.querySelector('link'),d=item.querySelector('pubDate');
-                        if(t)allNews.push({title:t.textContent,link:l?l.textContent:'#',date:d?new Date(d.textContent):new Date()});
+            fetch('/api/rss-proxy?q='+encodeURIComponent(q))
+                .then(function(r){return r.json()})
+                .then(function(data){
+                    (data.items||[]).forEach(function(item){
+                        allNews.push({title:item.title,link:item.link,date:item.date?new Date(item.date):new Date()});
                     });
-                }catch(e){}
-            }).finally(function(){
-                loaded++;
-                if(loaded>=total)renderNews(allNews);
-            });
-        },delay);
-    }
-
-    // Her sorguyu 1.5 saniye arayla gönder (rate limit'i aşmamak için)
-    queries.forEach(function(q,i){processQuery(q,i*1500)});
+                })
+                .catch(function(){})
+                .finally(function(){
+                    loaded++;
+                    if(loaded>=total)renderNews(allNews);
+                });
+        },i*500);
+    });
 }
 
 function renderNews(allNews){
