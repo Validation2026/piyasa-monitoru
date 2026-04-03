@@ -1,306 +1,121 @@
 /**
- * Piyasa Monitörü — Shared JS
- * Ortak fonksiyonlar: veri yükleme, grafik oluşturma, formatlama
+ * Piyasa Monitörü — Shared JS v2
+ * Detail page ortak fonksiyonlar
  */
+var PM=(function(){'use strict';
 
-var PM = (function() {
-    'use strict';
+var D='data/';
+var COLORS=['#3b82f6','#00d68f','#fbbf24','#ff4757','#a78bfa','#22d3ee','#ec4899','#84cc16','#f97316','#6366f1','#14b8a6','#e11d48'];
 
-    var DATA_DIR = 'data/';
+// ── Data ──
+function fj(f){return fetch(D+f+'?t='+Date.now()).then(function(r){return r.json()}).catch(function(){return null})}
+function fs(d,id){if(!d||!d.series)return null;for(var i=0;i<d.series.length;i++)if(d.series[i].id===id)return d.series[i];return null}
 
-    // ══════════════════════════════════════
-    //  Data Loading
-    // ══════════════════════════════════════
+// ── Format ──
+function fp(v,dec){if(v==null)return'—';dec=dec!=null?dec:2;return Number(v).toLocaleString('tr-TR',{minimumFractionDigits:dec,maximumFractionDigits:dec})}
+function fc(p){if(p==null)return'<span class="chg" style="color:var(--t3)">—</span>';var s=p>=0?'+':'';var c=p>=0?'u':'d';return'<span class="chg '+c+'">'+s+p.toFixed(2)+'%</span>'}
+function cc(p){return p!=null?(p>=0?'u':'d'):''}
+function gc(i){return COLORS[i%COLORS.length]}
 
-    function fetchJSON(file) {
-        return fetch(DATA_DIR + file + '?t=' + Date.now())
-            .then(function(r) { return r.json(); })
-            .catch(function() { return null; });
+// ── Period Filter ──
+function filterPeriod(data,period){
+    if(!data||!data.length)return[];
+    var now=new Date();var cut;
+    switch(period){
+        case'1m':cut=new Date(now.getTime()-30*864e5);break;
+        case'3m':cut=new Date(now.getTime()-90*864e5);break;
+        case'6m':cut=new Date(now.getTime()-180*864e5);break;
+        case'1y':cut=new Date(now.getTime()-365*864e5);break;
+        case'ytd':cut=new Date(now.getFullYear(),0,1);break;
+        default:return data;
     }
+    var cs=cut.toISOString().split('T')[0];
+    return data.filter(function(d){return d.date>=cs});
+}
 
-    function findSeries(data, id) {
-        if (!data || !data.series) return null;
-        for (var i = 0; i < data.series.length; i++) {
-            if (data.series[i].id === id) return data.series[i];
-        }
-        return null;
-    }
+// ── Mini Sparkline (summary cards) ──
+function miniSpark(canvasId,data,color){
+    var c=document.getElementById(canvasId);if(!c||!data||data.length<2)return;
+    var pts=data.slice(-30).map(function(d){return d.value});
+    new Chart(c,{type:'line',data:{labels:pts.map(function(){return''}),datasets:[{data:pts,borderColor:color,backgroundColor:color+'15',fill:true,tension:.4,pointRadius:0,borderWidth:1.5}]},options:{responsive:true,maintainAspectRatio:false,animation:{duration:600},plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{display:false},y:{display:false}}}});
+}
 
-    // ══════════════════════════════════════
-    //  Formatting
-    // ══════════════════════════════════════
+// ── Full Chart ──
+function makeChart(canvasId,series,opts){
+    var c=document.getElementById(canvasId);if(!c||!series||!series.data||!series.data.length)return null;
+    opts=opts||{};
+    var color=opts.color||COLORS[0];
+    var filtered=filterPeriod(series.data,opts.period||'1y');
+    var labels=filtered.map(function(d){return d.date});
+    var vals=filtered.map(function(d){return d.value});
+    var dark=document.documentElement.getAttribute('data-theme')!=='light';
+    var grid=dark?'rgba(255,255,255,.05)':'rgba(0,0,0,.05)';
+    var txt=dark?'#8a99b2':'#475569';
+    var MO=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
 
-    function formatPrice(val, dec) {
-        if (val == null) return '—';
-        dec = dec != null ? dec : 2;
-        return Number(val).toLocaleString('tr-TR', {
-            minimumFractionDigits: dec,
-            maximumFractionDigits: dec
+    return new Chart(c,{type:'line',data:{labels:labels,datasets:[{label:series.name,data:vals,borderColor:color,backgroundColor:color+'12',fill:true,tension:.3,pointRadius:0,pointHoverRadius:5,pointHoverBackgroundColor:color,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,animation:{duration:600},interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{backgroundColor:dark?'#1e293b':'#fff',titleColor:dark?'#e8edf5':'#0f172a',bodyColor:dark?'#8a99b2':'#475569',borderColor:dark?'#334155':'#dde4ed',borderWidth:1,padding:10,displayColors:false,callbacks:{label:function(ctx){return series.name+': '+fp(ctx.raw)+' '+(series.unit||'')}}}},scales:{x:{grid:{color:grid,drawBorder:false},ticks:{color:txt,font:{size:10,family:"'JetBrains Mono'"},maxTicksLimit:window.innerWidth<600?4:8,callback:function(v){var l=this.getLabelForValue(v);var p=l.split('-');if(p.length>=2)return MO[parseInt(p[1])-1]+' '+p[0].slice(2);return l}}},y:{grid:{color:grid,drawBorder:false},ticks:{color:txt,font:{size:10,family:"'JetBrains Mono'"},callback:function(v){return fp(v,0)}}}}}});
+}
+
+// ── Summary Cards with Sparklines ──
+function buildSummary(containerId,seriesList){
+    var el=document.getElementById(containerId);if(!el)return;
+    var h='';
+    seriesList.forEach(function(s,i){
+        if(!s)return;
+        var chgs='';
+        if(s.change_1d_pct!=null)chgs+=fc(s.change_1d_pct)+'<span class="chg-label">1G</span> ';
+        if(s.change_1w_pct!=null)chgs+=fc(s.change_1w_pct)+'<span class="chg-label">1H</span> ';
+        if(s.change_1m_pct!=null)chgs+=fc(s.change_1m_pct)+'<span class="chg-label">1A</span> ';
+        if(s.change_ytd_pct!=null)chgs+=fc(s.change_ytd_pct)+'<span class="chg-label">YTD</span> ';
+        var range=s.low_52w!=null?'52H: '+fp(s.low_52w)+' — '+fp(s.high_52w):'';
+        var sid='mini-spark-'+i;
+        h+='<div class="scard fade-in" style="animation-delay:'+(.05*i)+'s"><div class="scard-name">'+s.name+'</div><div class="scard-price">'+fp(s.current)+' <span class="scard-unit">'+(s.unit||'')+'</span></div><div class="scard-chgs">'+chgs+'</div>'+(range?'<div class="scard-range">'+range+'</div>':'')+'<div class="scard-spark"><canvas id="'+sid+'"></canvas></div></div>';
+    });
+    el.innerHTML=h;
+    // Draw sparklines after DOM update
+    setTimeout(function(){
+        seriesList.forEach(function(s,i){
+            if(s&&s.data)miniSpark('mini-spark-'+i,s.data,gc(i));
         });
-    }
+    },50);
+}
 
-    function formatChange(pct) {
-        if (pct == null) return '<span class="s-chg" style="color:var(--text-muted)">—</span>';
-        var sign = pct >= 0 ? '+' : '';
-        var cls = pct >= 0 ? 'up' : 'down';
-        return '<span class="s-chg ' + cls + '">' + sign + pct.toFixed(2) + '%</span>';
-    }
+// ── Charts Grid ──
+function buildCharts(containerId,seriesList,period){
+    var el=document.getElementById(containerId);if(!el)return;
+    el.innerHTML='';
+    var charts=[];
+    seriesList.forEach(function(s,i){
+        if(!s)return;
+        var cid='chart-'+i;
+        var card=document.createElement('div');card.className='chrt fade-in';card.style.animationDelay=(.05*i)+'s';
+        var pBadge=s.change_1d_pct!=null?fc(s.change_1d_pct):'';
+        card.innerHTML='<div class="chrt-title">'+s.name+'</div><div class="chrt-sub"><span class="live">'+fp(s.current)+' '+(s.unit||'')+'</span>'+pBadge+'</div><canvas id="'+cid+'"></canvas>';
+        el.appendChild(card);
+        var ch=makeChart(cid,s,{color:gc(i),period:period});
+        if(ch)charts.push(ch);
+    });
+    return charts;
+}
 
-    function changeClass(pct) {
-        if (pct == null) return '';
-        return pct >= 0 ? 'up' : 'down';
-    }
+// ── Data Table ──
+function buildTable(containerId,seriesList){
+    var el=document.getElementById(containerId);if(!el)return;
+    var h='<table><thead><tr><th>İsim</th><th class="r">Fiyat</th><th class="r">1 Gün</th><th class="r">1 Hafta</th><th class="r">1 Ay</th><th class="r">YTD</th><th class="r">52H Aralık</th></tr></thead><tbody>';
+    seriesList.forEach(function(s){
+        if(!s)return;
+        function cv(p){if(p==null)return'<td class="mono r dim">—</td>';return'<td class="mono r '+cc(p)+'">'+(p>=0?'+':'')+p.toFixed(2)+'%</td>'}
+        h+='<tr><td>'+s.name+'</td><td class="mono r">'+fp(s.current)+' <span class="dim">'+(s.unit||'')+'</span></td>'+cv(s.change_1d_pct)+cv(s.change_1w_pct)+cv(s.change_1m_pct)+cv(s.change_ytd_pct)+'<td class="mono r dim" style="font-size:.7rem">'+(s.low_52w!=null?fp(s.low_52w)+' — '+fp(s.high_52w):'—')+'</td></tr>';
+    });
+    h+='</tbody></table>';el.innerHTML=h;
+}
 
-    // ══════════════════════════════════════
-    //  Chart Colors (cycling palette)
-    // ══════════════════════════════════════
+// ── Clock & Theme ──
+var MO=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+var DA=['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
+function initClock(){function u(){var e=document.getElementById('clock');if(!e)return;var n=new Date();e.textContent=n.getDate()+' '+MO[n.getMonth()]+' '+n.getFullYear()+', '+DA[n.getDay()]+'  '+String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')+':'+String(n.getSeconds()).padStart(2,'0')}setInterval(u,1000);u()}
+function initTheme(){var b=document.getElementById('themeToggle');if(!b)return;var s=localStorage.getItem('theme');if(s){document.documentElement.setAttribute('data-theme',s);b.textContent=s==='dark'?'🌙':'☀️'}b.addEventListener('click',function(){var c=document.documentElement.getAttribute('data-theme');var nx=c==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',nx);b.textContent=nx==='dark'?'🌙':'☀️';localStorage.setItem('theme',nx)})}
 
-    var COLORS = [
-        '#3b82f6', '#10b981', '#f59e0b', '#ef4444',
-        '#8b5cf6', '#06b6d4', '#ec4899', '#84cc16',
-        '#f97316', '#6366f1', '#14b8a6', '#e11d48'
-    ];
-
-    function getColor(i) { return COLORS[i % COLORS.length]; }
-
-    // ══════════════════════════════════════
-    //  Chart Creation
-    // ══════════════════════════════════════
-
-    function createLineChart(canvasId, series, options) {
-        var canvas = document.getElementById(canvasId);
-        if (!canvas || !series || !series.data || series.data.length === 0) return null;
-
-        options = options || {};
-        var color = options.color || COLORS[0];
-        var data = series.data;
-
-        // Period filter
-        var period = options.period || '1y';
-        var filtered = filterByPeriod(data, period);
-
-        var labels = filtered.map(function(d) { return d.date; });
-        var values = filtered.map(function(d) { return d.value; });
-
-        var isDark = document.documentElement.getAttribute('data-theme') !== 'light';
-        var gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
-        var textColor = isDark ? '#8b9ab5' : '#64748b';
-
-        var chart = new Chart(canvas, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: series.name,
-                    data: values,
-                    borderColor: color,
-                    backgroundColor: color + '15',
-                    fill: true,
-                    tension: 0.3,
-                    pointRadius: 0,
-                    pointHoverRadius: 5,
-                    pointHoverBackgroundColor: color,
-                    borderWidth: 2,
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                animation: { duration: 600 },
-                interaction: { mode: 'index', intersect: false },
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        backgroundColor: isDark ? '#1e293b' : '#ffffff',
-                        titleColor: isDark ? '#e2e8f0' : '#1e293b',
-                        bodyColor: isDark ? '#94a3b8' : '#64748b',
-                        borderColor: isDark ? '#334155' : '#e2e8f0',
-                        borderWidth: 1,
-                        padding: 12,
-                        displayColors: false,
-                        callbacks: {
-                            label: function(ctx) {
-                                return series.name + ': ' + formatPrice(ctx.raw) + ' ' + (series.unit || '');
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        grid: { color: gridColor, drawBorder: false },
-                        ticks: {
-                            color: textColor, font: { size: 10, family: "'JetBrains Mono'" },
-                            maxTicksLimit: 8,
-                            callback: function(val, idx) {
-                                var lbl = this.getLabelForValue(val);
-                                // Show as "Oca 25" format
-                                var parts = lbl.split('-');
-                                if (parts.length >= 2) {
-                                    var months = ['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
-                                    return months[parseInt(parts[1])-1] + ' ' + parts[0].slice(2);
-                                }
-                                return lbl;
-                            }
-                        }
-                    },
-                    y: {
-                        grid: { color: gridColor, drawBorder: false },
-                        ticks: {
-                            color: textColor,
-                            font: { size: 10, family: "'JetBrains Mono'" },
-                            callback: function(val) { return formatPrice(val, 0); }
-                        }
-                    }
-                }
-            }
-        });
-
-        return chart;
-    }
-
-    function filterByPeriod(data, period) {
-        if (!data || !data.length) return [];
-        var now = new Date();
-        var cutoff;
-
-        switch(period) {
-            case '1m': cutoff = new Date(now.getTime() - 30*86400000); break;
-            case '3m': cutoff = new Date(now.getTime() - 90*86400000); break;
-            case '6m': cutoff = new Date(now.getTime() - 180*86400000); break;
-            case '1y': cutoff = new Date(now.getTime() - 365*86400000); break;
-            case 'ytd': cutoff = new Date(now.getFullYear(), 0, 1); break;
-            default: return data;
-        }
-
-        var cutStr = cutoff.toISOString().split('T')[0];
-        return data.filter(function(d) { return d.date >= cutStr; });
-    }
-
-    // ══════════════════════════════════════
-    //  Summary Card Builder
-    // ══════════════════════════════════════
-
-    function buildSummaryCards(containerId, seriesList) {
-        var container = document.getElementById(containerId);
-        if (!container) return;
-
-        var html = '';
-        seriesList.forEach(function(s) {
-            if (!s) return;
-
-            var changes = '';
-            if (s.change_1d_pct != null) changes += formatChange(s.change_1d_pct) + '<span class="s-chg-label">1G</span> ';
-            if (s.change_1w_pct != null) changes += formatChange(s.change_1w_pct) + '<span class="s-chg-label">1H</span> ';
-            if (s.change_1m_pct != null) changes += formatChange(s.change_1m_pct) + '<span class="s-chg-label">1A</span> ';
-            if (s.change_ytd_pct != null) changes += formatChange(s.change_ytd_pct) + '<span class="s-chg-label">YTD</span> ';
-
-            var range = '';
-            if (s.low_52w != null && s.high_52w != null) {
-                range = '52H: ' + formatPrice(s.low_52w) + ' — ' + formatPrice(s.high_52w);
-            }
-
-            html += '<div class="summary-card">' +
-                '<div class="s-name">' + s.name + '</div>' +
-                '<div class="s-price">' + formatPrice(s.current) + ' <span class="s-unit">' + (s.unit || '') + '</span></div>' +
-                '<div class="s-changes">' + changes + '</div>' +
-                (range ? '<div class="s-range">' + range + '</div>' : '') +
-                '</div>';
-        });
-
-        container.innerHTML = html || '<div class="summary-card"><div class="s-name">Veri yükleniyor...</div></div>';
-    }
-
-    // ══════════════════════════════════════
-    //  Data Table Builder
-    // ══════════════════════════════════════
-
-    function buildDataTable(containerId, seriesList) {
-        var container = document.getElementById(containerId);
-        if (!container) return;
-
-        var html = '<table><thead><tr>' +
-            '<th>İsim</th><th style="text-align:right">Fiyat</th><th style="text-align:right">1 Gün</th>' +
-            '<th style="text-align:right">1 Hafta</th><th style="text-align:right">1 Ay</th>' +
-            '<th style="text-align:right">YTD</th><th style="text-align:right">52H Aralık</th>' +
-            '</tr></thead><tbody>';
-
-        seriesList.forEach(function(s) {
-            if (!s) return;
-            html += '<tr>' +
-                '<td>' + s.name + '</td>' +
-                '<td class="mono" style="text-align:right">' + formatPrice(s.current) + ' <small style="color:var(--text-muted)">' + (s.unit || '') + '</small></td>' +
-                '<td class="mono ' + changeClass(s.change_1d_pct) + '" style="text-align:right">' + (s.change_1d_pct != null ? (s.change_1d_pct >= 0 ? '+' : '') + s.change_1d_pct.toFixed(2) + '%' : '—') + '</td>' +
-                '<td class="mono ' + changeClass(s.change_1w_pct) + '" style="text-align:right">' + (s.change_1w_pct != null ? (s.change_1w_pct >= 0 ? '+' : '') + s.change_1w_pct.toFixed(2) + '%' : '—') + '</td>' +
-                '<td class="mono ' + changeClass(s.change_1m_pct) + '" style="text-align:right">' + (s.change_1m_pct != null ? (s.change_1m_pct >= 0 ? '+' : '') + s.change_1m_pct.toFixed(2) + '%' : '—') + '</td>' +
-                '<td class="mono ' + changeClass(s.change_ytd_pct) + '" style="text-align:right">' + (s.change_ytd_pct != null ? (s.change_ytd_pct >= 0 ? '+' : '') + s.change_ytd_pct.toFixed(2) + '%' : '—') + '</td>' +
-                '<td class="mono" style="text-align:right;color:var(--text-muted);font-size:0.75rem">' +
-                    (s.low_52w != null ? formatPrice(s.low_52w) + ' — ' + formatPrice(s.high_52w) : '—') + '</td>' +
-                '</tr>';
-        });
-
-        html += '</tbody></table>';
-        container.innerHTML = html;
-    }
-
-    // ══════════════════════════════════════
-    //  Clock & Theme (shared)
-    // ══════════════════════════════════════
-
-    function initClock() {
-        var months = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
-        var days = ['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
-        function update() {
-            var el = document.getElementById('clock');
-            if (!el) return;
-            var n = new Date();
-            el.textContent = n.getDate() + ' ' + months[n.getMonth()] + ' ' + n.getFullYear() +
-                ', ' + days[n.getDay()] + '  ' +
-                String(n.getHours()).padStart(2,'0') + ':' + String(n.getMinutes()).padStart(2,'0') + ':' + String(n.getSeconds()).padStart(2,'0');
-        }
-        setInterval(update, 1000);
-        update();
-    }
-
-    function initTheme() {
-        var btn = document.getElementById('themeToggle');
-        if (!btn) return;
-        var saved = localStorage.getItem('theme');
-        if (saved) {
-            document.documentElement.setAttribute('data-theme', saved);
-            btn.textContent = saved === 'dark' ? '🌙' : '☀️';
-        }
-        btn.addEventListener('click', function() {
-            var cur = document.documentElement.getAttribute('data-theme');
-            var next = cur === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', next);
-            btn.textContent = next === 'dark' ? '🌙' : '☀️';
-            localStorage.setItem('theme', next);
-        });
-    }
-
-    // ══════════════════════════════════════
-    //  Public API
-    // ══════════════════════════════════════
-
-    return {
-        fetchJSON: fetchJSON,
-        findSeries: findSeries,
-        formatPrice: formatPrice,
-        formatChange: formatChange,
-        changeClass: changeClass,
-        getColor: getColor,
-        createLineChart: createLineChart,
-        filterByPeriod: filterByPeriod,
-        buildSummaryCards: buildSummaryCards,
-        buildDataTable: buildDataTable,
-        initClock: initClock,
-        initTheme: initTheme
-    };
-
+return{fj:fj,fs:fs,fp:fp,fc:fc,cc:cc,gc:gc,filterPeriod:filterPeriod,miniSpark:miniSpark,makeChart:makeChart,buildSummary:buildSummary,buildCharts:buildCharts,buildTable:buildTable,initClock:initClock,initTheme:initTheme};
 })();
-
-// Auto-init
-document.addEventListener('DOMContentLoaded', function() {
-    PM.initClock();
-    PM.initTheme();
-});
+document.addEventListener('DOMContentLoaded',function(){PM.initClock();PM.initTheme()});
