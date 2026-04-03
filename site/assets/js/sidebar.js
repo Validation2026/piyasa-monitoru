@@ -10,6 +10,7 @@ var links = [
     ['emtia-enerji','⛽','Enerji'],
     ['emtia-metaller','🥇','Madenler'],
     ['emtia-tarim','🌾','Tarım'],
+    ['sanayi','🏭','Sanayi'],
     ['kurlar','💱','Döviz'],
     ['tahviller','📜','Tahvil'],
     ['endeksler','📈','Endeksler'],

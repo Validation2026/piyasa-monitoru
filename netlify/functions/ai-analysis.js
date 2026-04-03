@@ -58,6 +58,13 @@ BIST 100'de yabancı akışları ve TL'deki değerlenme belirleyici. Asya'da Çi
 Ethereum ekosisteminde Layer 2 çözümleri ilgi çekiyor. Küresel regülasyon gelişmeleri tüm piyasayı yakından ilgilendiriyor.
 
 ⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
+'sanayi': `Sanayi hammaddelerinde küresel imalat PMI verileri ve Çin'in talebi belirleyici. Bakır ve alüminyum elektrikli araç ve yenilenebilir enerji yatırımlarıyla yapısal talep artışı yaşıyor.
+
+Çelik sektöründe Çin'in aşırı kapasite sorunu ve ihracat baskısı küresel fiyatları etkilemeye devam ediyor. Nadir toprak elementlerinde arz güvenliği endişeleri ve Çin'in ihracat kısıtlamaları fiyatları destekliyor. Lityum ve uranyum enerji dönüşümünün stratejik hammaddeleri olarak öne çıkıyor.
+
+Kuru yük navlun endeksi (BDI) küresel ticaret hacminin öncü göstergesi olarak izleniyor. Kızıldeniz rota değişiklikleri navlun maliyetlerini artırıyor.
+
+⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
 'genel': `Küresel piyasalarda İran-İsrail gerginliği başta olmak üzere jeopolitik riskler belirleyici. Enerji fiyatlarındaki risk primi emtia genelinde yayılım gösteriyor.
 
 Merkez bankaları enflasyon-büyüme dengesini gözetirken faiz beklentileri döviz ve tahvil piyasalarını şekillendiriyor. Risk iştahı jeopolitik gelişmelere duyarlı.

@@ -132,10 +132,32 @@ CRYPTO = {
     }
 }
 
+INDUSTRIAL = {
+    "file": "industrial.json",
+    "category": "Sanayi & Hammadde",
+    "symbols": {
+        "HG=F":   {"name": "HG (Bakır)",         "unit": "USD/lb"},
+        "ALI=F":  {"name": "ALI (Alüminyum)",     "unit": "USD/ton"},
+        "ZN=F":   {"name": "ZN (Çinko)",          "unit": "USD/ton"},
+        "NI=F":   {"name": "NI (Nikel)",           "unit": "USD/ton"},
+        "SN=F":   {"name": "SN (Kalay)",           "unit": "USD/ton"},
+        "PB=F":   {"name": "PB (Kurşun)",          "unit": "USD/ton"},
+        "LBS=F":  {"name": "LBS (Kereste)",        "unit": "USD/mbf"},
+        "RR=F":   {"name": "RR (Kauçuk)",          "unit": "USc/lb"},
+        "URA":    {"name": "URA (Uranyum ETF)",    "unit": "USD"},
+        "LIT":    {"name": "LIT (Lityum ETF)",     "unit": "USD"},
+        "COPX":   {"name": "COPX (Bakır Madenci)", "unit": "USD"},
+        "SLX":    {"name": "SLX (Çelik ETF)",      "unit": "USD"},
+        "BDRY":   {"name": "BDRY (Kuru Yük Navlun)","unit": "USD"},
+        "REMX":   {"name": "REMX (Nadir Toprak)",  "unit": "USD"},
+    }
+}
+
 ALL_YF_GROUPS = [
     COMMODITIES_ENERGY,
     COMMODITIES_METALS,
     COMMODITIES_AGRICULTURE,
+    INDUSTRIAL,
     CURRENCIES,
     BONDS,
     INDICES,

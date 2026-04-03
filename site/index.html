@@ -103,6 +103,7 @@
     <a class="cat" href="emtia-enerji.html"><div class="cat-icon">⛽</div><div class="cat-name">Enerji</div><div class="cat-desc">Brent, WTI, Doğalgaz, Benzin</div><div class="cat-tag">6 seri</div></a>
     <a class="cat" href="emtia-metaller.html"><div class="cat-icon">🥇</div><div class="cat-name">Kıymetli Madenler</div><div class="cat-desc">Altın, Gümüş, Platin, Bakır</div><div class="cat-tag">6 seri</div></a>
     <a class="cat" href="emtia-tarim.html"><div class="cat-icon">🌾</div><div class="cat-name">Tarım</div><div class="cat-desc">Buğday, Kahve, Kakao +10</div><div class="cat-tag">13 seri</div></a>
+    <a class="cat" href="sanayi.html"><div class="cat-icon">🏭</div><div class="cat-name">Sanayi & Hammadde</div><div class="cat-desc">Bakır, Çelik, Lityum, Navlun +10</div><div class="cat-tag">14 seri</div></a>
     <a class="cat" href="kurlar.html"><div class="cat-icon">💱</div><div class="cat-name">Döviz Kurları</div><div class="cat-desc">19 parite + DXY</div><div class="cat-tag">19 seri</div></a>
     <a class="cat" href="tahviller.html"><div class="cat-icon">📜</div><div class="cat-name">Tahviller</div><div class="cat-desc">ABD 3M–30Y getiri eğrisi</div><div class="cat-tag">4 seri</div></a>
     <a class="cat" href="endeksler.html"><div class="cat-icon">📈</div><div class="cat-name">Endeksler</div><div class="cat-desc">BIST, S&P, DAX, Nikkei +12</div><div class="cat-tag">17 seri</div></a>
@@ -150,8 +151,8 @@ function buildTable(id,items){var el=document.getElementById(id);if(!el)return;e
 
 function buildAct(data){var el=document.getElementById('actFeed');if(!el||!data||!data.activities)return;el.innerHTML=data.activities.slice(0,6).map(function(a){var d=new Date(a.timestamp);var now=new Date();var diff=Math.floor((now-d)/864e5);var t=diff===0?'bugün':diff===1?'dün':diff+' gün önce';return'<div class="act-item"><div class="act-dot"></div><div><strong>'+a.title+'</strong> '+a.text+'<div class="act-time">'+t+'</div></div></div>'}).join('')}
 
-Promise.all([fj('currencies.json'),fj('commodities_energy.json'),fj('commodities_metals.json'),fj('commodities_agriculture.json'),fj('bonds.json'),fj('indices.json'),fj('crypto.json'),fj('activities.json')]).then(function(r){
-    var cur=r[0],ener=r[1],met=r[2],agri=r[3],bonds=r[4],idx=r[5],crypto=r[6],act=r[7];
+Promise.all([fj('currencies.json'),fj('commodities_energy.json'),fj('commodities_metals.json'),fj('commodities_agriculture.json'),fj('bonds.json'),fj('indices.json'),fj('crypto.json'),fj('industrial.json'),fj('activities.json')]).then(function(r){
+    var cur=r[0],ener=r[1],met=r[2],agri=r[3],bonds=r[4],idx=r[5],crypto=r[6],indust=r[7],act=r[8];
 
     setKPI('usdtry',fs(cur,'USDTRY=X'),'#3b82f6');
     setKPI('gold',fs(met,'GC=F'),'#fbbf24');
@@ -159,13 +160,13 @@ Promise.all([fj('currencies.json'),fj('commodities_energy.json'),fj('commodities
     setKPI('bist',fs(idx,'XU100.IS'),'#22d3ee');
 
     var all=[];var total=0;
-    [cur,ener,met,agri,idx,bonds,crypto].forEach(function(d){if(d&&d.series){d.series.forEach(function(s){all.push(s)});total+=d.series.length}});
+    [cur,ener,met,agri,indust,idx,bonds,crypto].forEach(function(d){if(d&&d.series){d.series.forEach(function(s){all.push(s)});total+=d.series.length}});
 
     buildTicker(all);
     buildMini([cur,bonds,crypto,idx,ener,met]);
     buildMovers(all);
 
-    var comm=[];[ener,met,agri].forEach(function(d){if(d&&d.series)d.series.forEach(function(s){comm.push(s)})});buildTable('tblComm',comm);
+    var comm=[];[ener,met,agri,indust].forEach(function(d){if(d&&d.series)d.series.forEach(function(s){comm.push(s)})});buildTable('tblComm',comm);
     var fx=[];[cur,bonds].forEach(function(d){if(d&&d.series)d.series.forEach(function(s){fx.push(s)})});buildTable('tblFx',fx);
     if(idx&&idx.series)buildTable('tblIdx',idx.series);
     if(crypto&&crypto.series)buildTable('tblCrypto',crypto.series);
