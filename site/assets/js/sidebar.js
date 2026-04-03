@@ -21,7 +21,6 @@ var links = [
     ['kuresel-risk','🌍','Küresel Risk'],
     ['ekonomik-takvim','📅','Takvim'],
     ['merkez-bankalari','🏛️','Merkez Bank.'],
-    ['navlun','🚢','Navlun'],
     ['ulke-risk','🌐','Ülke Risk'],
     ['korelasyon','🔗','Korelasyon'],
     ['performans','📊','Performans']
