@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Paneli — İran Risk</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:'Outfit',system-ui;background:#f0f4f8;color:#0f172a;padding:20px}
+        .container{max-width:600px;margin:0 auto}
+        h1{font-size:1.3rem;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+        .card{background:#fff;border:1px solid #dde4ed;border-radius:12px;padding:16px;margin-bottom:14px}
+        .card-title{font-size:.7rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+        label{font-size:.7rem;font-weight:600;color:#64748b;display:block;margin-bottom:4px}
+        input,select{width:100%;border:1px solid #dde4ed;border-radius:6px;padding:8px 10px;font-family:'JetBrains Mono';font-size:.85rem;outline:none;background:#f8fafc}
+        input:focus,select:focus{border-color:#3b82f6}
+        .row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+        .row4{display:grid;grid-template-columns:1fr .7fr .7fr .7fr auto;gap:6px;margin-bottom:6px;align-items:end}
+        .btn{background:#3b82f6;color:#fff;border:none;border-radius:8px;padding:12px;font-weight:800;font-size:.85rem;cursor:pointer;width:100%;transition:.2s}
+        .btn:hover{background:#2563eb}
+        .btn-red{background:#ff4757}.btn-red:hover{background:#e83e4e}
+        .btn-sm{background:#64748b;color:#fff;border:none;border-radius:4px;padding:5px 10px;font-size:.65rem;font-weight:700;cursor:pointer}
+        .btn-del{background:#fee2e2;color:#dc2626;border:none;border-radius:4px;padding:6px 8px;cursor:pointer;font-weight:700}
+        .back{display:inline-block;margin-bottom:12px;color:#3b82f6;text-decoration:none;font-size:.82rem;font-weight:600}
+        .back:hover{text-decoration:underline}
+    </style>
+</head>
+<body>
+<div class="container">
+    <a class="back" href="iran-risk.html">← İran Risk Monitörüne Dön</a>
+    <h1>⚙️ İran Risk — Admin Paneli</h1>
+
+    <div class="card">
+        <label>PIN</label>
+        <input type="password" id="pin" placeholder="PIN girin" style="margin-bottom:12px">
+    </div>
+
+    <div class="card">
+        <div class="card-title">Risk Ayarları</div>
+        <div class="row">
+            <div><label>Risk Skoru (0-100)</label><input type="number" id="riskScore" min="0" max="100" value="50"></div>
+            <div><label>Hürmüz Durumu</label><select id="hurmuz"><option value="AÇIK / GÜVENLİ">🟢 AÇIK</option><option value="RİSKLİ">🟡 RİSKLİ</option><option value="KISMEN KAPALI">🟠 KISMEN KAPALI</option><option value="KAPALI">🔴 KAPALI</option></select></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">Emtia Verileri (Manuel Override)</div>
+        <div id="commodList"></div>
+    </div>
+
+    <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div class="card-title" style="margin:0">Özel Veri Girişi</div>
+            <button class="btn-sm" id="addBtn">+ Yeni Ekle</button>
+        </div>
+        <div id="customList"></div>
+    </div>
+
+    <button class="btn btn-red" id="saveBtn">💾 KAYDET</button>
+</div>
+
+<script>
+var COMMODITIES=['BZ=F|BZ (Brent)','CL=F|CL (WTI)','NG=F|NG (Doğalgaz)','MTF=F|TTF','HO=F|HO (Isıtma Yağı)','RB=F|RB (Benzin)','GC=F|XAU (Altın)','SI=F|XAG (Gümüş)','HG=F|HG (Bakır)','ZW=F|ZW (Buğday)','ZC=F|ZC (Mısır)','ZS=F|ZS (Soya)'];
+var KEY='iran_risk_state';
+
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return{}}}
+function save(s){localStorage.setItem(KEY,JSON.stringify(s))}
+
+// Build commodity inputs
+var cl=document.getElementById('commodList');
+COMMODITIES.forEach(function(c){
+    var p=c.split('|');var id=p[0].replace(/[^a-zA-Z0-9]/g,'_');
+    cl.innerHTML+='<div class="row" style="margin-bottom:6px"><div><label>'+p[1]+' — Fiyat</label><input type="number" step="any" id="cv_'+id+'"></div><div><label>Değişim %</label><input type="number" step="any" id="cc_'+id+'"></div></div>';
+});
+
+function addCustomRow(n,u,v,ch){
+    var d=document.createElement('div');d.className='row4';
+    d.innerHTML='<div><label>İsim</label><input type="text" class="cn" value="'+(n||'')+'"></div><div><label>Birim</label><input type="text" class="cu" value="'+(u||'')+'"></div><div><label>Değer</label><input type="number" step="any" class="cv" value="'+(v||'')+'"></div><div><label>%</label><input type="number" step="any" class="cc" value="'+(ch||'')+'"></div><button class="btn-del" onclick="this.parentElement.remove()">✕</button>';
+    document.getElementById('customList').appendChild(d);
+}
+document.getElementById('addBtn').onclick=function(){addCustomRow()};
+
+// Load state
+var s=load();
+document.getElementById('riskScore').value=s.riskScore||50;
+document.getElementById('hurmuz').value=s.hurmuzStatus||'AÇIK / GÜVENLİ';
+if(s.manualCommodities){
+    COMMODITIES.forEach(function(c){
+        var p=c.split('|');var id=p[0].replace(/[^a-zA-Z0-9]/g,'_');
+        if(s.manualCommodities[p[0]]){
+            document.getElementById('cv_'+id).value=s.manualCommodities[p[0]].value||'';
+            document.getElementById('cc_'+id).value=s.manualCommodities[p[0]].change||'';
+        }
+    });
+}
+(s.customMetrics||[]).forEach(function(m){addCustomRow(m.name,m.unit,m.value,m.change)});
+
+// Save
+document.getElementById('saveBtn').onclick=function(){
+    var pin=document.getElementById('pin').value;
+    if(pin!=='isedes'){alert('❌ Yanlış PIN!');return}
+    var st=load();
+    st.riskScore=parseInt(document.getElementById('riskScore').value)||50;
+    st.hurmuzStatus=document.getElementById('hurmuz').value;
+    st.manualCommodities={};
+    COMMODITIES.forEach(function(c){
+        var p=c.split('|');var id=p[0].replace(/[^a-zA-Z0-9]/g,'_');
+        var v=parseFloat(document.getElementById('cv_'+id).value);
+        var ch=parseFloat(document.getElementById('cc_'+id).value);
+        if(!isNaN(v)||!isNaN(ch))st.manualCommodities[p[0]]={value:v||0,change:ch||0};
+    });
+    st.customMetrics=[];
+    document.querySelectorAll('.row4').forEach(function(r){
+        var n=r.querySelector('.cn').value.trim();if(!n)return;
+        st.customMetrics.push({name:n,unit:r.querySelector('.cu').value.trim(),value:parseFloat(r.querySelector('.cv').value)||0,change:parseFloat(r.querySelector('.cc').value)||0});
+    });
+    save(st);
+    alert('✅ Kaydedildi! İran Risk sayfasına dönünce güncellenecek.');
+};
+</script>
+</body>
+</html>

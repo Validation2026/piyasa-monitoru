@@ -3,12 +3,12 @@
    ═══════════════════════════════════════════ */
 
 :root{
-    --bg:#06080d;--bg2:#0c1018;--card:#0f1419;--card2:#141b23;
-    --border:#1a2332;--border2:#0f1720;
-    --t1:#e8edf5;--t2:#8a99b2;--t3:#4a5873;
+    --bg:#f0f4f8;--bg2:#e8edf2;--card:#fff;--card2:#f8fafc;
+    --border:#dde4ed;--border2:#e8edf2;
+    --t1:#0f172a;--t2:#475569;--t3:#94a3b8;
     --green:#00d68f;--red:#ff4757;--blue:#3b82f6;--cyan:#22d3ee;
-    --gold:#fbbf24;--purple:#a78bfa;
-    --gbg:rgba(0,214,143,.07);--rbg:rgba(255,71,87,.07);
+    --gold:#f59e0b;--purple:#a78bfa;
+    --gbg:rgba(0,214,143,.1);--rbg:rgba(255,71,87,.1);
     --fm:'Outfit',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;
     --r:12px;--rs:6px;
     --sidebar-w:240px;
@@ -118,9 +118,23 @@ body{font-family:var(--fm);background:var(--bg);color:var(--t1);line-height:1.6;
 
 /* Overlay for mobile */
 .sb-overlay{
-    display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);
+    display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);
     z-index:150;opacity:0;transition:opacity .3s;
 }
+
+/* Mobile nav strip */
+.mobile-nav{
+    display:none;position:fixed;top:48px;left:0;right:0;z-index:90;
+    background:var(--card);border-bottom:1px solid var(--border);
+    overflow-x:auto;white-space:nowrap;padding:6px 8px;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none;
+}
+.mobile-nav::-webkit-scrollbar{display:none}
+.mb-link{
+    display:inline-block;padding:5px 10px;font-size:.7rem;font-weight:600;
+    color:var(--t2);text-decoration:none;border-radius:6px;transition:.2s;white-space:nowrap;
+}
+.mb-link:hover,.mb-link.active{color:var(--blue);background:rgba(59,130,246,.08)}
 
 /* ══════════════════════════════
    MOBILE RESPONSIVE
@@ -131,7 +145,8 @@ body{font-family:var(--fm);background:var(--bg);color:var(--t1);line-height:1.6;
     .sb-overlay.open{display:block;opacity:1}
     .topbar{left:0}
     .topbar-hamburger{display:block}
-    .main{margin-left:0}
+    .main{margin-left:0;padding-top:90px}
+    .mobile-nav{display:block}
 }
 
 /* ══════════════════════════════

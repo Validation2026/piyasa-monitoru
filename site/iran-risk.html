@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr" data-theme="dark">
+<html lang="tr" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -59,10 +59,10 @@
         .nw-time{font-size:.62rem;color:var(--t3);margin-top:2px}
 
         /* Admin */
-        .admin-toggle{position:fixed;bottom:20px;right:20px;z-index:300;background:#ff4757;color:#fff;border:none;border-radius:50%;width:48px;height:48px;font-size:1.2rem;cursor:pointer;box-shadow:0 4px 20px rgba(255,71,87,.4);transition:.2s}
-        .admin-toggle:hover{transform:scale(1.1)}
-        .admin-panel{display:none;position:fixed;bottom:80px;right:20px;z-index:300;background:var(--card);border:2px solid var(--border);border-radius:var(--r);padding:20px;width:340px;max-height:70vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,.4)}
-        .admin-panel.open{display:block}
+        
+        
+        
+        
         .admin-panel h3{font-size:.85rem;font-weight:800;margin-bottom:12px;color:#ff4757}
         .adm-group{margin-bottom:12px}
         .adm-label{font-size:.65rem;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
@@ -89,7 +89,6 @@
 
 <div class="page-head">
     <h1>🔴 İran Risk Monitörü</h1>
-    <div class="sub">Orta Doğu jeopolitik risk takibi — enerji ve emtia etki analizi</div>
 </div>
 
 <!-- War Day Counter -->
@@ -148,15 +147,7 @@
 </div>
 
 <!-- Admin Toggle -->
-<button class="admin-toggle" id="adminBtn" title="Admin Paneli">⚙️</button>
 
-<!-- Admin Panel -->
-<div class="admin-panel" id="adminPanel">
-    <h3>⚙️ Admin Paneli</h3>
-    <input type="password" class="adm-pin" id="admPin" placeholder="PIN girin">
-
-    <div class="adm-group">
-        <div class="adm-label">Risk Skoru (0-100)</div>
         <input type="number" class="adm-input" id="admRisk" min="0" max="100" value="50">
     </div>
 

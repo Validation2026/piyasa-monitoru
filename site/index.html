@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr" data-theme="dark">
+<html lang="tr" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -57,6 +57,20 @@
     <div class="stat"><div class="stat-v">18</div><div class="stat-l">Döviz Çifti</div></div>
     <div class="stat"><div class="stat-v" id="stUpdate">—</div><div class="stat-l">Son Güncelleme</div></div>
 </div>
+
+<!-- İran Risk Banner -->
+<a href="iran-risk.html" style="display:block;background:linear-gradient(135deg,#1a0000,#330000);border:2px solid #660000;border-radius:12px;padding:14px 20px;margin-bottom:14px;text-decoration:none;transition:.2s" onmouseover="this.style.borderColor='#ff4757'" onmouseout="this.style.borderColor='#660000'">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+        <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-size:1.3rem">🔴</span>
+            <div>
+                <div style="font-size:.82rem;font-weight:800;color:#ff4757">İRAN-İSRAİL SAVAŞI</div>
+                <div style="font-size:.68rem;color:#ff6b6b" id="iranBannerDay">Savaşın başlangıcından bu yana...</div>
+            </div>
+        </div>
+        <div style="font-size:.65rem;color:#993333;font-weight:600">DETAYLAR →</div>
+    </div>
+</a>
 
 <!-- AI Günlük Özet -->
 <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:20px;position:relative;overflow:hidden">
@@ -160,8 +174,11 @@ Promise.all([fj('currencies.json'),fj('commodities_energy.json'),fj('commodities
     buildAct(act);
 
     var st=document.getElementById('stTotal');if(st)st.textContent=total+'+';
-    var su=document.getElementById('stUpdate');if(su){var latest=cur||ener;if(latest&&latest.meta){var d=new Date(latest.meta.updated_at);su.textContent=d.getDate()+'.'+(d.getMonth()+1)+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}}
+    var su=document.getElementById('stUpdate');if(su){var latest=cur||ener;if(latest&&latest.meta){var d=new Date(latest.meta.updated_at);su.textContent=String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+d.getFullYear()}}
 });
+// Iran day counter
+var warDays=Math.floor((new Date()-new Date('2026-02-28T00:00:00+03:00'))/864e5);
+var ib=document.getElementById('iranBannerDay');if(ib)ib.textContent=warDays+'. gün — Canlı risk takibi ve harita';
 // AI
 fetch('/api/ai-analysis?cat=genel').then(function(r){return r.json()}).then(function(d){var el=document.getElementById('indexAiAnalysis');if(el&&d.analysis)el.textContent=d.analysis}).catch(function(){});
 })();

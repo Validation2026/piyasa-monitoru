@@ -2,14 +2,18 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Enerji",
+<<<<<<< HEAD
     "updated_at": "2026-04-03T12:43:12Z",
+=======
+    "updated_at": "2026-04-03T13:15:00Z",
+>>>>>>> b5e2353 (22 dosya mega update)
     "symbol_count": 6,
     "errors": []
   },
   "series": [
     {
       "id": "BZ=F",
-      "name": "Brent Petrol",
+      "name": "BZ (Brent)",
       "unit": "USD/bbl",
       "current": 109.03,
       "change_1d_pct": 7.78,
@@ -1033,7 +1037,7 @@
     },
     {
       "id": "CL=F",
-      "name": "WTI Petrol",
+      "name": "CL (WTI)",
       "unit": "USD/bbl",
       "current": 111.54,
       "change_1d_pct": 11.41,
@@ -2057,7 +2061,7 @@
     },
     {
       "id": "NG=F",
-      "name": "Doğalgaz (Henry Hub)",
+      "name": "NG (Doğalgaz)",
       "unit": "USD/MMBtu",
       "current": 2.8,
       "change_1d_pct": -0.67,
@@ -3081,7 +3085,7 @@
     },
     {
       "id": "MTF=F",
-      "name": "Avrupa Doğalgaz (TTF)",
+      "name": "TTF (Avrupa Gaz)",
       "unit": "EUR/MWh",
       "current": 96.0,
       "change_1d_pct": -0.57,
@@ -3837,7 +3841,7 @@
     },
     {
       "id": "HO=F",
-      "name": "Isıtma Yağı",
+      "name": "HO (Isıtma Yağı)",
       "unit": "USD/gal",
       "current": 4.3611,
       "change_1d_pct": 7.5,
@@ -4861,7 +4865,7 @@
     },
     {
       "id": "RB=F",
-      "name": "Benzin (RBOB)",
+      "name": "RB (Benzin)",
       "unit": "USD/gal",
       "current": 3.288,
       "change_1d_pct": 6.36,

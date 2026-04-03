@@ -2,14 +2,18 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Kıymetli Madenler & Metaller",
+<<<<<<< HEAD
     "updated_at": "2026-04-03T12:43:14Z",
+=======
+    "updated_at": "2026-04-03T13:15:06Z",
+>>>>>>> b5e2353 (22 dosya mega update)
     "symbol_count": 6,
     "errors": []
   },
   "series": [
     {
       "id": "GC=F",
-      "name": "Altın",
+      "name": "XAU (Altın)",
       "unit": "USD/oz",
       "current": 4651.5,
       "change_1d_pct": -2.75,
@@ -1033,7 +1037,7 @@
     },
     {
       "id": "SI=F",
-      "name": "Gümüş",
+      "name": "XAG (Gümüş)",
       "unit": "USD/oz",
       "current": 72.735,
       "change_1d_pct": -4.13,
@@ -2057,7 +2061,7 @@
     },
     {
       "id": "PL=F",
-      "name": "Platin",
+      "name": "XPT (Platin)",
       "unit": "USD/oz",
       "current": 1963.8,
       "change_1d_pct": -0.28,
@@ -3081,7 +3085,7 @@
     },
     {
       "id": "PA=F",
-      "name": "Paladyum",
+      "name": "XPD (Paladyum)",
       "unit": "USD/oz",
       "current": 1491.4,
       "change_1d_pct": 0.88,
@@ -4101,7 +4105,7 @@
     },
     {
       "id": "HG=F",
-      "name": "Bakır",
+      "name": "HG (Bakır)",
       "unit": "USD/lb",
       "current": 5.563,
       "change_1d_pct": -1.08,
@@ -5125,7 +5129,7 @@
     },
     {
       "id": "ALI=F",
-      "name": "Alüminyum",
+      "name": "ALI (Alüminyum)",
       "unit": "USD/ton",
       "current": 3411.0,
       "change_1d_pct": -1.19,

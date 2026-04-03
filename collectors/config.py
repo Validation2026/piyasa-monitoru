@@ -14,12 +14,12 @@ COMMODITIES_ENERGY = {
     "file": "commodities_energy.json",
     "category": "Enerji",
     "symbols": {
-        "BZ=F":  {"name": "Brent Petrol",        "unit": "USD/bbl"},
-        "CL=F":  {"name": "WTI Petrol",           "unit": "USD/bbl"},
-        "NG=F":  {"name": "Doğalgaz (Henry Hub)",  "unit": "USD/MMBtu"},
-        "MTF=F": {"name": "Avrupa Doğalgaz (TTF)", "unit": "EUR/MWh"},
-        "HO=F":  {"name": "Isıtma Yağı",          "unit": "USD/gal"},
-        "RB=F":  {"name": "Benzin (RBOB)",         "unit": "USD/gal"},
+        "BZ=F":  {"name": "BZ (Brent)",        "unit": "USD/bbl"},
+        "CL=F":  {"name": "CL (WTI)",           "unit": "USD/bbl"},
+        "NG=F":  {"name": "NG (Doğalgaz)",  "unit": "USD/MMBtu"},
+        "MTF=F": {"name": "TTF (Avrupa Gaz)", "unit": "EUR/MWh"},
+        "HO=F":  {"name": "HO (Isıtma Yağı)",          "unit": "USD/gal"},
+        "RB=F":  {"name": "RB (Benzin)",         "unit": "USD/gal"},
     }
 }
 
@@ -27,12 +27,12 @@ COMMODITIES_METALS = {
     "file": "commodities_metals.json",
     "category": "Kıymetli Madenler & Metaller",
     "symbols": {
-        "GC=F":  {"name": "Altın",      "unit": "USD/oz"},
-        "SI=F":  {"name": "Gümüş",      "unit": "USD/oz"},
-        "PL=F":  {"name": "Platin",      "unit": "USD/oz"},
-        "PA=F":  {"name": "Paladyum",    "unit": "USD/oz"},
-        "HG=F":  {"name": "Bakır",       "unit": "USD/lb"},
-        "ALI=F": {"name": "Alüminyum",   "unit": "USD/ton"},
+        "GC=F":  {"name": "XAU (Altın)",      "unit": "USD/oz"},
+        "SI=F":  {"name": "XAG (Gümüş)",      "unit": "USD/oz"},
+        "PL=F":  {"name": "XPT (Platin)",      "unit": "USD/oz"},
+        "PA=F":  {"name": "XPD (Paladyum)",    "unit": "USD/oz"},
+        "HG=F":  {"name": "HG (Bakır)",       "unit": "USD/lb"},
+        "ALI=F": {"name": "ALI (Alüminyum)",   "unit": "USD/ton"},
     }
 }
 
@@ -40,19 +40,18 @@ COMMODITIES_AGRICULTURE = {
     "file": "commodities_agriculture.json",
     "category": "Tarım",
     "symbols": {
-        "ZW=F":  {"name": "Buğday",       "unit": "USc/bu"},
-        "ZC=F":  {"name": "Mısır",        "unit": "USc/bu"},
-        "ZS=F":  {"name": "Soya Fasulyesi","unit": "USc/bu"},
-        "ZM=F":  {"name": "Soya Küspesi",  "unit": "USD/ton"},
-        "ZL=F":  {"name": "Soya Yağı",    "unit": "USc/lb"},
-        "CT=F":  {"name": "Pamuk",         "unit": "USc/lb"},
-        "KC=F":  {"name": "Kahve",         "unit": "USc/lb"},
-        "SB=F":  {"name": "Şeker",         "unit": "USc/lb"},
-        "CC=F":  {"name": "Kakao",         "unit": "USD/ton"},
-        "OJ=F":  {"name": "Portakal Suyu", "unit": "USc/lb"},
-        "LBS=F": {"name": "Kereste",       "unit": "USD/mbf"},
-        "LE=F":  {"name": "Canlı Sığır",   "unit": "USc/lb"},
-        "HE=F":  {"name": "Yağsız Domuz",  "unit": "USc/lb"},
+        "ZW=F":  {"name": "ZW (Buğday)",       "unit": "USc/bu"},
+        "ZC=F":  {"name": "ZC (Mısır)",        "unit": "USc/bu"},
+        "ZS=F":  {"name": "ZS (Soya)","unit": "USc/bu"},
+        "ZM=F":  {"name": "ZM (Soya Küspesi)",  "unit": "USD/ton"},
+        "ZL=F":  {"name": "ZL (Soya Yağı)",    "unit": "USc/lb"},
+        "CT=F":  {"name": "CT (Pamuk)",         "unit": "USc/lb"},
+        "KC=F":  {"name": "KC (Kahve)",         "unit": "USc/lb"},
+        "SB=F":  {"name": "SB (Şeker)",         "unit": "USc/lb"},
+        "CC=F":  {"name": "CC (Kakao)",         "unit": "USD/ton"},
+        "OJ=F":  {"name": "OJ (Portakal Suyu)", "unit": "USc/lb"},
+        "LBS=F": {"name": "LBS (Kereste)",       "unit": "USD/mbf"},
+        "LE=F":  {"name": "LE (Canlı Sığır)",   "unit": "USc/lb"},
     }
 }
 
@@ -120,16 +119,16 @@ CRYPTO = {
     "file": "crypto.json",
     "category": "Kripto Paralar",
     "symbols": {
-        "BTC-USD":  {"name": "Bitcoin",   "unit": "USD"},
-        "ETH-USD":  {"name": "Ethereum",  "unit": "USD"},
+        "BTC-USD":  {"name": "BTC (Bitcoin)",   "unit": "USD"},
+        "ETH-USD":  {"name": "ETH (Ethereum)",  "unit": "USD"},
         "BNB-USD":  {"name": "BNB",       "unit": "USD"},
-        "SOL-USD":  {"name": "Solana",    "unit": "USD"},
+        "SOL-USD":  {"name": "SOL (Solana)",    "unit": "USD"},
         "XRP-USD":  {"name": "XRP",       "unit": "USD"},
-        "ADA-USD":  {"name": "Cardano",   "unit": "USD"},
-        "DOGE-USD": {"name": "Dogecoin",  "unit": "USD"},
-        "AVAX-USD": {"name": "Avalanche", "unit": "USD"},
-        "DOT-USD":  {"name": "Polkadot",  "unit": "USD"},
-        "LINK-USD": {"name": "Chainlink", "unit": "USD"},
+        "ADA-USD":  {"name": "ADA (Cardano)",   "unit": "USD"},
+        "DOGE-USD": {"name": "DOGE (Dogecoin)",  "unit": "USD"},
+        "AVAX-USD": {"name": "AVAX (Avalanche)", "unit": "USD"},
+        "DOT-USD":  {"name": "DOT (Polkadot)",  "unit": "USD"},
+        "LINK-USD": {"name": "LINK (Chainlink)", "unit": "USD"},
     }
 }
 
