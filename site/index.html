@@ -7,26 +7,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+    <link rel="stylesheet" href="assets/css/style.css">
     <style>
-        :root{
-            --bg:#06080d;--bg2:#0c1018;--card:#0f1419;--card2:#141b23;
-            --border:#1a2332;--border2:#0f1720;
-            --t1:#e8edf5;--t2:#8a99b2;--t3:#4a5873;
-            --green:#00d68f;--red:#ff4757;--blue:#3b82f6;--cyan:#22d3ee;
-            --gold:#fbbf24;--purple:#a78bfa;
-            --gbg:rgba(0,214,143,.07);--rbg:rgba(255,71,87,.07);
-            --fm:'Outfit',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;
-            --r:12px;--rs:6px;
-        }
-        [data-theme=light]{
-            --bg:#f0f4f8;--bg2:#e8edf2;--card:#fff;--card2:#f8fafc;
-            --border:#dde4ed;--border2:#e8edf2;
-            --t1:#0f172a;--t2:#475569;--t3:#94a3b8;
-            --gbg:rgba(0,214,143,.1);--rbg:rgba(255,71,87,.1);
-        }
-        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-        html{scroll-behavior:smooth}
-        body{font-family:var(--fm);background:var(--bg);color:var(--t1);line-height:1.6;overflow-x:hidden}
+        /* Index-specific overrides */
 
         /* ── NAV ── */
         .nav{position:sticky;top:0;z-index:100;background:var(--card);border-bottom:1px solid var(--border);height:54px;display:flex;align-items:center;padding:0 20px;gap:16px;backdrop-filter:blur(16px)}
@@ -140,28 +123,9 @@
 </head>
 <body>
 
-<!-- NAV -->
-<nav class="nav">
-    <a class="nav-brand" href="index.html">📊 Piyasa Monitörü</a>
-    <div class="nav-links">
-        <a href="index.html" class="active">Panel</a>
-        <a href="emtia-enerji.html">Enerji</a>
-        <a href="emtia-metaller.html">Madenler</a>
-        <a href="emtia-tarim.html">Tarım</a>
-        <a href="kurlar.html">Döviz</a>
-        <a href="tahviller.html">Tahvil</a>
-        <a href="endeksler.html">Endeksler</a>
-        <a href="makro.html">Makro</a>
-    </div>
-    <div class="nav-spacer"></div>
-    <span class="nav-clock" id="clock"></span>
-    <button class="theme-btn" id="themeToggle">🌙</button>
-</nav>
+<script src="assets/js/sidebar.js"></script>
 
-<!-- TICKER -->
-<div class="ticker"><div class="ticker-track" id="tickerTrack"></div></div>
-
-<div class="container">
+<div class="page">
 
 <!-- HERO -->
 <div class="hero">
@@ -227,18 +191,6 @@ function fj(f){return fetch(D+f+'?t='+Date.now()).then(function(r){return r.json
 function fp(v,d){if(v==null)return'—';d=d!=null?d:2;return Number(v).toLocaleString('tr-TR',{minimumFractionDigits:d,maximumFractionDigits:d})}
 function fs(d,id){if(!d||!d.series)return null;for(var i=0;i<d.series.length;i++)if(d.series[i].id===id)return d.series[i];return null}
 function cc(p){return p>=0?'u':'d'}
-
-// ── Clock ──
-var MO=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
-var DA=['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
-function uc(){var n=new Date(),e=document.getElementById('clock');if(e)e.textContent=n.getDate()+' '+MO[n.getMonth()]+' '+n.getFullYear()+', '+DA[n.getDay()]+'  '+String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')+':'+String(n.getSeconds()).padStart(2,'0')}
-setInterval(uc,1000);uc();
-
-// ── Theme ──
-var tb=document.getElementById('themeToggle');
-var sv=localStorage.getItem('theme');
-if(sv){document.documentElement.setAttribute('data-theme',sv);tb.textContent=sv==='dark'?'🌙':'☀️'}
-tb.addEventListener('click',function(){var c=document.documentElement.getAttribute('data-theme');var nx=c==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',nx);tb.textContent=nx==='dark'?'🌙':'☀️';localStorage.setItem('theme',nx)});
 
 // ── Sparkline ──
 function spark(cid,data,color){
