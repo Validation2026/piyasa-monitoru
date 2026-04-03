@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tedarik Zinciri Haritası — Piyasa Monitörü</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+.map-full{background:#fff;border:1px solid #dde4ed;border-radius:12px;overflow:hidden;margin-bottom:16px}
+.map-full h3{padding:12px 16px 6px;font-size:.88rem;font-weight:700}
+#supplyMap{height:500px;z-index:1}
+.leg{padding:4px 16px 10px;display:flex;gap:14px;flex-wrap:wrap;font-size:.62rem;color:#94a3b8}
+.leg span{display:flex;align-items:center;gap:4px}
+.ld{width:9px;height:9px;border-radius:50%;display:inline-block}
+.prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:18px}
+.prod-card{background:#fff;border:1px solid #dde4ed;border-radius:10px;padding:14px}
+.prod-card:hover{border-color:#3b82f6}
+.pc-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.pc-flag{font-size:1.4rem}
+.pc-name{font-size:.9rem;font-weight:800}
+.pc-list{font-size:.75rem;color:#475569;line-height:1.6}
+.pc-tag{display:inline-block;font-size:.6rem;font-weight:700;padding:1px 6px;border-radius:3px;margin:1px 2px}
+.pc-tag.en{background:#fef3c7;color:#d97706}.pc-tag.me{background:#dbeafe;color:#2563eb}.pc-tag.ag{background:#dcfce7;color:#16a34a}.pc-tag.in{background:#f3e8ff;color:#7c3aed}
+.route-table{background:#fff;border:1px solid #dde4ed;border-radius:10px;overflow-x:auto;margin-bottom:18px}
+.route-table table{width:100%;border-collapse:collapse;min-width:600px}
+.route-table th{padding:8px 12px;font-size:.65rem;text-align:left;color:#94a3b8;border-bottom:1px solid #dde4ed;background:#f8fafc;text-transform:uppercase;font-weight:700}
+.route-table td{padding:8px 12px;font-size:.78rem;border-bottom:1px solid #f1f5f9}
+.route-table tr:hover td{background:#f8fafc}
+.risk-high{color:#ff4757;font-weight:700}.risk-med{color:#f59e0b;font-weight:700}.risk-low{color:#00d68f;font-weight:700}
+@media(max-width:768px){#supplyMap{height:350px}.prod-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="assets/js/sidebar.js"></script>
+<div class="page">
+<div class="page-head"><h1>🌍 Tedarik Zinciri Haritası</h1></div>
+
+<div class="map-full">
+<h3>🗺️ Küresel Ticaret Rotaları & Darboğazlar</h3>
+<div class="leg">
+<span><div class="ld" style="background:#ff4757"></div> Yüksek Risk Bölgesi</span>
+<span><div class="ld" style="background:#fbbf24"></div> Orta Risk</span>
+<span><div class="ld" style="background:#3b82f6"></div> Ticaret Rotası</span>
+<span><div class="ld" style="background:#a78bfa"></div> Kritik Geçiş</span>
+</div>
+<div id="supplyMap"></div>
+</div>
+
+<div class="sec-title">🏭 Kim Ne Üretiyor?</div>
+<div class="prod-grid" id="prodGrid"></div>
+
+<div class="sec-title">🚢 Kritik Deniz Rotaları</div>
+<div class="route-table">
+<table>
+<thead><tr><th>Rota</th><th>Geçiş Noktası</th><th>Günlük Hacim</th><th>Taşınan</th><th>Risk</th></tr></thead>
+<tbody>
+<tr><td>Basra Körfezi → Asya</td><td>Hürmüz Boğazı</td><td>21M varil petrol</td><td>Ham petrol, LNG</td><td class="risk-high">🔴 YÜKSEK</td></tr>
+<tr><td>Akdeniz → Hint Okyanusu</td><td>Süveyş Kanalı</td><td>5.5M varil eşdeğer</td><td>Konteyner, petrol</td><td class="risk-med">🟡 ORTA</td></tr>
+<tr><td>Kızıldeniz → Aden</td><td>Bab el-Mandeb</td><td>6.2M varil</td><td>Petrol, LNG, konteyner</td><td class="risk-high">🔴 YÜKSEK</td></tr>
+<tr><td>Güney Çin Denizi</td><td>Malakka Boğazı</td><td>16M varil</td><td>Ham petrol, LNG, mal</td><td class="risk-low">🟢 DÜŞÜK</td></tr>
+<tr><td>Panama Kanalı</td><td>Panama</td><td>1M varil eşdeğer</td><td>Konteyner, tahıl, LNG</td><td class="risk-low">🟢 DÜŞÜK (Kuraklık)</td></tr>
+<tr><td>Türk Boğazları</td><td>İstanbul/Çanakkale</td><td>3M varil</td><td>Karadeniz petrolü, tahıl</td><td class="risk-med">🟡 ORTA</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="footer">Piyasa Monitörü © 2026</div>
+</div>
+<script>
+(function(){
+var map=L.map('supplyMap',{scrollWheelZoom:false}).setView([25,50],3);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{maxZoom:10}).addTo(map);
+
+// Kritik geçiş noktaları
+var chokes=[
+    {lat:26.56,lon:56.24,n:'Hürmüz Boğazı',info:'21M varil/gün — Dünya petrolünün %20\'si',risk:'high'},
+    {lat:30.45,lon:32.35,n:'Süveyş Kanalı',info:'5.5M varil eşdeğer/gün — Avrupa-Asya',risk:'med'},
+    {lat:12.58,lon:43.33,n:'Bab el-Mandeb',info:'6.2M varil/gün — Kızıldeniz girişi',risk:'high'},
+    {lat:1.35,lon:103.8,n:'Malakka Boğazı',info:'16M varil/gün — Asya enerji koridoru',risk:'low'},
+    {lat:9.0,lon:-79.5,n:'Panama Kanalı',info:'1M varil eşdeğer — Amerika arası',risk:'low'},
+    {lat:41.0,lon:29.0,n:'Türk Boğazları',info:'3M varil — Karadeniz çıkışı',risk:'med'},
+    {lat:35.0,lon:-5.5,n:'Cebelitarık Boğazı',info:'Akdeniz-Atlantik geçişi',risk:'low'},
+];
+var rColors={high:'#ff4757',med:'#fbbf24',low:'#00d68f'};
+chokes.forEach(function(c){
+    L.circleMarker([c.lat,c.lon],{radius:12,color:rColors[c.risk],fillColor:rColors[c.risk],fillOpacity:.5,weight:3}).addTo(map).bindPopup('<b>'+c.n+'</b><br><small>'+c.info+'</small>');
+});
+
+// Ticaret rotaları (polyline)
+var routes=[
+    {pts:[[26.5,56],[22,62],[15,68],[5,75],[1.3,103.8]],color:'#3b82f6',name:'Körfez→Asya'},
+    {pts:[[26.5,56],[22,58],[12.5,43.3],[15,41],[30.4,32.3],[35,25],[36,5]],color:'#3b82f6',name:'Körfez→Avrupa (Süveyş)'},
+    {pts:[[26.5,56],[22,58],[12.5,43.3],[5,42],[-5,35],[-34,18],[-34,5],[5,-5],[36,5]],color:'#f97316',name:'Körfez→Avrupa (Ümit Burnu)'},
+    {pts:[[-23,113],[5,105],[1.3,103.8],[15,100],[30,120],[35,130]],color:'#3b82f6',name:'Avustralya→Çin'},
+    {pts:[[30,120],[35,130],[40,140],[35,145]],color:'#22d3ee',name:'LNG→Japonya'},
+];
+routes.forEach(function(r){
+    L.polyline(r.pts,{color:r.color,weight:2.5,opacity:.5,dashArray:r.color==='#f97316'?'8,6':null}).addTo(map).bindPopup('<b>'+r.name+'</b>');
+});
+
+// Üretici ülke noktaları
+var producers=[
+    {lat:25,lon:45,n:'🇸🇦 S.Arabistan',info:'Petrol #1 ihracatçı'},
+    {lat:32,lon:53,n:'🇮🇷 İran',info:'Petrol, doğalgaz (yaptırım)'},
+    {lat:30,lon:48,n:'🇮🇶 Irak',info:'Petrol #5 üretici'},
+    {lat:35,lon:105,n:'🇨🇳 Çin',info:'Çelik, nadir toprak, bakır'},
+    {lat:-25,lon:135,n:'🇦🇺 Avustralya',info:'Demir cevheri, LNG, lityum'},
+    {lat:-15,lon:-50,n:'🇧🇷 Brezilya',info:'Soya, demir, kahve'},
+    {lat:60,lon:90,n:'🇷🇺 Rusya',info:'Petrol, doğalgaz, buğday'},
+    {lat:37,lon:-95,n:'🇺🇸 ABD',info:'Petrol, LNG, mısır, buğday'},
+    {lat:-5,lon:22,n:'🇨🇩 Kongo',info:'Kobalt dünya #1'},
+    {lat:-20,lon:25,n:'🇿🇦 G.Afrika',info:'Platin, altın, krom'},
+    {lat:-10,lon:-75,n:'🇵🇪 Peru',info:'Bakır, çinko'},
+    {lat:-33,lon:-70,n:'🇨🇱 Şili',info:'Bakır dünya #1, lityum'},
+];
+producers.forEach(function(p){
+    L.marker([p.lat,p.lon]).addTo(map).bindPopup('<b>'+p.n+'</b><br><small>'+p.info+'</small>');
+});
+
+// Üretici kartları
+var countries=[
+    {flag:'🇸🇦',name:'Suudi Arabistan',items:[{t:'Ham Petrol',c:'en'},{t:'LNG',c:'en'},{t:'Petrokimya',c:'in'}]},
+    {flag:'🇮🇷',name:'İran (Yaptırım Altında)',items:[{t:'Ham Petrol',c:'en'},{t:'Doğalgaz',c:'en'},{t:'Çelik',c:'in'},{t:'Uranyum',c:'in'}]},
+    {flag:'🇷🇺',name:'Rusya',items:[{t:'Ham Petrol',c:'en'},{t:'Doğalgaz',c:'en'},{t:'Buğday',c:'ag'},{t:'Alüminyum',c:'me'},{t:'Paladyum',c:'me'}]},
+    {flag:'🇨🇳',name:'Çin',items:[{t:'Çelik',c:'in'},{t:'Alüminyum',c:'me'},{t:'Nadir Toprak',c:'in'},{t:'Solar Panel',c:'in'},{t:'Lityum İşleme',c:'in'}]},
+    {flag:'🇦🇺',name:'Avustralya',items:[{t:'Demir Cevheri',c:'me'},{t:'LNG',c:'en'},{t:'Lityum',c:'me'},{t:'Bakır',c:'me'}]},
+    {flag:'🇧🇷',name:'Brezilya',items:[{t:'Soya',c:'ag'},{t:'Demir Cevheri',c:'me'},{t:'Kahve',c:'ag'},{t:'Şeker',c:'ag'}]},
+    {flag:'🇺🇸',name:'ABD',items:[{t:'Ham Petrol',c:'en'},{t:'LNG',c:'en'},{t:'Mısır',c:'ag'},{t:'Soya',c:'ag'},{t:'Buğday',c:'ag'}]},
+    {flag:'🇨🇱',name:'Şili',items:[{t:'Bakır #1',c:'me'},{t:'Lityum #2',c:'me'}]},
+    {flag:'🇨🇩',name:'Kongo DC',items:[{t:'Kobalt #1',c:'me'},{t:'Bakır',c:'me'}]},
+    {flag:'🇿🇦',name:'Güney Afrika',items:[{t:'Platin #1',c:'me'},{t:'Altın',c:'me'},{t:'Krom',c:'me'}]},
+    {flag:'🇮🇩',name:'Endonezya',items:[{t:'Nikel #1',c:'me'},{t:'Kalay',c:'me'},{t:'Palm Yağı',c:'ag'}]},
+    {flag:'🇹🇷',name:'Türkiye',items:[{t:'Krom',c:'me'},{t:'Bor #1',c:'in'},{t:'Çelik',c:'in'},{t:'Tekstil',c:'in'}]},
+];
+var g=document.getElementById('prodGrid');
+g.innerHTML=countries.map(function(c){
+    var tags=c.items.map(function(i){return '<span class="pc-tag '+i.c+'">'+i.t+'</span>'}).join('');
+    return '<div class="prod-card"><div class="pc-head"><span class="pc-flag">'+c.flag+'</span><span class="pc-name">'+c.name+'</span></div><div class="pc-list">'+tags+'</div></div>';
+}).join('');
+})();
+</script>
+</body>
+</html>
