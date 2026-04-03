@@ -1,12 +1,15 @@
-name: Update TCMB Macro Data
+name: Update Market Data
 
 on:
   schedule:
-    - cron: '30 7 * * 1-5'  # Hafta içi her gün 10:30 TR (07:30 UTC)
-  workflow_dispatch:
+    # Her 15 dakikada bir (UTC) — piyasa saatlerinde
+    # TR saati = UTC+3, NYSE 16:30-23:00 TR, piyasalar genel 08:00-00:00 TR
+    - cron: '*/15 5-21 * * 1-5'   # Hafta içi 08:00-00:00 TR
+    - cron: '0 */4 * * 0,6'       # Hafta sonu her 4 saatte (emtia/kripto)
+  workflow_dispatch:  # Manuel tetikleme butonu
 
 jobs:
-  update-evds:
+  update-yahoo:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -24,10 +27,8 @@ jobs:
       - name: Install dependencies
         run: pip install -r collectors/requirements.txt
 
-      - name: Run TCMB EVDS collector
-        env:
-          TCMB_API_KEY: ${{ secrets.TCMB_API_KEY }}
-        run: python collectors/tcmb_evds.py
+      - name: Run Yahoo Finance collector
+        run: python collectors/yahoo_finance.py
 
       - name: Copy data to site
         run: |
@@ -39,5 +40,5 @@ jobs:
           git config user.name "Market Data Bot"
           git config user.email "bot@piyasa-monitoru.dev"
           git add data/ site/data/
-          git diff --staged --quiet || git commit -m "🏦 TCMB makro verileri güncellendi [$(date -u +%Y-%m-%d)]"
+          git diff --staged --quiet || git commit -m "📊 Piyasa verileri güncellendi [$(date -u +%Y-%m-%d\ %H:%M)]"
           git push
