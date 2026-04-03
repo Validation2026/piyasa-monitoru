@@ -69,6 +69,13 @@ Kuru yük navlun endeksi (BDI) küresel ticaret hacminin öncü göstergesi olar
 
 Merkez bankaları enflasyon-büyüme dengesini gözetirken faiz beklentileri döviz ve tahvil piyasalarını şekillendiriyor. Risk iştahı jeopolitik gelişmelere duyarlı.
 
+⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
+'navlun': `Küresel deniz taşımacılığında Kızıldeniz/Hürmüz rotalarındaki güvenlik riskleri navlun maliyetlerini artırmaya devam ediyor. Konteyner hatları Ümit Burnu rotasına yönelirken transit süreleri 10-14 gün uzadı.
+
+Kuru yük navlun endeksi (BDI) demir cevheri, kömür ve tahıl taşımacılığının barometresi olarak küresel ticaret hacmini yansıtıyor. Çin'in ithalat talebi BDI'ın ana belirleyicisi olmaya devam ediyor.
+
+Konteyner piyasasında Şangay-Avrupa rotası fiyatları jeopolitik risklerin etkisiyle normalin üzerinde seyrediyor. Sigorta primleri Basra Körfezi ve Kızıldeniz geçişleri için katlanmış durumda.
+
 ⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`
     };
     return {statusCode:200, headers:H, body:JSON.stringify({analysis: A[cat]||A['genel']})};

@@ -18,7 +18,11 @@ var links = [
     ['iran-risk','🔴','İran Risk'],
     ['kuresel-risk','🌍','Küresel Risk'],
     ['ekonomik-takvim','📅','Takvim'],
-    ['merkez-bankalari','🏛️','Merkez Bank.']
+    ['merkez-bankalari','🏛️','Merkez Bank.'],
+    ['navlun','🚢','Navlun'],
+    ['ulke-risk','🌐','Ülke Risk'],
+    ['korelasyon','🔗','Korelasyon'],
+    ['performans','📊','Performans']
 ];
 
 // Build links HTML

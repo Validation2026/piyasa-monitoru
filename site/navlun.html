@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navlun & Lojistik — Piyasa Monitörü</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+    <style>
+        .ai-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;margin-bottom:22px;border-top:3px solid var(--purple)}
+        .ai-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+        .ai-header span{font-size:.82rem;font-weight:700}
+        .ai-badge{font-size:.58rem;font-family:var(--mono);font-weight:700;background:rgba(167,139,250,.15);color:var(--purple);padding:2px 8px;border-radius:4px}
+        .ai-body{font-size:.82rem;color:var(--t2);line-height:1.7;white-space:pre-wrap}
+        .ai-loading{color:var(--t3);font-style:italic}
+    </style>
+</head>
+<body>
+<script src="assets/js/sidebar.js"></script>
+<div class="page">
+    <div class="page-head">
+        <h1>🚢 Navlun & Lojistik</h1>
+        <div class="sub"></div>
+        <div class="update-info" id="updateInfo"></div>
+    </div>
+    <div class="ai-box"><div class="ai-header"><span>🤖 AI Piyasa Analizi</span><span class="ai-badge">Gemini</span></div><div class="ai-body" id="aiAnalysis"><span class="ai-loading">Analiz yükleniyor...</span></div></div>
+    <div class="summary-row" id="summaryCards"></div>
+    <div class="periods" id="periodSelector">
+        <button class="pbtn" data-period="1m">1A</button>
+        <button class="pbtn" data-period="3m">3A</button>
+        <button class="pbtn" data-period="6m">6A</button>
+        <button class="pbtn on" data-period="1y">1Y</button>
+        <button class="pbtn" data-period="ytd">YTD</button>
+    </div>
+    <div class="charts" id="chartsGrid"></div>
+    <div class="dtable" id="dataTable"></div>
+    <div class="footer">Piyasa Monitörü © 2026</div>
+</div>
+<script src="assets/js/app.js"></script>
+<script>
+(function(){
+    var period='1y',allSeries=[],charts=[];
+    PM.fj('industrial.json').then(function(data){
+        if(!data||!data.series||!data.series.length){document.getElementById('summaryCards').innerHTML='<div class="scard"><div class="scard-name">Veri bulunamadı.</div></div>';return}
+        allSeries=data.series;
+        var ui=document.getElementById('updateInfo');
+        if(ui&&data.meta)ui.textContent='Son güncelleme: '+new Date(data.meta.updated_at).toLocaleString('tr-TR')+' \u00b7 '+data.meta.symbol_count+' seri';
+        PM.buildSummary('summaryCards',allSeries);
+        charts=PM.buildCharts('chartsGrid',allSeries,period);
+        PM.buildTable('dataTable',allSeries);
+    });
+    document.getElementById('periodSelector').addEventListener('click',function(e){
+        if(!e.target.classList.contains('pbtn'))return;
+        document.querySelectorAll('.pbtn').forEach(function(b){b.classList.remove('on')});
+        e.target.classList.add('on');period=e.target.getAttribute('data-period');
+        if(charts)charts.forEach(function(c){c.destroy()});
+        charts=PM.buildCharts('chartsGrid',allSeries,period);
+    });
+    fetch('/api/ai-analysis?cat=sanayi').then(function(r){return r.json()}).then(function(d){
+        var el=document.getElementById('aiAnalysis');if(el&&d.analysis)el.textContent=d.analysis;
+    }).catch(function(){var el=document.getElementById('aiAnalysis');if(el)el.innerHTML='<span class="ai-loading">Analiz yüklenemiyor.</span>'});
+})();
+</script>
+</body>
+</html>

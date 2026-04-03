@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ülke Risk Profilleri — Piyasa Monitörü</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+.ai-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;margin-bottom:22px;border-top:3px solid var(--purple)}
+.ai-body{font-size:.82rem;color:var(--t2);line-height:1.7;white-space:pre-wrap}
+.risk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-bottom:22px}
+.rk-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;transition:.2s}
+.rk-card:hover{border-color:var(--blue);transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.06)}
+.rk-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.rk-flag{font-size:1.6rem}
+.rk-name{font-size:1rem;font-weight:800}
+.rk-sub{font-size:.68rem;color:var(--t3)}
+.rk-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border2);font-size:.8rem}
+.rk-row:last-child{border-bottom:none}
+.rk-label{color:var(--t3);font-weight:500}
+.rk-val{font-family:var(--mono);font-weight:700}
+.rk-rating{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.7rem;font-weight:800;font-family:var(--mono)}
+.rat-a{background:rgba(0,214,143,.1);color:#00d68f}
+.rat-b{background:rgba(59,130,246,.1);color:#3b82f6}
+.rat-c{background:rgba(251,191,36,.1);color:#f59e0b}
+.rat-d{background:rgba(255,71,87,.1);color:#ff4757}
+@media(max-width:600px){.risk-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="assets/js/sidebar.js"></script>
+<div class="page">
+<div class="page-head"><h1>🌐 Ülke Risk Profilleri</h1></div>
+
+<div class="ai-box"><div style="font-size:.82rem;font-weight:700;margin-bottom:8px">🤖 Analiz</div><div class="ai-body" id="aiBox">Yükleniyor...</div></div>
+
+<div class="sec-title">🏳️ Ülke Kartları</div>
+<div class="risk-grid" id="riskGrid"></div>
+
+<div class="footer">Piyasa Monitörü © 2026</div>
+</div>
+<script>
+(function(){
+var countries = [
+    {flag:'🇹🇷',name:'Türkiye',cds:'265',rating:'B+',ratingCls:'rat-c',outlook:'Pozitif',inflation:'31.5%',interest:'42.5%',debt:'35%',currency:'USD/TRY 44.5',risk:'ORTA-YÜKSEK'},
+    {flag:'🇺🇸',name:'ABD',cds:'15',rating:'AA+',ratingCls:'rat-a',outlook:'Stabil',inflation:'2.8%',interest:'4.75%',debt:'123%',currency:'DXY 100',risk:'DÜŞÜK'},
+    {flag:'🇮🇷',name:'İran',cds:'—',rating:'—',ratingCls:'rat-d',outlook:'Negatif',inflation:'45%+',interest:'—',debt:'—',currency:'Yaptırım altında',risk:'ÇOK YÜKSEK'},
+    {flag:'🇮🇱',name:'İsrail',cds:'120',rating:'A+',ratingCls:'rat-b',outlook:'Negatif',inflation:'3.2%',interest:'4.5%',debt:'62%',currency:'USD/ILS 3.85',risk:'YÜKSEK (Savaş)'},
+    {flag:'🇪🇺',name:'Euro Bölgesi',cds:'20',rating:'AA',ratingCls:'rat-a',outlook:'Stabil',inflation:'2.4%',interest:'3.75%',debt:'88%',currency:'EUR/USD 1.15',risk:'DÜŞÜK-ORTA'},
+    {flag:'🇬🇧',name:'İngiltere',cds:'25',rating:'AA-',ratingCls:'rat-a',outlook:'Stabil',inflation:'2.6%',interest:'4.25%',debt:'98%',currency:'GBP/USD 1.32',risk:'DÜŞÜK'},
+    {flag:'🇯🇵',name:'Japonya',cds:'30',rating:'A+',ratingCls:'rat-b',outlook:'Stabil',inflation:'2.2%',interest:'0.5%',debt:'255%',currency:'USD/JPY 160',risk:'ORTA'},
+    {flag:'🇨🇳',name:'Çin',cds:'65',rating:'A+',ratingCls:'rat-b',outlook:'Negatif',inflation:'0.3%',interest:'3.1%',debt:'83%',currency:'USD/CNY 7.25',risk:'ORTA'},
+    {flag:'🇸🇦',name:'Suudi Arabistan',cds:'55',rating:'A',ratingCls:'rat-b',outlook:'Stabil',inflation:'1.8%',interest:'5.75%',debt:'26%',currency:'USD/SAR 3.75',risk:'ORTA (Jeopolitik)'},
+    {flag:'🇷🇺',name:'Rusya',cds:'—',rating:'—',ratingCls:'rat-d',outlook:'—',inflation:'8.5%',interest:'21%',debt:'18%',currency:'Yaptırım altında',risk:'ÇOK YÜKSEK'},
+];
+
+var g=document.getElementById('riskGrid');
+g.innerHTML=countries.map(function(c){
+    return '<div class="rk-card"><div class="rk-head"><span class="rk-flag">'+c.flag+'</span><div><div class="rk-name">'+c.name+'</div><div class="rk-sub">Risk: '+c.risk+'</div></div></div>'+
+    '<div class="rk-row"><span class="rk-label">Kredi Notu</span><span class="rk-rating '+c.ratingCls+'">'+c.rating+'</span></div>'+
+    '<div class="rk-row"><span class="rk-label">CDS (5Y)</span><span class="rk-val">'+c.cds+' bps</span></div>'+
+    '<div class="rk-row"><span class="rk-label">Görünüm</span><span class="rk-val">'+c.outlook+'</span></div>'+
+    '<div class="rk-row"><span class="rk-label">Enflasyon</span><span class="rk-val">'+c.inflation+'</span></div>'+
+    '<div class="rk-row"><span class="rk-label">Politika Faizi</span><span class="rk-val">'+c.interest+'</span></div>'+
+    '<div class="rk-row"><span class="rk-label">Borç/GSYİH</span><span class="rk-val">'+c.debt+'</span></div>'+
+    '<div class="rk-row"><span class="rk-label">Döviz</span><span class="rk-val">'+c.currency+'</span></div>'+
+    '</div>';
+}).join('');
+
+fetch('/api/ai-analysis?cat=genel').then(function(r){return r.json()}).then(function(d){
+    if(d.analysis)document.getElementById('aiBox').textContent=d.analysis;
+}).catch(function(){});
+})();
+</script>
+</body>
+</html>

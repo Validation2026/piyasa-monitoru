@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Korelasyon Tablosu — Piyasa Monitörü</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+.ai-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;margin-bottom:22px;border-top:3px solid var(--purple)}
+.ai-body{font-size:.82rem;color:var(--t2);line-height:1.7;white-space:pre-wrap}
+.cor-table{width:100%;border-collapse:collapse;font-size:.7rem;font-family:var(--mono)}
+.cor-table th,.cor-table td{padding:6px 4px;text-align:center;border:1px solid var(--border2);min-width:48px}
+.cor-table th{background:var(--bg2);font-size:.6rem;font-weight:700;color:var(--t3)}
+.cor-table td.name{text-align:left;font-weight:700;font-size:.65rem;background:var(--bg2);color:var(--t1);padding-left:8px}
+.cor-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow-x:auto;padding:12px;margin-bottom:22px;-webkit-overflow-scrolling:touch}
+.pairs{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin-bottom:22px}
+.pair{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px}
+.pair-head{font-size:.78rem;font-weight:700;margin-bottom:6px}
+.pair-desc{font-size:.72rem;color:var(--t3);line-height:1.5}
+.pair-val{font-family:var(--mono);font-weight:700;font-size:.85rem;margin-top:4px}
+.pos{color:#00d68f}.neg{color:#ff4757}.neu{color:#94a3b8}
+@media(max-width:600px){.pairs{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<script src="assets/js/sidebar.js"></script>
+<div class="page">
+<div class="page-head"><h1>🔗 Emtia Korelasyon Tablosu</h1></div>
+
+<div class="ai-box"><div style="font-size:.82rem;font-weight:700;margin-bottom:8px">🤖 Analiz</div><div class="ai-body">Korelasyon, iki varlığın ne kadar birlikte hareket ettiğini gösterir. +1.0 mükemmel pozitif (birlikte hareket), -1.0 mükemmel negatif (ters hareket), 0 ilişkisiz demektir. Korelasyonlar zamanla değişebilir ve nedensellik göstermez.
+
+⚠️ Bu bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.</div></div>
+
+<div class="sec-title">📊 Korelasyon Matrisi (Yaklaşık Değerler)</div>
+<div class="cor-wrap">
+<table class="cor-table" id="corMatrix"></table>
+</div>
+
+<div class="sec-title">🔗 Önemli Korelasyon Çiftleri</div>
+<div class="pairs" id="pairsGrid"></div>
+
+<div class="footer">Piyasa Monitörü © 2026</div>
+</div>
+<script>
+(function(){
+var assets = ['BZ','XAU','XAG','DXY','BTC','S&P500','BIST','ZW','HG','NG'];
+
+// Yaklaşık korelasyon matrisi (gerçek piyasa ilişkilerine dayalı)
+var matrix = [
+//         BZ   XAU  XAG  DXY  BTC  S&P  BIST ZW   HG   NG
+/* BZ  */ [1.0, 0.3, 0.2,-0.4, 0.1, 0.1, 0.2, 0.3, 0.5, 0.6],
+/* XAU */ [0.3, 1.0, 0.9,-0.7, 0.4,-0.1, 0.1, 0.2, 0.3, 0.1],
+/* XAG */ [0.2, 0.9, 1.0,-0.6, 0.3, 0.0, 0.1, 0.1, 0.5, 0.1],
+/* DXY */ [-0.4,-0.7,-0.6, 1.0,-0.3, 0.1,-0.3,-0.2,-0.3,-0.1],
+/* BTC */ [0.1, 0.4, 0.3,-0.3, 1.0, 0.5, 0.2, 0.0, 0.2, 0.0],
+/* S&P */ [0.1,-0.1, 0.0, 0.1, 0.5, 1.0, 0.4,-0.1, 0.3, 0.0],
+/* BIST*/ [0.2, 0.1, 0.1,-0.3, 0.2, 0.4, 1.0, 0.1, 0.2, 0.1],
+/* ZW  */ [0.3, 0.2, 0.1,-0.2, 0.0,-0.1, 0.1, 1.0, 0.2, 0.3],
+/* HG  */ [0.5, 0.3, 0.5,-0.3, 0.2, 0.3, 0.2, 0.2, 1.0, 0.2],
+/* NG  */ [0.6, 0.1, 0.1,-0.1, 0.0, 0.0, 0.1, 0.3, 0.2, 1.0]
+];
+
+// Render matrix
+var t=document.getElementById('corMatrix');
+var h='<tr><th></th>';
+assets.forEach(function(a){h+='<th>'+a+'</th>'});
+h+='</tr>';
+matrix.forEach(function(row,i){
+    h+='<tr><td class="name">'+assets[i]+'</td>';
+    row.forEach(function(v,j){
+        var bg,color;
+        if(i===j){bg='#e2e8f0';color='#64748b'}
+        else if(v>=0.5){bg='rgba(0,214,143,'+(0.1+v*0.3)+')';color='#00875a'}
+        else if(v>=0.2){bg='rgba(0,214,143,'+(0.05+v*0.15)+')';color='#059669'}
+        else if(v>=-0.2){bg='#f8fafc';color='#94a3b8'}
+        else if(v>=-0.5){bg='rgba(255,71,87,'+(0.05+Math.abs(v)*0.15)+')';color='#dc2626'}
+        else{bg='rgba(255,71,87,'+(0.1+Math.abs(v)*0.3)+')';color='#991b1b'}
+        h+='<td style="background:'+bg+';color:'+color+';font-weight:700">'+(v>=0?'+':'')+v.toFixed(1)+'</td>';
+    });
+    h+='</tr>';
+});
+t.innerHTML=h;
+
+// Key pairs
+var pairs = [
+    {a:'XAU',b:'DXY',val:-0.7,cls:'neg',desc:'Altın ve dolar ters hareket eder. Dolar güçlendiğinde altın genelde düşer.'},
+    {a:'XAU',b:'XAG',val:+0.9,cls:'pos',desc:'Altın ve gümüş neredeyse her zaman birlikte hareket eder.'},
+    {a:'BZ',b:'NG',val:+0.6,cls:'pos',desc:'Petrol ve doğalgaz enerji sektörü olarak birlikte yönlenir.'},
+    {a:'BZ',b:'HG',val:+0.5,cls:'pos',desc:'Petrol ve bakır küresel büyüme beklentileriyle birlikte hareket eder.'},
+    {a:'BTC',b:'S&P500',val:+0.5,cls:'pos',desc:'Bitcoin son yıllarda hisse senetleriyle artan korelasyon gösteriyor.'},
+    {a:'DXY',b:'BIST',val:-0.3,cls:'neg',desc:'Güçlü dolar genelde gelişmekte olan piyasaları olumsuz etkiler.'},
+    {a:'BZ',b:'ZW',val:+0.3,cls:'pos',desc:'Enerji maliyetleri tarım ürünlerinin üretim ve nakliye giderlerini etkiler.'},
+    {a:'XAU',b:'BTC',val:+0.4,cls:'pos',desc:'Her ikisi de alternatif değer saklama aracı olarak görülüyor.'},
+];
+var pg=document.getElementById('pairsGrid');
+pg.innerHTML=pairs.map(function(p){
+    return '<div class="pair"><div class="pair-head">'+p.a+' ↔ '+p.b+'</div><div class="pair-val '+p.cls+'">'+(p.val>=0?'+':'')+p.val.toFixed(1)+'</div><div class="pair-desc">'+p.desc+'</div></div>';
+}).join('');
+})();
+</script>
+</body>
+</html>
