@@ -2,14 +2,14 @@
   "meta": {
     "source": "TCMB EVDS",
     "category": "Türkiye Makro Verileri",
-    "updated_at": "2026-04-03T06:03:40Z",
+    "updated_at": "2026-04-03T06:32:32Z",
     "series_count": 6,
     "errors": []
   },
   "series": [
     {
-      "id": "TP_GENENDEKS_T1-1",
-      "name": "TÜFE Aylık Değişim",
+      "id": "TP.FG.J0",
+      "name": "TÜFE Endeksi (2003=100)",
       "category": "Enflasyon",
       "current": 3683.83,
       "latest_date": "2026-1",
@@ -156,7 +156,7 @@
       ]
     },
     {
-      "id": "TP_GENENDEKS_T1-3",
+      "id": "TP.FE.OKTG01",
       "name": "TÜFE Yıllık Değişim (%)",
       "category": "Enflasyon",
       "current": 3513.87,
