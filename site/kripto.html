@@ -9,21 +9,44 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
-    <style>
+</head>
+<body>
+<script src="assets/js/sidebar.js"></script>
+<div class="page">
+    <div class="page-head">
+        <h1>₿ Kripto Paralar</h1>
+        <div class="sub">Bitcoin, Ethereum, Solana, XRP ve daha fazlası</div>
+        <div class="update-info" id="updateInfo"></div>
+    </div>
+    <div class="summary-row" id="summaryCards"></div>
+    <div class="periods" id="periodSelector">
+        <button class="pbtn" data-period="1m">1A</button>
+        <button class="pbtn" data-period="3m">3A</button>
+        <button class="pbtn" data-period="6m">6A</button>
+        <button class="pbtn on" data-period="1y">1Y</button>
+        <button class="pbtn" data-period="ytd">YTD</button>
+    </div>
+    <div class="charts" id="chartsGrid"></div>
+    <div class="dtable" id="dataTable"></div>
+    <div class="footer">Piyasa Monitörü © 2026</div>
+</div>
+<script src="assets/js/app.js"></script>
+<script>
+(function(){
+    var period='1y',allSeries=[],charts=[];
+    PM.fj('crypto.json').then(function(data){
+        if(!data||!data.series||!data.series.length){document.getElementById('summaryCards').innerHTML='<div class="scard"><div class="scard-name">Veri bulunamadı.</div></div>';return}
         allSeries=data.series;
         var ui=document.getElementById('updateInfo');
-        if(ui&&data.meta)ui.textContent='Son güncelleme: '+new Date(data.meta.updated_at).toLocaleString('tr-TR')+' · '+data.meta.symbol_count+' seri';
-
+        if(ui&&data.meta)ui.textContent='Son güncelleme: '+new Date(data.meta.updated_at).toLocaleString('tr-TR')+' \u00b7 '+data.meta.symbol_count+' seri';
         PM.buildSummary('summaryCards',allSeries);
         charts=PM.buildCharts('chartsGrid',allSeries,period);
         PM.buildTable('dataTable',allSeries);
     });
-
     document.getElementById('periodSelector').addEventListener('click',function(e){
         if(!e.target.classList.contains('pbtn'))return;
         document.querySelectorAll('.pbtn').forEach(function(b){b.classList.remove('on')});
-        e.target.classList.add('on');
-        period=e.target.getAttribute('data-period');
+        e.target.classList.add('on');period=e.target.getAttribute('data-period');
         if(charts)charts.forEach(function(c){c.destroy()});
         charts=PM.buildCharts('chartsGrid',allSeries,period);
     });
