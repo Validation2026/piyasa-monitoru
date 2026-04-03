@@ -14,7 +14,6 @@ var HTML = '<div class="sb-overlay" id="sbOverlay"></div>' +
 '<a class="sb-direct" href="tahviller.html" data-page="tahviller"><span class="sb-icon">📜</span> Tahvil Faizleri</a>' +
 '<a class="sb-direct" href="endeksler.html" data-page="endeksler"><span class="sb-icon">📈</span> Borsa Endeksleri</a>' +
 '<a class="sb-direct" href="kripto.html" data-page="kripto"><span class="sb-icon">₿</span> Kripto Paralar</a>' +
-'<a class="sb-direct" href="makro.html" data-page="makro"><span class="sb-icon">🏦</span> Türkiye Makro</a>' +
 '<a class="sb-direct" href="iran-risk.html" data-page="iran-risk" style="border-top:1px solid var(--border);margin-top:4px;padding-top:14px"><span class="sb-icon">🔴</span> İran Risk</a>' +
 '<div class="sb-footer"><button class="sb-theme-btn" id="sbThemeBtn">🌙 Tema Değiştir</button></div>' +
 '</aside>' +
