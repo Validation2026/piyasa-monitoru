@@ -14,6 +14,8 @@ var HTML = '<div class="sb-overlay" id="sbOverlay"></div>' +
 '<a class="sb-direct" href="tahviller.html" data-page="tahviller"><span class="sb-icon">📜</span> Tahvil Faizleri</a>' +
 '<a class="sb-direct" href="endeksler.html" data-page="endeksler"><span class="sb-icon">📈</span> Borsa Endeksleri</a>' +
 '<a class="sb-direct" href="kripto.html" data-page="kripto"><span class="sb-icon">₿</span> Kripto Paralar</a>' +
+'<a class="sb-direct" href="makro.html" data-page="makro"><span class="sb-icon">🏦</span> Türkiye Makro</a>' +
+'<a class="sb-direct" href="iran-risk.html" data-page="iran-risk" style="border-top:1px solid var(--border);margin-top:4px;padding-top:14px"><span class="sb-icon">🔴</span> İran Risk</a>' +
 '<div class="sb-footer"><button class="sb-theme-btn" id="sbThemeBtn">🌙 Tema Değiştir</button></div>' +
 '</aside>' +
 '<div class="topbar" id="topbar">' +
@@ -75,7 +77,7 @@ function tick() {
 setInterval(tick, 1000); tick();
 
 // Breadcrumb
-var titles = {index:'Ana Panel','emtia-enerji':'Enerji','emtia-metaller':'Kıymetli Madenler','emtia-tarim':'Tarım',kurlar:'Döviz Kurları',tahviller:'Tahvil Faizleri',endeksler:'Borsa Endeksleri',kripto:'Kripto Paralar'};
+var titles = {index:'Ana Panel','emtia-enerji':'Enerji','emtia-metaller':'Kıymetli Madenler','emtia-tarim':'Tarım',kurlar:'Döviz Kurları',tahviller:'Tahvil Faizleri',endeksler:'Borsa Endeksleri',kripto:'Kripto Paralar',makro:'Türkiye Makro','iran-risk':'İran Risk Monitörü'};
 var bc = document.getElementById('topbarBreadcrumb');
 if (bc) bc.innerHTML = '<a href="index.html">Panel</a> › ' + (titles[cur] || '');
 
