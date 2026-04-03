@@ -37,6 +37,9 @@ var SIDEBAR_HTML = `
     <a class="sb-direct" href="makro.html" data-page="makro">
         <span class="sb-icon">🏦</span> Türkiye Makro
     </a>
+    <a class="sb-direct" href="kripto.html" data-page="kripto">
+        <span class="sb-icon">₿</span> Kripto Paralar
+    </a>
 
     <div class="sb-footer">
         <button class="sb-theme-btn" id="sbThemeBtn">🌙 Tema Değiştir</button>
