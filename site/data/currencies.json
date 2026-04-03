@@ -2,11 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Döviz Kurları",
-<<<<<<< HEAD
-    "updated_at": "2026-04-03T12:43:29Z",
-=======
-    "updated_at": "2026-04-03T13:15:42Z",
->>>>>>> b5e2353 (22 dosya mega update)
+    "updated_at": "2026-04-03T13:23:43Z",
     "symbol_count": 16,
     "errors": [
       "CNYTRY=X",
@@ -18,25 +14,14 @@
       "id": "USDTRY=X",
       "name": "USD/TRY",
       "unit": "TRY",
-<<<<<<< HEAD
-      "current": 44.5915,
-      "change_1d_pct": 0.24,
-      "change_1w_pct": 0.31,
-      "change_1m_pct": 1.46,
-      "change_3m_pct": 3.82,
-      "change_ytd_pct": 3.72,
-      "change_1y_pct": 17.52,
-      "high_52w": 44.5915,
-=======
-      "current": 44.5876,
+      "current": 44.5903,
       "change_1d_pct": 0.23,
       "change_1w_pct": 0.3,
       "change_1m_pct": 1.46,
       "change_3m_pct": 3.81,
       "change_ytd_pct": 3.71,
       "change_1y_pct": 17.51,
-      "high_52w": 44.5876,
->>>>>>> b5e2353 (22 dosya mega update)
+      "high_52w": 44.5903,
       "low_52w": 37.9446,
       "data": [
         {
@@ -1069,11 +1054,7 @@
         },
         {
           "date": "2026-04-03",
-<<<<<<< HEAD
-          "value": 44.5915
-=======
-          "value": 44.5876
->>>>>>> b5e2353 (22 dosya mega update)
+          "value": 44.5903
         }
       ]
     },
@@ -1081,23 +1062,13 @@
       "id": "EURTRY=X",
       "name": "EUR/TRY",
       "unit": "TRY",
-<<<<<<< HEAD
-      "current": 51.5048,
-      "change_1d_pct": -0.38,
-      "change_1w_pct": 0.37,
-      "change_1m_pct": 1.15,
-      "change_3m_pct": 1.79,
-      "change_ytd_pct": 2.04,
-      "change_1y_pct": 24.49,
-=======
-      "current": 51.5353,
-      "change_1d_pct": -0.33,
-      "change_1w_pct": 0.43,
-      "change_1m_pct": 1.21,
-      "change_3m_pct": 1.85,
-      "change_ytd_pct": 2.1,
-      "change_1y_pct": 24.57,
->>>>>>> b5e2353 (22 dosya mega update)
+      "current": 51.523,
+      "change_1d_pct": -0.35,
+      "change_1w_pct": 0.4,
+      "change_1m_pct": 1.19,
+      "change_3m_pct": 1.82,
+      "change_ytd_pct": 2.07,
+      "change_1y_pct": 24.54,
       "high_52w": 52.1954,
       "low_52w": 41.372,
       "data": [
@@ -2131,11 +2102,7 @@
         },
         {
           "date": "2026-04-03",
-<<<<<<< HEAD
-          "value": 51.5048
-=======
-          "value": 51.5353
->>>>>>> b5e2353 (22 dosya mega update)
+          "value": 51.523
         }
       ]
     },
@@ -2143,17 +2110,13 @@
       "id": "GBPTRY=X",
       "name": "GBP/TRY",
       "unit": "TRY",
-<<<<<<< HEAD
-      "current": 58.9265,
-=======
-      "current": 58.9267,
->>>>>>> b5e2353 (22 dosya mega update)
-      "change_1d_pct": -0.69,
-      "change_1w_pct": -0.68,
-      "change_1m_pct": 0.61,
-      "change_3m_pct": 1.58,
-      "change_ytd_pct": 1.81,
-      "change_1y_pct": 19.05,
+      "current": 58.9195,
+      "change_1d_pct": -0.71,
+      "change_1w_pct": -0.69,
+      "change_1m_pct": 0.59,
+      "change_3m_pct": 1.57,
+      "change_ytd_pct": 1.8,
+      "change_1y_pct": 19.04,
       "high_52w": 60.0847,
       "low_52w": 48.3796,
       "data": [
@@ -3187,11 +3150,7 @@
         },
         {
           "date": "2026-04-03",
-<<<<<<< HEAD
-          "value": 58.9265
-=======
-          "value": 58.9267
->>>>>>> b5e2353 (22 dosya mega update)
+          "value": 58.9195
         }
       ]
     },
@@ -3199,23 +3158,13 @@
       "id": "CHFTRY=X",
       "name": "CHF/TRY",
       "unit": "TRY",
-<<<<<<< HEAD
-      "current": 55.7604,
-      "change_1d_pct": -0.75,
-      "change_1w_pct": -0.39,
-      "change_1m_pct": -0.57,
-      "change_3m_pct": 2.5,
-      "change_ytd_pct": 2.81,
-      "change_1y_pct": 28.88,
-=======
-      "current": 55.8138,
+      "current": 55.8176,
       "change_1d_pct": -0.65,
       "change_1w_pct": -0.29,
       "change_1m_pct": -0.47,
       "change_3m_pct": 2.6,
-      "change_ytd_pct": 2.91,
-      "change_1y_pct": 29.0,
->>>>>>> b5e2353 (22 dosya mega update)
+      "change_ytd_pct": 2.92,
+      "change_1y_pct": 29.01,
       "high_52w": 57.1442,
       "low_52w": 43.2666,
       "data": [
@@ -4249,11 +4198,7 @@
         },
         {
           "date": "2026-04-03",
-<<<<<<< HEAD
-          "value": 55.7604
-=======
-          "value": 55.8138
->>>>>>> b5e2353 (22 dosya mega update)
+          "value": 55.8176
         }
       ]
     },
@@ -4281,32 +4226,19 @@
       "id": "CADTRY=X",
       "name": "CAD/TRY",
       "unit": "TRY",
-<<<<<<< HEAD
-      "current": 32.002,
-=======
-      "current": 31.9939,
->>>>>>> b5e2353 (22 dosya mega update)
+      "current": 31.9883,
       "change_1d_pct": null,
       "change_1w_pct": null,
       "change_1m_pct": null,
       "change_3m_pct": null,
       "change_ytd_pct": null,
       "change_1y_pct": null,
-<<<<<<< HEAD
-      "high_52w": 32.002,
-      "low_52w": 32.002,
+      "high_52w": 31.9883,
+      "low_52w": 31.9883,
       "data": [
         {
           "date": "2026-04-03",
-          "value": 32.002
-=======
-      "high_52w": 31.9939,
-      "low_52w": 31.9939,
-      "data": [
-        {
-          "date": "2026-04-03",
-          "value": 31.9939
->>>>>>> b5e2353 (22 dosya mega update)
+          "value": 31.9883
         }
       ]
     },
@@ -4314,32 +4246,19 @@
       "id": "AUDTRY=X",
       "name": "AUD/TRY",
       "unit": "TRY",
-<<<<<<< HEAD
-      "current": 30.7768,
-=======
-      "current": 30.7773,
->>>>>>> b5e2353 (22 dosya mega update)
+      "current": 30.7778,
       "change_1d_pct": null,
       "change_1w_pct": null,
       "change_1m_pct": null,
       "change_3m_pct": null,
       "change_ytd_pct": null,
       "change_1y_pct": null,
-<<<<<<< HEAD
-      "high_52w": 30.7768,
-      "low_52w": 30.7768,
+      "high_52w": 30.7778,
+      "low_52w": 30.7778,
       "data": [
         {
           "date": "2026-04-03",
-          "value": 30.7768
-=======
-      "high_52w": 30.7773,
-      "low_52w": 30.7773,
-      "data": [
-        {
-          "date": "2026-04-03",
-          "value": 30.7773
->>>>>>> b5e2353 (22 dosya mega update)
+          "value": 30.7778
         }
       ]
     },
@@ -4347,23 +4266,13 @@
       "id": "EURUSD=X",
       "name": "EUR/USD",
       "unit": "USD",
-<<<<<<< HEAD
-      "current": 1.1534,
-      "change_1d_pct": -0.49,
-      "change_1w_pct": -0.01,
-      "change_1m_pct": -0.67,
-      "change_3m_pct": -1.81,
-      "change_ytd_pct": -1.84,
-      "change_1y_pct": 5.73,
-=======
-      "current": 1.1541,
-      "change_1d_pct": -0.43,
-      "change_1w_pct": 0.05,
-      "change_1m_pct": -0.61,
-      "change_3m_pct": -1.75,
-      "change_ytd_pct": -1.78,
-      "change_1y_pct": 5.79,
->>>>>>> b5e2353 (22 dosya mega update)
+      "current": 1.1538,
+      "change_1d_pct": -0.46,
+      "change_1w_pct": 0.03,
+      "change_1m_pct": -0.64,
+      "change_3m_pct": -1.78,
+      "change_ytd_pct": -1.8,
+      "change_1y_pct": 5.77,
       "high_52w": 1.2018,
       "low_52w": 1.0909,
       "data": [
@@ -5397,11 +5306,7 @@
         },
         {
           "date": "2026-04-03",
-<<<<<<< HEAD
-          "value": 1.1534
-=======
-          "value": 1.1541
->>>>>>> b5e2353 (22 dosya mega update)
+          "value": 1.1538
         }
       ]
     },
@@ -5409,23 +5314,13 @@
       "id": "GBPUSD=X",
       "name": "GBP/USD",
       "unit": "USD",
-<<<<<<< HEAD
-      "current": 1.3216,
-      "change_1d_pct": -0.65,
-      "change_1w_pct": -0.9,
-      "change_1m_pct": -1.03,
-      "change_3m_pct": -1.86,
-      "change_ytd_pct": -1.91,
-      "change_1y_pct": 1.3,
-=======
-      "current": 1.3218,
-      "change_1d_pct": -0.64,
-      "change_1w_pct": -0.88,
-      "change_1m_pct": -1.02,
-      "change_3m_pct": -1.85,
-      "change_ytd_pct": -1.9,
-      "change_1y_pct": 1.32,
->>>>>>> b5e2353 (22 dosya mega update)
+      "current": 1.3214,
+      "change_1d_pct": -0.67,
+      "change_1w_pct": -0.91,
+      "change_1m_pct": -1.05,
+      "change_3m_pct": -1.88,
+      "change_ytd_pct": -1.93,
+      "change_1y_pct": 1.29,
       "high_52w": 1.3825,
       "low_52w": 1.2735,
       "data": [
@@ -6459,11 +6354,7 @@
         },
         {
           "date": "2026-04-03",
-<<<<<<< HEAD
-          "value": 1.3216
-=======
-          "value": 1.3218
->>>>>>> b5e2353 (22 dosya mega update)
+          "value": 1.3214
         }
       ]
     },
@@ -6471,23 +6362,13 @@
       "id": "USDJPY=X",
       "name": "USD/JPY",
       "unit": "JPY",
-<<<<<<< HEAD
-      "current": 159.572,
+      "current": 159.584,
       "change_1d_pct": 0.56,
       "change_1w_pct": -0.08,
-      "change_1m_pct": 1.14,
-      "change_3m_pct": 2.02,
-      "change_ytd_pct": 1.81,
-      "change_1y_pct": 7.91,
-=======
-      "current": 159.558,
-      "change_1d_pct": 0.55,
-      "change_1w_pct": -0.09,
-      "change_1m_pct": 1.13,
-      "change_3m_pct": 2.01,
-      "change_ytd_pct": 1.8,
-      "change_1y_pct": 7.9,
->>>>>>> b5e2353 (22 dosya mega update)
+      "change_1m_pct": 1.15,
+      "change_3m_pct": 2.03,
+      "change_ytd_pct": 1.82,
+      "change_1y_pct": 7.92,
       "high_52w": 160.234,
       "low_52w": 140.876,
       "data": [
@@ -7521,11 +7402,7 @@
         },
         {
           "date": "2026-04-03",
-<<<<<<< HEAD
-          "value": 159.572
-=======
-          "value": 159.558
->>>>>>> b5e2353 (22 dosya mega update)
+          "value": 159.584
         }
       ]
     },
@@ -7533,23 +7410,13 @@
       "id": "USDCHF=X",
       "name": "USD/CHF",
       "unit": "CHF",
-<<<<<<< HEAD
-      "current": 0.7997,
-      "change_1d_pct": 0.72,
-      "change_1w_pct": 0.63,
-      "change_1m_pct": 2.28,
-      "change_3m_pct": 1.01,
-      "change_ytd_pct": 0.97,
-      "change_1y_pct": -8.79,
-=======
-      "current": 0.7987,
-      "change_1d_pct": 0.59,
-      "change_1w_pct": 0.5,
-      "change_1m_pct": 2.15,
-      "change_3m_pct": 0.88,
-      "change_ytd_pct": 0.85,
-      "change_1y_pct": -8.91,
->>>>>>> b5e2353 (22 dosya mega update)
+      "current": 0.799,
+      "change_1d_pct": 0.63,
+      "change_1w_pct": 0.54,
+      "change_1m_pct": 2.19,
+      "change_3m_pct": 0.92,
+      "change_ytd_pct": 0.88,
+      "change_1y_pct": -8.87,
       "high_52w": 0.8768,
       "low_52w": 0.7632,
       "data": [
@@ -8583,11 +8450,7 @@
         },
         {
           "date": "2026-04-03",
-<<<<<<< HEAD
-          "value": 0.7997
-=======
-          "value": 0.7987
->>>>>>> b5e2353 (22 dosya mega update)
+          "value": 0.799
         }
       ]
     },
@@ -9643,23 +9506,13 @@
       "id": "USDCAD=X",
       "name": "USD/CAD",
       "unit": "CAD",
-<<<<<<< HEAD
-      "current": 1.3934,
-      "change_1d_pct": 0.42,
-      "change_1w_pct": 0.59,
-      "change_1m_pct": 1.9,
-      "change_3m_pct": 1.75,
-      "change_ytd_pct": 1.59,
-      "change_1y_pct": -1.99,
-=======
-      "current": 1.3937,
-      "change_1d_pct": 0.44,
-      "change_1w_pct": 0.61,
-      "change_1m_pct": 1.92,
-      "change_3m_pct": 1.77,
-      "change_ytd_pct": 1.61,
-      "change_1y_pct": -1.97,
->>>>>>> b5e2353 (22 dosya mega update)
+      "current": 1.3941,
+      "change_1d_pct": 0.47,
+      "change_1w_pct": 0.64,
+      "change_1m_pct": 1.95,
+      "change_3m_pct": 1.8,
+      "change_ytd_pct": 1.64,
+      "change_1y_pct": -1.94,
       "high_52w": 1.4253,
       "low_52w": 1.3492,
       "data": [
@@ -10693,11 +10546,7 @@
         },
         {
           "date": "2026-04-03",
-<<<<<<< HEAD
-          "value": 1.3934
-=======
-          "value": 1.3937
->>>>>>> b5e2353 (22 dosya mega update)
+          "value": 1.3941
         }
       ]
     },
@@ -10705,23 +10554,13 @@
       "id": "NZDUSD=X",
       "name": "NZD/USD",
       "unit": "USD",
-<<<<<<< HEAD
-      "current": 0.5706,
-      "change_1d_pct": -0.77,
-      "change_1w_pct": -0.97,
-      "change_1m_pct": -3.11,
-      "change_3m_pct": -1.47,
-      "change_ytd_pct": -0.9,
-      "change_1y_pct": -0.38,
-=======
-      "current": 0.5709,
-      "change_1d_pct": -0.71,
-      "change_1w_pct": -0.92,
-      "change_1m_pct": -3.06,
-      "change_3m_pct": -1.42,
-      "change_ytd_pct": -0.85,
-      "change_1y_pct": -0.33,
->>>>>>> b5e2353 (22 dosya mega update)
+      "current": 0.5708,
+      "change_1d_pct": -0.73,
+      "change_1w_pct": -0.94,
+      "change_1m_pct": -3.07,
+      "change_3m_pct": -1.43,
+      "change_ytd_pct": -0.87,
+      "change_1y_pct": -0.35,
       "high_52w": 0.6101,
       "low_52w": 0.5518,
       "data": [
@@ -11755,11 +11594,7 @@
         },
         {
           "date": "2026-04-03",
-<<<<<<< HEAD
-          "value": 0.5706
-=======
-          "value": 0.5709
->>>>>>> b5e2353 (22 dosya mega update)
+          "value": 0.5708
         }
       ]
     },
@@ -11767,23 +11602,13 @@
       "id": "USDCNY=X",
       "name": "USD/CNY",
       "unit": "CNY",
-<<<<<<< HEAD
-      "current": 6.8825,
-      "change_1d_pct": 0.17,
-      "change_1w_pct": -0.41,
-      "change_1m_pct": -0.25,
-      "change_3m_pct": -1.62,
-      "change_ytd_pct": -1.62,
-      "change_1y_pct": -5.3,
-=======
-      "current": 6.8817,
-      "change_1d_pct": 0.16,
-      "change_1w_pct": -0.42,
-      "change_1m_pct": -0.26,
-      "change_3m_pct": -1.64,
-      "change_ytd_pct": -1.64,
-      "change_1y_pct": -5.31,
->>>>>>> b5e2353 (22 dosya mega update)
+      "current": 6.8805,
+      "change_1d_pct": 0.15,
+      "change_1w_pct": -0.44,
+      "change_1m_pct": -0.28,
+      "change_3m_pct": -1.65,
+      "change_ytd_pct": -1.65,
+      "change_1y_pct": -5.33,
       "high_52w": 7.35,
       "low_52w": 6.8409,
       "data": [
@@ -12817,11 +12642,7 @@
         },
         {
           "date": "2026-04-03",
-<<<<<<< HEAD
-          "value": 6.8825
-=======
-          "value": 6.8817
->>>>>>> b5e2353 (22 dosya mega update)
+          "value": 6.8805
         }
       ]
     },
@@ -12829,23 +12650,13 @@
       "id": "DX-Y.NYB",
       "name": "Dolar Endeksi (DXY)",
       "unit": "",
-<<<<<<< HEAD
-      "current": 100.098,
-      "change_1d_pct": 0.07,
-      "change_1w_pct": -0.05,
-      "change_1m_pct": 1.34,
-      "change_3m_pct": 2.1,
-      "change_ytd_pct": 1.7,
-      "change_1y_pct": -1.93,
-=======
-      "current": 100.069,
-      "change_1d_pct": 0.04,
-      "change_1w_pct": -0.08,
-      "change_1m_pct": 1.32,
-      "change_3m_pct": 2.07,
-      "change_ytd_pct": 1.68,
-      "change_1y_pct": -1.96,
->>>>>>> b5e2353 (22 dosya mega update)
+      "current": 100.057,
+      "change_1d_pct": 0.03,
+      "change_1w_pct": -0.09,
+      "change_1m_pct": 1.3,
+      "change_3m_pct": 2.06,
+      "change_ytd_pct": 1.66,
+      "change_1y_pct": -1.97,
       "high_52w": 103.26,
       "low_52w": 96.22,
       "data": [
@@ -13859,11 +13670,7 @@
         },
         {
           "date": "2026-04-03",
-<<<<<<< HEAD
-          "value": 100.098
-=======
-          "value": 100.069
->>>>>>> b5e2353 (22 dosya mega update)
+          "value": 100.057
         }
       ]
     }
