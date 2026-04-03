@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Enerji",
-    "updated_at": "2026-04-02T20:05:00Z",
+    "updated_at": "2026-04-03T06:02:14Z",
     "symbol_count": 4,
     "errors": []
   },
@@ -11,20 +11,16 @@
       "id": "BZ=F",
       "name": "Brent Petrol",
       "unit": "USD/bbl",
-      "current": 108.55,
-      "change_1d_pct": 7.31,
-      "change_1w_pct": 0.5,
-      "change_1m_pct": 33.35,
-      "change_3m_pct": 79.01,
-      "change_ytd_pct": 78.68,
-      "change_1y_pct": 44.83,
+      "current": 109.03,
+      "change_1d_pct": 7.78,
+      "change_1w_pct": 0.94,
+      "change_1m_pct": 33.94,
+      "change_3m_pct": 79.8,
+      "change_ytd_pct": 79.47,
+      "change_1y_pct": 55.45,
       "high_52w": 118.35,
       "low_52w": 58.92,
       "data": [
-        {
-          "date": "2025-04-02",
-          "value": 74.95
-        },
         {
           "date": "2025-04-03",
           "value": 70.14
@@ -1031,7 +1027,7 @@
         },
         {
           "date": "2026-04-02",
-          "value": 108.55
+          "value": 109.03
         }
       ]
     },
@@ -1039,20 +1035,16 @@
       "id": "CL=F",
       "name": "WTI Petrol",
       "unit": "USD/bbl",
-      "current": 111.5,
-      "change_1d_pct": 11.37,
-      "change_1w_pct": 18.01,
-      "change_1m_pct": 49.54,
-      "change_3m_pct": 96.51,
-      "change_ytd_pct": 94.52,
-      "change_1y_pct": 55.49,
-      "high_52w": 111.5,
+      "current": 111.54,
+      "change_1d_pct": 11.41,
+      "change_1w_pct": 18.06,
+      "change_1m_pct": 49.6,
+      "change_3m_pct": 96.58,
+      "change_ytd_pct": 94.59,
+      "change_1y_pct": 66.6,
+      "high_52w": 111.54,
       "low_52w": 55.27,
       "data": [
-        {
-          "date": "2025-04-02",
-          "value": 71.71
-        },
         {
           "date": "2025-04-03",
           "value": 66.95
@@ -2059,7 +2051,7 @@
         },
         {
           "date": "2026-04-02",
-          "value": 111.5
+          "value": 111.54
         }
       ]
     },
@@ -2067,20 +2059,16 @@
       "id": "NG=F",
       "name": "Doğalgaz (Henry Hub)",
       "unit": "USD/MMBtu",
-      "current": 2.802,
-      "change_1d_pct": -0.6,
-      "change_1w_pct": -6.57,
-      "change_1m_pct": -8.25,
-      "change_3m_pct": -35.82,
-      "change_ytd_pct": -22.55,
-      "change_1y_pct": -30.9,
+      "current": 2.8,
+      "change_1d_pct": -0.67,
+      "change_1w_pct": -6.64,
+      "change_1m_pct": -8.32,
+      "change_3m_pct": -35.87,
+      "change_ytd_pct": -22.61,
+      "change_1y_pct": -32.33,
       "high_52w": 7.46,
       "low_52w": 2.696,
       "data": [
-        {
-          "date": "2025-04-02",
-          "value": 4.055
-        },
         {
           "date": "2025-04-03",
           "value": 4.138
@@ -3087,7 +3075,7 @@
         },
         {
           "date": "2026-04-02",
-          "value": 2.802
+          "value": 2.8
         }
       ]
     },
@@ -3105,10 +3093,6 @@
       "high_52w": 108.9,
       "low_52w": 89.25,
       "data": [
-        {
-          "date": "2025-04-02",
-          "value": 103.3
-        },
         {
           "date": "2025-04-03",
           "value": 100.75
