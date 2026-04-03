@@ -41,6 +41,17 @@
 .nw:last-child{border-bottom:none}
 .nw a{color:#0f172a;text-decoration:none}.nw a:hover{color:#3b82f6}
 .nw-t{font-size:.6rem;color:#94a3b8;margin-top:1px}
+.tl-f{background:#fff;border:1px solid #dde4ed;border-radius:5px;padding:4px 10px;font-size:.67rem;font-weight:600;cursor:pointer;color:#64748b;transition:.2s}
+.tl-f:hover,.tl-f.on{background:#3b82f6;color:#fff;border-color:#3b82f6}
+#tlBox::before{content:'';position:absolute;left:6px;top:0;bottom:0;width:2px;background:#dde4ed}
+.tl-i{position:relative;margin-bottom:14px}
+.tl-d{position:absolute;left:-20px;top:3px;width:10px;height:10px;border-radius:50%;border:2px solid #fff}
+.tl-d.red{background:#ff4757}.tl-d.orange{background:#f97316}.tl-d.blue{background:#3b82f6}.tl-d.purple{background:#a78bfa}
+.tl-dt{font-size:.65rem;font-family:'JetBrains Mono',monospace;font-weight:700;color:#94a3b8}
+.tl-tt{font-size:.8rem;font-weight:700;color:#0f172a;margin:1px 0}
+.tl-ds{font-size:.72rem;color:#64748b;line-height:1.4}
+.tl-tg{display:inline-block;font-size:.55rem;font-weight:700;padding:1px 5px;border-radius:3px;margin-top:3px;text-transform:uppercase}
+.tg-mil{background:#fee2e2;color:#dc2626}.tg-dip{background:#dbeafe;color:#2563eb}.tg-eco{background:#fef3c7;color:#d97706}.tg-nuk{background:#f3e8ff;color:#7c3aed}
 @media(max-width:768px){.top-row{grid-template-columns:1fr}#warMap{height:300px}.cm-grid{grid-template-columns:repeat(3,1fr)}.war-day{font-size:2.2rem}}
 </style>
 </head>
@@ -77,6 +88,16 @@
 </div>
 <div id="warMap"></div>
 </div>
+
+<div class="sec-title">⏱️ Savaş Zaman Çizelgesi</div>
+<div style="display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap" id="tlFilter">
+<button class="tl-f on" data-f="all">Tümü</button>
+<button class="tl-f" data-f="mil">🔴 Askeri</button>
+<button class="tl-f" data-f="dip">🔵 Diplomatik</button>
+<button class="tl-f" data-f="eco">🟡 Ekonomik</button>
+<button class="tl-f" data-f="nuk">🟣 Nükleer</button>
+</div>
+<div id="tlBox" style="position:relative;padding-left:24px;margin-bottom:18px"></div>
 
 <div class="sec-title">📰 Son Haberler</div>
 <div class="news-box" id="newsBox"><div class="nw">Haberler yükleniyor...</div></div>
@@ -237,6 +258,46 @@ function renderAll(){
         return'<div class="nw"><a href="'+n.link+'" target="_blank">'+n.title+'</a><div class="nw-t">'+t+'</div></div>';
     }).join('')||'<div class="nw">Haber bulunamadı</div>';
 }
+
+// TIMELINE
+var TLE=[
+{d:'28.02',t:'İran-İsrail doğrudan çatışma başladı',ds:'İsrail nükleer tesislere hava operasyonu, İran balistik füze karşılığı',tag:'mil',dot:'red'},
+{d:'28.02',t:'BMGK acil toplantı',ds:'ABD ve Rusya veto kullandı',tag:'dip',dot:'blue'},
+{d:'01.03',t:'Brent %12 sıçradı',ds:'Hürmüz riski ile Brent 106$, Altın 4500$+',tag:'eco',dot:'orange'},
+{d:'02.03',t:'Natanz tesisi vuruldu',ds:'İsrail F-35 operasyonu, IAEA acil açıklama',tag:'nuk',dot:'purple'},
+{d:'03.03',t:'Hürmüz trafiği aksadı',ds:'İran donanması tatbikat, sigorta primleri 10x',tag:'eco',dot:'orange'},
+{d:'05.03',t:'ABD 5. Filo tam konuşlanma',ds:'İki uçak gemisi grubu Basra Körfezi\'nde',tag:'mil',dot:'red'},
+{d:'07.03',t:'Hizbullah kuzey İsrail\'i vurdu',ds:'200+ roket, İsrail Beyrut\'u bombaladı',tag:'mil',dot:'red'},
+{d:'08.03',t:'Isfahan ikinci kez vuruldu',ds:'İran orantısız yanıt sözü verdi',tag:'nuk',dot:'purple'},
+{d:'10.03',t:'Çin-Hindistan arabuluculuk',ds:'Diplomatik temas turları başladı',tag:'dip',dot:'blue'},
+{d:'12.03',t:'Husiler Kızıldeniz\'de tanker vurdu',ds:'Bab el-Mandeb, navlun %40 arttı',tag:'mil',dot:'red'},
+{d:'14.03',t:'OPEC+ acil üretim artışı',ds:'Günlük 500K varil ek üretim kararı',tag:'eco',dot:'orange'},
+{d:'16.03',t:'Buşehr reaktörü kapatıldı',ds:'Güvenlik gerekçesiyle geçici devre dışı',tag:'nuk',dot:'purple'},
+{d:'18.03',t:'İsrail kara harekatı sinyali',ds:'Lübnan sınırında 50.000 yedek asker',tag:'mil',dot:'red'},
+{d:'20.03',t:'Nevruz ateşkes teklifi',ds:'İran 72 saat önerdi, İsrail reddetti',tag:'dip',dot:'blue'},
+{d:'22.03',t:'Süveyş trafiği %30 düştü',ds:'Gemiler Ümit Burnu rotasına yöneldi',tag:'eco',dot:'orange'},
+{d:'25.03',t:'ABD İran\'a tam petrol ambargosu',ds:'Günlük 500K varil ihracat durduruldu',tag:'eco',dot:'orange'},
+{d:'28.03',t:'İran hipersonik füze ile Demir Kubbe\'yi aştı',ds:'Tel Aviv yakınlarına isabet',tag:'mil',dot:'red'},
+{d:'30.03',t:'G7 ateşkes çağrısı',ds:'İnsani yardım koridoru talebi',tag:'dip',dot:'blue'},
+{d:'01.04',t:'İran çelik tesisleri vuruldu',ds:'İsrail: Üretim kapasitesinin %70\'i yok edildi',tag:'mil',dot:'red'},
+{d:'02.04',t:'Stratejik köprü saldırısı',ds:'İran kırmızı çizgi aşıldı açıklaması',tag:'mil',dot:'red'},
+{d:'03.04',t:'Trump: Henüz başlamadık bile',ds:'Hürmüz gerilimi tırmandı',tag:'dip',dot:'blue'},
+];
+var tagNames={mil:'Askeri',dip:'Diplomatik',eco:'Ekonomik',nuk:'Nükleer'};
+function renderTL(f){
+    var box=document.getElementById('tlBox');
+    var items=f==='all'?TLE:TLE.filter(function(e){return e.tag===f});
+    box.innerHTML=items.slice().reverse().map(function(e){
+        return'<div class="tl-i"><div class="tl-d '+e.dot+'"></div><div class="tl-dt">'+e.d+'.2026</div><div class="tl-tt">'+e.t+'</div><div class="tl-ds">'+e.ds+'</div><span class="tl-tg tg-'+e.tag+'">'+tagNames[e.tag]+'</span></div>';
+    }).join('');
+}
+renderTL('all');
+document.getElementById('tlFilter').addEventListener('click',function(ev){
+    if(!ev.target.classList.contains('tl-f'))return;
+    document.querySelectorAll('.tl-f').forEach(function(b){b.classList.remove('on')});
+    ev.target.classList.add('on');
+    renderTL(ev.target.getAttribute('data-f'));
+});
 })();
 </script>
 </body>

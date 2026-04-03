@@ -16,14 +16,11 @@ var links = [
     ['endeksler','📈','Endeksler'],
     ['kripto','₿','Kripto'],
     ['iran-risk','🔴','İran Risk'],
-    ['zaman-cizelgesi','⏱️','Zaman Çizelgesi'],
     ['tedarik-zinciri','🌍','Tedarik Zinciri'],
     ['kuresel-risk','🌍','Küresel Risk'],
     ['ekonomik-takvim','📅','Takvim'],
     ['merkez-bankalari','🏛️','Merkez Bank.'],
     ['ulke-risk','🌐','Ülke Risk'],
-    ['korelasyon','🔗','Korelasyon'],
-    ['performans','📊','Performans']
 ];
 
 // Build links HTML
