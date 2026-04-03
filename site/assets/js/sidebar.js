@@ -16,35 +16,24 @@ var SIDEBAR_HTML = `
     <a class="sb-direct" href="index.html" data-page="index">
         <span class="sb-icon">🏠</span> Ana Panel
     </a>
-
-    <div class="sb-section" data-section="emtia">
-        <div class="sb-section-title">
-            <span class="sb-arrow">▶</span>
-            <span class="sb-icon">📦</span>
-            Emtia
-            <span class="sb-badge">3</span>
-        </div>
-        <div class="sb-pages">
-            <a class="sb-link" href="emtia-enerji.html" data-page="emtia-enerji">⛽ Enerji</a>
-            <a class="sb-link" href="emtia-metaller.html" data-page="emtia-metaller">🥇 Kıymetli Madenler</a>
-            <a class="sb-link" href="emtia-tarim.html" data-page="emtia-tarim">🌾 Tarım</a>
-        </div>
-    </div>
-
-    <div class="sb-section" data-section="finans">
-        <div class="sb-section-title">
-            <span class="sb-arrow">▶</span>
-            <span class="sb-icon">💹</span>
-            Finans
-            <span class="sb-badge">3</span>
-        </div>
-        <div class="sb-pages">
-            <a class="sb-link" href="kurlar.html" data-page="kurlar">💱 Döviz Kurları</a>
-            <a class="sb-link" href="tahviller.html" data-page="tahviller">📜 Tahvil Faizleri</a>
-            <a class="sb-link" href="endeksler.html" data-page="endeksler">📈 Borsa Endeksleri</a>
-        </div>
-    </div>
-
+    <a class="sb-direct" href="emtia-enerji.html" data-page="emtia-enerji">
+        <span class="sb-icon">⛽</span> Enerji
+    </a>
+    <a class="sb-direct" href="emtia-metaller.html" data-page="emtia-metaller">
+        <span class="sb-icon">🥇</span> Kıymetli Madenler
+    </a>
+    <a class="sb-direct" href="emtia-tarim.html" data-page="emtia-tarim">
+        <span class="sb-icon">🌾</span> Tarım Emtiaları
+    </a>
+    <a class="sb-direct" href="kurlar.html" data-page="kurlar">
+        <span class="sb-icon">💱</span> Döviz Kurları
+    </a>
+    <a class="sb-direct" href="tahviller.html" data-page="tahviller">
+        <span class="sb-icon">📜</span> Tahvil Faizleri
+    </a>
+    <a class="sb-direct" href="endeksler.html" data-page="endeksler">
+        <span class="sb-icon">📈</span> Borsa Endeksleri
+    </a>
     <a class="sb-direct" href="makro.html" data-page="makro">
         <span class="sb-icon">🏦</span> Türkiye Makro
     </a>
@@ -82,21 +71,11 @@ if (!mainContent) {
 var currentPage = location.pathname.split('/').pop().replace('.html','') || 'index';
 
 // Mark active link
-document.querySelectorAll('.sb-link, .sb-direct').forEach(function(link) {
+document.querySelectorAll('.sb-direct').forEach(function(link) {
     var pg = link.getAttribute('data-page');
     if (pg === currentPage) {
         link.classList.add('active');
-        // Open parent section
-        var section = link.closest('.sb-section');
-        if (section) section.classList.add('open');
     }
-});
-
-// ── Section toggle ──
-document.querySelectorAll('.sb-section-title').forEach(function(title) {
-    title.addEventListener('click', function() {
-        this.parentElement.classList.toggle('open');
-    });
 });
 
 // ── Hamburger toggle (mobile) ──
