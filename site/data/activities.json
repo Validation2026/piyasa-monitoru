@@ -2,6 +2,13 @@
   "activities": [
     {
       "type": "data",
+      "source_key": "yahoo_finance",
+      "title": "Yahoo Finance",
+      "text": "emtia, kur ve endeks verileri güncellendi",
+      "timestamp": "2026-04-03T07:36:52Z"
+    },
+    {
+      "type": "data",
       "source_key": "tcmb_evds",
       "title": "TCMB EVDS",
       "text": "makro ekonomik veriler güncellendi",

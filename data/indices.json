@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Endeksler",
-    "updated_at": "2026-04-03T06:02:29Z",
+    "updated_at": "2026-04-03T07:36:52Z",
     "symbol_count": 8,
     "errors": []
   },
@@ -11,20 +11,16 @@
       "id": "XU100.IS",
       "name": "BIST 100",
       "unit": "TRY",
-      "current": 13051.7002,
-      "change_1d_pct": 0.88,
-      "change_1w_pct": 2.55,
-      "change_1m_pct": -2.21,
-      "change_3m_pct": 17.05,
-      "change_ytd_pct": 13.51,
-      "change_1y_pct": 37.05,
+      "current": 13050.3301,
+      "change_1d_pct": -0.01,
+      "change_1w_pct": 2.77,
+      "change_1m_pct": 0.9,
+      "change_3m_pct": 16.31,
+      "change_ytd_pct": 13.5,
+      "change_1y_pct": 37.6,
       "high_52w": 14339.2998,
       "low_52w": 9008.9004,
       "data": [
-        {
-          "date": "2025-04-02",
-          "value": 9523.2998
-        },
         {
           "date": "2025-04-03",
           "value": 9484.2998
@@ -1028,6 +1024,10 @@
         {
           "date": "2026-04-02",
           "value": 13051.7002
+        },
+        {
+          "date": "2026-04-03",
+          "value": 13050.3301
         }
       ]
     },
@@ -1035,20 +1035,16 @@
       "id": "XU030.IS",
       "name": "BIST 30",
       "unit": "TRY",
-      "current": 14881.5,
-      "change_1d_pct": 1.33,
-      "change_1w_pct": 2.76,
-      "change_1m_pct": -1.69,
-      "change_3m_pct": 23.14,
-      "change_ytd_pct": 18.92,
-      "change_1y_pct": 43.1,
+      "current": 14879.9697,
+      "change_1d_pct": -0.01,
+      "change_1w_pct": 2.95,
+      "change_1m_pct": 1.52,
+      "change_3m_pct": 21.93,
+      "change_ytd_pct": 18.91,
+      "change_1y_pct": 44.01,
       "high_52w": 15828.2002,
       "low_52w": 9900.0996,
       "data": [
-        {
-          "date": "2025-04-02",
-          "value": 10399.4004
-        },
         {
           "date": "2025-04-03",
           "value": 10332.4004
@@ -2052,6 +2048,10 @@
         {
           "date": "2026-04-02",
           "value": 14881.5
+        },
+        {
+          "date": "2026-04-03",
+          "value": 14879.9697
         }
       ]
     },
@@ -7167,13 +7167,13 @@
       "id": "^N225",
       "name": "Nikkei 225",
       "unit": "JPY",
-      "current": 53146.0586,
-      "change_1d_pct": 1.3,
-      "change_1w_pct": -0.43,
-      "change_1m_pct": -5.57,
-      "change_3m_pct": 5.42,
-      "change_ytd_pct": 2.53,
-      "change_1y_pct": 53.0,
+      "current": 53123.4883,
+      "change_1d_pct": 1.26,
+      "change_1w_pct": -0.47,
+      "change_1m_pct": -5.61,
+      "change_3m_pct": 5.38,
+      "change_ytd_pct": 2.49,
+      "change_1y_pct": 52.94,
       "high_52w": 58850.2695,
       "low_52w": 31136.5801,
       "data": [
@@ -8155,7 +8155,7 @@
         },
         {
           "date": "2026-04-03",
-          "value": 53146.0586
+          "value": 53123.4883
         }
       ]
     }
