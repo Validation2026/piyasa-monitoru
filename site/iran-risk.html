@@ -100,6 +100,13 @@
     <div class="war-date">Başlangıç: 28 Şubat 2026</div>
 </div>
 
+<!-- AI Durum Analizi -->
+<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;margin-bottom:18px;position:relative;overflow:hidden">
+    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#ff4757,#fbbf24,#ff4757)"></div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="font-size:.85rem;font-weight:700">🤖 AI Durum Analizi</span><span style="font-size:.58rem;font-family:var(--mono);font-weight:700;background:rgba(255,71,87,.15);color:#ff4757;padding:2px 8px;border-radius:4px">Gemini · İran</span></div>
+    <div id="iranAiAnalysis" style="font-size:.82rem;color:var(--t2);line-height:1.7;white-space:pre-wrap"><span style="color:var(--t3);font-style:italic">Jeopolitik analiz yükleniyor...</span></div>
+</div>
+
 <!-- Risk + Hurmuz -->
 <div class="top-row">
     <div class="gauge-card">
@@ -485,6 +492,11 @@ Promise.all([fj('commodities_energy.json'),fj('commodities_metals.json'),fj('com
 });
 
 loadNews();
+
+// AI Analiz
+fetch('/api/ai-analysis?cat=iran-risk').then(function(r){return r.json()}).then(function(d){
+    var el=document.getElementById('iranAiAnalysis');if(el&&d.analysis)el.textContent=d.analysis;
+}).catch(function(){});
 
 })();
 </script>

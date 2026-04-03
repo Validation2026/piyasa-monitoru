@@ -9,6 +9,15 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+    <style>
+        .ai-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;margin-bottom:22px;position:relative;overflow:hidden}
+        .ai-box::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--purple),var(--blue),var(--cyan))}
+        .ai-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+        .ai-header span{font-size:.82rem;font-weight:700}
+        .ai-badge{font-size:.58rem;font-family:var(--mono);font-weight:700;background:rgba(167,139,250,.15);color:var(--purple);padding:2px 8px;border-radius:4px}
+        .ai-body{font-size:.82rem;color:var(--t2);line-height:1.7;white-space:pre-wrap}
+        .ai-loading{color:var(--t3);font-style:italic}
+    </style>
 </head>
 <body>
 <script src="assets/js/sidebar.js"></script>
@@ -18,6 +27,7 @@
         <div class="sub">Bitcoin, Ethereum, Solana, XRP ve daha fazlası</div>
         <div class="update-info" id="updateInfo"></div>
     </div>
+    <div class="ai-box"><div class="ai-header"><span>🤖 AI Piyasa Analizi</span><span class="ai-badge">Gemini</span></div><div class="ai-body" id="aiAnalysis"><span class="ai-loading">Analiz yükleniyor...</span></div></div>
     <div class="summary-row" id="summaryCards"></div>
     <div class="periods" id="periodSelector">
         <button class="pbtn" data-period="1m">1A</button>
@@ -50,6 +60,9 @@
         if(charts)charts.forEach(function(c){c.destroy()});
         charts=PM.buildCharts('chartsGrid',allSeries,period);
     });
+    fetch('/api/ai-analysis?cat=kripto').then(function(r){return r.json()}).then(function(d){
+        var el=document.getElementById('aiAnalysis');if(el&&d.analysis)el.textContent=d.analysis;
+    }).catch(function(){var el=document.getElementById('aiAnalysis');if(el)el.innerHTML='<span class="ai-loading">Analiz yüklenemiyor.</span>'});
 })();
 </script>
 </body>

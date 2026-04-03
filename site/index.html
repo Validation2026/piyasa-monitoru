@@ -51,11 +51,18 @@
 <!-- Stats -->
 <div class="stats-bar">
     <div class="stat"><div class="stat-v" id="stTotal">—</div><div class="stat-l">Varlık</div></div>
-    <div class="stat"><div class="stat-v">8</div><div class="stat-l">Kategori</div></div>
+    <div class="stat"><div class="stat-v">9</div><div class="stat-l">Kategori</div></div>
     <div class="stat"><div class="stat-v">17</div><div class="stat-l">Endeks</div></div>
     <div class="stat"><div class="stat-v">10</div><div class="stat-l">Kripto</div></div>
     <div class="stat"><div class="stat-v">18</div><div class="stat-l">Döviz Çifti</div></div>
     <div class="stat"><div class="stat-v" id="stUpdate">—</div><div class="stat-l">Son Güncelleme</div></div>
+</div>
+
+<!-- AI Günlük Özet -->
+<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:20px;position:relative;overflow:hidden">
+    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#a78bfa,#3b82f6,#22d3ee)"></div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="font-size:.85rem;font-weight:700">🤖 Günlük Piyasa Özeti</span><span style="font-size:.58rem;font-family:'JetBrains Mono',monospace;font-weight:700;background:rgba(167,139,250,.15);color:#a78bfa;padding:2px 8px;border-radius:4px">Gemini AI</span></div>
+    <div id="indexAiAnalysis" style="font-size:.82rem;color:var(--t2);line-height:1.7;white-space:pre-wrap"><span style="color:var(--t3);font-style:italic">Günlük piyasa özeti yükleniyor...</span></div>
 </div>
 
 <!-- Mini strip -->
@@ -86,6 +93,7 @@
     <a class="cat" href="tahviller.html"><div class="cat-icon">📜</div><div class="cat-name">Tahviller</div><div class="cat-desc">ABD 3M–30Y getiri eğrisi</div><div class="cat-tag">4 seri</div></a>
     <a class="cat" href="endeksler.html"><div class="cat-icon">📈</div><div class="cat-name">Endeksler</div><div class="cat-desc">BIST, S&P, DAX, Nikkei +12</div><div class="cat-tag">17 seri</div></a>
     <a class="cat" href="kripto.html"><div class="cat-icon">₿</div><div class="cat-name">Kripto Paralar</div><div class="cat-desc">BTC, ETH, SOL, XRP +6</div><div class="cat-tag">10 seri</div></a>
+    <a class="cat" href="makro.html"><div class="cat-icon">🏦</div><div class="cat-name">Türkiye Makro</div><div class="cat-desc">TÜFE, enflasyon, faiz, GSYİH, işsizlik</div><div class="cat-tag">12 seri</div></a>
 </div>
 
 <!-- Price Tables -->
@@ -154,6 +162,8 @@ Promise.all([fj('currencies.json'),fj('commodities_energy.json'),fj('commodities
     var st=document.getElementById('stTotal');if(st)st.textContent=total+'+';
     var su=document.getElementById('stUpdate');if(su){var latest=cur||ener;if(latest&&latest.meta){var d=new Date(latest.meta.updated_at);su.textContent=d.getDate()+'.'+(d.getMonth()+1)+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}}
 });
+// AI
+fetch('/api/ai-analysis?cat=genel').then(function(r){return r.json()}).then(function(d){var el=document.getElementById('indexAiAnalysis');if(el&&d.analysis)el.textContent=d.analysis}).catch(function(){});
 })();
 </script>
 </body>
