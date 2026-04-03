@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Endeksler",
-    "updated_at": "2026-04-03T15:27:56Z",
+    "updated_at": "2026-04-03T16:00:27Z",
     "symbol_count": 17,
     "errors": []
   },
@@ -12255,13 +12255,13 @@
       "id": "000001.SS",
       "name": "Shanghai Comp.",
       "unit": "CNY",
-      "current": 3880.0967,
-      "change_1d_pct": -1.0,
-      "change_1w_pct": -0.86,
-      "change_1m_pct": -4.96,
-      "change_3m_pct": -0.95,
-      "change_ytd_pct": -3.56,
-      "change_1y_pct": 16.1,
+      "current": 3919.2849,
+      "change_1d_pct": -0.74,
+      "change_1w_pct": 0.78,
+      "change_1m_pct": -4.93,
+      "change_3m_pct": 0.74,
+      "change_ytd_pct": -2.59,
+      "change_1y_pct": 17.27,
       "high_52w": 4182.5908,
       "low_52w": 3096.5759,
       "data": [
@@ -13232,10 +13232,6 @@
         {
           "date": "2026-04-02",
           "value": 3919.2849
-        },
-        {
-          "date": "2026-04-03",
-          "value": 3880.0967
         }
       ]
     },
