@@ -77,7 +77,7 @@ function tick() {
 setInterval(tick, 1000); tick();
 
 // Breadcrumb
-var titles = {index:'Ana Panel','emtia-enerji':'Enerji','emtia-metaller':'Kıymetli Madenler','emtia-tarim':'Tarım',kurlar:'Döviz Kurları',tahviller:'Tahvil Faizleri',endeksler:'Borsa Endeksleri',kripto:'Kripto Paralar',makro:'Türkiye Makro','iran-risk':'İran Risk Monitörü'};
+var titles = {index:'Ana Panel','emtia-enerji':'Enerji','emtia-metaller':'Kıymetli Madenler','emtia-tarim':'Tarım',kurlar:'Döviz Kurları',tahviller:'Tahvil Faizleri',endeksler:'Borsa Endeksleri',kripto:'Kripto Paralar','iran-risk':'İran Risk Monitörü'};
 var bc = document.getElementById('topbarBreadcrumb');
 if (bc) bc.innerHTML = '<a href="index.html">Panel</a> › ' + (titles[cur] || '');
 
