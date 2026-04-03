@@ -3,36 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Piyasa Monitörü — Canlı Veri Paneli</title>
+    <title>Piyasa Monitörü — Canlı Piyasa Verileri</title>
+    <meta name="description" content="Emtia, döviz, tahvil, endeks ve Türkiye makro verileri — canlı güncellenen grafikler ve analizler">
+    <meta name="theme-color" content="#06080d">
+    <meta property="og:title" content="Piyasa Monitörü">
+    <meta property="og:description" content="Tüm piyasa verileri tek panelde">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
     <style>
-        /* Index-specific */
-        .hero{text-align:center;padding:28px 0 22px}
-        .hero h1{font-size:1.8rem;font-weight:800;letter-spacing:-1px;line-height:1.2}
+        .hero{text-align:center;padding:24px 0 18px}
+        .hero h1{font-size:1.7rem;font-weight:800;letter-spacing:-1px}
         .hero h1 span{background:linear-gradient(135deg,var(--blue),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .hero p{color:var(--t2);font-size:.9rem;margin-top:6px}
+        .hero p{color:var(--t2);font-size:.88rem;margin-top:4px}
+
+        /* Mini market strip */
+        .mini-strip{display:flex;gap:10px;margin-bottom:22px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+        .mini-strip::-webkit-scrollbar{display:none}
+        .mini-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 14px;min-width:140px;flex-shrink:0;transition:.2s}
+        .mini-card:hover{border-color:var(--blue)}
+        .mc-name{font-size:.65rem;color:var(--t3);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+        .mc-row{display:flex;align-items:baseline;gap:6px;margin-top:3px}
+        .mc-val{font-size:1rem;font-family:var(--mono);font-weight:700}
+        .mc-chg{font-size:.68rem;font-family:var(--mono);font-weight:700}
+        .mc-chg.u{color:var(--green)}.mc-chg.d{color:var(--red)}
 
         /* Heatmap */
-        .heatmap-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:6px;margin-bottom:28px}
-        .hm-cell{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center;transition:.2s;cursor:default;text-decoration:none;color:inherit}
-        .hm-cell:hover{transform:scale(1.03);box-shadow:0 4px 16px rgba(0,0,0,.15)}
-        .hm-name{font-size:.68rem;color:var(--t2);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-        .hm-val{font-size:.85rem;font-family:var(--mono);font-weight:700;margin:3px 0 2px}
-        .hm-chg{font-size:.72rem;font-family:var(--mono);font-weight:700}
+        .heatmap-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(125px,1fr));gap:5px;margin-bottom:24px}
+        .hm-cell{border-radius:7px;padding:9px;text-align:center;transition:.2s;cursor:default}
+        .hm-cell:hover{transform:scale(1.04);box-shadow:0 4px 16px rgba(0,0,0,.2)}
+        .hm-name{font-size:.65rem;color:var(--t2);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .hm-val{font-size:.82rem;font-family:var(--mono);font-weight:700;margin:2px 0 1px}
+        .hm-chg{font-size:.7rem;font-family:var(--mono);font-weight:700}
 
+        /* Sector comparison */
+        .sector-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px}
+        .sector-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;overflow:hidden}
+        .sector-card h3{font-size:.88rem;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+        .sector-card canvas{width:100%!important;height:200px!important}
+
+        /* Stats footer */
+        .stats-bar{display:flex;justify-content:center;gap:32px;padding:16px 0;margin-bottom:16px;flex-wrap:wrap}
+        .stat{text-align:center}
+        .stat-val{font-size:1.3rem;font-weight:700;font-family:var(--mono);color:var(--blue)}
+        .stat-label{font-size:.68rem;color:var(--t3);text-transform:uppercase;letter-spacing:.5px}
+
+        @media(max-width:1024px){.sector-row{grid-template-columns:1fr}}
         @media(max-width:768px){
             .hero h1{font-size:1.3rem}
-            .heatmap-grid{grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:4px}
-            .hm-cell{padding:7px}
-            .hm-val{font-size:.75rem}
             .kpi-row{grid-template-columns:repeat(2,1fr)}
+            .heatmap-grid{grid-template-columns:repeat(auto-fill,minmax(100px,1fr))}
+            .stats-bar{gap:20px}
         }
         @media(max-width:480px){
             .kpi-row{grid-template-columns:1fr}
             .heatmap-grid{grid-template-columns:repeat(3,1fr)}
+            .mini-strip{gap:6px}
+            .mini-card{min-width:120px;padding:8px 10px}
         }
     </style>
 </head>
@@ -48,10 +77,13 @@
 <!-- Hero -->
 <div class="hero">
     <h1>Tüm Piyasa Verileri <span>Tek Panelde</span></h1>
-    <p>Emtia, döviz, tahvil, endeks ve Türkiye makro verileri — anlık güncellenen grafikler</p>
+    <p>38+ varlık · 7 kategori · Otomatik güncelleme · TCMB EVDS + Yahoo Finance</p>
 </div>
 
-<!-- KPI -->
+<!-- Mini Market Strip -->
+<div class="mini-strip" id="miniStrip"></div>
+
+<!-- KPI Sparklines -->
 <div class="kpi-row" id="kpiRow">
     <div class="kpi fade-in"><div class="kpi-top"><span class="kpi-label">USD/TRY</span><span class="kpi-badge" id="b-usdtry">—</span></div><div class="kpi-val" id="v-usdtry">—</div><div class="kpi-sub">TCMB Döviz Kuru</div><div class="kpi-spark"><canvas id="s-usdtry"></canvas></div></div>
     <div class="kpi fade-in"><div class="kpi-top"><span class="kpi-label">ALTIN</span><span class="kpi-badge" id="b-gold">—</span></div><div class="kpi-val" id="v-gold" style="color:var(--gold)">—</div><div class="kpi-sub">USD/oz — Spot</div><div class="kpi-spark"><canvas id="s-gold"></canvas></div></div>
@@ -60,12 +92,19 @@
 </div>
 
 <!-- Heatmap -->
-<div class="sec-title">🗺️ Piyasa Haritası (Günlük Değişim)</div>
+<div class="sec-title">🗺️ Piyasa Haritası</div>
 <div class="heatmap-grid" id="heatmap"></div>
+
+<!-- Sector Comparison -->
+<div class="sec-title">⚡ Sektör Performansı (YTD)</div>
+<div class="sector-row">
+    <div class="sector-card"><h3>📊 Emtia Sektörleri</h3><canvas id="chartSectors"></canvas></div>
+    <div class="sector-card"><h3>🌍 Küresel Endeksler</h3><canvas id="chartIndices"></canvas></div>
+</div>
 
 <!-- Movers -->
 <div class="sec-title">📈 En Çok Değişenler</div>
-<div class="movers-row" id="moversRow">
+<div class="movers-row">
     <div class="movers-card"><div class="movers-header"><span class="dot g"></span> Yükselenler</div><div id="moversUp"></div></div>
     <div class="movers-card"><div class="movers-header"><span class="dot r"></span> Düşenler</div><div id="moversDown"></div></div>
 </div>
@@ -83,7 +122,7 @@
 </div>
 
 <!-- Price Tables -->
-<div class="sec-title">💹 Anlık Fiyatlar</div>
+<div class="sec-title">💹 Tüm Fiyatlar</div>
 <div class="tables-row">
     <div class="ptable"><div class="ptable-header">⛽ Emtia & Madenler</div><div id="tblComm"></div></div>
     <div class="ptable"><div class="ptable-header">💱 Döviz & Endeks & Tahvil</div><div id="tblFx"></div></div>
@@ -93,14 +132,20 @@
 <div class="sec-title">🔔 Son Güncellemeler</div>
 <div class="activity" id="actFeed"></div>
 
-<!-- Footer -->
-<div class="footer">
-    <span>Piyasa Monitörü © 2026</span>
-    <a href="#">Hakkında</a>
-    <a href="#">Veri Kaynakları</a>
+<!-- Stats -->
+<div class="stats-bar" id="statsBar">
+    <div class="stat"><div class="stat-val" id="statTotal">—</div><div class="stat-label">Toplam Seri</div></div>
+    <div class="stat"><div class="stat-val">7</div><div class="stat-label">Kategori</div></div>
+    <div class="stat"><div class="stat-val">2</div><div class="stat-label">Veri Kaynağı</div></div>
+    <div class="stat"><div class="stat-val" id="statUpdate">—</div><div class="stat-label">Son Güncelleme</div></div>
 </div>
 
-</div><!-- /.page -->
+<!-- Footer -->
+<div class="footer">
+    Piyasa Monitörü © 2026 · Veriler: Yahoo Finance & TCMB EVDS · Otomatik güncelleme: 15dk
+</div>
+
+</div>
 
 <script>
 (function(){
@@ -110,75 +155,75 @@ function fj(f){return fetch(D+f+'?t='+Date.now()).then(function(r){return r.json
 function fp(v,d){if(v==null)return'—';d=d!=null?d:2;return Number(v).toLocaleString('tr-TR',{minimumFractionDigits:d,maximumFractionDigits:d})}
 function fs(d,id){if(!d||!d.series)return null;for(var i=0;i<d.series.length;i++)if(d.series[i].id===id)return d.series[i];return null}
 function cc(p){return p>=0?'u':'d'}
+var COLORS=['#3b82f6','#00d68f','#fbbf24','#ff4757','#a78bfa','#22d3ee','#ec4899','#84cc16'];
 
-// Sparkline
 function spark(cid,data,color){
     var c=document.getElementById(cid);if(!c||!data||data.length<2)return;
     var pts=data.slice(-30).map(function(d){return d.value});
     new Chart(c,{type:'line',data:{labels:pts.map(function(){return''}),datasets:[{data:pts,borderColor:color,backgroundColor:color+'18',fill:true,tension:.4,pointRadius:0,borderWidth:1.5}]},options:{responsive:true,maintainAspectRatio:false,animation:{duration:800},plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{display:false},y:{display:false}}}});
 }
 
-// KPI
 function setKPI(key,series,color){
     if(!series)return;
     var v=document.getElementById('v-'+key),b=document.getElementById('b-'+key);
     if(v)v.textContent=fp(series.current);
     if(b&&series.change_1d_pct!=null){var p=series.change_1d_pct;b.textContent=(p>=0?'+':'')+p.toFixed(2)+'%';b.className='kpi-badge '+cc(p)}
-    if(series.data)spark('s-'+key,series.data,color||'#3b82f6');
+    if(series.data)spark('s-'+key,series.data,color);
 }
 
-// Ticker
 function buildTicker(all){
     var t=document.getElementById('tickerTrack');if(!t)return;var h='';
-    all.forEach(function(s){if(!s)return;var p=s.change_1d_pct;var cls=p!=null?(p>=0?'u':'d'):'';var sign=p!=null?(p>=0?'+':''):'';
+    all.forEach(function(s){if(!s)return;var p=s.change_1d_pct;var cls=p!=null?cc(p):'';var sign=p!=null?(p>=0?'+':''):'';
     h+='<span class="ti"><span class="ti-n">'+s.name+'</span><span class="ti-p">'+fp(s.current)+'</span><span class="ti-c '+cls+'">'+sign+(p!=null?p.toFixed(2)+'%':'')+'</span></span>';});
     t.innerHTML=h+h;
 }
 
-// Heatmap
-function buildHeatmap(all){
-    var el=document.getElementById('heatmap');if(!el)return;
-    // Sadece change_1d_pct olan varlıkları al
-    var items=all.filter(function(s){return s&&s.change_1d_pct!=null});
-    // Mutlak değişime göre sırala (en çok değişen önce)
-    items.sort(function(a,b){return Math.abs(b.change_1d_pct)-Math.abs(a.change_1d_pct)});
-
-    el.innerHTML=items.map(function(s){
-        var p=s.change_1d_pct;
-        var sign=p>=0?'+':'';
-        // Renk yoğunluğu: %0 = nötr, yüksek = doygun
-        var intensity=Math.min(Math.abs(p)/8,1); // %8+ tam doygun
-        var bgColor,textColor;
-        if(p>=0){
-            var r=Math.round(0+intensity*0),g=Math.round(20+intensity*195),bl=Math.round(10+intensity*133);
-            bgColor='rgba('+r+','+g+','+bl+','+(.12+intensity*.18)+')';
-            textColor='hsl(155,'+Math.round(50+intensity*40)+'%,'+Math.round(65-intensity*10)+'%)';
-        }else{
-            var r2=Math.round(200+intensity*55),g2=Math.round(30+intensity*41),bl2=Math.round(40+intensity*47);
-            bgColor='rgba('+r2+','+g2+','+bl2+','+(.12+intensity*.18)+')';
-            textColor='hsl(0,'+Math.round(50+intensity*40)+'%,'+Math.round(65-intensity*10)+'%)';
-        }
-        return'<div class="hm-cell" style="background:'+bgColor+';border-color:'+bgColor+'"><div class="hm-name">'+s.name+'</div><div class="hm-val">'+fp(s.current)+'</div><div class="hm-chg" style="color:'+textColor+'">'+sign+p.toFixed(2)+'%</div></div>';
+function buildMiniStrip(cur,bonds,idx){
+    var el=document.getElementById('miniStrip');if(!el)return;
+    var items=[
+        fs(cur,'EURUSD=X'),fs(cur,'GBPUSD=X'),fs(cur,'USDJPY=X'),
+        fs(cur,'DX-Y.NYB'),fs(bonds,'^TNX'),fs(bonds,'^TYX'),
+        fs(idx,'^GSPC'),fs(idx,'^IXIC'),fs(idx,'^N225')
+    ];
+    el.innerHTML=items.filter(Boolean).map(function(s){
+        var p=s.change_1d_pct;var cls=p!=null?cc(p):'';var sign=p!=null?(p>=0?'+':''):'';
+        return'<div class="mini-card"><div class="mc-name">'+s.name+'</div><div class="mc-row"><span class="mc-val">'+fp(s.current)+'</span><span class="mc-chg '+cls+'">'+sign+(p!=null?p.toFixed(2)+'%':'')+'</span></div></div>';
     }).join('');
 }
 
-// Movers
+function buildHeatmap(all){
+    var el=document.getElementById('heatmap');if(!el)return;
+    var items=all.filter(function(s){return s&&s.change_1d_pct!=null});
+    items.sort(function(a,b){return Math.abs(b.change_1d_pct)-Math.abs(a.change_1d_pct)});
+    el.innerHTML=items.map(function(s){
+        var p=s.change_1d_pct;var sign=p>=0?'+':'';
+        var i=Math.min(Math.abs(p)/6,1);
+        var bg,tc;
+        if(p>=0){bg='rgba(0,'+(Math.round(180*i))+','+(Math.round(120*i))+','+(.1+i*.2)+')';tc='hsl(155,'+(50+i*40)+'%,'+(60-i*5)+'%)'}
+        else{bg='rgba('+(Math.round(220*i))+','+(Math.round(50*i))+','+(Math.round(60*i))+','+(.1+i*.2)+')';tc='hsl(0,'+(50+i*40)+'%,'+(60-i*5)+'%)'}
+        return'<div class="hm-cell" style="background:'+bg+'"><div class="hm-name">'+s.name+'</div><div class="hm-val">'+fp(s.current)+'</div><div class="hm-chg" style="color:'+tc+'">'+sign+p.toFixed(2)+'%</div></div>';
+    }).join('');
+}
+
+function buildSectorChart(canvasId,datasets){
+    var c=document.getElementById(canvasId);if(!c)return;
+    var dark=document.documentElement.getAttribute('data-theme')!=='light';
+    new Chart(c,{type:'bar',data:{labels:datasets.map(function(d){return d.name}),datasets:[{data:datasets.map(function(d){return d.ytd}),backgroundColor:datasets.map(function(d){return d.ytd>=0?'rgba(0,214,143,.6)':'rgba(255,71,87,.6)'}),borderRadius:6,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',animation:{duration:800},plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){return ctx.raw.toFixed(2)+'%'}}}},scales:{x:{grid:{color:dark?'rgba(255,255,255,.05)':'rgba(0,0,0,.05)',drawBorder:false},ticks:{color:dark?'#8a99b2':'#475569',font:{size:10,family:"'JetBrains Mono'"},callback:function(v){return v+'%'}}},y:{grid:{display:false},ticks:{color:dark?'#e8edf5':'#1e293b',font:{size:11,family:"'Outfit'"}}}}}});
+}
+
 function buildMovers(all){
     var sorted=all.filter(function(s){return s&&s.change_1d_pct!=null}).sort(function(a,b){return b.change_1d_pct-a.change_1d_pct});
     function render(id,items){var el=document.getElementById(id);if(!el)return;
     el.innerHTML=items.map(function(s){var p=s.change_1d_pct;return'<div class="mover-item"><div class="mover-name">'+s.name+'</div><div class="mover-val">'+fp(s.current)+'</div><div class="mover-chg '+cc(p)+'">'+(p>=0?'+':'')+p.toFixed(2)+'%</div></div>'}).join('')}
-    render('moversUp',sorted.slice(0,5));
-    render('moversDown',sorted.slice(-5).reverse());
+    render('moversUp',sorted.slice(0,6));render('moversDown',sorted.slice(-6).reverse());
 }
 
-// Price Table
 function buildTable(id,items){
     var el=document.getElementById(id);if(!el)return;
     el.innerHTML=items.map(function(s){if(!s)return'';var p=s.change_1d_pct;var cls=p!=null?cc(p):'';var sign=p!=null?(p>=0?'+':''):'';var chg=p!=null?sign+p.toFixed(2)+'%':'—';
     return'<div class="prow"><div class="prow-n">'+s.name+'</div><div class="prow-v">'+fp(s.current)+' <small style="color:var(--t3)">'+(s.unit||'')+'</small></div><div class="prow-c '+cls+'">'+chg+'</div></div>'}).join('');
 }
 
-// Activity
 function buildAct(data){
     var el=document.getElementById('actFeed');if(!el||!data||!data.activities)return;
     el.innerHTML=data.activities.slice(0,6).map(function(a){
@@ -192,26 +237,41 @@ function buildAct(data){
 Promise.all([fj('currencies.json'),fj('commodities_energy.json'),fj('commodities_metals.json'),fj('commodities_agriculture.json'),fj('bonds.json'),fj('indices.json'),fj('activities.json')]).then(function(r){
     var cur=r[0],ener=r[1],met=r[2],agri=r[3],bonds=r[4],idx=r[5],act=r[6];
 
-    // KPIs
     setKPI('usdtry',fs(cur,'USDTRY=X'),'#3b82f6');
     setKPI('gold',fs(met,'GC=F'),'#fbbf24');
     setKPI('brent',fs(ener,'BZ=F'),'#22d3ee');
     setKPI('bist',fs(idx,'XU100.IS'),'#a78bfa');
 
-    // All series
-    var all=[];
-    [cur,ener,met,agri,idx,bonds].forEach(function(d){if(d&&d.series)d.series.forEach(function(s){all.push(s)})});
+    var all=[];var totalSeries=0;
+    [cur,ener,met,agri,idx,bonds].forEach(function(d){if(d&&d.series){d.series.forEach(function(s){all.push(s)});totalSeries+=d.series.length}});
 
     buildTicker(all);
+    buildMiniStrip(cur,bonds,idx);
     buildHeatmap(all);
     buildMovers(all);
 
+    // Sector comparison
+    var sectorData=[];
+    function avgYTD(d,label){if(!d||!d.series)return;var vals=d.series.filter(function(s){return s.change_ytd_pct!=null}).map(function(s){return s.change_ytd_pct});if(vals.length)sectorData.push({name:label,ytd:vals.reduce(function(a,b){return a+b},0)/vals.length})}
+    avgYTD(ener,'Enerji');avgYTD(met,'Madenler');avgYTD(agri,'Tarım');avgYTD(cur,'Döviz');avgYTD(bonds,'Tahvil');
+    buildSectorChart('chartSectors',sectorData);
+
+    var indexData=[];
+    if(idx&&idx.series)idx.series.forEach(function(s){if(s.change_ytd_pct!=null)indexData.push({name:s.name,ytd:s.change_ytd_pct})});
+    buildSectorChart('chartIndices',indexData);
+
+    // Tables
     var comm=[];[ener,met,agri].forEach(function(d){if(d&&d.series)d.series.forEach(function(s){comm.push(s)})});
     buildTable('tblComm',comm);
     var fx=[];[cur,idx,bonds].forEach(function(d){if(d&&d.series)d.series.forEach(function(s){fx.push(s)})});
     buildTable('tblFx',fx);
 
     buildAct(act);
+
+    // Stats
+    var st=document.getElementById('statTotal');if(st)st.textContent=totalSeries;
+    var su=document.getElementById('statUpdate');
+    if(su){var latest=cur||ener;if(latest&&latest.meta){var d=new Date(latest.meta.updated_at);su.textContent=d.getDate()+'.'+(d.getMonth()+1)+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}}
 });
 })();
 </script>

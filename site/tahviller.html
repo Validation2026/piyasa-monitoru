@@ -4,18 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tahvil Faizleri — Piyasa Monitörü</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+    <style>
+        .comp-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:28px}
+        .comp-card h3{font-size:.9rem;font-weight:700;margin-bottom:4px}
+        .comp-card .comp-sub{font-size:.73rem;color:var(--t3);margin-bottom:14px}
+        .comp-card canvas{width:100%!important;height:300px!important}
+        @media(max-width:768px){.comp-card canvas{height:220px!important}}
+    </style>
 </head>
 <body>
 
+<script src="assets/js/sidebar.js"></script>
 
 <div class="page">
     <div class="page-head">
         <h1>📜 Tahvil Faizleri</h1>
-        <div class="sub">ABD 3 Aylık, 5 Yıllık, 10 Yıllık, 30 Yıllık tahvil getirileri</div>
+        <div class="sub">ABD 3 Aylık, 5 Yıllık, 10 Yıllık, 30 Yıllık</div>
         <div class="update-info" id="updateInfo">Yükleniyor...</div>
     </div>
 
@@ -30,16 +39,21 @@
     </div>
 
     <div class="charts" id="chartsGrid"></div>
+
+    <!-- Comparison Chart -->
+    <div class="comp-card">
+        <h3>📊 Karşılaştırma (Normalize Edilmiş %)</h3>
+        <div class="comp-sub">Tüm serilerin seçili dönemdeki yüzde değişimi — başlangıç noktası 0%</div>
+        <canvas id="compChart"></canvas>
+    </div>
+
     <div class="dtable" id="dataTable"></div>
 
     <div class="footer">
-        <span>Piyasa Monitörü © 2026</span>
-        <a href="index.html">Ana Sayfa</a>
-        <span style="color:var(--t3)">Kaynak: Yahoo Finance</span>
+        Piyasa Monitörü © 2026 · Kaynak: Yahoo Finance · Otomatik güncelleme
     </div>
 </div>
 
-<script src="assets/js/sidebar.js"></script>
 <script src="assets/js/app.js"></script>
 <script>
 (function(){
@@ -48,20 +62,20 @@
     var period='1y';
     var allSeries=[];
     var charts=[];
+    var compChart=null;
 
     PM.fj(FILE).then(function(data){
         if(!data||!data.series||!data.series.length){
-            document.getElementById('summaryCards').innerHTML='<div class="scard"><div class="scard-name">Veri bulunamadı. Collector çalıştırın.</div></div>';
+            document.getElementById('summaryCards').innerHTML='<div class="scard"><div class="scard-name">Veri bulunamadı.</div></div>';
             return;
         }
         allSeries=data.series;
-
-        // Update info
         var ui=document.getElementById('updateInfo');
         if(ui&&data.meta)ui.textContent='Son güncelleme: '+new Date(data.meta.updated_at).toLocaleString('tr-TR')+' · '+data.meta.symbol_count+' seri';
 
         PM.buildSummary('summaryCards',allSeries);
         charts=PM.buildCharts('chartsGrid',allSeries,period);
+        compChart=PM.buildComparisonChart('compChart',allSeries,period);
         PM.buildTable('dataTable',allSeries);
     });
 
@@ -71,7 +85,9 @@
         e.target.classList.add('on');
         period=e.target.getAttribute('data-period');
         if(charts)charts.forEach(function(c){c.destroy()});
+        if(compChart)compChart.destroy();
         charts=PM.buildCharts('chartsGrid',allSeries,period);
+        compChart=PM.buildComparisonChart('compChart',allSeries,period);
     });
 })();
 </script>
