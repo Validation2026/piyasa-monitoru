@@ -143,6 +143,7 @@
 <div class="sec-title">📰 Son Haberler (Canlı)</div>
 <div class="news-box" id="newsFeed"><div class="nw-item">Haberler yükleniyor...</div></div>
 
+<div style="text-align:center;margin-bottom:14px"><a href="admin.html" style="font-size:.7rem;color:var(--t3);text-decoration:none">⚙️ Admin Paneli</a></div>
 <div class="footer">Piyasa Monitörü © 2026</div>
 </div>
 
@@ -151,30 +152,12 @@
         <input type="number" class="adm-input" id="admRisk" min="0" max="100" value="50">
     </div>
 
-    <div class="adm-group">
-        <div class="adm-label">Hürmüz Boğazı Durumu</div>
-        <select class="adm-select" id="admHurmuz">
-            <option value="AÇIK / GÜVENLİ">🟢 AÇIK / GÜVENLİ</option>
-            <option value="RİSKLİ">🟡 RİSKLİ</option>
-            <option value="KISMEN KAPALI">🟠 KISMEN KAPALI</option>
-            <option value="KAPALI">🔴 KAPALI</option>
-        </select>
-    </div>
-
-    <div class="adm-group">
-        <div class="adm-label">Manuel Emtia Verileri</div>
-        <div id="admCommodList"></div>
-    </div>
-
-    <div class="adm-group" style="border-top:1px solid var(--border);padding-top:12px;margin-top:12px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-            <div class="adm-label">Özel Veri Girişi</div>
-            <button type="button" id="addCustomBtn" style="background:var(--blue);color:#fff;border:none;border-radius:4px;padding:3px 8px;font-size:.65rem;font-weight:700;cursor:pointer">+ YENİ EKLE</button>
+                <button type="button" id="addCustomBtn" style="background:var(--blue);color:#fff;border:none;border-radius:4px;padding:3px 8px;font-size:.65rem;font-weight:700;cursor:pointer">+ YENİ EKLE</button>
         </div>
-        <div id="customMetrics"></div>
+        
     </div>
 
-    <button class="adm-save" id="admSave">💾 KAYDET</button>
+    
 </div>
 
 <script>
@@ -411,68 +394,6 @@ function renderNews(allNews){
         var t=h<1?'az önce':h<24?h+' saat önce':Math.floor(h/24)+' gün önce';
         return'<div class="nw-item"><a href="'+n.link+'" target="_blank" rel="noopener">'+n.title+'</a><div class="nw-time">'+t+'</div></div>';
     }).join('')||'<div class="nw-item">Haber bulunamadı</div>';
-}
-
-// ═══ ADMIN PANEL ═══
-document.getElementById('adminBtn').addEventListener('click',function(){
-    document.getElementById('adminPanel').classList.toggle('open');
-});
-
-// Admin commodity inputs
-var admList=document.getElementById('admCommodList');
-AFFECTED_COMMODITIES.forEach(function(c){
-    admList.innerHTML+='<div class="adm-row" style="margin-bottom:6px"><div><div class="adm-label">'+c.name+'</div><input type="number" step="any" class="adm-input" id="adm_v_'+c.id.replace(/[^a-zA-Z0-9]/g,'_')+'" placeholder="Fiyat"></div><div><div class="adm-label">Değişim %</div><input type="number" step="any" class="adm-input" id="adm_c_'+c.id.replace(/[^a-zA-Z0-9]/g,'_')+'" placeholder="%"></div></div>';
-});
-
-// Custom metrics
-function addCustomRow(name,unit,val,chg){
-    var d=document.createElement('div');
-    d.className='custom-row';
-    d.style.cssText='display:grid;grid-template-columns:1fr .6fr .6fr .6fr auto;gap:4px;margin-bottom:4px;align-items:end';
-    d.innerHTML='<div><div class="adm-label">İsim</div><input type="text" class="adm-input cr-n" value="'+(name||'')+'" placeholder="İsim"></div><div><div class="adm-label">Birim</div><input type="text" class="adm-input cr-u" value="'+(unit||'')+'" placeholder="$/Ton"></div><div><div class="adm-label">Değer</div><input type="number" step="any" class="adm-input cr-v" value="'+(val||'')+'" placeholder="0"></div><div><div class="adm-label">%</div><input type="number" step="any" class="adm-input cr-c" value="'+(chg||'')+'" placeholder="0"></div><button type="button" onclick="this.parentElement.remove()" style="background:#ff4757;color:#fff;border:none;border-radius:4px;padding:6px 8px;cursor:pointer;font-weight:700;margin-bottom:1px">✕</button>';
-    document.getElementById('customMetrics').appendChild(d);
-}
-document.getElementById('addCustomBtn').addEventListener('click',function(){addCustomRow()});
-
-// Load admin state
-var state=loadState();
-document.getElementById('admRisk').value=state.riskScore||50;
-document.getElementById('admHurmuz').value=state.hurmuzStatus||'AÇIK / GÜVENLİ';
-// Load custom metrics
-(state.customMetrics||[]).forEach(function(m){addCustomRow(m.name,m.unit,m.value,m.change)});
-
-// Save
-document.getElementById('admSave').addEventListener('click',function(){
-    var pin=document.getElementById('admPin').value;
-    if(pin!=='isedes'){alert('❌ Yanlış PIN!');return}
-    var s=loadState();
-    s.riskScore=parseInt(document.getElementById('admRisk').value)||50;
-    s.hurmuzStatus=document.getElementById('admHurmuz').value;
-    s.manualCommodities={};
-    AFFECTED_COMMODITIES.forEach(function(c){
-        var key=c.id.replace(/[^a-zA-Z0-9]/g,'_');
-        var v=parseFloat(document.getElementById('adm_v_'+key).value);
-        var ch=parseFloat(document.getElementById('adm_c_'+key).value);
-        if(!isNaN(v)||!isNaN(ch)){s.manualCommodities[c.id]={value:v||0,change:ch||0}}
-    });
-    // Custom metrics
-    s.customMetrics=[];
-    document.querySelectorAll('.custom-row').forEach(function(row){
-        var n=row.querySelector('.cr-n').value.trim();
-        if(!n)return;
-        s.customMetrics.push({name:n,unit:row.querySelector('.cr-u').value.trim(),value:parseFloat(row.querySelector('.cr-v').value)||0,change:parseFloat(row.querySelector('.cr-c').value)||0});
-    });
-    saveState(s);
-    applyState();
-    // Rebuild commodities
-    Promise.all([fj('commodities_energy.json'),fj('commodities_metals.json'),fj('commodities_agriculture.json')]).then(function(r){buildCommodities(r)});
-    alert('✅ Kaydedildi!');
-});
-
-function applyState(){
-    var s=loadState();
-    setRisk(s.riskScore);
-    setHurmuz(s.hurmuzStatus);
 }
 
 // ═══ INIT ═══
