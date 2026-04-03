@@ -90,25 +90,33 @@
 var days=Math.floor((new Date()-new Date('2026-02-28T00:00:00+03:00'))/864e5);
 document.getElementById('warDay').textContent=days>0?days:0;
 
-// STATE
-var S;
-try{S=JSON.parse(localStorage.getItem('iran_risk_state'))||{}}catch(e){S={}}
-var score=S.riskScore||50;
-var hurmuz=S.hurmuzStatus||'AÇIK / GÜVENLİ';
+// STATE — API'den oku (tüm cihazlarda aynı)
+fetch('/api/iran-state').then(function(r){return r.json()}).then(function(S){
+    var score=S.riskScore||50;
+    var hurmuz=S.hurmuzStatus||'AÇIK / GÜVENLİ';
 
-// RISK
-var el=document.getElementById('rScore'),fl=document.getElementById('rFill'),lb=document.getElementById('rLabel');
-el.textContent=score;
-fl.style.width=score+'%';
-if(score>75){fl.style.background='#ff4757';el.style.color='#ff4757';lb.textContent='🚨 KRİTİK'}
-else if(score>50){fl.style.background='#fbbf24';el.style.color='#f59e0b';lb.textContent='⚠️ YÜKSEK RİSK'}
-else if(score>25){fl.style.background='#22d3ee';el.style.color='#0ea5e9';lb.textContent='ℹ️ ORTA RİSK'}
-else{fl.style.background='#00d68f';el.style.color='#00d68f';lb.textContent='✅ DÜŞÜK RİSK'}
+    // RISK
+    var el=document.getElementById('rScore'),fl=document.getElementById('rFill'),lb=document.getElementById('rLabel');
+    el.textContent=score;
+    fl.style.width=score+'%';
+    if(score>75){fl.style.background='#ff4757';el.style.color='#ff4757';lb.textContent='🚨 KRİTİK'}
+    else if(score>50){fl.style.background='#fbbf24';el.style.color='#f59e0b';lb.textContent='⚠️ YÜKSEK RİSK'}
+    else if(score>25){fl.style.background='#22d3ee';el.style.color='#0ea5e9';lb.textContent='ℹ️ ORTA RİSK'}
+    else{fl.style.background='#00d68f';el.style.color='#00d68f';lb.textContent='✅ DÜŞÜK RİSK'}
 
-// HURMUZ
-var colors={'AÇIK / GÜVENLİ':'#00d68f','RİSKLİ':'#fbbf24','KISMEN KAPALI':'#f97316','KAPALI':'#ff4757'};
-document.getElementById('hDot').style.background=colors[hurmuz]||'#00d68f';
-document.getElementById('hTxt').textContent=hurmuz;
+    // HURMUZ
+    var colors={'AÇIK / GÜVENLİ':'#00d68f','RİSKLİ':'#fbbf24','KISMEN KAPALI':'#f97316','KAPALI':'#ff4757'};
+    document.getElementById('hDot').style.background=colors[hurmuz]||'#00d68f';
+    document.getElementById('hTxt').textContent=hurmuz;
+
+    // COMMODITIES — state'teki manualCommodities ve customMetrics'i kullan
+    window._iranState = S;
+    loadCommodities();
+}).catch(function(){
+    // API başarısız → default değerler
+    window._iranState = {};
+    loadCommodities();
+});
 
 // AI ANALYSIS
 fetch('/api/ai-analysis?cat=iran-risk').then(function(r){return r.json()}).then(function(d){
@@ -137,6 +145,8 @@ function fs(d,id){if(!d||!d.series)return null;for(var i=0;i<d.series.length;i++
 var D='data/';
 function fj(f){return fetch(D+f+'?t='+Date.now()).then(function(r){return r.json()}).catch(function(){return null})}
 
+function loadCommodities(){
+var S=window._iranState||{};
 Promise.all([fj('commodities_energy.json'),fj('commodities_metals.json'),fj('commodities_agriculture.json')]).then(function(r){
     var datasets=r;
     var g=document.getElementById('cmGrid');
@@ -151,13 +161,13 @@ Promise.all([fj('commodities_energy.json'),fj('commodities_metals.json'),fj('com
         var sign=chg!=null?(chg>=0?'+':''):'';
         html+='<div class="cm" title="'+c.w+'"><div class="cm-n">'+c.n+'</div><div class="cm-v">'+fp(val)+'</div><div class="cm-c '+cls+'">'+sign+(chg!=null?chg.toFixed(2)+'%':'—')+'</div></div>';
     });
-    // Özel metrikler
     (S.customMetrics||[]).forEach(function(m){
         var cls=m.change>=0?'u':'d';
         html+='<div class="cm" style="border-color:#a78bfa"><div class="cm-n">'+m.name+(m.unit?' ('+m.unit+')':'')+'</div><div class="cm-v">'+fp(m.value)+'</div><div class="cm-c '+cls+'">'+(m.change>=0?'+':'')+m.change.toFixed(2)+'%</div></div>';
     });
     g.innerHTML=html;
 });
+}
 
 // MAP
 var map=L.map('warMap',{scrollWheelZoom:false}).setView([30,50],5);
