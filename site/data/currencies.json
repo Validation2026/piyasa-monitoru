@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Döviz Kurları",
-    "updated_at": "2026-04-04T12:57:12Z",
+    "updated_at": "2026-04-04T16:37:11Z",
     "symbol_count": 16,
     "errors": [
       "CNYTRY=X",
@@ -14,14 +14,14 @@
       "id": "USDTRY=X",
       "name": "USD/TRY",
       "unit": "TRY",
-      "current": 44.5824,
-      "change_1d_pct": 0.06,
-      "change_1w_pct": 0.31,
+      "current": 44.5793,
+      "change_1d_pct": 0.05,
+      "change_1w_pct": 0.3,
       "change_1m_pct": 1.46,
       "change_3m_pct": 3.69,
       "change_ytd_pct": 3.69,
       "change_1y_pct": 17.49,
-      "high_52w": 44.5824,
+      "high_52w": 44.5793,
       "low_52w": 37.9446,
       "data": [
         {
@@ -1057,8 +1057,8 @@
           "value": 44.5558
         },
         {
-          "date": "2026-04-03",
-          "value": 44.5824
+          "date": "2026-04-04",
+          "value": 44.5793
         }
       ]
     },
@@ -11646,13 +11646,13 @@
       "id": "USDCNY=X",
       "name": "USD/CNY",
       "unit": "CNY",
-      "current": 6.8942,
-      "change_1d_pct": 0.13,
-      "change_1w_pct": -0.25,
-      "change_1m_pct": -0.04,
-      "change_3m_pct": -1.46,
-      "change_ytd_pct": -1.46,
-      "change_1y_pct": -5.14,
+      "current": 6.8819,
+      "change_1d_pct": -0.05,
+      "change_1w_pct": -0.43,
+      "change_1m_pct": -0.22,
+      "change_3m_pct": -1.63,
+      "change_ytd_pct": -1.63,
+      "change_1y_pct": -5.31,
       "high_52w": 7.35,
       "low_52w": 6.8409,
       "data": [
@@ -12689,8 +12689,8 @@
           "value": 6.8851
         },
         {
-          "date": "2026-04-04",
-          "value": 6.8942
+          "date": "2026-04-03",
+          "value": 6.8819
         }
       ]
     },
