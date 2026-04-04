@@ -215,16 +215,16 @@ var queries=['İran savaş','İran İsrail saldırı','Hürmüz Boğazı','Orta 
 var BLOCKED=['kürdistan','kürt','pkk','pyd','ypg','pjak','kdp','peshmerga','peşmerge','rojava','hdp','dem parti'];
 var allNews=[];var loaded=0;
 
-function isBlocked(title){
-    var low=title.toLowerCase();
-    for(var i=0;i<BLOCKED.length;i++){if(low.indexOf(BLOCKED[i])>-1)return true}
+function isBlocked(item){
+    var text=(item.title+' '+item.source+' '+(item.sourceUrl||'')+' '+item.link).toLowerCase();
+    for(var i=0;i<BLOCKED.length;i++){if(text.indexOf(BLOCKED[i])>-1)return true}
     return false;
 }
 
 queries.forEach(function(q,i){
     setTimeout(function(){
         fetch('/api/rss-proxy?q='+encodeURIComponent(q)).then(function(r){return r.json()}).then(function(d){
-            (d.items||[]).forEach(function(it){if(!isBlocked(it.title))allNews.push(it)});
+            (d.items||[]).forEach(function(it){if(!isBlocked(it))allNews.push(it)});
         }).catch(function(){}).finally(function(){
             loaded++;
             if(loaded>=queries.length)renderAll();
@@ -262,7 +262,8 @@ function renderAll(){
     nb.innerHTML=uniq.slice(0,15).map(function(n){
         var h=Math.floor((Date.now()-new Date(n.date).getTime())/36e5);
         var t=h<1?'az önce':h<24?h+' saat önce':Math.floor(h/24)+' gün önce';
-        return'<div class="nw"><a href="'+n.link+'" target="_blank">'+n.title+'</a><div class="nw-t">'+t+'</div></div>';
+        var src=n.source?' · '+n.source:'';
+        return'<div class="nw"><a href="'+n.link+'" target="_blank">'+n.title+'</a><div class="nw-t">'+t+src+'</div></div>';
     }).join('')||'<div class="nw">Haber bulunamadı</div>';
 }
 
