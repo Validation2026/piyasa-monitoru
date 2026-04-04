@@ -76,6 +76,34 @@ Kuru yük navlun endeksi (BDI) demir cevheri, kömür ve tahıl taşımacılığ
 
 Konteyner piyasasında Şangay-Avrupa rotası fiyatları jeopolitik risklerin etkisiyle normalin üzerinde seyrediyor. Sigorta primleri Basra Körfezi ve Kızıldeniz geçişleri için katlanmış durumda.
 
+⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
+'merkez-bankalari': `Küresel merkez bankaları enflasyon-büyüme dengesini gözetirken farklı politika yolları izliyor. Fed faiz indirim döngüsüne temkinli devam ederken, ECB daha agresif gevşeme sinyalleri veriyor.
+
+TCMB sıkı para politikasını sürdürüyor. Politika faizi %42.5 seviyesinde tutulurken, enflasyonda düşüş trendi izleniyor. Reel faiz pozitif bölgede kalması yabancı yatırımcı ilgisini artırıyor.
+
+BoJ negatif faiz döneminden çıkarak normalleşme sürecine girdi ancak temkinli adımlar atıyor. Yen zayıflığı müdahale riskini canlı tutuyor.
+
+⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
+'kuresel-risk': `Küresel risk haritasında İran-İsrail savaşı ve Rusya-Ukrayna çatışması iki ana jeopolitik odak noktası olmaya devam ediyor. VIX endeksi belirsizlik dönemlerinde yükseliyor.
+
+Enerji güvenliği, gıda arzı ve tedarik zinciri kesintileri küresel risk algısını şekillendiren temel faktörler. Gelişmekte olan ülkelerde sermaye çıkışları ve kur baskısı izleniyor.
+
+Küresel büyüme beklentileri IMF ve Dünya Bankası tahminleriyle takip ediliyor. ABD-Çin ticaret gerilimleri ve teknoloji savaşları ek risk unsurları oluşturuyor.
+
+⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
+'ulke-risk': `Ülke risk profillerinde kredi derecelendirme kuruluşlarının not değişiklikleri ve CDS spreadleri öncü göstergeler olarak izleniyor.
+
+Türkiye'de TCMB'nin sıkı para politikası ve enflasyonla mücadele programı kredi notu görünümünü iyileştiriyor. Cari açık daralması ve rezerv artışı olumlu sinyaller veriyor.
+
+İran-İsrail savaşı bölge ülkelerinin risk primlerini artırırken, enerji ihracatçıları petrol geliri artışından faydalanıyor. Rusya uluslararası finansal izolasyonunu sürdürüyor.
+
+⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
+'ekonomik-takvim': `Önümüzdeki dönemde Fed, ECB ve TCMB faiz kararları piyasaların ana odak noktası. ABD enflasyon verileri (TÜFE) ve istihdam rakamları Fed'in faiz patikasını belirleyecek.
+
+Türkiye'de TÜİK enflasyon verileri ve TCMB kararları TL varlıklar için kritik önemde. Dezenflasyon sürecinin hızı yatırımcı güvenini doğrudan etkiliyor.
+
+Euro Bölgesi GSYİH ve PMI verileri ECB'nin faiz indirim hızını şekillendirecek. Çin büyüme verileri emtia ve gelişmekte olan piyasalar için yön verici.
+
 ⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`
     };
     return {statusCode:200, headers:H, body:JSON.stringify({analysis: A[cat]||A['genel']})};

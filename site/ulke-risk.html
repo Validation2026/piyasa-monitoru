@@ -117,7 +117,7 @@ g.innerHTML=C.map(function(c){
     '<div class="note">'+c.note+'</div></div>';
 }).join('');
 
-fetch('/api/ai-analysis?cat=genel').then(function(r){return r.json()}).then(function(d){
+fetch('/api/ai-analysis?cat=ulke-risk').then(function(r){return r.json()}).then(function(d){
     if(d.analysis)document.getElementById('aiBox').textContent=d.analysis;
 }).catch(function(){});
 })();

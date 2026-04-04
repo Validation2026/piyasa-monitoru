@@ -115,7 +115,7 @@ function renderEvents(containerId, events){
 renderEvents('cbEvents', cbDates);
 renderEvents('ecoEvents', ecoEvents);
 
-fetch('/api/ai-analysis?cat=genel').then(function(r){return r.json()}).then(function(d){
+fetch('/api/ai-analysis?cat=ekonomik-takvim').then(function(r){return r.json()}).then(function(d){
     var el=document.getElementById('aiAnalysis');if(el&&d.analysis)el.textContent=d.analysis;
 }).catch(function(){});
 })();

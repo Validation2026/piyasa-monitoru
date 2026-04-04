@@ -211,13 +211,20 @@ bases.forEach(function(b){L.circleMarker([b.lat,b.lon],{radius:b.t==='cr'?10:7,c
 var strikeLayer=L.layerGroup().addTo(map);
 var KW={'tahran':[35.68,51.38],'isfahan':[32.65,51.66],'natanz':[33.97,51.92],'iran':[35.68,51.38],'tel aviv':[32.08,34.78],'kudüs':[31.76,35.21],'haifa':[32.79,34.99],'israil':[31.5,34.8],'beyrut':[33.89,35.5],'lübnan':[33.89,35.5],'hizbullah':[33.89,35.5],'şam':[33.51,36.29],'halep':[36.2,37.13],'suriye':[33.51,36.29],'bağdat':[33.31,44.36],'erbil':[36.19,44.01],'irak':[33.31,44.36],'sanaa':[15.36,44.19],'yemen':[15.36,44.19],'husi':[14.79,42.95],'kızıldeniz':[15,41.5],'hürmüz':[26.56,56.24],'bandar abbas':[27.15,56.28],'golan':[33.01,35.75],'gazze':[31.5,34.47],'cidde':[21.43,39.17],'nevatim':[30.62,34.82],'hayfa':[32.79,34.99],'füze':[32.08,34.78],'saldırı':[35.68,51.38]};
 
-var queries=['İran savaş','İran İsrail saldırı','Hürmüz Boğazı','Orta Doğu füze','Yemen Husi'];
+var queries=['İran savaş','İran İsrail saldırı','Hürmüz Boğazı','Orta Doğu füze','Yemen Husi','İran ekonomi yaptırım','petrol İran ambargo','Orta Doğu enerji piyasa'];
+var BLOCKED=['kürdistan','kürt','pkk','pyd','ypg','pjak','kdp','peshmerga','peşmerge','rojava','hdp','dem parti'];
 var allNews=[];var loaded=0;
+
+function isBlocked(title){
+    var low=title.toLowerCase();
+    for(var i=0;i<BLOCKED.length;i++){if(low.indexOf(BLOCKED[i])>-1)return true}
+    return false;
+}
 
 queries.forEach(function(q,i){
     setTimeout(function(){
         fetch('/api/rss-proxy?q='+encodeURIComponent(q)).then(function(r){return r.json()}).then(function(d){
-            (d.items||[]).forEach(function(it){allNews.push(it)});
+            (d.items||[]).forEach(function(it){if(!isBlocked(it.title))allNews.push(it)});
         }).catch(function(){}).finally(function(){
             loaded++;
             if(loaded>=queries.length)renderAll();
