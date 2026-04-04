@@ -1,0 +1,1 @@
+# pytest konfigürasyon dosyası

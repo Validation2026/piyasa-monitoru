@@ -44,12 +44,16 @@ exports.handler = async function(event) {
             const title = (block.match(/<title>([\s\S]*?)<\/title>/) || [])[1] || '';
             const link = (block.match(/<link>([\s\S]*?)<\/link>/) || [])[1] || '';
             const pubDate = (block.match(/<pubDate>([\s\S]*?)<\/pubDate>/) || [])[1] || '';
+            const source = (block.match(/<source[^>]*>([\s\S]*?)<\/source>/) || [])[1] || '';
+            const sourceUrl = (block.match(/<source[^>]*url="([^"]*)"/) || [])[1] || '';
 
             if (title) {
                 items.push({
                     title: title.replace(/<!\[CDATA\[|\]\]>/g, '').trim(),
                     link: link.trim(),
-                    date: pubDate.trim()
+                    date: pubDate.trim(),
+                    source: source.replace(/<!\[CDATA\[|\]\]>/g, '').trim(),
+                    sourceUrl: sourceUrl.trim()
                 });
             }
         }

@@ -1,7 +1,7 @@
 /**
- * Piyasa Monitörü — Sidebar v3
+ * Piyasa Monitörü — Sidebar v4
  * Mobilde üstte yatay nav, masaüstünde sol sidebar
- * Tema toggle yok — her zaman açık tema
+ * Dark/Light tema desteği
  */
 (function(){'use strict';
 
@@ -16,7 +16,7 @@ var links = [
     ['endeksler','📈','Endeksler'],
     ['kripto','₿','Kripto'],
     ['iran-risk','🔴','İran Risk'],
-    ['tedarik-zinciri','🌍','Tedarik Zinciri'],
+    ['tedarik-zinciri','🚢','Tedarik Zinciri'],
     ['kuresel-risk','🌍','Küresel Risk'],
     ['ekonomik-takvim','📅','Takvim'],
     ['merkez-bankalari','🏛️','Merkez Bank.'],
@@ -39,12 +39,13 @@ var HTML = '' +
 '<aside class="sidebar" id="sidebar">' +
 '<a class="sb-brand" href="index.html"><span class="sb-brand-icon">📊</span><span class="sb-brand-text">Piyasa Monitörü</span></a>' +
 linksHtml +
+'<button class="sb-direct" id="themeToggle" style="margin-top:auto;border:none;cursor:pointer;text-align:left;background:none"><span class="sb-icon" id="themeIcon">🌙</span> <span id="themeLabel">Koyu Tema</span></button>' +
 '</aside>' +
 // Topbar
 '<div class="topbar" id="topbar">' +
 '<button class="topbar-hamburger" id="hamburger">☰</button>' +
 '<a href="index.html" style="text-decoration:none;font-size:.9rem;font-weight:800;color:var(--blue)">📊 PM</a>' +
-'<span class="topbar-clock" id="clock"></span>' +
+'<div style="display:flex;align-items:center;gap:10px"><span class="topbar-clock" id="clock"></span><button id="themeToggleMobile" style="background:none;border:none;font-size:1.1rem;cursor:pointer;padding:2px" title="Tema değiştir">🌙</button></div>' +
 '</div>' +
 // Mobile nav strip
 '<div class="mobile-nav" id="mobileNav">' + mobileLinksHtml + '</div>';
@@ -84,5 +85,26 @@ function tick(){
     el.textContent=String(n.getDate()).padStart(2,'0')+'.'+String(n.getMonth()+1).padStart(2,'0')+'.'+n.getFullYear()+' '+String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');
 }
 setInterval(tick,30000);tick();
+
+// Theme toggle (dark/light)
+function applyTheme(dark){
+    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+    var icon = document.getElementById('themeIcon');
+    var label = document.getElementById('themeLabel');
+    var mBtn = document.getElementById('themeToggleMobile');
+    if(icon) icon.textContent = dark ? '☀️' : '🌙';
+    if(label) label.textContent = dark ? 'Açık Tema' : 'Koyu Tema';
+    if(mBtn) mBtn.textContent = dark ? '☀️' : '🌙';
+    try { localStorage.setItem('pm-theme', dark ? 'dark' : 'light'); } catch(e){}
+}
+var savedTheme = null;
+try { savedTheme = localStorage.getItem('pm-theme'); } catch(e){}
+var isDark = savedTheme === 'dark';
+applyTheme(isDark);
+
+function toggleTheme(){ isDark = !isDark; applyTheme(isDark); }
+document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+var mobileToggle = document.getElementById('themeToggleMobile');
+if(mobileToggle) mobileToggle.addEventListener('click', toggleTheme);
 
 })();
