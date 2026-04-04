@@ -119,7 +119,7 @@ g.innerHTML=C.map(function(c){
 
 fetch('/api/ai-analysis?cat=ulke-risk').then(function(r){return r.json()}).then(function(d){
     if(d.analysis)document.getElementById('aiBox').textContent=d.analysis;
-}).catch(function(){});
+}).catch(function(){var el=document.getElementById('aiBox');if(el)el.textContent='Analiz yüklenemiyor.'});
 })();
 </script>
 </body>

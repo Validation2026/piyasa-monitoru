@@ -180,7 +180,7 @@ Promise.all([fj('currencies.json'),fj('commodities_energy.json'),fj('commodities
 var warDays=Math.floor((new Date()-new Date('2026-02-28T00:00:00+03:00'))/864e5);
 var ib=document.getElementById('iranBannerDay');if(ib)ib.textContent=warDays+'. gün — Canlı risk takibi ve harita';
 // AI
-fetch('/api/ai-analysis?cat=genel').then(function(r){return r.json()}).then(function(d){var el=document.getElementById('indexAiAnalysis');if(el&&d.analysis)el.textContent=d.analysis}).catch(function(){});
+fetch('/api/ai-analysis?cat=genel').then(function(r){return r.json()}).then(function(d){var el=document.getElementById('indexAiAnalysis');if(el&&d.analysis)el.textContent=d.analysis}).catch(function(){var el=document.getElementById('indexAiAnalysis');if(el)el.innerHTML='<span style="color:var(--t3);font-style:italic">AI analiz su anda kullanilamiyor.</span>'});
 // Auto-refresh every 5 minutes
 setTimeout(function(){location.reload()},5*60*1000);
 })();
