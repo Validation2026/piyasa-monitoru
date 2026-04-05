@@ -73,7 +73,7 @@
 <div class="hz-card"><div class="hz-dot" id="hDot" style="background:#00d68f"></div><div><div class="hz-txt" id="hTxt">AÇIK / GÜVENLİ</div><div style="font-size:.68rem;color:#94a3b8;margin-top:2px">Hürmüz Boğazı — Dünya petrolünün %20'si</div></div></div>
 </div>
 
-<div class="ai-box"><div style="font-size:.82rem;font-weight:700;margin-bottom:8px">🤖 Durum Analizi</div><div class="ai-body" id="aiBox">Yükleniyor...</div></div>
+<div class="ai-box"><div style="font-size:.82rem;font-weight:700;margin-bottom:8px">🤖 Durum Analizi <span style="font-size:.6rem;background:rgba(59,130,246,.1);color:#3b82f6;padding:2px 6px;border-radius:4px;font-weight:600;margin-left:4px">Gemini AI</span></div><div class="ai-body" id="aiBox">Analiz yükleniyor...</div></div>
 
 <div class="sec-title">⛽ Seçilmiş Risk Göstergeleri</div>
 <div class="cm-grid" id="cmGrid"></div>
@@ -141,7 +141,7 @@ fetch('/api/iran-state').then(function(r){return r.json()}).then(function(S){
 });
 
 // AI ANALYSIS
-fetch('/api/ai-analysis?cat=iran-risk').then(function(r){return r.json()}).then(function(d){
+fetch('/api/iran-ai').then(function(r){return r.json()}).then(function(d){
     if(d.analysis)document.getElementById('aiBox').textContent=d.analysis;
 }).catch(function(){document.getElementById('aiBox').textContent='Analiz yüklenemiyor.'});
 
