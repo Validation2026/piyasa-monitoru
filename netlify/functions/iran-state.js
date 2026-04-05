@@ -47,6 +47,7 @@ exports.handler = async function(event) {
                 hurmuzStatus: body.data.hurmuzStatus || 'AÇIK / GÜVENLİ',
                 manualCommodities: body.data.manualCommodities || {},
                 customMetrics: body.data.customMetrics || [],
+                timeline: body.data.timeline || [],
                 updatedAt: new Date().toISOString()
             };
 
