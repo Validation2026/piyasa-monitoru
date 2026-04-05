@@ -59,7 +59,7 @@ Yanıtını TAM OLARAK aşağıdaki iki bölümde ver. Başka hiçbir şey eklem
 
 === BÖLÜM 2: ZAMAN ÇİZELGESİ ===
 
-Son 48 saatteki en önemli 5 olayı şu JSON formatında ver. Başka hiçbir şey ekleme, sadece JSON array:
+28 Şubat 2026'dan bugüne kadar olan en önemli 15-20 olayı haberlerden derle. Kronolojik sırala (eskiden yeniye). Her olay için şu JSON formatını kullan:
 
 [TIMELINE_START]
 [
@@ -68,6 +68,7 @@ Son 48 saatteki en önemli 5 olayı şu JSON formatında ver. Başka hiçbir şe
 [TIMELINE_END]
 
 tag değerleri: mil=askeri, dip=diplomatik, eco=ekonomik, nuk=nükleer
+Son 24 saatteki olayları mutlaka dahil et. Sadece JSON ver, başka açıklama ekleme.
 
 ÖNEMLİ: "Profesyonel analist olarak..." gibi giriş cümlesi KOYMA. Direkt 📊 DURUM ile başla.`;
 }
@@ -103,7 +104,7 @@ exports.handler = async function(event) {
             '/v1beta/models/' + model + ':generateContent?key=' + API_KEY,
             {
                 contents: [{ parts: [{ text: buildPrompt() }] }],
-                generationConfig: { temperature: 0.7, maxOutputTokens: 1200 },
+                generationConfig: { temperature: 0.7, maxOutputTokens: 2500 },
                 tools: [{ googleSearch: {} }]
             }
         );
