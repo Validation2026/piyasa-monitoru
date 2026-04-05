@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Kıymetli Madenler & Metaller",
-    "updated_at": "2026-04-05T02:32:03Z",
+    "updated_at": "2026-04-05T05:45:02Z",
     "symbol_count": 6,
     "errors": []
   },
@@ -11,24 +11,16 @@
       "id": "GC=F",
       "name": "XAU (Altın)",
       "unit": "USD/oz",
-      "current": 4651.5,
-      "change_1d_pct": -2.75,
-      "change_1w_pct": 6.31,
-      "change_1m_pct": -8.93,
-      "change_3m_pct": 2.7,
-      "change_ytd_pct": 7.81,
-      "change_1y_pct": 50.19,
+      "current": 4702.7002,
+      "change_1d_pct": -1.68,
+      "change_1w_pct": 7.48,
+      "change_1m_pct": -7.92,
+      "change_3m_pct": 3.83,
+      "change_ytd_pct": 9.0,
+      "change_1y_pct": 59.34,
       "high_52w": 5318.3999,
       "low_52w": 2951.3,
       "data": [
-        {
-          "date": "2025-04-03",
-          "value": 3097.0
-        },
-        {
-          "date": "2025-04-04",
-          "value": 3012.0
-        },
         {
           "date": "2025-04-07",
           "value": 2951.3
@@ -1027,7 +1019,7 @@
         },
         {
           "date": "2026-04-02",
-          "value": 4651.5
+          "value": 4702.7002
         }
       ]
     },
@@ -1035,24 +1027,16 @@
       "id": "SI=F",
       "name": "XAG (Gümüş)",
       "unit": "USD/oz",
-      "current": 72.735,
-      "change_1d_pct": -4.13,
-      "change_1w_pct": 7.48,
-      "change_1m_pct": -12.29,
-      "change_3m_pct": -4.9,
-      "change_ytd_pct": 3.09,
-      "change_1y_pct": 128.41,
+      "current": 73.17,
+      "change_1d_pct": -3.55,
+      "change_1w_pct": 8.13,
+      "change_1m_pct": -11.76,
+      "change_3m_pct": -4.34,
+      "change_ytd_pct": 3.7,
+      "change_1y_pct": 147.95,
       "high_52w": 115.08,
-      "low_52w": 29.116,
+      "low_52w": 29.51,
       "data": [
-        {
-          "date": "2025-04-03",
-          "value": 31.844
-        },
-        {
-          "date": "2025-04-04",
-          "value": 29.116
-        },
         {
           "date": "2025-04-07",
           "value": 29.51
@@ -2051,7 +2035,7 @@
         },
         {
           "date": "2026-04-02",
-          "value": 72.735
+          "value": 73.17
         }
       ]
     },
@@ -2059,24 +2043,16 @@
       "id": "PL=F",
       "name": "XPT (Platin)",
       "unit": "USD/oz",
-      "current": 1963.8,
-      "change_1d_pct": -0.28,
-      "change_1w_pct": 6.83,
-      "change_1m_pct": -5.35,
-      "change_3m_pct": -20.42,
-      "change_ytd_pct": -7.62,
-      "change_1y_pct": 108.36,
+      "current": 1999.9,
+      "change_1d_pct": 1.55,
+      "change_1w_pct": 8.79,
+      "change_1m_pct": -3.61,
+      "change_3m_pct": -18.96,
+      "change_ytd_pct": -5.92,
+      "change_1y_pct": 123.7,
       "high_52w": 2852.3999,
       "low_52w": 894.0,
       "data": [
-        {
-          "date": "2025-04-03",
-          "value": 942.5
-        },
-        {
-          "date": "2025-04-04",
-          "value": 902.0
-        },
         {
           "date": "2025-04-07",
           "value": 894.0
@@ -3075,7 +3051,7 @@
         },
         {
           "date": "2026-04-02",
-          "value": 1963.8
+          "value": 1999.9
         }
       ]
     },
@@ -3083,24 +3059,16 @@
       "id": "PA=F",
       "name": "XPD (Paladyum)",
       "unit": "USD/oz",
-      "current": 1491.4,
-      "change_1d_pct": 0.88,
-      "change_1w_pct": 11.19,
-      "change_1m_pct": -8.78,
-      "change_3m_pct": -24.86,
-      "change_ytd_pct": -10.59,
-      "change_1y_pct": 62.27,
+      "current": 1515.0,
+      "change_1d_pct": 2.48,
+      "change_1w_pct": 12.95,
+      "change_1m_pct": -7.34,
+      "change_3m_pct": -23.67,
+      "change_ytd_pct": -9.17,
+      "change_1y_pct": 72.83,
       "high_52w": 2169.8999,
       "low_52w": 876.6,
       "data": [
-        {
-          "date": "2025-04-03",
-          "value": 919.1
-        },
-        {
-          "date": "2025-04-04",
-          "value": 896.2
-        },
         {
           "date": "2025-04-07",
           "value": 876.6
@@ -4095,7 +4063,7 @@
         },
         {
           "date": "2026-04-02",
-          "value": 1491.4
+          "value": 1515.0
         }
       ]
     },
@@ -4103,24 +4071,16 @@
       "id": "HG=F",
       "name": "HG (Bakır)",
       "unit": "USD/lb",
-      "current": 5.563,
-      "change_1d_pct": -1.08,
-      "change_1w_pct": 2.14,
-      "change_1m_pct": -3.65,
-      "change_3m_pct": -3.53,
-      "change_ytd_pct": -1.37,
-      "change_1y_pct": 15.63,
+      "current": 5.6815,
+      "change_1d_pct": 1.02,
+      "change_1w_pct": 4.31,
+      "change_1m_pct": -1.59,
+      "change_3m_pct": -1.47,
+      "change_ytd_pct": 0.74,
+      "change_1y_pct": 36.28,
       "high_52w": 6.1755,
       "low_52w": 4.1275,
       "data": [
-        {
-          "date": "2025-04-03",
-          "value": 4.811
-        },
-        {
-          "date": "2025-04-04",
-          "value": 4.3845
-        },
         {
           "date": "2025-04-07",
           "value": 4.169
@@ -5119,7 +5079,7 @@
         },
         {
           "date": "2026-04-02",
-          "value": 5.563
+          "value": 5.6815
         }
       ]
     },
@@ -5127,24 +5087,16 @@
       "id": "ALI=F",
       "name": "ALI (Alüminyum)",
       "unit": "USD/ton",
-      "current": 3411.0,
-      "change_1d_pct": -1.19,
-      "change_1w_pct": 7.89,
-      "change_1m_pct": 7.75,
-      "change_3m_pct": 16.63,
-      "change_ytd_pct": 16.1,
-      "change_1y_pct": 48.55,
+      "current": 3422.0,
+      "change_1d_pct": -0.88,
+      "change_1w_pct": 8.24,
+      "change_1m_pct": 8.09,
+      "change_3m_pct": 17.0,
+      "change_ytd_pct": 16.47,
+      "change_1y_pct": 55.6,
       "high_52w": 3464.0,
       "low_52w": 2166.25,
       "data": [
-        {
-          "date": "2025-04-03",
-          "value": 2296.25
-        },
-        {
-          "date": "2025-04-04",
-          "value": 2209.5
-        },
         {
           "date": "2025-04-07",
           "value": 2199.25
@@ -6139,7 +6091,7 @@
         },
         {
           "date": "2026-04-02",
-          "value": 3411.0
+          "value": 3422.0
         }
       ]
     }
