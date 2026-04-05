@@ -144,7 +144,7 @@ body{font-family:var(--fm);background:var(--bg);color:var(--t1);line-height:1.6;
     .sidebar.open{transform:translateX(0)}
     .sb-overlay.open{display:block;opacity:1}
     .topbar{display:none}
-    .main{margin-left:0;padding-top:50px}
+    .main{margin-left:0;padding-top:60px}
     .mobile-nav{display:block;top:0}
 }
 
