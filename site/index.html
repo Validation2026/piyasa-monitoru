@@ -48,7 +48,7 @@
 
 <div style="height:12px"></div>
 
-<div style="text-align:center;padding:8px 0 14px">
+<div style="text-align:center;padding:8px 0 14px;margin-top:6px">
 <h1 style="font-size:1.4rem;font-weight:800;letter-spacing:-.5px;margin:0"><span style="background:linear-gradient(135deg,#3b82f6,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Risk Monitörü</span></h1>
 <p style="color:#64748b;font-size:.78rem;margin:4px 0 0">Emtia, döviz, kripto, tahvil ve borsa endeksleri — anlık veriler</p>
 </div>
@@ -113,6 +113,12 @@
     <a class="cat" href="tahviller.html"><div class="cat-icon">📜</div><div class="cat-name">Tahviller</div><div class="cat-desc">ABD 3M–30Y getiri eğrisi</div><div class="cat-tag">4 seri</div></a>
     <a class="cat" href="endeksler.html"><div class="cat-icon">📈</div><div class="cat-name">Endeksler</div><div class="cat-desc">BIST, S&P, DAX, Nikkei +12</div><div class="cat-tag">17 seri</div></a>
     <a class="cat" href="kripto.html"><div class="cat-icon">₿</div><div class="cat-name">Kripto Paralar</div><div class="cat-desc">BTC, ETH, SOL, XRP +6</div><div class="cat-tag">10 seri</div></a>
+    <a class="cat" href="iran-risk.html"><div class="cat-icon">🔴</div><div class="cat-name">İran Risk Monitörü</div><div class="cat-desc">Savaş takibi, harita, haberler</div><div class="cat-tag">Canlı</div></a>
+    <a class="cat" href="tedarik-zinciri.html"><div class="cat-icon">🌍</div><div class="cat-name">Tedarik Zinciri</div><div class="cat-desc">Ticaret rotaları, üretici ülkeler</div><div class="cat-tag">Harita</div></a>
+    <a class="cat" href="kuresel-risk.html"><div class="cat-icon">🌍</div><div class="cat-name">Küresel Risk</div><div class="cat-desc">Jeopolitik risk göstergeleri</div><div class="cat-tag">Analiz</div></a>
+    <a class="cat" href="ekonomik-takvim.html"><div class="cat-icon">📅</div><div class="cat-name">Ekonomik Takvim</div><div class="cat-desc">Merkez bankası kararları, veri</div><div class="cat-tag">2026</div></a>
+    <a class="cat" href="merkez-bankalari.html"><div class="cat-icon">🏛️</div><div class="cat-name">Merkez Bankaları</div><div class="cat-desc">Fed, ECB, TCMB faiz politikaları</div><div class="cat-tag">Analiz</div></a>
+    <a class="cat" href="ulke-risk.html"><div class="cat-icon">🌐</div><div class="cat-name">Ülke Risk Profilleri</div><div class="cat-desc">CDS, kredi notları, 10 ülke</div><div class="cat-tag">Doğrulanmış</div></a>
 </div>
 
 <!-- Price Tables -->
@@ -127,8 +133,7 @@
 </div>
 
 <!-- Activity -->
-<div class="sec-title">🔔 Son Güncellemeler</div>
-<div class="activity" id="actFeed"></div>
+
 
 <div class="footer">Risk Monitörü © 2026</div>
 </div>
@@ -153,10 +158,9 @@ function buildMovers(all){var sorted=all.filter(function(s){return s&&s.change_1
 
 function buildTable(id,items){var el=document.getElementById(id);if(!el)return;el.innerHTML=items.map(function(s){if(!s)return'';var p=s.change_1d_pct;var cls=p!=null?cc(p):'';var sign=p!=null?(p>=0?'+':''):'';var chg=p!=null?sign+p.toFixed(2)+'%':'—';return'<div class="prow"><div class="prow-n">'+s.name+'</div><div class="prow-v">'+fp(s.current)+'</div><div class="prow-c '+cls+'">'+chg+'</div></div>'}).join('')}
 
-function buildAct(data){var el=document.getElementById('actFeed');if(!el||!data||!data.activities)return;el.innerHTML=data.activities.slice(0,6).map(function(a){var d=new Date(a.timestamp);var now=new Date();var diff=Math.floor((now-d)/864e5);var t=diff===0?'bugün':diff===1?'dün':diff+' gün önce';return'<div class="act-item"><div class="act-dot"></div><div><strong>'+a.title+'</strong> '+a.text+'<div class="act-time">'+t+'</div></div></div>'}).join('')}
 
-Promise.all([fj('currencies.json'),fj('commodities_energy.json'),fj('commodities_metals.json'),fj('commodities_agriculture.json'),fj('bonds.json'),fj('indices.json'),fj('crypto.json'),fj('industrial.json'),fj('activities.json')]).then(function(r){
-    var cur=r[0],ener=r[1],met=r[2],agri=r[3],bonds=r[4],idx=r[5],crypto=r[6],indust=r[7],act=r[8];
+Promise.all([fj('currencies.json'),fj('commodities_energy.json'),fj('commodities_metals.json'),fj('commodities_agriculture.json'),fj('bonds.json'),fj('indices.json'),fj('crypto.json'),fj('industrial.json')]).then(function(r){
+    var cur=r[0],ener=r[1],met=r[2],agri=r[3],bonds=r[4],idx=r[5],crypto=r[6],indust=r[7];
 
     setKPI('usdtry',fs(cur,'USDTRY=X'),'#3b82f6');
     setKPI('gold',fs(met,'GC=F'),'#fbbf24');
@@ -174,7 +178,6 @@ Promise.all([fj('currencies.json'),fj('commodities_energy.json'),fj('commodities
     if(idx&&idx.series)buildTable('tblIdx',idx.series);
     if(crypto&&crypto.series)buildTable('tblCrypto',crypto.series);
 
-    buildAct(act);
 
     var st=document.getElementById('stTotal');if(st)st.textContent=total+'+';
     var su=document.getElementById('stUpdate');if(su){var latest=cur||ener;if(latest&&latest.meta){var d=new Date(latest.meta.updated_at);su.textContent=String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+d.getFullYear()}}
