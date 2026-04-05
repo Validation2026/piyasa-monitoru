@@ -8,7 +8,7 @@ function geminiRequest(path, body) {
             path: path,
             method: body ? 'POST' : 'GET',
             headers: body ? { 'Content-Type': 'application/json' } : {},
-            timeout: 25000
+            timeout: 30000
         }, (res) => {
             let data = '';
             res.on('data', chunk => data += chunk);
@@ -35,65 +35,69 @@ async function getModel() {
     return 'gemini-2.5-flash';
 }
 
-const PROMPT = `Sen profesyonel bir jeopolitik ve makroekonomi analistisin. Türkçe yaz. Kısa, net, yönetici özeti kıvamında ol. Destan yazma.
+function buildPrompt() {
+    const now = new Date();
+    const tr = new Intl.DateTimeFormat('tr-TR', { day:'numeric', month:'long', year:'numeric', timeZone:'Europe/Istanbul' }).format(now);
+    const warStart = new Date('2026-02-28T00:00:00+03:00');
+    const dayCount = Math.floor((now - warStart) / 86400000);
 
-İran-İsrail savaşı (28 Şubat 2026 başlangıç) bağlamında BUGÜNKÜ durumu analiz et.
+    return `Bugün ${tr}, İran-İsrail savaşının ${dayCount}. günü.
 
-Şu başlıkları kullan:
+Sen jeopolitik ve makroekonomi analistisin. İnternetten son 6 saatteki İran-İsrail savaşı haberlerini tara. Sonra aşağıdaki formatta KISA ve NET bir özet yaz. Türkçe yaz. Her madde 1 cümle olsun. Uzun paragraflar YAZMA.
 
-📊 DURUM ANALİZİ
-2-3 cümle genel durum özeti. Savaşın kaçıncı gününde olduğumuzu, son gelişmeleri ve genel gidişatı özetle.
+📊 DURUM
+• Son 6 saatteki en önemli 2-3 gelişmeyi özetle
 
-⚔️ ASKERİ DURUM
-• 3-4 kısa madde (son askeri gelişmeler, cepheler, füze saldırıları, deniz durumu)
+⚔️ JEOPOLİTİK
+• Askeri gelişmeler, cepheler, diplomasi (3-4 kısa madde)
 
-💰 EKONOMİK ETKİLER
-• 3-4 kısa madde (petrol, altın, navlun, sigorta, polyester hammadde, Hürmüz Boğazı etkisi)
+💰 EKONOMİK
+• Petrol, altın, navlun, sigorta, hammadde etkileri (3-4 kısa madde)
 
-🔮 KISA VADEDE İZLENMESİ GEREKENLER
-• 2-3 kısa madde
+⚠️ Bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.
 
-⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`;
+ÖNEMLİ: Başlığın önüne "Profesyonel bir analist olarak..." gibi giriş cümlesi KOYMA. Direkt 📊 DURUM ile başla.`;
+}
 
-const FALLBACK = `📊 DURUM ANALİZİ
-İran-İsrail arasındaki çatışma Şubat 2026'dan bu yana devam ediyor. Hürmüz Boğazı ve Kızıldeniz'deki deniz trafiği aksama riski altında.
+const FALLBACK = `📊 DURUM
+• İran-İsrail arasındaki çatışma devam ediyor
+• Hürmüz Boğazı ve Kızıldeniz'deki deniz trafiği risk altında
 
-⚔️ ASKERİ DURUM
-• Hürmüz Boğazı'ndan geçen tanker trafiğinde aksaklık riski artıyor
-• İsrail-İran arasında doğrudan askeri tırmanma devam ediyor
-• Hizbullah ve Husi milislerinin vekâlet savaşı genişliyor
+⚔️ JEOPOLİTİK
+• Hürmüz Boğazı tanker trafiğinde aksaklık riski artıyor
+• İsrail-İran doğrudan askeri tırmanma devam ediyor
+• Hizbullah ve Husi vekâlet savaşı genişliyor
 • ABD 5. Filo Basra Körfezi'nde konuşlu
 
-💰 EKONOMİK ETKİLER
-• Ham petrol fiyatlarında jeopolitik risk primi yükseldi
-• Deniz sigorta maliyetleri Basra Körfezi rotaları için katlandı
-• Navlun — Süveyş→Ümit Burnu rota değişikliği maliyetleri arttı
-• Polyester dahil petrol bazlı hammaddeler doğrudan etkileniyor
+💰 EKONOMİK
+• Petrolde jeopolitik risk primi yükseldi
+• Deniz sigortaları Basra Körfezi için katlandı
+• Gemiler Ümit Burnu rotasına yöneldi, navlun arttı
+• Polyester dahil petrol bazlı hammaddeler etkileniyor
 
-🔮 KISA VADEDE İZLENMESİ GEREKENLER
-• IAEA nükleer denetim raporları ve diplomatik müzakereler
-• Kızıldeniz ve Aden Körfezi'ndeki Husi saldırıları
-• OPEC+ acil üretim artışı kararları
-
-⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`;
+⚠️ Bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`;
 
 exports.handler = async function(event) {
     const H = {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
-        'Cache-Control': 'public, max-age=1800'
+        'Cache-Control': 'public, max-age=21600'
     };
 
     try {
         const model = await getModel();
+        const prompt = buildPrompt();
         const result = await geminiRequest(
             '/v1beta/models/' + model + ':generateContent?key=' + API_KEY,
             {
-                contents: [{ parts: [{ text: PROMPT }] }],
-                generationConfig: { temperature: 0.7, maxOutputTokens: 1500 }
+                contents: [{ parts: [{ text: prompt }] }],
+                generationConfig: { temperature: 0.7, maxOutputTokens: 800 },
+                tools: [{ googleSearch: {} }]
             }
         );
-        const text = result.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        let text = result.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        // "Profesyonel bir analist olarak" gibi giriş cümlelerini temizle
+        text = text.replace(/^[^📊]*📊/, '📊').trim();
         if (text && text.length > 50) {
             return { statusCode: 200, headers: H, body: JSON.stringify({ analysis: text, source: 'gemini' }) };
         }
