@@ -75,7 +75,7 @@
 
 <div class="ai-box"><div style="font-size:.82rem;font-weight:700;margin-bottom:8px">🤖 Durum Analizi <span style="font-size:.6rem;background:rgba(59,130,246,.1);color:#3b82f6;padding:2px 6px;border-radius:4px;font-weight:600;margin-left:4px">Gemini AI</span></div><div class="ai-body" id="aiBox">Analiz yükleniyor...</div></div>
 
-<div class="sec-title">⛽ Seçilmiş Risk Göstergeleri </div>
+<div class="sec-title">⛽ Seçilmiş Risk Göstergeleri</div>
 <div class="cm-grid" id="cmGrid"></div>
 
 <div class="map-box">
@@ -264,8 +264,8 @@ function renderAll(){
     }).join('')||'<div class="nw">Haber bulunamadı</div>';
 }
 
-// TIMELINE — sabit olaylar
-var TLE=[
+// TIMELINE — API'den yükle, yoksa statik
+var STATIC_TLE=[
 {d:'28.02',t:'İran-İsrail doğrudan çatışma başladı',ds:'İsrail nükleer tesislere hava operasyonu, İran balistik füze karşılığı',tag:'mil',dot:'red'},
 {d:'28.02',t:'BMGK acil toplantı',ds:'ABD ve Rusya veto kullandı',tag:'dip',dot:'blue'},
 {d:'01.03',t:'Brent %12 sıçradı',ds:'Hürmüz riski ile Brent 106$, Altın 4500$+',tag:'eco',dot:'orange'},
@@ -288,7 +288,9 @@ var TLE=[
 {d:'02.04',t:'Stratejik köprü saldırısı',ds:'İran kırmızı çizgi aşıldı açıklaması',tag:'mil',dot:'red'},
 {d:'03.04',t:'Trump: Henüz başlamadık bile',ds:'Hürmüz gerilimi tırmandı',tag:'dip',dot:'blue'},
 ];
+var TLE=STATIC_TLE.slice();
 var tagNames={mil:'Askeri',dip:'Diplomatik',eco:'Ekonomik',nuk:'Nükleer'};
+var dotMap={mil:'red',dip:'blue',eco:'orange',nuk:'purple'};
 function renderTL(f){
     var box=document.getElementById('tlBox');
     var items=f==='all'?TLE:TLE.filter(function(e){return e.tag===f});
@@ -297,6 +299,23 @@ function renderTL(f){
     }).join('');
 }
 renderTL('all');
+
+// Admin'den eklenen olayları API'den yükle
+fetch('/api/iran-state').then(function(r){return r.json()}).then(function(s){
+    if(s.timeline && s.timeline.length>0){
+        var adminEvents=s.timeline.map(function(e){
+            var parts=e.date.split('-');
+            var dd=parts[2]||'01',mm=parts[1]||'01';
+            return{d:dd+'.'+mm,t:e.title,ds:e.desc||'',tag:e.tag||'mil',dot:dotMap[e.tag]||'red'};
+        });
+        TLE=STATIC_TLE.concat(adminEvents);
+        TLE.sort(function(a,b){
+            var pa=a.d.split('.'),pb=b.d.split('.');
+            return(parseInt(pa[1])*100+parseInt(pa[0]))-(parseInt(pb[1])*100+parseInt(pb[0]));
+        });
+        renderTL('all');
+    }
+}).catch(function(){});
 document.getElementById('tlFilter').addEventListener('click',function(ev){
     if(!ev.target.classList.contains('tl-f'))return;
     document.querySelectorAll('.tl-f').forEach(function(b){b.classList.remove('on')});
