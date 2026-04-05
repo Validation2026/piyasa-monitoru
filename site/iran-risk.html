@@ -11,9 +11,9 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-.war-banner{background:linear-gradient(135deg,#1a0000,#330000);border:2px solid #660000;border-radius:12px;padding:20px;text-align:center;margin-bottom:16px}
-.war-day{font-size:3rem;font-weight:900;font-family:'JetBrains Mono',monospace;color:#ff4757;line-height:1}
-.war-label{font-size:.7rem;color:#ff6b6b;text-transform:uppercase;letter-spacing:2px;margin-top:4px}
+.war-banner{background:linear-gradient(135deg,#1a0000,#330000);border:2px solid #660000;border-radius:12px;padding:14px 10px;text-align:center;margin-bottom:16px}
+.war-day{font-size:2.5rem;font-weight:900;font-family:'JetBrains Mono',monospace;color:#ff4757;line-height:1}
+.war-label{font-size:.6rem;color:#ff6b6b;text-transform:uppercase;letter-spacing:1px;margin-top:4px;word-break:break-word}
 .top-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
 .g-card{background:#fff;border:1px solid #dde4ed;border-radius:12px;padding:16px;text-align:center}
 .g-score{font-size:2.5rem;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1}
@@ -52,7 +52,7 @@
 .tl-ds{font-size:.72rem;color:#64748b;line-height:1.4}
 .tl-tg{display:inline-block;font-size:.55rem;font-weight:700;padding:1px 5px;border-radius:3px;margin-top:3px;text-transform:uppercase}
 .tg-mil{background:#fee2e2;color:#dc2626}.tg-dip{background:#dbeafe;color:#2563eb}.tg-eco{background:#fef3c7;color:#d97706}.tg-nuk{background:#f3e8ff;color:#7c3aed}
-@media(max-width:768px){.top-row{grid-template-columns:1fr}#warMap{height:300px}.cm-grid{grid-template-columns:repeat(3,1fr)}.war-day{font-size:2.2rem}}
+@media(max-width:768px){.top-row{grid-template-columns:1fr}#warMap{height:300px}.cm-grid{grid-template-columns:repeat(3,1fr)}.war-day{font-size:2rem}.war-label{font-size:.55rem;letter-spacing:.5px}}
 </style>
 </head>
 <body>
@@ -211,20 +211,20 @@ bases.forEach(function(b){L.circleMarker([b.lat,b.lon],{radius:b.t==='cr'?10:7,c
 var strikeLayer=L.layerGroup().addTo(map);
 var KW={'tahran':[35.68,51.38],'isfahan':[32.65,51.66],'natanz':[33.97,51.92],'iran':[35.68,51.38],'tel aviv':[32.08,34.78],'kudüs':[31.76,35.21],'haifa':[32.79,34.99],'israil':[31.5,34.8],'beyrut':[33.89,35.5],'lübnan':[33.89,35.5],'hizbullah':[33.89,35.5],'şam':[33.51,36.29],'halep':[36.2,37.13],'suriye':[33.51,36.29],'bağdat':[33.31,44.36],'erbil':[36.19,44.01],'irak':[33.31,44.36],'sanaa':[15.36,44.19],'yemen':[15.36,44.19],'husi':[14.79,42.95],'kızıldeniz':[15,41.5],'hürmüz':[26.56,56.24],'bandar abbas':[27.15,56.28],'golan':[33.01,35.75],'gazze':[31.5,34.47],'cidde':[21.43,39.17],'nevatim':[30.62,34.82],'hayfa':[32.79,34.99],'füze':[32.08,34.78],'saldırı':[35.68,51.38]};
 
-var queries=['İran savaş','İran İsrail saldırı','Hürmüz Boğazı','Orta Doğu füze','Yemen Husi','İran ekonomi yaptırım','petrol İran ambargo','Orta Doğu enerji piyasa'];
-var BLOCKED=['kürdistan','kürt','pkk','pyd','ypg','pjak','kdp','peshmerga','peşmerge','rojava','hdp','dem parti'];
+var queries=['İran savaş','İran İsrail saldırı','Hürmüz Boğazı','Orta Doğu füze','Yemen Husi','petrol İran ekonomi','enerji piyasası Orta Doğu','altın güvenli liman savaş'];
+var BLOCKED=['rudaw','kurdistan','kürdistan','rojava','ypg','pkk','pyd'];
 var allNews=[];var loaded=0;
-
-function isBlocked(item){
-    var text=(item.title+' '+item.source+' '+(item.sourceUrl||'')+' '+item.link).toLowerCase();
-    for(var i=0;i<BLOCKED.length;i++){if(text.indexOf(BLOCKED[i])>-1)return true}
-    return false;
-}
 
 queries.forEach(function(q,i){
     setTimeout(function(){
         fetch('/api/rss-proxy?q='+encodeURIComponent(q)).then(function(r){return r.json()}).then(function(d){
-            (d.items||[]).forEach(function(it){if(!isBlocked(it))allNews.push(it)});
+            (d.items||[]).forEach(function(it){
+                // Engelli kaynak kontrolü
+                var dominated=false;
+                var low=(it.title||'').toLowerCase()+(it.link||'').toLowerCase();
+                for(var b=0;b<BLOCKED.length;b++){if(low.indexOf(BLOCKED[b])>-1){dominated=true;break}}
+                if(!dominated)allNews.push(it);
+            });
         }).catch(function(){}).finally(function(){
             loaded++;
             if(loaded>=queries.length)renderAll();
@@ -262,8 +262,7 @@ function renderAll(){
     nb.innerHTML=uniq.slice(0,15).map(function(n){
         var h=Math.floor((Date.now()-new Date(n.date).getTime())/36e5);
         var t=h<1?'az önce':h<24?h+' saat önce':Math.floor(h/24)+' gün önce';
-        var src=n.source?' · '+n.source:'';
-        return'<div class="nw"><a href="'+n.link+'" target="_blank">'+n.title+'</a><div class="nw-t">'+t+src+'</div></div>';
+        return'<div class="nw"><a href="'+n.link+'" target="_blank">'+n.title+'</a><div class="nw-t">'+t+'</div></div>';
     }).join('')||'<div class="nw">Haber bulunamadı</div>';
 }
 
