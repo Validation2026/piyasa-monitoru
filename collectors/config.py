@@ -51,7 +51,6 @@ COMMODITIES_AGRICULTURE = {
         "CC=F":  {"name": "CC (Kakao)",         "unit": "USD/ton"},
         "OJ=F":  {"name": "OJ (Portakal Suyu)", "unit": "USc/lb"},
         "LBS=F": {"name": "LBS (Kereste)",       "unit": "USD/mbf"},
-        "LE=F":  {"name": "LE (Canlı Sığır)",   "unit": "USc/lb"},
     }
 }
 

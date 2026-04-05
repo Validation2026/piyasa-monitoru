@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>İran Risk Monitörü — Piyasa Monitörü</title>
+<title>İran Risk Monitörü — Risk Monitörü</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔴</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -102,7 +102,7 @@
 <div class="sec-title">📰 Son Haberler</div>
 <div class="news-box" id="newsBox"><div class="nw">Haberler yükleniyor...</div></div>
 
-<div class="footer">Piyasa Monitörü © 2026</div>
+<div class="footer">Risk Monitörü © 2026</div>
 </div>
 
 <script>
@@ -155,9 +155,8 @@ var COMMS=[
     {id:'GC=F',f:'commodities_metals.json',n:'XAU (Altın)',w:'Güvenli liman'},
     {id:'SI=F',f:'commodities_metals.json',n:'XAG (Gümüş)',w:'Güvenli liman'},
     {id:'HG=F',f:'commodities_metals.json',n:'HG (Bakır)',w:'Sanayi'},
-    {id:'ZW=F',f:'commodities_agriculture.json',n:'ZW (Buğday)',w:'Gıda güvenliği'},
-    {id:'ZC=F',f:'commodities_agriculture.json',n:'ZC (Mısır)',w:'Gıda arzı'},
-    {id:'ZS=F',f:'commodities_agriculture.json',n:'ZS (Soya)',w:'Navlun'}
+    {id:'ALI=F',f:'industrial.json',n:'ALI (Alüminyum)',w:'Sanayi'},
+    {id:'LBS=F',f:'industrial.json',n:'LBS (Kereste)',w:'İnşaat'}
 ];
 
 function fp(v){if(v==null)return'—';return Number(v).toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2})}

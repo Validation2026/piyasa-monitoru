@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Piyasa Monitörü — Canlı Piyasa Verileri</title>
+    <title>Risk Monitörü — Canlı Piyasa Verileri</title>
     <meta name="description" content="80+ varlık, 9 kategori, otomatik güncellenen piyasa verileri">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -46,12 +46,6 @@
 
 <div class="page">
 
-<div class="ticker"><div class="ticker-track" id="tickerTrack"></div></div>
-
-<div class="hero">
-    <h1>Tüm Piyasa Verileri <span>Tek Panelde</span></h1>
-    <p>Emtia, döviz, kripto, tahvil ve borsa endeksleri — anlık veriler</p>
-</div>
 
 <!-- Stats -->
 <div class="stats-bar">
@@ -130,7 +124,7 @@
 <div class="sec-title">🔔 Son Güncellemeler</div>
 <div class="activity" id="actFeed"></div>
 
-<div class="footer">Piyasa Monitörü © 2026</div>
+<div class="footer">Risk Monitörü © 2026</div>
 </div>
 
 <script>
@@ -146,7 +140,6 @@ function spark(cid,data,color){var c=document.getElementById(cid);if(!c||!data||
 
 function setKPI(key,series,color){if(!series)return;var v=document.getElementById('v-'+key),b=document.getElementById('b-'+key);if(v)v.textContent=fp(series.current);if(b&&series.change_1d_pct!=null){var p=series.change_1d_pct;b.textContent=(p>=0?'+':'')+p.toFixed(2)+'%';b.className='kpi-badge '+cc(p)}if(series.data)spark('s-'+key,series.data,color)}
 
-function buildTicker(all){var t=document.getElementById('tickerTrack');if(!t)return;var h='';all.forEach(function(s){if(!s)return;var p=s.change_1d_pct;var cls=p!=null?cc(p):'';var sign=p!=null?(p>=0?'+':''):'';h+='<span class="ti"><span class="ti-n">'+s.name+'</span><span class="ti-p">'+fp(s.current)+'</span><span class="ti-c '+cls+'">'+sign+(p!=null?p.toFixed(2)+'%':'')+'</span></span>'});t.innerHTML=h+h}
 
 function buildMini(datasets){var el=document.getElementById('miniStrip');if(!el)return;var keys=['EURUSD=X','GBPUSD=X','USDJPY=X','DX-Y.NYB','^TNX','BTC-USD','ETH-USD','^GSPC','^IXIC','^GDAXI','^N225','BZ=F','GC=F'];var items=[];keys.forEach(function(k){for(var i=0;i<datasets.length;i++){var s=fs(datasets[i],k);if(s){items.push(s);break}}});el.innerHTML=items.map(function(s){var p=s.change_1d_pct;var cls=p!=null?cc(p):'';var sign=p!=null?(p>=0?'+':''):'';return'<div class="mc"><div class="mc-n">'+s.name+'</div><div class="mc-r"><span class="mc-v">'+fp(s.current)+'</span><span class="mc-c '+cls+'">'+sign+(p!=null?p.toFixed(2)+'%':'')+'</span></div></div>'}).join('')}
 
@@ -167,7 +160,6 @@ Promise.all([fj('currencies.json'),fj('commodities_energy.json'),fj('commodities
     var all=[];var total=0;
     [cur,ener,met,agri,indust,idx,bonds,crypto].forEach(function(d){if(d&&d.series){d.series.forEach(function(s){all.push(s)});total+=d.series.length}});
 
-    buildTicker(all);
     buildMini([cur,bonds,crypto,idx,ener,met]);
     buildMovers(all);
 
