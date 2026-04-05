@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="tr" data-theme="light">
 <head>
 <meta charset="UTF-8">
@@ -58,6 +59,7 @@
 <body>
 <script src="assets/js/sidebar.js"></script>
 <div class="page">
+<div style="height:10px"></div>
 <div class="page-head"><h1>🔴 İran Risk Monitörü</h1></div>
 
 <div class="war-banner">
@@ -74,7 +76,7 @@
 
 <div class="ai-box"><div style="font-size:.82rem;font-weight:700;margin-bottom:8px">🤖 Durum Analizi</div><div class="ai-body" id="aiBox">Yükleniyor...</div></div>
 
-<div class="sec-title">⛽ Seçilmiş Risk Göstergeleri</div>
+<div class="sec-title">⛽ Bölgeden Etkilenen Emtialar</div>
 <div class="cm-grid" id="cmGrid"></div>
 
 <div class="map-box">
@@ -120,10 +122,10 @@ fetch('/api/iran-state').then(function(r){return r.json()}).then(function(S){
     var el=document.getElementById('rScore'),fl=document.getElementById('rFill'),lb=document.getElementById('rLabel');
     el.textContent=score;
     fl.style.width=score+'%';
-    if(score>75){fl.style.background='#ff4757';el.style.color='#ff4757';lb.textContent='Risk Skoru (🚨 KRİTİK)'}
-    else if(score>50){fl.style.background='#fbbf24';el.style.color='#f59e0b';lb.textContent='Risk Skoru (⚠️ YÜKSEK RİSK)'}
-    else if(score>25){fl.style.background='#22d3ee';el.style.color='#0ea5e9';lb.textContent='Risk Skoru (ℹ️ ORTA RİSK)'}
-    else{fl.style.background='#00d68f';el.style.color='#00d68f';lb.textContent='Risk Skoru (✅ DÜŞÜK RİSK)'}
+    if(score>75){fl.style.background='#ff4757';el.style.color='#ff4757';lb.textContent='🚨 KRİTİK'}
+    else if(score>50){fl.style.background='#fbbf24';el.style.color='#f59e0b';lb.textContent='⚠️ YÜKSEK RİSK'}
+    else if(score>25){fl.style.background='#22d3ee';el.style.color='#0ea5e9';lb.textContent='ℹ️ ORTA RİSK'}
+    else{fl.style.background='#00d68f';el.style.color='#00d68f';lb.textContent='✅ DÜŞÜK RİSK'}
 
     // HURMUZ
     var colors={'AÇIK / GÜVENLİ':'#00d68f','RİSKLİ':'#fbbf24','KISMEN KAPALI':'#f97316','KAPALI':'#ff4757'};
@@ -304,5 +306,6 @@ document.getElementById('tlFilter').addEventListener('click',function(ev){
 });
 })();
 </script>
+
 </body>
 </html>
