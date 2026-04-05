@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sanayi & Hammadde — Piyasa Monitörü</title>
+    <title>Sanayi & Hammadde — Risk Monitörü</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -21,6 +21,7 @@
 <body>
 <script src="assets/js/sidebar.js"></script>
 <div class="page">
+<div style="height:50px"></div>
     <div class="page-head">
         <h1>🏭 Sanayi & Hammadde</h1>
         <div class="sub"></div>
@@ -47,7 +48,7 @@
 <tr><td style="padding:7px 12px;border-bottom:1px solid var(--border2)">🇹🇷 Türkiye</td><td style="padding:7px 12px;text-align:right;font-family:var(--mono);font-weight:700;border-bottom:1px solid var(--border2)">49.1</td><td style="padding:7px 12px;text-align:right;color:#f59e0b;font-weight:700;border-bottom:1px solid var(--border2)">Sınırda</td></tr>
 <tr><td style="padding:7px 12px"><b>Küresel</b></td><td style="padding:7px 12px;text-align:right;font-family:var(--mono);font-weight:800">50.1</td><td style="padding:7px 12px;text-align:right;font-weight:700">Nötr-Pozitif</td></tr>
 </tbody></table><div style="padding:6px 12px;font-size:.65rem;color:var(--t3)">PMI > 50 = genişleme, PMI &lt; 50 = daralma. Kaynak: S&amp;P Global</div></div>
-    <div class="footer">Piyasa Monitörü © 2026</div>
+    <div class="footer">Risk Monitörü © 2026</div>
 </div>
 <script src="assets/js/app.js"></script>
 <script>
@@ -69,7 +70,7 @@
         if(charts)charts.forEach(function(c){c.destroy()});
         charts=PM.buildCharts('chartsGrid',allSeries,period);
     });
-    fetch('/api/ai-analysis?cat=sanayi').then(function(r){return r.json()}).then(function(d){
+    fetch('/api/ai-analysis?cat=genel').then(function(r){return r.json()}).then(function(d){
         var el=document.getElementById('aiAnalysis');if(el&&d.analysis)el.textContent=d.analysis;
     }).catch(function(){var el=document.getElementById('aiAnalysis');if(el)el.innerHTML='<span class="ai-loading">Analiz yüklenemiyor.</span>'});
 })();

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ekonomik Takvim — Piyasa Monitörü</title>
+    <title>Ekonomik Takvim — Risk Monitörü</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -37,6 +37,7 @@
 <body>
 <script src="assets/js/sidebar.js"></script>
 <div class="page">
+<div style="height:50px"></div>
     <div class="page-head">
         <h1>📅 Ekonomik Takvim</h1>
         <div class="sub">Merkez bankası kararları, TÜFE açıklamaları, önemli ekonomik veriler</div>
@@ -54,7 +55,7 @@
         <div id="ecoEvents"></div>
     </div>
 
-    <div class="footer">Piyasa Monitörü © 2026</div>
+    <div class="footer">Risk Monitörü © 2026</div>
 </div>
 <script>
 (function(){
@@ -115,9 +116,9 @@ function renderEvents(containerId, events){
 renderEvents('cbEvents', cbDates);
 renderEvents('ecoEvents', ecoEvents);
 
-fetch('/api/ai-analysis?cat=ekonomik-takvim').then(function(r){return r.json()}).then(function(d){
+fetch('/api/ai-analysis?cat=genel').then(function(r){return r.json()}).then(function(d){
     var el=document.getElementById('aiAnalysis');if(el&&d.analysis)el.textContent=d.analysis;
-}).catch(function(){var el=document.getElementById('aiAnalysis');if(el)el.innerHTML='<span style="color:var(--t3);font-style:italic">Analiz yüklenemiyor.</span>'});
+}).catch(function(){});
 })();
 </script>
 </body>

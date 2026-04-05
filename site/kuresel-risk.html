@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Küresel Risk — Piyasa Monitörü</title>
+    <title>Küresel Risk — Risk Monitörü</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -21,6 +21,7 @@
 <body>
 <script src="assets/js/sidebar.js"></script>
 <div class="page">
+<div style="height:50px"></div>
     <div class="page-head">
         <h1>🌍 Küresel Risk Haritası</h1>
         <div class="sub"></div>
@@ -37,7 +38,7 @@
     </div>
     <div class="charts" id="chartsGrid"></div>
     <div class="dtable" id="dataTable"></div>
-    <div class="footer">Piyasa Monitörü © 2026</div>
+    <div class="footer">Risk Monitörü © 2026</div>
 </div>
 <script src="assets/js/app.js"></script>
 <script>
@@ -59,7 +60,7 @@
         if(charts)charts.forEach(function(c){c.destroy()});
         charts=PM.buildCharts('chartsGrid',allSeries,period);
     });
-    fetch('/api/ai-analysis?cat=kuresel-risk').then(function(r){return r.json()}).then(function(d){
+    fetch('/api/ai-analysis?cat=genel').then(function(r){return r.json()}).then(function(d){
         var el=document.getElementById('aiAnalysis');if(el&&d.analysis)el.textContent=d.analysis;
     }).catch(function(){var el=document.getElementById('aiAnalysis');if(el)el.innerHTML='<span class="ai-loading">Analiz yüklenemiyor.</span>'});
 })();
