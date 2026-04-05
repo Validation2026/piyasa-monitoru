@@ -8,7 +8,7 @@ function geminiRequest(path, body) {
             path: path,
             method: body ? 'POST' : 'GET',
             headers: body ? { 'Content-Type': 'application/json' } : {},
-            timeout: 30000
+            timeout: 35000
         }, (res) => {
             let data = '';
             res.on('data', chunk => data += chunk);
@@ -26,9 +26,7 @@ async function getModel() {
         const list = await geminiRequest('/v1beta/models?key=' + API_KEY);
         if (list.models) {
             for (const m of list.models) {
-                if (m.supportedGenerationMethods?.includes('generateContent')) {
-                    return m.name.replace('models/', '');
-                }
+                if (m.supportedGenerationMethods?.includes('generateContent')) return m.name.replace('models/', '');
             }
         }
     } catch(e) {}
@@ -38,42 +36,57 @@ async function getModel() {
 function buildPrompt() {
     const now = new Date();
     const tr = new Intl.DateTimeFormat('tr-TR', { day:'numeric', month:'long', year:'numeric', timeZone:'Europe/Istanbul' }).format(now);
-    const warStart = new Date('2026-02-28T00:00:00+03:00');
-    const dayCount = Math.floor((now - warStart) / 86400000);
+    const dayCount = Math.floor((now - new Date('2026-02-28T00:00:00+03:00')) / 86400000);
 
     return `Bugün ${tr}, İran-İsrail savaşının ${dayCount}. günü.
 
-Sen jeopolitik ve makroekonomi analistisin. İnternetten son 6 saatteki İran-İsrail savaşı haberlerini tara. Sonra aşağıdaki formatta KISA ve NET bir özet yaz. Türkçe yaz. Her madde 1 cümle olsun. Uzun paragraflar YAZMA.
+İnternetten son 6 saatteki İran-İsrail savaşı, Hürmüz Boğazı, Orta Doğu enerji ve savunma haberlerini tara.
+
+Yanıtını TAM OLARAK aşağıdaki iki bölümde ver. Başka hiçbir şey ekleme.
+
+=== BÖLÜM 1: ANALİZ ===
 
 📊 DURUM
-• Son 6 saatteki en önemli 2-3 gelişmeyi özetle
+• Son saatlerdeki en kritik 2-3 gelişmeyi somut detaylarla özetle. Hangi şehir vuruldu, kaç füze atıldı, hangi lider ne açıklama yaptı gibi spesifik bilgiler ver. "Gerilim devam ediyor" gibi boş cümleler YAZMA.
 
 ⚔️ JEOPOLİTİK
-• Askeri gelişmeler, cepheler, diplomasi (3-4 kısa madde)
+• 3-4 madde. Her maddede somut olay, aktör ismi, lokasyon veya rakam olsun. Örnek: "İsrail F-35'leri Isfahan'ı 3. kez vurdu" veya "Husi güçleri Kızıldeniz'de Norveç bayraklı tankeri hedef aldı" gibi.
 
 💰 EKONOMİK
-• Petrol, altın, navlun, sigorta, hammadde etkileri (3-4 kısa madde)
+• 3-4 madde. Spesifik fiyat hareketleri, yüzde değişimler, somut etkiler yaz. Örnek: "Brent 108$'a çıktı, savaş öncesine göre %18 yukarıda" veya "Süveyş trafiği %35 düştü, konteyner navlunu 3 katına çıktı" gibi.
 
 ⚠️ Bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.
 
-ÖNEMLİ: Başlığın önüne "Profesyonel bir analist olarak..." gibi giriş cümlesi KOYMA. Direkt 📊 DURUM ile başla.`;
+=== BÖLÜM 2: ZAMAN ÇİZELGESİ ===
+
+Son 48 saatteki en önemli 5 olayı şu JSON formatında ver. Başka hiçbir şey ekleme, sadece JSON array:
+
+[TIMELINE_START]
+[
+  {"date":"GG.AA","title":"Kısa başlık","desc":"1 cümle açıklama","tag":"mil|dip|eco|nuk"}
+]
+[TIMELINE_END]
+
+tag değerleri: mil=askeri, dip=diplomatik, eco=ekonomik, nuk=nükleer
+
+ÖNEMLİ: "Profesyonel analist olarak..." gibi giriş cümlesi KOYMA. Direkt 📊 DURUM ile başla.`;
 }
 
-const FALLBACK = `📊 DURUM
-• İran-İsrail arasındaki çatışma devam ediyor
-• Hürmüz Boğazı ve Kızıldeniz'deki deniz trafiği risk altında
+const FALLBACK_ANALYSIS = `📊 DURUM
+• İran-İsrail arasındaki çatışma aktif olarak devam ediyor
+• Hürmüz Boğazı ve Kızıldeniz'deki deniz trafiği aksama riski altında
 
 ⚔️ JEOPOLİTİK
-• Hürmüz Boğazı tanker trafiğinde aksaklık riski artıyor
-• İsrail-İran doğrudan askeri tırmanma devam ediyor
-• Hizbullah ve Husi vekâlet savaşı genişliyor
-• ABD 5. Filo Basra Körfezi'nde konuşlu
+• Hürmüz Boğazı tanker trafiğinde aksaklık riski yükseliyor
+• İsrail-İran arasında doğrudan askeri operasyonlar sürüyor
+• Hizbullah ve Husi milislerinin vekâlet savaşı bölgeye yayılıyor
+• ABD 5. Filo iki uçak gemisi grubuyla Basra Körfezi'nde konuşlu
 
 💰 EKONOMİK
-• Petrolde jeopolitik risk primi yükseldi
-• Deniz sigortaları Basra Körfezi için katlandı
-• Gemiler Ümit Burnu rotasına yöneldi, navlun arttı
-• Polyester dahil petrol bazlı hammaddeler etkileniyor
+• Brent 100$'ın üzerinde, savaş öncesine göre %15+ yukarıda
+• Basra Körfezi deniz sigorta primleri 10 katına çıktı
+• Gemiler Süveyş yerine Ümit Burnu rotasına yöneldi, transit 10-14 gün uzadı
+• Polyester ve petrol bazlı hammaddelerde maliyet artışı sürüyor
 
 ⚠️ Bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`;
 
@@ -86,23 +99,40 @@ exports.handler = async function(event) {
 
     try {
         const model = await getModel();
-        const prompt = buildPrompt();
         const result = await geminiRequest(
             '/v1beta/models/' + model + ':generateContent?key=' + API_KEY,
             {
-                contents: [{ parts: [{ text: prompt }] }],
-                generationConfig: { temperature: 0.7, maxOutputTokens: 800 },
+                contents: [{ parts: [{ text: buildPrompt() }] }],
+                generationConfig: { temperature: 0.7, maxOutputTokens: 1200 },
                 tools: [{ googleSearch: {} }]
             }
         );
+
         let text = result.candidates?.[0]?.content?.parts?.[0]?.text || '';
-        // "Profesyonel bir analist olarak" gibi giriş cümlelerini temizle
         text = text.replace(/^[^📊]*📊/, '📊').trim();
-        if (text && text.length > 50) {
-            return { statusCode: 200, headers: H, body: JSON.stringify({ analysis: text, source: 'gemini' }) };
+
+        if (!text || text.length < 50) {
+            return { statusCode: 200, headers: H, body: JSON.stringify({ analysis: FALLBACK_ANALYSIS, timeline: [], source: 'fallback' }) };
         }
-        return { statusCode: 200, headers: H, body: JSON.stringify({ analysis: FALLBACK, source: 'fallback' }) };
+
+        // Timeline JSON parse et
+        let timeline = [];
+        const tlMatch = text.match(/\[TIMELINE_START\]([\s\S]*?)\[TIMELINE_END\]/);
+        if (tlMatch) {
+            try {
+                const jsonStr = tlMatch[1].replace(/```json|```/g, '').trim();
+                timeline = JSON.parse(jsonStr);
+            } catch(e) {}
+            // Timeline kısmını analizden çıkar
+            text = text.replace(/=== BÖLÜM 2[\s\S]*$/, '').trim();
+            text = text.replace(/\[TIMELINE_START\][\s\S]*\[TIMELINE_END\]/, '').trim();
+        }
+
+        // Bölüm 1 başlığını da temizle
+        text = text.replace(/=== BÖLÜM 1:.*===\n?/, '').trim();
+
+        return { statusCode: 200, headers: H, body: JSON.stringify({ analysis: text, timeline: timeline, source: 'gemini' }) };
     } catch(e) {
-        return { statusCode: 200, headers: H, body: JSON.stringify({ analysis: FALLBACK, source: 'fallback' }) };
+        return { statusCode: 200, headers: H, body: JSON.stringify({ analysis: FALLBACK_ANALYSIS, timeline: [], source: 'fallback' }) };
     }
 };
