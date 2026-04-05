@@ -52,7 +52,7 @@ Yanıtını TAM OLARAK aşağıdaki iki bölümde ver. Başka hiçbir şey eklem
 ⚔️ JEOPOLİTİK
 • 3-4 madde. Her maddede somut olay, aktör ismi, lokasyon veya rakam olsun. Örnek: "İsrail F-35'leri Isfahan'ı 3. kez vurdu" veya "Husi güçleri Kızıldeniz'de Norveç bayraklı tankeri hedef aldı" gibi.
 
-💰 EKONOMİK
+💰 EKOPOLİTİK
 • 3-4 madde. Spesifik fiyat hareketleri, yüzde değişimler, somut etkiler yaz. Örnek: "Brent 108$'a çıktı, savaş öncesine göre %18 yukarıda" veya "Süveyş trafiği %35 düştü, konteyner navlunu 3 katına çıktı" gibi.
 
 ⚠️ Bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.
@@ -82,7 +82,7 @@ const FALLBACK_ANALYSIS = `📊 DURUM
 • Hizbullah ve Husi milislerinin vekâlet savaşı bölgeye yayılıyor
 • ABD 5. Filo iki uçak gemisi grubuyla Basra Körfezi'nde konuşlu
 
-💰 EKONOMİK
+💰 EKOPOLİTİK
 • Brent 100$'ın üzerinde, savaş öncesine göre %15+ yukarıda
 • Basra Körfezi deniz sigorta primleri 10 katına çıktı
 • Gemiler Süveyş yerine Ümit Burnu rotasına yöneldi, transit 10-14 gün uzadı
