@@ -120,10 +120,10 @@ fetch('/api/iran-state').then(function(r){return r.json()}).then(function(S){
     var el=document.getElementById('rScore'),fl=document.getElementById('rFill'),lb=document.getElementById('rLabel');
     el.textContent=score;
     fl.style.width=score+'%';
-    if(score>75){fl.style.background='#ff4757';el.style.color='#ff4757';lb.textContent='🚨 KRİTİK'}
-    else if(score>50){fl.style.background='#fbbf24';el.style.color='#f59e0b';lb.textContent='⚠️ YÜKSEK RİSK'}
-    else if(score>25){fl.style.background='#22d3ee';el.style.color='#0ea5e9';lb.textContent='ℹ️ ORTA RİSK'}
-    else{fl.style.background='#00d68f';el.style.color='#00d68f';lb.textContent='✅ DÜŞÜK RİSK'}
+    if(score>75){fl.style.background='#ff4757';el.style.color='#ff4757';lb.textContent='Risk Skoru (🚨 KRİTİK)'}
+    else if(score>50){fl.style.background='#fbbf24';el.style.color='#f59e0b';lb.textContent='Risk Skoru (⚠️ YÜKSEK RİSK)'}
+    else if(score>25){fl.style.background='#22d3ee';el.style.color='#0ea5e9';lb.textContent='Risk Skoru (ℹ️ ORTA RİSK)'}
+    else{fl.style.background='#00d68f';el.style.color='#00d68f';lb.textContent='Risk Skoru (✅ DÜŞÜK RİSK)'}
 
     // HURMUZ
     var colors={'AÇIK / GÜVENLİ':'#00d68f','RİSKLİ':'#fbbf24','KISMEN KAPALI':'#f97316','KAPALI':'#ff4757'};
