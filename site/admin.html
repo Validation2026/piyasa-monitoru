@@ -53,6 +53,14 @@ input:focus,select:focus{border-color:#3b82f6}
 <div id="customs"></div>
 </div>
 
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+<div class="ct" style="margin:0">⏱️ Zaman Çizelgesi</div>
+<button class="btn-sm" id="addTlBtn">+ Olay Ekle</button>
+</div>
+<div id="tlEvents"></div>
+</div>
+
 <button class="btn" id="saveBtn">💾 KAYDET</button>
 <div class="status" id="status"></div>
 </div>
@@ -73,6 +81,19 @@ function addRow(n,u,v,ch){
 }
 document.getElementById('addBtn').onclick=function(){addRow()};
 
+// Timeline olay ekleme
+function addTlRow(date,title,desc,tag){
+    var d=document.createElement('div');
+    d.style.cssText='background:#f8fafc;border:1px solid #dde4ed;border-radius:6px;padding:8px;margin-bottom:6px';
+    var today=date||new Date().toISOString().slice(0,10);
+    d.innerHTML='<div class="row" style="margin-bottom:4px"><div><label>Tarih</label><input type="date" class="tl-date" value="'+today+'"></div><div><label>Kategori</label><select class="tl-tag" style="width:100%;border:1px solid #dde4ed;border-radius:6px;padding:7px 9px;font-size:.82rem;background:#f8fafc"><option value="mil" '+(tag==='mil'?'selected':'')+'>🔴 Askeri</option><option value="dip" '+(tag==='dip'?'selected':'')+'>🔵 Diplomatik</option><option value="eco" '+(tag==='eco'?'selected':'')+'>🟡 Ekonomik</option><option value="nuk" '+(tag==='nuk'?'selected':'')+'>🟣 Nükleer</option></select></div></div>'+
+    '<div style="margin-bottom:4px"><label>Başlık</label><input type="text" class="tl-title" value="'+(title||'')+'" placeholder="Kısa olay başlığı"></div>'+
+    '<div style="margin-bottom:4px"><label>Açıklama</label><input type="text" class="tl-desc" value="'+(desc||'')+'" placeholder="1 cümle detay"></div>'+
+    '<div style="text-align:right"><button class="btn-del" onclick="this.closest(\'div[style]\').remove()">✕ Sil</button></div>';
+    document.getElementById('tlEvents').appendChild(d);
+}
+document.getElementById('addTlBtn').onclick=function(){addTlRow()};
+
 // Load from API
 fetch('/api/iran-state').then(function(r){return r.json()}).then(function(s){
     document.getElementById('risk').value=s.riskScore||50;
@@ -87,6 +108,7 @@ fetch('/api/iran-state').then(function(r){return r.json()}).then(function(s){
         });
     }
     (s.customMetrics||[]).forEach(function(m){addRow(m.name,m.unit,m.value,m.change)});
+    (s.timeline||[]).forEach(function(e){addTlRow(e.date,e.title,e.desc,e.tag)});
 }).catch(function(){});
 
 // Save to API
@@ -105,9 +127,14 @@ document.getElementById('saveBtn').onclick=function(){
         var n=r.querySelector('.cn').value.trim();if(!n)return;
         cm.push({name:n,unit:r.querySelector('.cu').value.trim(),value:parseFloat(r.querySelector('.cv').value)||0,change:parseFloat(r.querySelector('.cc').value)||0});
     });
+    var tl=[];
+    document.querySelectorAll('#tlEvents > div').forEach(function(r){
+        var title=r.querySelector('.tl-title').value.trim();if(!title)return;
+        tl.push({date:r.querySelector('.tl-date').value,title:title,desc:r.querySelector('.tl-desc').value.trim(),tag:r.querySelector('.tl-tag').value});
+    });
     var payload={
         pin:pin,
-        data:{riskScore:parseInt(document.getElementById('risk').value)||50,hurmuzStatus:document.getElementById('hurmuz').value,manualCommodities:mc,customMetrics:cm}
+        data:{riskScore:parseInt(document.getElementById('risk').value)||50,hurmuzStatus:document.getElementById('hurmuz').value,manualCommodities:mc,customMetrics:cm,timeline:tl}
     };
     document.getElementById('status').textContent='Kaydediliyor...';
     fetch('/api/iran-state',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).then(function(r){return r.json()}).then(function(d){
