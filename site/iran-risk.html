@@ -143,19 +143,7 @@ fetch('/api/iran-state').then(function(r){return r.json()}).then(function(S){
 // AI ANALYSIS
 fetch('/api/iran-ai').then(function(r){return r.json()}).then(function(d){
     if(d.analysis)document.getElementById('aiBox').textContent=d.analysis;
-    // Timeline tamamen AI'dan geliyor
-    if(d.timeline && d.timeline.length > 0){
-        TLE = d.timeline.map(function(e){
-            return {d:e.date,t:e.title,ds:e.desc,tag:e.tag||'mil',dot:{mil:'red',dip:'blue',eco:'orange',nuk:'purple'}[e.tag]||'red'};
-        });
-        renderTL('all');
-    } else {
-        document.getElementById('tlBox').innerHTML='<div style="font-size:.75rem;color:#94a3b8">Zaman çizelgesi verisi bulunamadı.</div>';
-    }
-}).catch(function(){
-    document.getElementById('aiBox').textContent='Analiz yüklenemiyor.';
-    document.getElementById('tlBox').innerHTML='<div style="font-size:.75rem;color:#94a3b8">Zaman çizelgesi yüklenemiyor.</div>';
-});
+}).catch(function(){document.getElementById('aiBox').textContent='Analiz yüklenemiyor.'});
 
 // COMMODITIES
 var COMMS=[
@@ -276,12 +264,33 @@ function renderAll(){
     }).join('')||'<div class="nw">Haber bulunamadı</div>';
 }
 
-// TIMELINE — başlangıçta yükleniyor, AI'dan gelecek
-var TLE=[];
+// TIMELINE — sabit olaylar
+var TLE=[
+{d:'28.02',t:'İran-İsrail doğrudan çatışma başladı',ds:'İsrail nükleer tesislere hava operasyonu, İran balistik füze karşılığı',tag:'mil',dot:'red'},
+{d:'28.02',t:'BMGK acil toplantı',ds:'ABD ve Rusya veto kullandı',tag:'dip',dot:'blue'},
+{d:'01.03',t:'Brent %12 sıçradı',ds:'Hürmüz riski ile Brent 106$, Altın 4500$+',tag:'eco',dot:'orange'},
+{d:'02.03',t:'Natanz tesisi vuruldu',ds:'İsrail F-35 operasyonu, IAEA acil açıklama',tag:'nuk',dot:'purple'},
+{d:'03.03',t:'Hürmüz trafiği aksadı',ds:'İran donanması tatbikat, sigorta primleri 10x',tag:'eco',dot:'orange'},
+{d:'05.03',t:'ABD 5. Filo tam konuşlanma',ds:'İki uçak gemisi grubu Basra Körfezi\'nde',tag:'mil',dot:'red'},
+{d:'07.03',t:'Hizbullah kuzey İsrail\'i vurdu',ds:'200+ roket, İsrail Beyrut\'u bombaladı',tag:'mil',dot:'red'},
+{d:'08.03',t:'Isfahan ikinci kez vuruldu',ds:'İran orantısız yanıt sözü verdi',tag:'nuk',dot:'purple'},
+{d:'10.03',t:'Çin-Hindistan arabuluculuk',ds:'Diplomatik temas turları başladı',tag:'dip',dot:'blue'},
+{d:'12.03',t:'Husiler Kızıldeniz\'de tanker vurdu',ds:'Bab el-Mandeb, navlun %40 arttı',tag:'mil',dot:'red'},
+{d:'14.03',t:'OPEC+ acil üretim artışı',ds:'Günlük 500K varil ek üretim kararı',tag:'eco',dot:'orange'},
+{d:'16.03',t:'Buşehr reaktörü kapatıldı',ds:'Güvenlik gerekçesiyle geçici devre dışı',tag:'nuk',dot:'purple'},
+{d:'18.03',t:'İsrail kara harekatı sinyali',ds:'Lübnan sınırında 50.000 yedek asker',tag:'mil',dot:'red'},
+{d:'20.03',t:'Nevruz ateşkes teklifi',ds:'İran 72 saat önerdi, İsrail reddetti',tag:'dip',dot:'blue'},
+{d:'22.03',t:'Süveyş trafiği %30 düştü',ds:'Gemiler Ümit Burnu rotasına yöneldi',tag:'eco',dot:'orange'},
+{d:'25.03',t:'ABD İran\'a tam petrol ambargosu',ds:'Günlük 500K varil ihracat durduruldu',tag:'eco',dot:'orange'},
+{d:'28.03',t:'İran hipersonik füze ile Demir Kubbe\'yi aştı',ds:'Tel Aviv yakınlarına isabet',tag:'mil',dot:'red'},
+{d:'30.03',t:'G7 ateşkes çağrısı',ds:'İnsani yardım koridoru talebi',tag:'dip',dot:'blue'},
+{d:'01.04',t:'İran çelik tesisleri vuruldu',ds:'İsrail: Üretim kapasitesinin %70\'i yok edildi',tag:'mil',dot:'red'},
+{d:'02.04',t:'Stratejik köprü saldırısı',ds:'İran kırmızı çizgi aşıldı açıklaması',tag:'mil',dot:'red'},
+{d:'03.04',t:'Trump: Henüz başlamadık bile',ds:'Hürmüz gerilimi tırmandı',tag:'dip',dot:'blue'},
+];
 var tagNames={mil:'Askeri',dip:'Diplomatik',eco:'Ekonomik',nuk:'Nükleer'};
 function renderTL(f){
     var box=document.getElementById('tlBox');
-    if(TLE.length===0){box.innerHTML='<div style="font-size:.75rem;color:#94a3b8;padding:8px 0">⏳ Zaman çizelgesi yükleniyor...</div>';return}
     var items=f==='all'?TLE:TLE.filter(function(e){return e.tag===f});
     box.innerHTML=items.slice().reverse().map(function(e){
         return'<div class="tl-i"><div class="tl-d '+e.dot+'"></div><div class="tl-dt">'+e.d+'.2026</div><div class="tl-tt">'+e.t+'</div><div class="tl-ds">'+e.ds+'</div><span class="tl-tg tg-'+e.tag+'">'+tagNames[e.tag]+'</span></div>';
