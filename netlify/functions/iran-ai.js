@@ -57,18 +57,7 @@ Yanıtını TAM OLARAK aşağıdaki iki bölümde ver. Başka hiçbir şey eklem
 
 ⚠️ Bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.
 
-=== BÖLÜM 2: ZAMAN ÇİZELGESİ ===
-
-28 Şubat 2026'dan bugüne kadar olan en önemli 15-20 olayı haberlerden derle. Kronolojik sırala (eskiden yeniye). Her olay için şu JSON formatını kullan:
-
-[TIMELINE_START]
-[
-  {"date":"GG.AA","title":"Kısa başlık","desc":"1 cümle açıklama","tag":"mil|dip|eco|nuk"}
-]
-[TIMELINE_END]
-
-tag değerleri: mil=askeri, dip=diplomatik, eco=ekonomik, nuk=nükleer
-Son 24 saatteki olayları mutlaka dahil et. Sadece JSON ver, başka açıklama ekleme.
+ÖNEMLİ: Başlığın önüne "Profesyonel bir analist olarak..." gibi giriş cümlesi KOYMA. Direkt 📊 DURUM ile başla.`;
 
 ÖNEMLİ: "Profesyonel analist olarak..." gibi giriş cümlesi KOYMA. Direkt 📊 DURUM ile başla.`;
 }
@@ -104,7 +93,7 @@ exports.handler = async function(event) {
             '/v1beta/models/' + model + ':generateContent?key=' + API_KEY,
             {
                 contents: [{ parts: [{ text: buildPrompt() }] }],
-                generationConfig: { temperature: 0.7, maxOutputTokens: 2500 },
+                generationConfig: { temperature: 0.7, maxOutputTokens: 1000 },
                 tools: [{ googleSearch: {} }]
             }
         );
@@ -112,28 +101,11 @@ exports.handler = async function(event) {
         let text = result.candidates?.[0]?.content?.parts?.[0]?.text || '';
         text = text.replace(/^[^📊]*📊/, '📊').trim();
 
-        if (!text || text.length < 50) {
-            return { statusCode: 200, headers: H, body: JSON.stringify({ analysis: FALLBACK_ANALYSIS, timeline: [], source: 'fallback' }) };
+        if (text && text.length > 50) {
+            return { statusCode: 200, headers: H, body: JSON.stringify({ analysis: text, source: 'gemini' }) };
         }
-
-        // Timeline JSON parse et
-        let timeline = [];
-        const tlMatch = text.match(/\[TIMELINE_START\]([\s\S]*?)\[TIMELINE_END\]/);
-        if (tlMatch) {
-            try {
-                const jsonStr = tlMatch[1].replace(/```json|```/g, '').trim();
-                timeline = JSON.parse(jsonStr);
-            } catch(e) {}
-            // Timeline kısmını analizden çıkar
-            text = text.replace(/=== BÖLÜM 2[\s\S]*$/, '').trim();
-            text = text.replace(/\[TIMELINE_START\][\s\S]*\[TIMELINE_END\]/, '').trim();
-        }
-
-        // Bölüm 1 başlığını da temizle
-        text = text.replace(/=== BÖLÜM 1:.*===\n?/, '').trim();
-
-        return { statusCode: 200, headers: H, body: JSON.stringify({ analysis: text, timeline: timeline, source: 'gemini' }) };
+        return { statusCode: 200, headers: H, body: JSON.stringify({ analysis: FALLBACK_ANALYSIS, source: 'fallback' }) };
     } catch(e) {
-        return { statusCode: 200, headers: H, body: JSON.stringify({ analysis: FALLBACK_ANALYSIS, timeline: [], source: 'fallback' }) };
+        return { statusCode: 200, headers: H, body: JSON.stringify({ analysis: FALLBACK_ANALYSIS, source: 'fallback' }) };
     }
 };
