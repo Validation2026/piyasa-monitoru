@@ -15,21 +15,21 @@ function cc(p){return p!=null?(p>=0?'u':'d'):''}
 function gc(i){return COLORS[i%COLORS.length]}
 
 function filterPeriod(data,period){
-    if(!data||!data.length)return[];var now=new Date();var cut;
-    switch(period){case'1m':cut=new Date(now.getTime()-30*864e5);break;case'3m':cut=new Date(now.getTime()-90*864e5);break;case'6m':cut=new Date(now.getTime()-180*864e5);break;case'1y':cut=new Date(now.getTime()-365*864e5);break;case'ytd':cut=new Date(now.getFullYear(),0,1);break;default:return data}
+    if(!data||!data.length)return[];if(period==='all')return data;var now=new Date();var cut;
+    switch(period){case'1m':cut=new Date(now.getTime()-30*864e5);break;case'3m':cut=new Date(now.getTime()-90*864e5);break;case'6m':cut=new Date(now.getTime()-180*864e5);break;case'1y':cut=new Date(now.getTime()-365*864e5);break;case'2y':cut=new Date(now.getTime()-730*864e5);break;case'3y':cut=new Date(now.getTime()-1095*864e5);break;case'5y':cut=new Date(now.getTime()-1825*864e5);break;case'ytd':cut=new Date(now.getFullYear(),0,1);break;default:return data}
     var cs=cut.toISOString().split('T')[0];return data.filter(function(d){return d.date>=cs})
 }
 
 function miniSpark(canvasId,data,color){
     var c=document.getElementById(canvasId);if(!c||!data||data.length<2)return;
-    var pts=data.slice(-30).map(function(d){return d.value});
+    var pts=data.slice(-90).map(function(d){return d.value});
     new Chart(c,{type:'line',data:{labels:pts.map(function(){return''}),datasets:[{data:pts,borderColor:color,backgroundColor:color+'15',fill:true,tension:.4,pointRadius:0,borderWidth:1.5}]},options:{responsive:true,maintainAspectRatio:false,animation:{duration:600},plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{display:false},y:{display:false}}}})
 }
 
 function makeChart(canvasId,series,opts){
     var c=document.getElementById(canvasId);if(!c||!series||!series.data||!series.data.length)return null;
     opts=opts||{};var color=opts.color||COLORS[0];
-    var filtered=filterPeriod(series.data,opts.period||'1y');
+    var filtered=filterPeriod(series.data,opts.period||'all');
     var labels=filtered.map(function(d){return d.date});var vals=filtered.map(function(d){return d.value});
     var dark=document.documentElement.getAttribute('data-theme')!=='light';
     var grid=dark?'rgba(255,255,255,.05)':'rgba(0,0,0,.05)';var txt=dark?'#8a99b2':'#475569';
