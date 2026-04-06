@@ -2,25 +2,30 @@ exports.handler = async function(event) {
     const cat = event.queryStringParameters?.cat || 'genel';
     const H = {'Content-Type':'application/json','Access-Control-Allow-Origin':'*','Cache-Control':'public, max-age=3600'};
     const A = {
-'iran-risk': `📊 DURUM ANALİZİ
-İran-İsrail arasındaki çatışma Şubat 2026'dan bu yana devam ediyor. Hürmüz Boğazı ve Kızıldeniz'deki deniz trafiği aksama riski altında.
+'iran-risk': `📊 GENEL DURUM
+İran-İsrail savaşı 28 Şubat 2026'da İsrail'in İran nükleer tesislerine düzenlediği kapsamlı hava operasyonuyla başladı. İran aynı gün balistik füzelerle karşılık verdi. Çatışma o günden bu yana karşılıklı saldırılarla devam ediyor. Bölgedeki tüm aktörler — ABD, Hizbullah, Husiler — çatışmaya doğrudan ya da dolaylı olarak dahil olmuş durumda.
 
-⚔️ JEOPOLİTİK RİSKLER
-• Hürmüz Boğazı'ndan geçen tanker trafiğinde aksaklık riski artıyor
-• İsrail-İran arasında doğrudan askeri tırmanma devam ediyor
-• Hizbullah ve Husi milislerinin vekâlet savaşı genişliyor
-• ABD 5. Filo'nun Basra Körfezi'ndeki konuşlanması sürdürülüyor
+⚔️ ASKERİ VE JEOPOLİTİK GELİŞMELER
+• İsrail F-35'leri İsfahan ve Natanz nükleer tesislerini birden fazla kez vurdu; İran'ın uranyum zenginleştirme kapasitesinin büyük bölümü devre dışı kaldı
+• İran hipersonik balistik füzelerle Demir Kubbe savunma sistemini en az bir kez aştı; Tel Aviv yakınlarına isabet kaydedildi
+• Hizbullah kuzey İsrail'e 200'ü aşkın roket saldırısı düzenledi; İsrail karşılığında Beyrut'un güney banliyölerini bombaladı
+• Husi güçleri Kızıldeniz'de ticari gemilere saldırılarını sürdürüyor; Bab el-Mandeb Boğazı yüksek risk altında
+• ABD 5. Filo Basra Körfezi'nde iki uçak gemisi grubuyla tam konuşlanma halinde; bölgeye ek kuvvet sevkiyatı devam ediyor
+• Diplomatik alanda Çin ve Hindistan arabuluculuk girişimleri başlattı ancak somut ilerleme sağlanamadı
 
-💰 EKOPOLİTİK RİSKLER
-• Ham petrol fiyatlarında jeopolitik risk primi yükseldi
-• Deniz sigorta maliyetleri Basra Körfezi rotaları için 3 katına çıktı
-• Navlun ücretlerinde Süveyş→Ümit Burnu rota değişikliği maliyetleri arttı
-• Altın ve güvenli liman varlıklarına yönelim sürüyor
+💰 EKONOMİK ETKİLER
+• Brent petrol savaş öncesindeki 85 dolardan 108 dolara fırladı — varil başına %27 artış; OPEC+ günlük 500 bin varil acil üretim artışı kararı aldı
+• Hürmüz Boğazı'ndan dünya petrolünün yaklaşık %20'si geçiyor; olası bir kapanma küresel enerji arzını doğrudan tehdit ediyor
+• Basra Körfezi deniz sigorta primleri savaş öncesine göre 10 katına çıktı; navlun maliyetlerinde %40 artış yaşandı
+• Süveyş Kanalı trafiği %30 düştü; gemiler Ümit Burnu rotasına yöneldi, transit süreler 10-14 gün uzadı
+• Altın güvenli liman talebiyle 4.500 doların üzerine çıktı; küresel risk iştahı belirgin şekilde zayıfladı
 
 🔮 İZLENMESİ GEREKENLER
-• IAEA nükleer denetim raporları ve diplomatik müzakereler
-• Kızıldeniz ve Aden Körfezi'ndeki Husi saldırıları
-• OPEC+ acil üretim artışı kararları
+• Hürmüz Boğazı'ndaki tanker trafiği ve İran donanma hareketleri
+• IAEA nükleer denetim raporları ve olası yeni yaptırım kararları
+• Kızıldeniz'deki Husi saldırılarının sıklığı ve kapsamı
+• OPEC+ acil toplantıları ve üretim politikası değişiklikleri
+• ABD-İran arasında olası doğrudan askeri temas riski
 
 ⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
 
