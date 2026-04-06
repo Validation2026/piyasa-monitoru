@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Kıymetli Madenler & Metaller",
-    "updated_at": "2026-04-05T20:34:31Z",
+    "updated_at": "2026-04-06T05:43:08Z",
     "symbol_count": 6,
     "errors": []
   },
@@ -11,13 +11,13 @@
       "id": "GC=F",
       "name": "XAU (Altın)",
       "unit": "USD/oz",
-      "current": 4702.7002,
-      "change_1d_pct": -1.68,
-      "change_1w_pct": 7.48,
-      "change_1m_pct": -7.92,
-      "change_3m_pct": 3.83,
-      "change_ytd_pct": 9.0,
-      "change_1y_pct": 59.34,
+      "current": 4691.6001,
+      "change_1d_pct": 0.86,
+      "change_1w_pct": 4.44,
+      "change_1m_pct": -8.37,
+      "change_3m_pct": 8.47,
+      "change_ytd_pct": 8.74,
+      "change_1y_pct": 58.97,
       "high_52w": 5318.3999,
       "low_52w": 2951.3,
       "data": [
@@ -1019,7 +1019,11 @@
         },
         {
           "date": "2026-04-02",
-          "value": 4702.7002
+          "value": 4651.5
+        },
+        {
+          "date": "2026-04-06",
+          "value": 4691.6001
         }
       ]
     },
@@ -1027,13 +1031,13 @@
       "id": "SI=F",
       "name": "XAG (Gümüş)",
       "unit": "USD/oz",
-      "current": 73.17,
-      "change_1d_pct": -3.55,
-      "change_1w_pct": 8.13,
-      "change_1m_pct": -11.76,
-      "change_3m_pct": -4.34,
-      "change_ytd_pct": 3.7,
-      "change_1y_pct": 147.95,
+      "current": 72.58,
+      "change_1d_pct": -0.21,
+      "change_1w_pct": 4.36,
+      "change_1m_pct": -12.17,
+      "change_3m_pct": 3.9,
+      "change_ytd_pct": 2.87,
+      "change_1y_pct": 145.95,
       "high_52w": 115.08,
       "low_52w": 29.51,
       "data": [
@@ -2035,7 +2039,11 @@
         },
         {
           "date": "2026-04-02",
-          "value": 73.17
+          "value": 72.735
+        },
+        {
+          "date": "2026-04-06",
+          "value": 72.58
         }
       ]
     },
@@ -2043,13 +2051,13 @@
       "id": "PL=F",
       "name": "XPT (Platin)",
       "unit": "USD/oz",
-      "current": 1999.9,
-      "change_1d_pct": 1.55,
-      "change_1w_pct": 8.79,
-      "change_1m_pct": -3.61,
-      "change_3m_pct": -18.96,
-      "change_ytd_pct": -5.92,
-      "change_1y_pct": 123.7,
+      "current": 1980.4,
+      "change_1d_pct": 0.85,
+      "change_1w_pct": 5.87,
+      "change_1m_pct": -8.09,
+      "change_3m_pct": -5.91,
+      "change_ytd_pct": -6.84,
+      "change_1y_pct": 121.52,
       "high_52w": 2852.3999,
       "low_52w": 894.0,
       "data": [
@@ -3051,7 +3059,11 @@
         },
         {
           "date": "2026-04-02",
-          "value": 1999.9
+          "value": 1963.8
+        },
+        {
+          "date": "2026-04-06",
+          "value": 1980.4
         }
       ]
     },
@@ -3059,13 +3071,13 @@
       "id": "PA=F",
       "name": "XPD (Paladyum)",
       "unit": "USD/oz",
-      "current": 1515.0,
-      "change_1d_pct": 2.48,
-      "change_1w_pct": 12.95,
-      "change_1m_pct": -7.34,
-      "change_3m_pct": -23.67,
-      "change_ytd_pct": -9.17,
-      "change_1y_pct": 72.83,
+      "current": 1512.0,
+      "change_1d_pct": 1.38,
+      "change_1w_pct": 8.71,
+      "change_1m_pct": -9.34,
+      "change_3m_pct": -8.27,
+      "change_ytd_pct": -9.35,
+      "change_1y_pct": 72.48,
       "high_52w": 2169.8999,
       "low_52w": 876.6,
       "data": [
@@ -4063,7 +4075,11 @@
         },
         {
           "date": "2026-04-02",
-          "value": 1515.0
+          "value": 1491.4
+        },
+        {
+          "date": "2026-04-06",
+          "value": 1512.0
         }
       ]
     },
@@ -4071,13 +4087,13 @@
       "id": "HG=F",
       "name": "HG (Bakır)",
       "unit": "USD/lb",
-      "current": 5.6815,
-      "change_1d_pct": 1.02,
-      "change_1w_pct": 4.31,
-      "change_1m_pct": -1.59,
-      "change_3m_pct": -1.47,
-      "change_ytd_pct": 0.74,
-      "change_1y_pct": 36.28,
+      "current": 5.623,
+      "change_1d_pct": 1.08,
+      "change_1w_pct": 2.85,
+      "change_1m_pct": -3.96,
+      "change_3m_pct": 2.41,
+      "change_ytd_pct": -0.3,
+      "change_1y_pct": 34.88,
       "high_52w": 6.1755,
       "low_52w": 4.1275,
       "data": [
@@ -5079,7 +5095,11 @@
         },
         {
           "date": "2026-04-02",
-          "value": 5.6815
+          "value": 5.563
+        },
+        {
+          "date": "2026-04-06",
+          "value": 5.623
         }
       ]
     },
@@ -5087,13 +5107,13 @@
       "id": "ALI=F",
       "name": "ALI (Alüminyum)",
       "unit": "USD/ton",
-      "current": 3422.0,
-      "change_1d_pct": -0.88,
-      "change_1w_pct": 8.24,
-      "change_1m_pct": 8.09,
-      "change_3m_pct": 17.0,
-      "change_ytd_pct": 16.47,
-      "change_1y_pct": 55.6,
+      "current": 3411.0,
+      "change_1d_pct": -1.19,
+      "change_1w_pct": 7.89,
+      "change_1m_pct": 7.75,
+      "change_3m_pct": 16.63,
+      "change_ytd_pct": 16.1,
+      "change_1y_pct": 55.1,
       "high_52w": 3464.0,
       "low_52w": 2166.25,
       "data": [
@@ -6091,7 +6111,7 @@
         },
         {
           "date": "2026-04-02",
-          "value": 3422.0
+          "value": 3411.0
         }
       ]
     }
