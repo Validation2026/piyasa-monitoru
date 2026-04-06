@@ -55,7 +55,7 @@
 var C=[
 {f:'🇹🇷',n:'Türkiye',risk:'ORTA-YÜKSEK',rc:'s-med',
  sp:'BB- (Stabil)',fitch:'BB- (Pozitif)',moodys:'Ba3 (Stabil)',rcls:'rc',
- cds:'~280',inflation:'31.5%',interest:'42.5%',debt:'25.4%',growth:'2.2%',
+ cds:'~280',inflation:'31.5%',interest:'7% (sabit, artış bekleniyor)',debt:'25.4%',growth:'2.2%',
  note:'Fitch Ocak 2026\'da görünümü pozitife yükseltti. Üç kuruluş da yatırım yapılabilir seviyenin 3 kademe altında. TCMB sıkı para politikası sürdürüyor.'},
 
 {f:'🇺🇸',n:'ABD',risk:'DÜŞÜK',rc:'s-low',
@@ -117,6 +117,27 @@ g.innerHTML=C.map(function(c){
     '<div class="rk-r"><span class="rk-l">Büyüme</span><span class="rk-v">'+c.growth+'</span></div>'+
     '<div class="note">'+c.note+'</div></div>';
 }).join('');
+
+// Admin'den güncellenen veriler varsa override et
+fetch('/api/iran-state').then(function(r){return r.json()}).then(function(s){
+    if(s.countryRisk && s.countryRisk.length>0){
+        var g2=document.getElementById('grid');
+        function rcls(r){if(r.indexOf('ÇOK YÜKSEK')>-1)return['s-vhigh','rd'];if(r.indexOf('YÜKSEK')>-1)return['s-high','rc'];if(r.indexOf('ORTA')>-1)return['s-med','rc'];return['s-low','ra']}
+        g2.innerHTML=s.countryRisk.map(function(c){
+            var cls=rcls(c.risk);
+            return '<div class="rk"><div class="rk-h"><span class="rk-f">'+c.flag+'</span><span class="rk-n">'+c.name+'</span><span class="rk-s '+cls[0]+'">'+c.risk+'</span></div>'+
+            '<div class="rk-r"><span class="rk-l">S&P</span><span class="rat '+cls[1]+'">'+c.sp+'</span></div>'+
+            '<div class="rk-r"><span class="rk-l">Fitch</span><span class="rat '+cls[1]+'">'+c.fitch+'</span></div>'+
+            '<div class="rk-r"><span class="rk-l">Moody\'s</span><span class="rat '+cls[1]+'">'+c.moodys+'</span></div>'+
+            '<div class="rk-r"><span class="rk-l">CDS (5Y)</span><span class="rk-v">'+c.cds+' bps</span></div>'+
+            '<div class="rk-r"><span class="rk-l">Enflasyon</span><span class="rk-v">'+c.inflation+'</span></div>'+
+            '<div class="rk-r"><span class="rk-l">Politika Faizi</span><span class="rk-v">'+c.interest+'</span></div>'+
+            '<div class="rk-r"><span class="rk-l">Borç/GSYİH</span><span class="rk-v">'+c.debt+'</span></div>'+
+            '<div class="rk-r"><span class="rk-l">Büyüme</span><span class="rk-v">'+c.growth+'</span></div>'+
+            '<div class="note">'+c.note+'</div></div>';
+        }).join('');
+    }
+}).catch(function(){});
 
 fetch('/api/ai-analysis?cat=genel').then(function(r){return r.json()}).then(function(d){
     if(d.analysis)document.getElementById('aiBox').textContent=d.analysis;

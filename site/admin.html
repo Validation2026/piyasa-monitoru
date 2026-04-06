@@ -61,6 +61,11 @@ input:focus,select:focus{border-color:#3b82f6}
 <div id="tlEvents"></div>
 </div>
 
+<div class="card">
+<div class="ct">🌐 Ülke Risk Profilleri</div>
+<div id="crEditors" style="max-height:400px;overflow-y:auto"></div>
+</div>
+
 <button class="btn" id="saveBtn">💾 KAYDET</button>
 <div class="status" id="status"></div>
 </div>
@@ -94,6 +99,34 @@ function addTlRow(date,title,desc,tag){
 }
 document.getElementById('addTlBtn').onclick=function(){addTlRow()};
 
+// Ülke Risk Profilleri
+var CR_DEFAULTS=[
+{id:'TR',flag:'🇹🇷',name:'Türkiye',sp:'BB- (Stabil)',fitch:'BB- (Pozitif)',moodys:'Ba3 (Stabil)',cds:'~280',inflation:'31.5%',interest:'7% (sabit)',debt:'25.4%',growth:'2.2%',risk:'ORTA-YÜKSEK',note:'Fitch Ocak 2026 pozitife yükseltti. TCMB 22 Nisan artış bekleniyor.'},
+{id:'US',flag:'🇺🇸',name:'ABD',sp:'AA+ (Stabil)',fitch:'AA+ (Stabil)',moodys:'Aaa (Stabil)',cds:'~18',inflation:'2.8%',interest:'4.75%',debt:'123%',growth:'2.3%',risk:'DÜŞÜK',note:'Dolar rezerv para avantajı.'},
+{id:'IL',flag:'🇮🇱',name:'İsrail',sp:'A (Stabil)',fitch:'A (Negatif izleme)',moodys:'Baa1 (Stabil→?)',cds:'~150',inflation:'3.5%',interest:'4.5%',debt:'68%',growth:'5%',risk:'YÜKSEK (Savaş)',note:'Şubat savaşı sonrası yeni indirim riski.'},
+{id:'IR',flag:'🇮🇷',name:'İran',sp:'—',fitch:'—',moodys:'—',cds:'—',inflation:'~45%+',interest:'—',debt:'—',growth:'—',risk:'ÇOK YÜKSEK',note:'Yaptırım altında, derecelendirilmemiş.'},
+{id:'EU',flag:'🇪🇺',name:'Euro Bölgesi',sp:'AAA',fitch:'AAA',moodys:'Aaa',cds:'~15',inflation:'2.4%',interest:'3.75%',debt:'63%',growth:'0.8%',risk:'DÜŞÜK',note:'Almanya referans.'},
+{id:'GB',flag:'🇬🇧',name:'İngiltere',sp:'AA',fitch:'AA-',moodys:'Aa3',cds:'~25',inflation:'2.6%',interest:'4.25%',debt:'98%',growth:'1.2%',risk:'DÜŞÜK-ORTA',note:'BoE temkinli faiz indirimi.'},
+{id:'JP',flag:'🇯🇵',name:'Japonya',sp:'A+',fitch:'A',moodys:'A1',cds:'~30',inflation:'2.2%',interest:'0.5%',debt:'255%',growth:'1.0%',risk:'ORTA',note:'En yüksek borç/GSYİH.'},
+{id:'CN',flag:'🇨🇳',name:'Çin',sp:'A+',fitch:'A+',moodys:'A1 (Negatif)',cds:'~65',inflation:'0.3%',interest:'3.1%',debt:'83%',growth:'4.5%',risk:'ORTA',note:'Emlak krizi, deflasyon riski.'},
+{id:'SA',flag:'🇸🇦',name:'S.Arabistan',sp:'A',fitch:'A+',moodys:'A1 (Pozitif)',cds:'~55',inflation:'1.8%',interest:'5.75%',debt:'26%',growth:'3.5%',risk:'ORTA',note:'Petrol bağımlılığı, Vision 2030.'},
+{id:'RU',flag:'🇷🇺',name:'Rusya',sp:'—',fitch:'—',moodys:'Ca (çekildi)',cds:'—',inflation:'8.5%',interest:'21%',debt:'18%',growth:'2.6%',risk:'ÇOK YÜKSEK',note:'Yaptırım, notlar çekildi.'},
+];
+
+function renderCREditors(data){
+    var el=document.getElementById('crEditors');
+    var countries=data||CR_DEFAULTS;
+    el.innerHTML=countries.map(function(c,i){
+        return '<div style="background:#f8fafc;border:1px solid #dde4ed;border-radius:6px;padding:8px;margin-bottom:6px"><div style="font-weight:700;font-size:.8rem;margin-bottom:6px">'+c.flag+' '+c.name+'</div>'+
+        '<div class="row" style="margin-bottom:3px"><div><label>S&P</label><input type="text" class="cr-sp" value="'+c.sp+'"></div><div><label>Fitch</label><input type="text" class="cr-fitch" value="'+c.fitch+'"></div></div>'+
+        '<div class="row" style="margin-bottom:3px"><div><label>Moody\'s</label><input type="text" class="cr-moodys" value="'+c.moodys+'"></div><div><label>CDS</label><input type="text" class="cr-cds" value="'+c.cds+'"></div></div>'+
+        '<div class="row" style="margin-bottom:3px"><div><label>Enflasyon</label><input type="text" class="cr-inf" value="'+c.inflation+'"></div><div><label>Faiz</label><input type="text" class="cr-int" value="'+c.interest+'"></div></div>'+
+        '<div class="row" style="margin-bottom:3px"><div><label>Borç/GSYİH</label><input type="text" class="cr-debt" value="'+c.debt+'"></div><div><label>Büyüme</label><input type="text" class="cr-grow" value="'+c.growth+'"></div></div>'+
+        '<div class="row" style="margin-bottom:3px"><div><label>Risk</label><input type="text" class="cr-risk" value="'+c.risk+'"></div><div><label>Not</label><input type="text" class="cr-note" value="'+c.note+'"></div></div>'+
+        '<input type="hidden" class="cr-id" value="'+c.id+'"><input type="hidden" class="cr-flag" value="'+c.flag+'"><input type="hidden" class="cr-name" value="'+c.name+'"></div>';
+    }).join('');
+}
+
 // Load from API
 fetch('/api/iran-state').then(function(r){return r.json()}).then(function(s){
     document.getElementById('risk').value=s.riskScore||50;
@@ -109,7 +142,8 @@ fetch('/api/iran-state').then(function(r){return r.json()}).then(function(s){
     }
     (s.customMetrics||[]).forEach(function(m){addRow(m.name,m.unit,m.value,m.change)});
     (s.timeline||[]).forEach(function(e){addTlRow(e.date,e.title,e.desc,e.tag)});
-}).catch(function(){});
+    renderCREditors(s.countryRisk||CR_DEFAULTS);
+}).catch(function(){renderCREditors(CR_DEFAULTS)});
 
 // Save to API
 document.getElementById('saveBtn').onclick=function(){
@@ -132,9 +166,13 @@ document.getElementById('saveBtn').onclick=function(){
         var title=r.querySelector('.tl-title').value.trim();if(!title)return;
         tl.push({date:r.querySelector('.tl-date').value,title:title,desc:r.querySelector('.tl-desc').value.trim(),tag:r.querySelector('.tl-tag').value});
     });
+    var cr=[];
+    document.querySelectorAll('#crEditors > div').forEach(function(r){
+        cr.push({id:r.querySelector('.cr-id').value,flag:r.querySelector('.cr-flag').value,name:r.querySelector('.cr-name').value,sp:r.querySelector('.cr-sp').value,fitch:r.querySelector('.cr-fitch').value,moodys:r.querySelector('.cr-moodys').value,cds:r.querySelector('.cr-cds').value,inflation:r.querySelector('.cr-inf').value,interest:r.querySelector('.cr-int').value,debt:r.querySelector('.cr-debt').value,growth:r.querySelector('.cr-grow').value,risk:r.querySelector('.cr-risk').value,note:r.querySelector('.cr-note').value});
+    });
     var payload={
         pin:pin,
-        data:{riskScore:parseInt(document.getElementById('risk').value)||50,hurmuzStatus:document.getElementById('hurmuz').value,manualCommodities:mc,customMetrics:cm,timeline:tl}
+        data:{riskScore:parseInt(document.getElementById('risk').value)||50,hurmuzStatus:document.getElementById('hurmuz').value,manualCommodities:mc,customMetrics:cm,timeline:tl,countryRisk:cr}
     };
     document.getElementById('status').textContent='Kaydediliyor...';
     fetch('/api/iran-state',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).then(function(r){return r.json()}).then(function(d){
