@@ -114,7 +114,7 @@ g.innerHTML=C.map(function(c){
     '<div class="rk-r"><span class="rk-l">Enflasyon</span><span class="rk-v">'+c.inflation+'</span></div>'+
     '<div class="rk-r"><span class="rk-l">Politika Faizi</span><span class="rk-v">'+c.interest+'</span></div>'+
     '<div class="rk-r"><span class="rk-l">Borç/GSYİH</span><span class="rk-v">'+c.debt+'</span></div>'+
-    '<div class="rk-r"><span class="rk-l">Büyüme</span><span class="rk-v">'+c.growth+'</span></div>'+
+    '<div class="rk-r"><span class="rk-l">Büyüme Tahmini (2026) </span><span class="rk-v">'+c.growth+'</span></div>'+
     '<div class="note">'+c.note+'</div></div>';
 }).join('');
 
@@ -133,7 +133,7 @@ fetch('/api/iran-state').then(function(r){return r.json()}).then(function(s){
             '<div class="rk-r"><span class="rk-l">Enflasyon</span><span class="rk-v">'+c.inflation+'</span></div>'+
             '<div class="rk-r"><span class="rk-l">Politika Faizi</span><span class="rk-v">'+c.interest+'</span></div>'+
             '<div class="rk-r"><span class="rk-l">Borç/GSYİH</span><span class="rk-v">'+c.debt+'</span></div>'+
-            '<div class="rk-r"><span class="rk-l">Büyüme</span><span class="rk-v">'+c.growth+'</span></div>'+
+            '<div class="rk-r"><span class="rk-l">Büyüme Tahmini (2026)</span><span class="rk-v">'+c.growth+'</span></div>'+
             '<div class="note">'+c.note+'</div></div>';
         }).join('');
     }
