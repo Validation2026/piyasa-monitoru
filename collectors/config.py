@@ -83,7 +83,7 @@ BONDS = {
     "file": "bonds.json",
     "category": "Tahvil Faizleri",
     "symbols": {
-        "^IRX":  {"name": "ABD 3 Aylık",   "unit": "%"},
+        "2YY=F": {"name": "ABD 2 Yıllık",  "unit": "%"},
         "^FVX":  {"name": "ABD 5 Yıllık",  "unit": "%"},
         "^TNX":  {"name": "ABD 10 Yıllık", "unit": "%"},
         "^TYX":  {"name": "ABD 30 Yıllık", "unit": "%"},
