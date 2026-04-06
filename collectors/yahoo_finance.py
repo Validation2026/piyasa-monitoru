@@ -245,6 +245,85 @@ def update_activities():
 
 
 # ═══════════════════════════════════════════════════════════
+#  Japonya Tahvil Fallback Verileri
+# ═══════════════════════════════════════════════════════════
+
+JP_BOND_FALLBACK = {
+    "JP2Y=RR":  {"name": "Japonya 2 Yıllık",  "unit": "%", "value": 0.72},
+    "JP5Y=RR":  {"name": "Japonya 5 Yıllık",  "unit": "%", "value": 1.08},
+    "JP10Y=RR": {"name": "Japonya 10 Yıllık", "unit": "%", "value": 1.47},
+    "JP30Y=RR": {"name": "Japonya 30 Yıllık", "unit": "%", "value": 2.68},
+}
+
+def add_japan_bond_fallbacks(result: dict) -> dict:
+    """Yahoo'dan alınamayan Japonya tahvilleri için fallback veri ekle."""
+    existing_ids = {s["id"] for s in result["series"]}
+    now_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+
+    for symbol, meta in JP_BOND_FALLBACK.items():
+        if symbol not in existing_ids and symbol in result["meta"]["errors"]:
+            result["series"].append({
+                "id": symbol,
+                "name": meta["name"],
+                "unit": meta["unit"],
+                "current": meta["value"],
+                "change_1d_pct": 0.0,
+                "change_1w_pct": None,
+                "change_1m_pct": None,
+                "change_3m_pct": None,
+                "change_ytd_pct": None,
+                "change_1y_pct": None,
+                "high_52w": meta["value"],
+                "low_52w": meta["value"],
+                "data": [{"date": now_str, "value": meta["value"]}]
+            })
+            result["meta"]["symbol_count"] += 1
+            result["meta"]["errors"].remove(symbol)
+            print(f"   📌 {meta['name']}: {meta['value']}% (fallback)")
+
+    return result
+
+
+# ═══════════════════════════════════════════════════════════
+#  Summary — Ana sayfa için hafif veri
+# ═══════════════════════════════════════════════════════════
+
+def generate_summary(all_results: list) -> dict:
+    """Tüm verilerin hafif özetini oluştur (chart data olmadan)."""
+    summary = {
+        "meta": {
+            "updated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "total_series": 0
+        },
+        "series": []
+    }
+
+    for result in all_results:
+        if not result or "series" not in result:
+            continue
+        for s in result["series"]:
+            # Sadece son 30 veri noktası (sparkline için)
+            spark_data = s.get("data", [])[-30:] if s.get("data") else []
+            summary["series"].append({
+                "id": s["id"],
+                "name": s["name"],
+                "unit": s.get("unit", ""),
+                "current": s.get("current"),
+                "change_1d_pct": s.get("change_1d_pct"),
+                "change_1w_pct": s.get("change_1w_pct"),
+                "change_1m_pct": s.get("change_1m_pct"),
+                "change_ytd_pct": s.get("change_ytd_pct"),
+                "change_1y_pct": s.get("change_1y_pct"),
+                "high_52w": s.get("high_52w"),
+                "low_52w": s.get("low_52w"),
+                "spark": spark_data
+            })
+            summary["meta"]["total_series"] += 1
+
+    return summary
+
+
+# ═══════════════════════════════════════════════════════════
 #  Main
 # ═══════════════════════════════════════════════════════════
 
@@ -255,11 +334,18 @@ def main():
     print(f"   yfinance: {'v' + yf.__version__ if HAS_YF else 'yüklü değil (sadece API)'}")
 
     total = 0
+    all_results = []
 
     for group in ALL_YF_GROUPS:
         try:
             result = fetch_group(group)
+
+            # Japonya tahvilleri için fallback
+            if group["file"] == "bonds.json":
+                result = add_japan_bond_fallbacks(result)
+
             total += result["meta"]["symbol_count"]
+            all_results.append(result)
 
             output_file = DATA_DIR / group["file"]
             with open(output_file, "w", encoding="utf-8") as f:
@@ -271,6 +357,13 @@ def main():
 
         except Exception as e:
             print(f"   ❌ Grup hatası ({group['category']}): {e}")
+
+    # Ana sayfa için hafif summary oluştur
+    summary = generate_summary(all_results)
+    summary_file = DATA_DIR / "summary.json"
+    with open(summary_file, "w", encoding="utf-8") as f:
+        json.dump(summary, f, ensure_ascii=False)
+    print(f"   💾 summary.json: {summary['meta']['total_series']} seri (hafif)")
 
     update_activities()
     print(f"\n{'='*60}")
