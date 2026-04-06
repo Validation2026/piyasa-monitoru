@@ -80,7 +80,7 @@
 <!-- AI Günlük Özet -->
 <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:20px;position:relative;overflow:hidden">
     <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#a78bfa,#3b82f6,#22d3ee)"></div>
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="font-size:.85rem;font-weight:700">🤖 Günlük Piyasa Özeti</span><span style="font-size:.58rem;font-family:'JetBrains Mono',monospace;font-weight:700;background:rgba(167,139,250,.15);color:#a78bfa;padding:2px 8px;border-radius:4px">Gemini AI</span></div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="font-size:.85rem;font-weight:700">🤖 Günlük Piyasa Özeti</span><span style="font-size:.58rem;font-family:'JetBrains Mono',monospace;font-weight:700;background:rgba(167,139,250,.15);color:#a78bfa;padding:2px 8px;border-radius:4px">AI</span></div>
     <div id="indexAiAnalysis" style="font-size:.82rem;color:var(--t2);line-height:1.7;white-space:pre-wrap"><span style="color:var(--t3);font-style:italic">Günlük piyasa özeti yükleniyor...</span></div>
 </div>
 
@@ -110,9 +110,10 @@
     <a class="cat" href="emtia-tarim.html"><div class="cat-icon">🌾</div><div class="cat-name">Tarım</div><div class="cat-desc">Buğday, Kahve, Kakao +10</div><div class="cat-tag">13 seri</div></a>
     <a class="cat" href="sanayi.html"><div class="cat-icon">🏭</div><div class="cat-name">Sanayi & Hammadde</div><div class="cat-desc">Bakır, Çelik, Lityum, Navlun +10</div><div class="cat-tag">14 seri</div></a>
     <a class="cat" href="kurlar.html"><div class="cat-icon">💱</div><div class="cat-name">Döviz Kurları</div><div class="cat-desc">19 parite + DXY</div><div class="cat-tag">19 seri</div></a>
-    <a class="cat" href="tahviller.html"><div class="cat-icon">📜</div><div class="cat-name">Tahviller</div><div class="cat-desc">ABD 3M–30Y getiri eğrisi</div><div class="cat-tag">4 seri</div></a>
+    <a class="cat" href="tahviller.html"><div class="cat-icon">📜</div><div class="cat-name">Tahviller</div><div class="cat-desc">ABD & Japonya tahvil faizleri</div><div class="cat-tag">8 seri</div></a>
     <a class="cat" href="endeksler.html"><div class="cat-icon">📈</div><div class="cat-name">Endeksler</div><div class="cat-desc">BIST, S&P, DAX, Nikkei +12</div><div class="cat-tag">17 seri</div></a>
     <a class="cat" href="kripto.html"><div class="cat-icon">₿</div><div class="cat-name">Kripto Paralar</div><div class="cat-desc">BTC, ETH, SOL, XRP +6</div><div class="cat-tag">10 seri</div></a>
+    <a class="cat" href="karsilastirma.html"><div class="cat-icon">📊</div><div class="cat-name">Karşılaştırma</div><div class="cat-desc">Varlık karşılaştırma & korelasyon</div><div class="cat-tag">84+ seri</div></a>
     <a class="cat" href="iran-risk.html"><div class="cat-icon">🔴</div><div class="cat-name">İran Risk Monitörü</div><div class="cat-desc">Savaş takibi, harita, haberler</div><div class="cat-tag">Canlı</div></a>
     <a class="cat" href="tedarik-zinciri.html"><div class="cat-icon">🚢</div><div class="cat-name">Tedarik Zinciri</div><div class="cat-desc">Ticaret rotaları, üretici ülkeler</div><div class="cat-tag">Harita</div></a>
     <a class="cat" href="kuresel-risk.html"><div class="cat-icon">🌍</div><div class="cat-name">Küresel Risk</div><div class="cat-desc">Jeopolitik risk göstergeleri</div><div class="cat-tag">Analiz</div></a>
@@ -147,40 +148,45 @@ function fp(v,d){if(v==null)return'—';d=d!=null?d:2;return Number(v).toLocaleS
 function fs(d,id){if(!d||!d.series)return null;for(var i=0;i<d.series.length;i++)if(d.series[i].id===id)return d.series[i];return null}
 function cc(p){return p>=0?'u':'d'}
 
-function spark(cid,data,color){var c=document.getElementById(cid);if(!c||!data||data.length<2)return;var pts=data.slice(-30).map(function(d){return d.value});new Chart(c,{type:'line',data:{labels:pts.map(function(){return''}),datasets:[{data:pts,borderColor:color,backgroundColor:color+'18',fill:true,tension:.4,pointRadius:0,borderWidth:1.5}]},options:{responsive:true,maintainAspectRatio:false,animation:{duration:800},plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{display:false},y:{display:false}}}})}
+function spark(cid,data,color){var c=document.getElementById(cid);if(!c||!data||data.length<2)return;var pts=data.slice(-30).map(function(d){return d.value});new Chart(c,{type:'line',data:{labels:pts.map(function(){return''}),datasets:[{data:pts,borderColor:color,backgroundColor:color+'18',fill:true,tension:.4,pointRadius:0,borderWidth:1.5}]},options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{display:false},y:{display:false}}}})}
 
-function setKPI(key,series,color){if(!series)return;var v=document.getElementById('v-'+key),b=document.getElementById('b-'+key);if(v)v.textContent=fp(series.current);if(b&&series.change_1d_pct!=null){var p=series.change_1d_pct;b.textContent=(p>=0?'+':'')+p.toFixed(2)+'%';b.className='kpi-badge '+cc(p)}if(series.data)spark('s-'+key,series.data,color)}
+function setKPI(key,series,color){if(!series)return;var v=document.getElementById('v-'+key),b=document.getElementById('b-'+key);if(v)v.textContent=fp(series.current);if(b&&series.change_1d_pct!=null){var p=series.change_1d_pct;b.textContent=(p>=0?'+':'')+p.toFixed(2)+'%';b.className='kpi-badge '+cc(p)}if(series.spark)spark('s-'+key,series.spark,color)}
 
+function findS(all,id){for(var i=0;i<all.length;i++)if(all[i].id===id)return all[i];return null}
 
-function buildMini(datasets){var el=document.getElementById('miniStrip');if(!el)return;var keys=['EURUSD=X','GBPUSD=X','USDJPY=X','DX-Y.NYB','^TNX','BTC-USD','ETH-USD','^GSPC','^IXIC','^GDAXI','^N225','BZ=F','GC=F'];var items=[];keys.forEach(function(k){for(var i=0;i<datasets.length;i++){var s=fs(datasets[i],k);if(s){items.push(s);break}}});el.innerHTML=items.map(function(s){var p=s.change_1d_pct;var cls=p!=null?cc(p):'';var sign=p!=null?(p>=0?'+':''):'';return'<div class="mc"><div class="mc-n">'+s.name+'</div><div class="mc-r"><span class="mc-v">'+fp(s.current)+'</span><span class="mc-c '+cls+'">'+sign+(p!=null?p.toFixed(2)+'%':'')+'</span></div></div>'}).join('')}
+function buildMini(all){var el=document.getElementById('miniStrip');if(!el)return;var keys=['EURUSD=X','GBPUSD=X','USDJPY=X','DX-Y.NYB','^TNX','BTC-USD','ETH-USD','^GSPC','^IXIC','^GDAXI','^N225','BZ=F','GC=F'];var items=[];keys.forEach(function(k){var s=findS(all,k);if(s)items.push(s)});el.innerHTML=items.map(function(s){var p=s.change_1d_pct;var cls=p!=null?cc(p):'';var sign=p!=null?(p>=0?'+':''):'';return'<div class="mc"><div class="mc-n">'+s.name+'</div><div class="mc-r"><span class="mc-v">'+fp(s.current)+'</span><span class="mc-c '+cls+'">'+sign+(p!=null?p.toFixed(2)+'%':'')+'</span></div></div>'}).join('')}
 
 function buildMovers(all){var sorted=all.filter(function(s){return s&&s.change_1d_pct!=null}).sort(function(a,b){return b.change_1d_pct-a.change_1d_pct});function render(id,items){var el=document.getElementById(id);if(!el)return;el.innerHTML=items.map(function(s){var p=s.change_1d_pct;return'<div class="mover-item"><div class="mover-name">'+s.name+'</div><div class="mover-val">'+fp(s.current)+'</div><div class="mover-chg '+cc(p)+'">'+(p>=0?'+':'')+p.toFixed(2)+'%</div></div>'}).join('')}render('moversUp',sorted.slice(0,7));render('moversDown',sorted.slice(-7).reverse())}
 
 function buildTable(id,items){var el=document.getElementById(id);if(!el)return;el.innerHTML=items.map(function(s){if(!s)return'';var p=s.change_1d_pct;var cls=p!=null?cc(p):'';var sign=p!=null?(p>=0?'+':''):'';var chg=p!=null?sign+p.toFixed(2)+'%':'—';return'<div class="prow"><div class="prow-n">'+s.name+'</div><div class="prow-v">'+fp(s.current)+'</div><div class="prow-c '+cls+'">'+chg+'</div></div>'}).join('')}
 
+// Tek hafif dosya ile tüm veriyi yükle (8MB yerine ~114KB)
+fj('summary.json').then(function(data){
+    if(!data||!data.series){return}
+    var all=data.series;
 
-Promise.all([fj('currencies.json'),fj('commodities_energy.json'),fj('commodities_metals.json'),fj('commodities_agriculture.json'),fj('bonds.json'),fj('indices.json'),fj('crypto.json'),fj('industrial.json')]).then(function(r){
-    var cur=r[0],ener=r[1],met=r[2],agri=r[3],bonds=r[4],idx=r[5],crypto=r[6],indust=r[7];
+    setKPI('usdtry',findS(all,'USDTRY=X'),'#3b82f6');
+    setKPI('gold',findS(all,'GC=F'),'#fbbf24');
+    setKPI('btc',findS(all,'BTC-USD'),'#a78bfa');
+    setKPI('bist',findS(all,'XU100.IS'),'#22d3ee');
 
-    setKPI('usdtry',fs(cur,'USDTRY=X'),'#3b82f6');
-    setKPI('gold',fs(met,'GC=F'),'#fbbf24');
-    setKPI('btc',fs(crypto,'BTC-USD'),'#a78bfa');
-    setKPI('bist',fs(idx,'XU100.IS'),'#22d3ee');
-
-    var all=[];var total=0;
-    [cur,ener,met,agri,indust,idx,bonds,crypto].forEach(function(d){if(d&&d.series){d.series.forEach(function(s){all.push(s)});total+=d.series.length}});
-
-    buildMini([cur,bonds,crypto,idx,ener,met]);
+    buildMini(all);
     buildMovers(all);
 
-    var comm=[];[ener,met,agri,indust].forEach(function(d){if(d&&d.series)d.series.forEach(function(s){comm.push(s)})});buildTable('tblComm',comm);
-    var fx=[];[cur,bonds].forEach(function(d){if(d&&d.series)d.series.forEach(function(s){fx.push(s)})});buildTable('tblFx',fx);
-    if(idx&&idx.series)buildTable('tblIdx',idx.series);
-    if(crypto&&crypto.series)buildTable('tblCrypto',crypto.series);
+    // Kategori bazlı tablolar
+    var commIds=['BZ=F','CL=F','NG=F','MTF=F','HO=F','RB=F','GC=F','SI=F','PL=F','PA=F','HG=F','ALI=F','ZW=F','ZC=F','ZS=F','ZM=F','ZL=F','CT=F','KC=F','SB=F','CC=F','OJ=F','LBS=F','NI=F','SN=F','PB=F','RR=F','URA','LIT','COPX','SLX','BDRY','REMX','ZN=F'];
+    var fxIds=['USDTRY=X','EURTRY=X','GBPTRY=X','CHFTRY=X','JPYTRY=X','CADTRY=X','AUDTRY=X','CNYTRY=X','SARTRY=X','EURUSD=X','GBPUSD=X','USDJPY=X','USDCHF=X','AUDUSD=X','USDCAD=X','NZDUSD=X','USDCNY=X','DX-Y.NYB','2YY=F','^FVX','^TNX','^TYX','JP2Y=RR','JP5Y=RR','JP10Y=RR','JP30Y=RR'];
+    var idxIds=['XU100.IS','XU030.IS','^GSPC','^DJI','^IXIC','^RUT','^STOXX50E','^FTSE','^GDAXI','^FCHI','^N225','^HSI','000001.SS','^BSESN','^KS11','^TWII','^MERV'];
+    var cryptoIds=['BTC-USD','ETH-USD','BNB-USD','SOL-USD','XRP-USD','ADA-USD','DOGE-USD','AVAX-USD','DOT-USD','LINK-USD'];
 
+    function filterByIds(ids){return ids.map(function(id){return findS(all,id)}).filter(Boolean)}
+    buildTable('tblComm',filterByIds(commIds));
+    buildTable('tblFx',filterByIds(fxIds));
+    buildTable('tblIdx',filterByIds(idxIds));
+    buildTable('tblCrypto',filterByIds(cryptoIds));
 
-    var st=document.getElementById('stTotal');if(st)st.textContent=total+'+';
-    var su=document.getElementById('stUpdate');if(su){var latest=cur||ener;if(latest&&latest.meta){var d=new Date(latest.meta.updated_at);su.textContent=String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+d.getFullYear()}}
+    var st=document.getElementById('stTotal');if(st)st.textContent=all.length+'+';
+    var su=document.getElementById('stUpdate');if(su&&data.meta){var d=new Date(data.meta.updated_at);su.textContent=String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+d.getFullYear()}
 });
 // Iran day counter
 var warDays=Math.floor((new Date()-new Date('2026-02-28T00:00:00+03:00'))/864e5);
@@ -188,7 +194,7 @@ var ib=document.getElementById('iranBannerDay');if(ib)ib.textContent=warDays+'. 
 // AI
 fetch('/api/ai-analysis?cat=genel').then(function(r){return r.json()}).then(function(d){var el=document.getElementById('indexAiAnalysis');if(el&&d.analysis)el.textContent=d.analysis}).catch(function(){});
 })();
-if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js');
+if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').then(function(reg){reg.update()});}
 </script>
 </body>
 </html>

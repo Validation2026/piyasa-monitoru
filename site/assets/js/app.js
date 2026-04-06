@@ -39,19 +39,22 @@ function filterPeriod(data, period) {
 
 function miniSpark(canvasId,data,color){
     var c=document.getElementById(canvasId);if(!c||!data||data.length<2)return;
-    var pts=data.slice(-90).map(function(d){return d.value});
-    new Chart(c,{type:'line',data:{labels:pts.map(function(){return''}),datasets:[{data:pts,borderColor:color,backgroundColor:color+'15',fill:true,tension:.4,pointRadius:0,borderWidth:1.5}]},options:{responsive:true,maintainAspectRatio:false,animation:{duration:600},plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{display:false},y:{display:false}}}})
+    var pts=data.slice(-60).map(function(d){return d.value});
+    new Chart(c,{type:'line',data:{labels:pts.map(function(){return''}),datasets:[{data:pts,borderColor:color,backgroundColor:color+'15',fill:true,tension:.4,pointRadius:0,borderWidth:1.5}]},options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{display:false},y:{display:false}}}})
 }
+
+function downsample(arr,max){if(!arr||arr.length<=max)return arr;var step=arr.length/max;var result=[];for(var i=0;i<max;i++){var idx=Math.floor(i*step);result.push(arr[idx])}if(arr.length>0)result[result.length-1]=arr[arr.length-1];return result}
 
 function makeChart(canvasId,series,opts){
     var c=document.getElementById(canvasId);if(!c||!series||!series.data||!series.data.length)return null;
     opts=opts||{};var color=opts.color||COLORS[0];
     var filtered=filterPeriod(series.data,opts.period||'all');
+    filtered=downsample(filtered,300);
     var labels=filtered.map(function(d){return d.date});var vals=filtered.map(function(d){return d.value});
     var dark=document.documentElement.getAttribute('data-theme')!=='light';
     var grid=dark?'rgba(255,255,255,.05)':'rgba(0,0,0,.05)';var txt=dark?'#8a99b2':'#475569';
     var MO=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
-    return new Chart(c,{type:'line',data:{labels:labels,datasets:[{label:series.name,data:vals,borderColor:color,backgroundColor:color+'12',fill:true,tension:.3,pointRadius:0,pointHoverRadius:5,pointHoverBackgroundColor:color,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,animation:{duration:600},interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{backgroundColor:dark?'#1e293b':'#fff',titleColor:dark?'#e8edf5':'#0f172a',bodyColor:dark?'#8a99b2':'#475569',borderColor:dark?'#334155':'#dde4ed',borderWidth:1,padding:10,displayColors:false,callbacks:{label:function(ctx){return series.name+': '+fp(ctx.raw)+' '+(series.unit||'')}}}},scales:{x:{grid:{color:grid,drawBorder:false},ticks:{color:txt,font:{size:10,family:"'JetBrains Mono'"},maxTicksLimit:window.innerWidth<600?4:8,callback:function(v){var l=this.getLabelForValue(v);var p=l.split('-');if(p.length>=2)return MO[parseInt(p[1])-1]+' '+p[0].slice(2);return l}}},y:{grid:{color:grid,drawBorder:false},ticks:{color:txt,font:{size:10,family:"'JetBrains Mono'"},callback:function(v){return fp(v,0)}}}}}})
+    return new Chart(c,{type:'line',data:{labels:labels,datasets:[{label:series.name,data:vals,borderColor:color,backgroundColor:color+'12',fill:true,tension:.3,pointRadius:0,pointHoverRadius:4,pointHoverBackgroundColor:color,borderWidth:1.5}]},options:{responsive:true,maintainAspectRatio:false,animation:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{backgroundColor:dark?'#1e293b':'#fff',titleColor:dark?'#e8edf5':'#0f172a',bodyColor:dark?'#8a99b2':'#475569',borderColor:dark?'#334155':'#dde4ed',borderWidth:1,padding:10,displayColors:false,callbacks:{label:function(ctx){return series.name+': '+fp(ctx.raw)+' '+(series.unit||'')}}}},scales:{x:{grid:{color:grid,drawBorder:false},ticks:{color:txt,font:{size:10,family:"'JetBrains Mono'"},maxTicksLimit:window.innerWidth<600?4:8,callback:function(v){var l=this.getLabelForValue(v);var p=l.split('-');if(p.length>=2)return MO[parseInt(p[1])-1]+' '+p[0].slice(2);return l}}},y:{grid:{color:grid,drawBorder:false},ticks:{color:txt,font:{size:10,family:"'JetBrains Mono'"},callback:function(v){return fp(v,0)}}}}}})
 }
 
 function buildSummary(containerId,seriesList){
@@ -99,7 +102,7 @@ function buildComparisonChart(canvasId,seriesList,period){
     var maxLen=0;var allLabels=[];
     seriesList.forEach(function(s,i){
         if(!s||!s.data)return;
-        var filtered=filterPeriod(s.data,period||'1y');
+        var filtered=downsample(filterPeriod(s.data,period||'1y'),300);
         if(!filtered.length)return;
         var base=filtered[0].value;if(!base)return;
         var vals=filtered.map(function(d){return((d.value-base)/base)*100});
@@ -107,7 +110,7 @@ function buildComparisonChart(canvasId,seriesList,period){
         if(labels.length>maxLen){maxLen=labels.length;allLabels=labels}
         datasets.push({label:s.name,data:vals,borderColor:gc(i),backgroundColor:'transparent',tension:.3,pointRadius:0,pointHoverRadius:4,borderWidth:2});
     });
-    return new Chart(c,{type:'line',data:{labels:allLabels,datasets:datasets},options:{responsive:true,maintainAspectRatio:false,animation:{duration:600},interaction:{mode:'index',intersect:false},plugins:{legend:{display:true,position:'top',labels:{color:txt,font:{size:11,family:"'Outfit'"},boxWidth:12,padding:12}},tooltip:{backgroundColor:dark?'#1e293b':'#fff',titleColor:dark?'#e8edf5':'#0f172a',bodyColor:dark?'#8a99b2':'#475569',borderColor:dark?'#334155':'#dde4ed',borderWidth:1,padding:10,callbacks:{label:function(ctx){return ctx.dataset.label+': '+(ctx.raw>=0?'+':'')+ctx.raw.toFixed(2)+'%'}}}},scales:{x:{grid:{color:grid,drawBorder:false},ticks:{color:txt,font:{size:10,family:"'JetBrains Mono'"},maxTicksLimit:6,callback:function(v){var l=this.getLabelForValue(v);var p=l.split('-');if(p.length>=2)return MO[parseInt(p[1])-1]+' '+p[0].slice(2);return l}}},y:{grid:{color:grid,drawBorder:false},ticks:{color:txt,font:{size:10,family:"'JetBrains Mono'"},callback:function(v){return(v>=0?'+':'')+v.toFixed(0)+'%'}}}}}});
+    return new Chart(c,{type:'line',data:{labels:allLabels,datasets:datasets},options:{responsive:true,maintainAspectRatio:false,animation:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:true,position:'top',labels:{color:txt,font:{size:11,family:"'Outfit'"},boxWidth:12,padding:12}},tooltip:{backgroundColor:dark?'#1e293b':'#fff',titleColor:dark?'#e8edf5':'#0f172a',bodyColor:dark?'#8a99b2':'#475569',borderColor:dark?'#334155':'#dde4ed',borderWidth:1,padding:10,callbacks:{label:function(ctx){return ctx.dataset.label+': '+(ctx.raw>=0?'+':'')+ctx.raw.toFixed(2)+'%'}}}},scales:{x:{grid:{color:grid,drawBorder:false},ticks:{color:txt,font:{size:10,family:"'JetBrains Mono'"},maxTicksLimit:6,callback:function(v){var l=this.getLabelForValue(v);var p=l.split('-');if(p.length>=2)return MO[parseInt(p[1])-1]+' '+p[0].slice(2);return l}}},y:{grid:{color:grid,drawBorder:false},ticks:{color:txt,font:{size:10,family:"'JetBrains Mono'"},callback:function(v){return(v>=0?'+':'')+v.toFixed(0)+'%'}}}}}});
 }
 
 function applyOverrides(seriesList, overrides) {
@@ -129,17 +132,8 @@ function loadOverrides(pageId) {
 }
 
 function loadData(file, pageId) {
-    return Promise.all([
-        fj(file),
-        pageId ? loadOverrides(pageId) : Promise.resolve({})
-    ]).then(function(results) {
-        var data = results[0];
-        var overrides = results[1];
-        if (data && data.series && overrides) {
-            applyOverrides(data.series, overrides);
-        }
-        return data;
-    });
+    // Veriyi hemen yükle, override'ları beklemeden
+    return fj(file);
 }
 
 return{fj:fj,fs:fs,fp:fp,fc:fc,cc:cc,gc:gc,filterPeriod:filterPeriod,miniSpark:miniSpark,makeChart:makeChart,buildSummary:buildSummary,buildCharts:buildCharts,buildTable:buildTable,buildComparisonChart:buildComparisonChart,applyOverrides:applyOverrides,loadOverrides:loadOverrides,loadData:loadData};

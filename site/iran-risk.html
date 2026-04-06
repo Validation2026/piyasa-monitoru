@@ -75,7 +75,35 @@
 <div class="hz-card"><div class="hz-dot" id="hDot" style="background:#00d68f"></div><div><div class="hz-txt" id="hTxt">AÇIK / GÜVENLİ</div><div style="font-size:.68rem;color:#94a3b8;margin-top:2px">Hürmüz Boğazı — Dünya petrolünün %20'si</div></div></div>
 </div>
 
-<div class="ai-box"><div style="font-size:.82rem;font-weight:700;margin-bottom:8px">🤖 Durum Analizi <span style="font-size:.6rem;background:rgba(59,130,246,.1);color:#3b82f6;padding:2px 6px;border-radius:4px;font-weight:600;margin-left:4px" id="aiBadge">AI</span></div><div class="ai-body" id="aiBox">Analiz yükleniyor...</div></div>
+<div class="ai-box"><div style="font-size:.82rem;font-weight:700;margin-bottom:8px">🤖 Durum Analizi</div><div class="ai-body" id="aiBox">📊 GENEL DURUM
+İran-İsrail savaşı 28 Şubat 2026'da İsrail'in İran nükleer tesislerine düzenlediği kapsamlı hava operasyonuyla başladı. İran aynı gün balistik füzelerle karşılık verdi. Çatışma o günden bu yana karşılıklı saldırılarla devam ediyor. Bölgedeki tüm aktörler — ABD, Hizbullah, Husiler — çatışmaya doğrudan ya da dolaylı olarak dahil olmuş durumda.
+
+⚔️ ASKERİ VE JEOPOLİTİK GELİŞMELER
+• İsrail F-35'leri İsfahan ve Natanz nükleer tesislerini birden fazla kez vurdu; İran'ın uranyum zenginleştirme kapasitesinin büyük bölümü devre dışı kaldı
+• İran hipersonik balistik füzelerle Demir Kubbe savunma sistemini en az bir kez aştı; Tel Aviv yakınlarına isabet kaydedildi
+• Hizbullah kuzey İsrail'e 200'ü aşkın roket saldırısı düzenledi; İsrail karşılığında Beyrut'un güney banliyölerini bombaladı
+• Husi güçleri Kızıldeniz'de ticari gemilere saldırılarını sürdürüyor; Bab el-Mandeb Boğazı yüksek risk altında
+• ABD 5. Filo Basra Körfezi'nde iki uçak gemisi grubuyla tam konuşlanma halinde; bölgeye ek kuvvet sevkiyatı devam ediyor
+• Trump yönetimi İran'a yönelik "henüz başlamadık bile" açıklamasıyla tırmanma sinyali verdi
+• Çin ve Hindistan arabuluculuk girişimleri başlattı ancak somut ilerleme sağlanamadı
+
+💰 EKONOMİK ETKİLER
+• Brent petrol savaş öncesindeki 85 dolardan 108 dolara fırladı — varil başına %27 artış
+• OPEC+ günlük 500 bin varil acil üretim artışı kararı aldı
+• Hürmüz Boğazı'ndan dünya petrolünün yaklaşık %20'si geçiyor; olası bir kapanma küresel enerji arzını doğrudan tehdit ediyor
+• Basra Körfezi deniz sigorta primleri savaş öncesine göre 10 katına çıktı; navlun maliyetlerinde %40 artış yaşandı
+• Süveyş Kanalı trafiği %30 düştü; gemiler Ümit Burnu rotasına yöneldi, transit süreler 10-14 gün uzadı
+• Altın güvenli liman talebiyle 4.500 doların üzerine çıktı; küresel risk iştahı belirgin şekilde zayıfladı
+• ABD İran'a tam petrol ambargosu uyguladı; günlük 500 bin varil ihracat durduruldu
+
+🔮 İZLENMESİ GEREKENLER
+• Hürmüz Boğazı'ndaki tanker trafiği ve İran donanma hareketleri
+• IAEA nükleer denetim raporları ve olası yeni yaptırım kararları
+• Kızıldeniz'deki Husi saldırılarının sıklığı ve kapsamı
+• OPEC+ acil toplantıları ve üretim politikası değişiklikleri
+• ABD-İran arasında olası doğrudan askeri temas riski
+
+⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.</div></div>
 
 <div class="sec-title">⛽ Seçilmiş Risk Göstergeleri</div>
 <div class="cm-grid" id="cmGrid"></div>
@@ -141,13 +169,6 @@ fetch('/api/iran-state').then(function(r){return r.json()}).then(function(S){
     window._iranState = {};
     loadCommodities();
 });
-
-// AI ANALYSIS
-fetch('/api/iran-ai').then(function(r){return r.json()}).then(function(d){
-    if(d.analysis)document.getElementById('aiBox').textContent=d.analysis;
-    var badge=document.getElementById('aiBadge');
-    if(badge&&d.source){var names={groq:'Groq AI',huggingface:'HuggingFace AI',gemini:'Gemini AI',fallback:'Statik'};badge.textContent=names[d.source]||'AI';}
-}).catch(function(){document.getElementById('aiBox').textContent='Analiz yüklenemiyor.'});
 
 // COMMODITIES
 var COMMS=[
@@ -343,6 +364,7 @@ document.getElementById('tlFilter').addEventListener('click',function(ev){
     renderTL(ev.target.getAttribute('data-f'));
 });
 })();
+if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').then(function(reg){reg.update()});}
 </script>
 </body>
 </html>

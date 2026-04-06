@@ -34,6 +34,21 @@
 .category-tabs{display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap}
 .cat-tab{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:.68rem;font-weight:700;cursor:pointer;color:var(--t2);transition:.2s}
 .cat-tab:hover{border-color:var(--blue)}.cat-tab.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+@media(max-width:768px){
+    .comp-grid{grid-template-columns:repeat(2,1fr);gap:4px}
+    .chart-wrap canvas{max-height:280px}
+    .heat-cell{padding:4px 2px;font-size:.5rem}
+    .heat-header{font-size:.48rem}
+    .perf-table{font-size:.65rem}
+    .perf-table th,.perf-table td{padding:5px 3px}
+    .category-tabs{gap:3px}
+    .cat-tab{padding:4px 8px;font-size:.62rem}
+}
+@media(max-width:480px){
+    .comp-grid{grid-template-columns:repeat(2,1fr)}
+    .comp-item .ci-name{font-size:.6rem}
+    .comp-item .ci-val{font-size:.7rem}
+}
 </style>
 </head>
 <body>
@@ -67,7 +82,7 @@
     <button class="pbtn" data-period="2y">2Y</button>
     <button class="pbtn" data-period="5y">5Y</button>
     <button class="pbtn" data-period="ytd">YTD</button>
-    <button class="pbtn" data-period="all">Tumu</button>
+    <button class="pbtn" data-period="all">Tümü</button>
 </div>
 
 <div class="chart-wrap">
@@ -127,7 +142,7 @@ function getSeriesForCat(cat) {
         if (s) result.push(s);
     });
     // Filter by file category
-    var catNames = {energy:'Enerji',metals:'Kiymetli Madenler & Metaller',currencies:'Doviz Kurlari',indices:'Endeksler',crypto:'Kripto Paralar',bonds:'Tahvil Faizleri'};
+    var catNames = {energy:'Enerji',metals:'Kiymetli Madenler & Metaller',currencies:'Döviz Kurlari',indices:'Endeksler',crypto:'Kripto Paralar',bonds:'Tahvil Faizleri'};
     // Simpler: just return all for popular, filter by known IDs for others
     return result;
 }
@@ -139,7 +154,7 @@ function renderGrid(cat) {
     if (cat === 'popular') {
         series = POPULAR_IDS.map(function(id) { return allData[id]; }).filter(Boolean);
     } else {
-        var catMap = {energy:'Enerji',metals:'Kiymetli Madenler & Metaller',currencies:'Doviz Kurlari',indices:'Endeksler',crypto:'Kripto Paralar',bonds:'Tahvil Faizleri'};
+        var catMap = {energy:'Enerji',metals:'Kiymetli Madenler & Metaller',currencies:'Döviz Kurlari',indices:'Endeksler',crypto:'Kripto Paralar',bonds:'Tahvil Faizleri'};
         var catName = catMap[cat];
         Object.keys(allData).forEach(function(id) {
             var s = allData[id];
@@ -217,7 +232,7 @@ function updateCharts() {
 
 function buildCorrelation(seriesList) {
     var el = document.getElementById('heatMap');
-    if (seriesList.length < 2) { el.innerHTML = '<div style="color:var(--t3);font-size:.8rem;padding:10px">En az 2 varlik secin.</div>'; return; }
+    if (seriesList.length < 2) { el.innerHTML = '<div style="color:var(--t3);font-size:.8rem;padding:10px">En az 2 varlık seçin.</div>'; return; }
 
     var n = seriesList.length;
     var cols = n + 1;
@@ -304,7 +319,7 @@ function corrColor(v) {
 function buildPerfTable(seriesList) {
     var el = document.getElementById('perfTable');
     if (!seriesList.length) { el.innerHTML = ''; return; }
-    var html = '<table class="perf-table"><thead><tr><th>Varlik</th><th>Fiyat</th><th>1G</th><th>1H</th><th>1A</th><th>YTD</th><th>1Y</th><th>52H Aralik</th></tr></thead><tbody>';
+    var html = '<table class="perf-table"><thead><tr><th>Varlık</th><th>Fiyat</th><th>1G</th><th>1H</th><th>1A</th><th>YTD</th><th>1Y</th><th>52H Aralık</th></tr></thead><tbody>';
     seriesList.forEach(function(s) {
         function cv(p) { if (p == null) return '<td class="d" style="color:var(--t3)">—</td>'; return '<td class="' + (p >= 0 ? 'u' : 'd') + '">' + (p >= 0 ? '+' : '') + p.toFixed(2) + '%</td>'; }
         html += '<tr><td>' + s.name + '</td><td style="font-family:var(--mono)">' + PM.fp(s.current) + ' ' + (s.unit || '') + '</td>' + cv(s.change_1d_pct) + cv(s.change_1w_pct) + cv(s.change_1m_pct) + cv(s.change_ytd_pct) + cv(s.change_1y_pct) + '<td style="font-family:var(--mono);font-size:.7rem;color:var(--t3)">' + (s.low_52w != null ? PM.fp(s.low_52w) + ' — ' + PM.fp(s.high_52w) : '—') + '</td></tr>';

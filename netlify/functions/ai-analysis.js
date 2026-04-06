@@ -2,107 +2,126 @@ exports.handler = async function(event) {
     const cat = event.queryStringParameters?.cat || 'genel';
     const H = {'Content-Type':'application/json','Access-Control-Allow-Origin':'*','Cache-Control':'public, max-age=3600'};
     const A = {
-'iran-risk': `📊 DURUM ANALİZİ
-İran-İsrail arasındaki çatışma Şubat 2026'dan bu yana devam ediyor. Hürmüz Boğazı ve Kızıldeniz'deki deniz trafiği aksama riski altında.
+'iran-risk': `📊 GENEL DURUM
+İran-İsrail savaşı 28 Şubat 2026'da İsrail'in İran nükleer tesislerine düzenlediği kapsamlı hava operasyonuyla başladı. İran aynı gün balistik füzelerle karşılık verdi. Çatışma o günden bu yana karşılıklı saldırılarla devam ediyor. Bölgedeki tüm aktörler — ABD, Hizbullah, Husiler — çatışmaya doğrudan ya da dolaylı olarak dahil olmuş durumda.
 
-⚔️ JEOPOLİTİK RİSKLER
-• Hürmüz Boğazı'ndan geçen tanker trafiğinde aksaklık riski artıyor
-• İsrail-İran arasında doğrudan askeri tırmanma devam ediyor
-• Hizbullah ve Husi milislerinin vekâlet savaşı genişliyor
-• ABD 5. Filo'nun Basra Körfezi'ndeki konuşlanması sürdürülüyor
+⚔️ ASKERİ VE JEOPOLİTİK GELİŞMELER
+• İsrail F-35'leri İsfahan ve Natanz nükleer tesislerini birden fazla kez vurdu; İran'ın uranyum zenginleştirme kapasitesinin büyük bölümü devre dışı kaldı
+• İran hipersonik balistik füzelerle Demir Kubbe savunma sistemini en az bir kez aştı; Tel Aviv yakınlarına isabet kaydedildi
+• Hizbullah kuzey İsrail'e 200'ü aşkın roket saldırısı düzenledi; İsrail karşılığında Beyrut'un güney banliyölerini bombaladı
+• Husi güçleri Kızıldeniz'de ticari gemilere saldırılarını sürdürüyor; Bab el-Mandeb Boğazı yüksek risk altında
+• ABD 5. Filo Basra Körfezi'nde iki uçak gemisi grubuyla tam konuşlanma halinde; bölgeye ek kuvvet sevkiyatı devam ediyor
+• Diplomatik alanda Çin ve Hindistan arabuluculuk girişimleri başlattı ancak somut ilerleme sağlanamadı
 
-💰 EKOPOLİTİK RİSKLER
-• Ham petrol fiyatlarında jeopolitik risk primi yükseldi
-• Deniz sigorta maliyetleri Basra Körfezi rotaları için 3 katına çıktı
-• Navlun ücretlerinde Süveyş→Ümit Burnu rota değişikliği maliyetleri arttı
-• Altın ve güvenli liman varlıklarına yönelim sürüyor
+💰 EKONOMİK ETKİLER
+• Brent petrol savaş öncesindeki 85 dolardan 108 dolara fırladı — varil başına %27 artış; OPEC+ günlük 500 bin varil acil üretim artışı kararı aldı
+• Hürmüz Boğazı'ndan dünya petrolünün yaklaşık %20'si geçiyor; olası bir kapanma küresel enerji arzını doğrudan tehdit ediyor
+• Basra Körfezi deniz sigorta primleri savaş öncesine göre 10 katına çıktı; navlun maliyetlerinde %40 artış yaşandı
+• Süveyş Kanalı trafiği %30 düştü; gemiler Ümit Burnu rotasına yöneldi, transit süreler 10-14 gün uzadı
+• Altın güvenli liman talebiyle 4.500 doların üzerine çıktı; küresel risk iştahı belirgin şekilde zayıfladı
 
 🔮 İZLENMESİ GEREKENLER
-• IAEA nükleer denetim raporları ve diplomatik müzakereler
-• Kızıldeniz ve Aden Körfezi'ndeki Husi saldırıları
-• OPEC+ acil üretim artışı kararları
+• Hürmüz Boğazı'ndaki tanker trafiği ve İran donanma hareketleri
+• IAEA nükleer denetim raporları ve olası yeni yaptırım kararları
+• Kızıldeniz'deki Husi saldırılarının sıklığı ve kapsamı
+• OPEC+ acil toplantıları ve üretim politikası değişiklikleri
+• ABD-İran arasında olası doğrudan askeri temas riski
 
 ⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
-'emtia-enerji': `Enerji piyasalarında İran-İsrail gerginliği kaynaklı risk primi fiyatlanmaya devam ediyor. Hürmüz Boğazı'ndaki olası aksaklıklar ham petrol arzını doğrudan tehdit ediyor. OPEC+ üretim politikaları ve ABD stratejik stok kararları dengeleyici rol üstleniyor.
 
-Doğalgaz tarafında LNG rotalarındaki jeopolitik riskler Avrupa TTF fiyatlarını destekliyor. ABD Henry Hub fiyatları ihracat kapasitesi artışıyla yeni denge arıyor. Mevsimsel talep azalması kısmen baskılayıcı etki yapıyor.
+'emtia-enerji': `Enerji piyasalarında İran-İsrail gerginliği kaynaklı jeopolitik risk primi fiyatlanmaya devam ediyor. Hürmüz Boğazı'ndaki olası bir aksaklık küresel ham petrol arzını doğrudan tehdit etmektedir. OPEC+'ın üretim politikaları ve ABD stratejik stok kararları piyasadaki dengeleyici unsurlar arasında yer alıyor.
 
-⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
-'emtia-metaller': `Kıymetli madenlerde güvenli liman talebi güçlü seyrediyor. Merkez bankalarının altın alımları rekor seviyelere ulaşırken, reel faiz oranları ve dolar endeksi fiyatlamada belirleyici olmaya devam ediyor.
-
-Endüstriyel metallerde Çin'in ekonomik toparlanma hızı ve küresel PMI verileri yön belirliyor. Bakır, yeşil enerji dönüşümü ve elektrikli araç talebiyle uzun vadeli destekleniyor.
+Doğalgaz cephesinde LNG rotalarındaki jeopolitik riskler Avrupa TTF fiyatlarını desteklemeye devam ediyor. ABD Henry Hub fiyatları artan ihracat kapasitesiyle yeni denge noktası arıyor. Mevsimsel talep azalması kısmen baskılayıcı etki yaratıyor.
 
 ⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
-'emtia-tarim': `Tarım emtialarında iklim koşulları ve arz güvenliği endişeleri ön planda. Buğday ve mısırda Karadeniz bölgesi ticaret rotaları ile Güney Amerika hasat beklentileri izleniyor.
 
-Kahve ve kakao fiyatlarında üretici ülkelerdeki arz kısıtları devam ediyor. Navlun maliyetlerindeki artış ve Kızıldeniz rota değişiklikleri tüm tarım emtialarını etkiliyor.
+'emtia-metaller': `Kıymetli madenlerde güvenli liman talebi güçlü seyrini koruyor. Merkez bankalarının altın alımları rekor seviyelere ulaşırken, reel faiz oranları ve dolar endeksi fiyatlamada temel belirleyiciler arasında öne çıkıyor.
 
-⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
-'kurlar': `Döviz piyasalarında Fed ve ECB'nin faiz politikaları temel belirleyici. USD/TRY'de TCMB'nin sıkı para politikası ve cari denge gelişmeleri izleniyor. Dolar endeksi ABD makro verileri ve risk iştahıyla yönleniyor.
-
-Gelişmekte olan ülke para birimlerinde jeopolitik riskler ve carry trade dinamikleri etkili. Yen'de BoJ politika değişikliği beklentileri volatiliteyi artırıyor.
+Endüstriyel metallerde Çin'in ekonomik toparlanma hızı ve küresel imalat PMI verileri yön belirliyor. Bakır, yeşil enerji dönüşümü ve elektrikli araç talebiyle uzun vadeli yapısal destekten faydalanıyor.
 
 ⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
-'tahviller': `ABD tahvil piyasasında Fed'in faiz patikası beklentileri getiri eğrisini şekillendiriyor. 10 yıllık getiri enflasyon beklentileri ve güvenli liman talebinin etkisinde.
 
-Getiri eğrisinin eğimi resesyon sinyalleri açısından izleniyor. Küresel merkez bankalarının politika farklılıkları tahvil piyasalarında volatiliteyi artırıyor.
+'emtia-tarim': `Tarım emtialarında iklim koşulları ve küresel arz güvenliği endişeleri gündemin ön sıralarında yer alıyor. Buğday ve mısır piyasalarında Karadeniz bölgesi ticaret rotaları ile Güney Amerika hasat beklentileri yakından takip ediliyor.
 
-⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
-'endeksler': `Küresel hisse senedi piyasalarında kazanç sezonu beklentileri ve makro veriler yön belirliyor. S&P 500 yapay zeka yatırımlarının büyüme etkisini fiyatlıyor.
-
-BIST 100'de yabancı akışları ve TL'deki değerlenme belirleyici. Asya'da Çin ekonomi politikaları ve yen hareketleri endeksleri etkiliyor.
+Kahve ve kakao fiyatlarında üretici ülkelerdeki arz kısıtları belirleyici olmaya devam ediyor. Navlun maliyetlerindeki artış ve Kızıldeniz rota değişiklikleri tüm tarım emtialarının maliyet yapısını etkiliyor.
 
 ⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
-'kripto': `Kripto para piyasasında kurumsal adaptasyon ve ETF akışları gündemde. Bitcoin'in halving sonrası arz dinamikleri ve makro korelasyonlar fiyatlamayı etkiliyor.
 
-Ethereum ekosisteminde Layer 2 çözümleri ilgi çekiyor. Küresel regülasyon gelişmeleri tüm piyasayı yakından ilgilendiriyor.
+'kurlar': `Döviz piyasalarında Fed ve ECB'nin faiz politikaları temel fiyatlama dinamiğini oluşturuyor. USD/TRY paritesinde TCMB'nin sıkı para politikası duruşu ve cari dengedeki iyileşme önemli takip kalemleri arasında bulunuyor.
 
-⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
-'sanayi': `Sanayi hammaddelerinde küresel imalat PMI verileri ve Çin'in talebi belirleyici. Bakır ve alüminyum elektrikli araç ve yenilenebilir enerji yatırımlarıyla yapısal talep artışı yaşıyor.
-
-Çelik sektöründe Çin'in aşırı kapasite sorunu ve ihracat baskısı küresel fiyatları etkilemeye devam ediyor. Nadir toprak elementlerinde arz güvenliği endişeleri ve Çin'in ihracat kısıtlamaları fiyatları destekliyor. Lityum ve uranyum enerji dönüşümünün stratejik hammaddeleri olarak öne çıkıyor.
-
-Kuru yük navlun endeksi (BDI) küresel ticaret hacminin öncü göstergesi olarak izleniyor. Kızıldeniz rota değişiklikleri navlun maliyetlerini artırıyor.
+Gelişmekte olan ülke para birimlerinde jeopolitik riskler ve carry trade dinamikleri belirleyici olmaya devam ediyor. Japon yeninde BoJ'un politika normalleşme adımları volatiliteyi artırıyor. Dolar endeksi ABD makroekonomik verileri ve küresel risk iştahıyla yönleniyor.
 
 ⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
-'genel': `Küresel piyasalarda İran-İsrail gerginliği başta olmak üzere jeopolitik riskler belirleyici. Enerji fiyatlarındaki risk primi emtia genelinde yayılım gösteriyor.
 
-Merkez bankaları enflasyon-büyüme dengesini gözetirken faiz beklentileri döviz ve tahvil piyasalarını şekillendiriyor. Risk iştahı jeopolitik gelişmelere duyarlı.
+'tahviller': `ABD tahvil piyasasında Fed'in faiz patikası beklentileri getiri eğrisini şekillendiren temel unsur olmaya devam ediyor. 10 yıllık getiri, enflasyon beklentileri ve güvenli liman talebinin kesişim noktasında seyrediyor.
 
-⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
-'navlun': `Küresel deniz taşımacılığında Kızıldeniz/Hürmüz rotalarındaki güvenlik riskleri navlun maliyetlerini artırmaya devam ediyor. Konteyner hatları Ümit Burnu rotasına yönelirken transit süreleri 10-14 gün uzadı.
-
-Kuru yük navlun endeksi (BDI) demir cevheri, kömür ve tahıl taşımacılığının barometresi olarak küresel ticaret hacmini yansıtıyor. Çin'in ithalat talebi BDI'ın ana belirleyicisi olmaya devam ediyor.
-
-Konteyner piyasasında Şangay-Avrupa rotası fiyatları jeopolitik risklerin etkisiyle normalin üzerinde seyrediyor. Sigorta primleri Basra Körfezi ve Kızıldeniz geçişleri için katlanmış durumda.
+Getiri eğrisinin eğimi olası resesyon sinyalleri açısından yakından izleniyor. Küresel merkez bankalarının farklılaşan para politikaları tahvil piyasalarındaki volatiliteyi artırıyor. Japonya Merkez Bankası'nın normalleşme adımları JGB getirilerinde yukarı yönlü baskı oluşturuyor.
 
 ⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
-'merkez-bankalari': `Küresel merkez bankaları enflasyon-büyüme dengesini gözetirken farklı politika yolları izliyor. Fed faiz indirim döngüsüne temkinli devam ederken, ECB daha agresif gevşeme sinyalleri veriyor.
 
-TCMB sıkı para politikasını sürdürüyor. Politika faizi %42.5 seviyesinde tutulurken, enflasyonda düşüş trendi izleniyor. Reel faiz pozitif bölgede kalması yabancı yatırımcı ilgisini artırıyor.
+'endeksler': `Küresel hisse senedi piyasalarında şirket kazanç sezonu beklentileri ve makroekonomik veriler yön belirlemeye devam ediyor. S&P 500 endeksinde yapay zekâ yatırımlarının büyümeye katkısı fiyatlamaların merkezinde yer alıyor.
 
-BoJ negatif faiz döneminden çıkarak normalleşme sürecine girdi ancak temkinli adımlar atıyor. Yen zayıflığı müdahale riskini canlı tutuyor.
-
-⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
-'kuresel-risk': `Küresel risk haritasında İran-İsrail savaşı ve Rusya-Ukrayna çatışması iki ana jeopolitik odak noktası olmaya devam ediyor. VIX endeksi belirsizlik dönemlerinde yükseliyor.
-
-Enerji güvenliği, gıda arzı ve tedarik zinciri kesintileri küresel risk algısını şekillendiren temel faktörler. Gelişmekte olan ülkelerde sermaye çıkışları ve kur baskısı izleniyor.
-
-Küresel büyüme beklentileri IMF ve Dünya Bankası tahminleriyle takip ediliyor. ABD-Çin ticaret gerilimleri ve teknoloji savaşları ek risk unsurları oluşturuyor.
+BIST 100 endeksinde yabancı sermaye akışları ve Türk lirasındaki reel değerlenme belirleyici faktörler arasında öne çıkıyor. Asya piyasalarında Çin'in ekonomi politikaları ve yen hareketleri bölgesel endeksleri etkiliyor.
 
 ⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
+
+'kripto': `Kripto para piyasasında kurumsal benimseme süreci ve spot ETF akışları gündemin merkezinde yer alıyor. Bitcoin'in halving sonrası arz dinamikleri ve makroekonomik korelasyonlar fiyat hareketlerini belirliyor.
+
+Ethereum ekosisteminde katman 2 ölçeklendirme çözümleri yatırımcı ilgisini çekmeye devam ediyor. Küresel düzenleme çerçevelerindeki gelişmeler tüm kripto para piyasasını doğrudan etkiliyor.
+
+⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
+
+'sanayi': `Sanayi hammaddelerinde küresel imalat PMI verileri ve Çin'in talebi temel belirleyiciler arasında yer alıyor. Bakır ve alüminyum, elektrikli araç üretimi ve yenilenebilir enerji yatırımlarıyla yapısal talep artışı yaşıyor.
+
+Çelik sektöründe Çin'in aşırı kapasite sorunu ve ihracat baskısı küresel fiyatları etkilemeye devam ediyor. Nadir toprak elementlerinde arz güvenliği endişeleri ve Çin'in ihracat kısıtlamaları fiyatları destekliyor. Lityum ve uranyum, enerji dönüşümünün stratejik hammaddeleri olarak önemini artırıyor.
+
+Kuru yük navlun endeksi küresel ticaret hacminin öncü göstergesi olarak izleniyor. Kızıldeniz rota değişiklikleri navlun maliyetlerini yukarı çekiyor.
+
+⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
+
+'genel': `Küresel piyasalarda İran-İsrail gerginliği başta olmak üzere jeopolitik riskler fiyatlamaların temel belirleyicisi olmaya devam ediyor. Enerji fiyatlarındaki risk primi emtia genelinde yayılım etkisi gösteriyor.
+
+Merkez bankaları enflasyon ile büyüme arasındaki hassas dengeyi gözetirken, faiz beklentileri döviz ve tahvil piyasalarını doğrudan şekillendiriyor. Risk iştahı jeopolitik gelişmelere karşı yüksek duyarlılık sergiliyor.
+
+⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
+
+'navlun': `Küresel deniz taşımacılığında Kızıldeniz ve Hürmüz Boğazı rotalarındaki güvenlik riskleri navlun maliyetlerini artırmaya devam ediyor. Konteyner hatları Ümit Burnu rotasına yönelirken transit süreleri 10-14 gün uzadı.
+
+Kuru yük navlun endeksi demir cevheri, kömür ve tahıl taşımacılığının barometresi olarak küresel ticaret hacmini yansıtıyor. Çin'in ithalat talebi endeksin başlıca belirleyicisi olmaya devam ediyor.
+
+Konteyner piyasasında Şangay-Avrupa rotası fiyatları jeopolitik risklerin etkisiyle normalin üzerinde seyrediyor. Sigorta primleri Basra Körfezi ve Kızıldeniz geçişlerinde belirgin şekilde yükseldi.
+
+⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
+
+'merkez-bankalari': `Küresel merkez bankaları enflasyon ve büyüme arasındaki dengeyi gözetirken birbirinden farklılaşan politika yolları izliyor. Fed temkinli bir faiz indirim döngüsü sürdürürken, ECB daha kararlı gevşeme sinyalleri veriyor.
+
+TCMB sıkı para politikasını korumaya devam ediyor. Politika faizi yüksek seviyede tutulurken enflasyonda düşüş eğilimi izleniyor. Reel faizin pozitif bölgede kalması yabancı yatırımcı ilgisini canlı tutuyor.
+
+Japonya Merkez Bankası negatif faiz döneminden çıkarak normalleşme sürecini başlattı ancak adımları son derece temkinli atıyor. Yendeki zayıflık piyasa müdahalesi riskini gündemde tutuyor.
+
+⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
+
+'kuresel-risk': `Küresel risk haritasında İran-İsrail savaşı ve Rusya-Ukrayna çatışması iki temel jeopolitik odak noktası olmayı sürdürüyor. VIX endeksi belirsizlik dönemlerinde belirgin yükselişler gösteriyor.
+
+Enerji güvenliği, gıda arzı ve tedarik zinciri kesintileri küresel risk algısını şekillendiren başlıca faktörler arasında yer alıyor. Gelişmekte olan ülkelerde sermaye çıkışları ve kur baskısı yakından takip ediliyor.
+
+Küresel büyüme tahminleri IMF ve Dünya Bankası projeksiyonları doğrultusunda güncelleniyor. ABD-Çin arasındaki ticari gerilimler ve teknoloji rekabeti ilave risk unsurları oluşturuyor.
+
+⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
+
 'ulke-risk': `Ülke risk profillerinde kredi derecelendirme kuruluşlarının not değişiklikleri ve CDS spreadleri öncü göstergeler olarak izleniyor.
 
-Türkiye'de TCMB'nin sıkı para politikası ve enflasyonla mücadele programı kredi notu görünümünü iyileştiriyor. Cari açık daralması ve rezerv artışı olumlu sinyaller veriyor.
+Türkiye'de TCMB'nin sıkı para politikası ve enflasyonla mücadele programı kredi notu görünümünü olumlu yönde etkiliyor. Cari açığın daralması ve döviz rezervlerindeki artış güven artırıcı sinyaller veriyor.
 
-İran-İsrail savaşı bölge ülkelerinin risk primlerini artırırken, enerji ihracatçıları petrol geliri artışından faydalanıyor. Rusya uluslararası finansal izolasyonunu sürdürüyor.
+İran-İsrail savaşı bölge ülkelerinin risk primlerini yükseltirken, enerji ihracatçıları artan petrol gelirlerinden faydalanıyor. Rusya uluslararası finansal izolasyonunu sürdürmeye devam ediyor.
 
 ⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
-'ekonomik-takvim': `Önümüzdeki dönemde Fed, ECB ve TCMB faiz kararları piyasaların ana odak noktası. ABD enflasyon verileri (TÜFE) ve istihdam rakamları Fed'in faiz patikasını belirleyecek.
 
-Türkiye'de TÜİK enflasyon verileri ve TCMB kararları TL varlıklar için kritik önemde. Dezenflasyon sürecinin hızı yatırımcı güvenini doğrudan etkiliyor.
+'ekonomik-takvim': `Önümüzdeki dönemde Fed, ECB ve TCMB faiz kararları piyasaların başlıca odak noktası olmaya devam edecek. ABD enflasyon verileri ve istihdam rakamları Fed'in faiz patikasını doğrudan belirleyecek.
 
-Euro Bölgesi GSYİH ve PMI verileri ECB'nin faiz indirim hızını şekillendirecek. Çin büyüme verileri emtia ve gelişmekte olan piyasalar için yön verici.
+Türkiye'de TÜİK enflasyon verileri ve TCMB politika kararları TL varlıklar için kritik önem taşıyor. Dezenflasyon sürecinin hızı yatırımcı güvenini doğrudan etkiliyor.
+
+Euro Bölgesi büyüme ve PMI verileri ECB'nin faiz indirim hızını şekillendirecek. Çin büyüme verileri emtia ve gelişmekte olan ülke piyasaları için yön verici nitelik taşıyor.
 
 ⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`
     };

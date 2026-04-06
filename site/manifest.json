@@ -1,8 +1,9 @@
 {
-  "name": "Risk Monitörü",
-  "short_name": "RiskM",
-  "description": "Canlı piyasa verileri, emtia, döviz, kripto ve İran risk takibi",
+  "name": "Piyasa Monitörü",
+  "short_name": "PiyasaM",
+  "description": "Canlı piyasa verileri, emtia, döviz, kripto, tahvil ve İran risk takibi",
   "start_url": "/index.html",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#f0f4f8",
   "theme_color": "#3b82f6",
