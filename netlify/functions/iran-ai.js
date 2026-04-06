@@ -19,22 +19,22 @@ function buildPrompt() {
     const tr = new Intl.DateTimeFormat('tr-TR', { day:'numeric', month:'long', year:'numeric', timeZone:'Europe/Istanbul' }).format(now);
     const dayCount = Math.floor((now - new Date('2026-02-28T00:00:00+03:00')) / 86400000);
 
-    return `Bugun ${tr}, Iran-Israil savasinin ${dayCount}. gunu.
+    return `Bugün ${tr}, İran-İsrail savaşının ${dayCount}. günü.
 
-Turkce yaz. Kisa, net, somut. Her madde 1 cumle. Bos laf YAZMA.
+Türkçe yaz. Kısa, net, somut. Her madde 1 cümle. Boş laf YAZMA. Türkçe karakterleri (ş, ç, ğ, ü, ö, ı, İ) doğru kullan.
 
 📊 DURUM
-• Savasin bugunku genel durumunu 2-3 maddede ozetle. Somut ol.
+• Savaşın bugünkü genel durumunu 2-3 maddede özetle. Somut ol — hangi cephede ne oluyor, hangi diplomatik adım atıldı.
 
-⚔️ JEOPOLITIK
-• 3-4 madde. Aktor ismi, lokasyon, somut gelisme.
+⚔️ JEOPOLİTİK
+• 3-4 madde. Aktör ismi, lokasyon, somut gelişme. Örnek: "ABD B-2 bombardıman uçaklarını Diego Garcia'ya konuşlandırdı" gibi.
 
-💰 EKONOMIK
-• 3-4 madde. Fiyat, yuzde, rakam ver.
+💰 EKONOMİK
+• 3-4 madde. Fiyat, yüzde, rakam ver. Örnek: "Brent savaş öncesi 85$'tan 108$'a çıktı, %27 artış" gibi.
 
-⚠️ Bilgilendirme amaclidir, yatirim tavsiyesi degildir.
+⚠️ Bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.
 
-ONEMLI: Direkt 📊 DURUM ile basla.`;
+ÖNEMLİ: Direkt 📊 DURUM ile başla. Giriş cümlesi koyma.`;
 }
 
 // Method 1: Groq (free tier - needs GROQ_API_KEY env var)
@@ -135,23 +135,23 @@ async function tryGemini() {
 }
 
 const FALLBACK = `📊 DURUM
-• Iran-Israil savasi 28 Subat'tan bu yana aktif olarak devam ediyor, karsilikli fuze ve hava saldirilari yogunlasmis durumda
-• Hurmuz Bogazi'nda Iran donanmasi tatbikat surduruyor, tanker gecislerinde aksamalar yasaniyor
-• ABD ve muttefikleri Basra Korfezi'nde iki ucak gemisi grubuyla tam konuslanma halinde
+• İran-İsrail savaşı 28 Şubat'tan bu yana aktif olarak devam ediyor; karşılıklı füze ve hava saldırıları yoğunlaşmış durumda
+• Hürmüz Boğazı'nda İran donanması tatbikat sürdürüyor, tanker geçişlerinde aksamalar yaşanıyor
+• ABD ve müttefikleri Basra Körfezi'nde iki uçak gemisi grubuyla tam konuşlanma halinde
 
-⚔️ JEOPOLITIK
-• Israil F-35'leri Isfahan ve Natanz nukleer tesislerini defalarca vurdu, Iran zenginlestirme kapasitesinin buyuk kismini kaybetti
-• Iran hipersonik balistik fuzelerle Demir Kubbe savunmasini en az bir kez deldi, Tel Aviv yakinlarina isabet kaydedildi
-• Hizbullah kuzey Israil'e 200+ roket atti, Israil karsiliginda Beyrut guney banliyolerini bombaladi
-• Husi gucleri Kizildeniz'de ticari gemileri hedef almaya devam ediyor, Bab el-Mandeb gecisi riskli
+⚔️ JEOPOLİTİK
+• İsrail F-35'leri İsfahan ve Natanz nükleer tesislerini defalarca vurdu; İran'ın zenginleştirme kapasitesinin büyük kısmı devre dışı kaldı
+• İran hipersonik balistik füzelerle Demir Kubbe savunmasını en az bir kez deldi, Tel Aviv yakınlarına isabet kaydedildi
+• Hizbullah kuzey İsrail'e 200'den fazla roket attı; İsrail karşılığında Beyrut'un güney banliyölerini bombaladı
+• Husi güçleri Kızıldeniz'de ticari gemileri hedef almaya devam ediyor, Bab el-Mandeb geçişi yüksek risk altında
 
-💰 EKONOMIK
-• Brent petrol savas oncesi 85$'tan 108$'a firladi, varil basina %27 artis — OPEC+ 500K varil/gun acil uretim artisi karari aldi
-• Basra Korfezi deniz sigorta primleri savas oncesine gore 10 katina cikti, navlun maliyetleri %40 artti
-• Suveys Kanali trafigi %30 dustu, gemiler Umit Burnu rotasina yoneldi — transit sureler 10-14 gun uzadi
-• Altin guvenli liman talebiyle 4.500$ uzerine cikti, polyester ve petrol bazli tum hammaddelerde maliyet artisi suruyor
+💰 EKONOMİK
+• Brent petrol savaş öncesi 85 dolardan 108 dolara fırladı; varil başına %27 artış — OPEC+ günlük 500 bin varil acil üretim artışı kararı aldı
+• Basra Körfezi deniz sigorta primleri savaş öncesine göre 10 katına çıktı, navlun maliyetleri %40 arttı
+• Süveyş Kanalı trafiği %30 düştü; gemiler Ümit Burnu rotasına yöneldi, transit süreler 10-14 gün uzadı
+• Altın güvenli liman talebiyle 4.500 doların üzerine çıktı; petrol bazlı tüm hammaddelerde maliyet artışı sürüyor
 
-⚠️ Bilgilendirme amaclidir, yatirim tavsiyesi degildir.`;
+⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`;
 
 exports.handler = async function(event) {
     const H = {
