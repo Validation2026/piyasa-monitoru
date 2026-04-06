@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Sanayi & Hammadde",
-    "updated_at": "2026-04-06T12:13:50Z",
+    "updated_at": "2026-04-06T12:35:42Z",
     "symbol_count": 9,
     "errors": [
       "NI=F",
@@ -17,13 +17,13 @@
       "id": "HG=F",
       "name": "HG (Bakır)",
       "unit": "USD/lb",
-      "current": 5.676,
-      "change_1d_pct": 2.03,
-      "change_1w_pct": 3.82,
-      "change_1m_pct": -3.06,
-      "change_3m_pct": 3.38,
-      "change_ytd_pct": 0.64,
-      "change_1y_pct": 36.15,
+      "current": 5.648,
+      "change_1d_pct": 1.53,
+      "change_1w_pct": 3.31,
+      "change_1m_pct": -3.54,
+      "change_3m_pct": 2.87,
+      "change_ytd_pct": 0.14,
+      "change_1y_pct": 35.48,
       "high_52w": 6.1755,
       "low_52w": 4.1275,
       "data": [
@@ -1029,7 +1029,7 @@
         },
         {
           "date": "2026-04-06",
-          "value": 5.676
+          "value": 5.648
         }
       ]
     },
@@ -1037,13 +1037,13 @@
       "id": "ALI=F",
       "name": "ALI (Alüminyum)",
       "unit": "USD/ton",
-      "current": 3409.75,
-      "change_1d_pct": -0.04,
-      "change_1w_pct": 6.97,
-      "change_1m_pct": 3.96,
-      "change_3m_pct": 20.25,
-      "change_ytd_pct": 16.06,
-      "change_1y_pct": 55.04,
+      "current": 3419.0,
+      "change_1d_pct": 0.23,
+      "change_1w_pct": 7.26,
+      "change_1m_pct": 4.25,
+      "change_3m_pct": 20.58,
+      "change_ytd_pct": 16.37,
+      "change_1y_pct": 55.46,
       "high_52w": 3464.0,
       "low_52w": 2166.25,
       "data": [
@@ -2045,7 +2045,7 @@
         },
         {
           "date": "2026-04-06",
-          "value": 3409.75
+          "value": 3419.0
         }
       ]
     },
@@ -2053,13 +2053,13 @@
       "id": "ZN=F",
       "name": "ZN (Çinko)",
       "unit": "USD/ton",
-      "current": 110.5938,
-      "change_1d_pct": -0.38,
-      "change_1w_pct": 0.4,
-      "change_1m_pct": -2.05,
-      "change_3m_pct": -1.89,
-      "change_ytd_pct": -1.43,
-      "change_1y_pct": -1.31,
+      "current": 110.6406,
+      "change_1d_pct": -0.34,
+      "change_1w_pct": 0.44,
+      "change_1m_pct": -2.01,
+      "change_3m_pct": -1.84,
+      "change_ytd_pct": -1.39,
+      "change_1y_pct": -1.27,
       "high_52w": 113.8594,
       "low_52w": 109.5,
       "data": [
@@ -3065,7 +3065,7 @@
         },
         {
           "date": "2026-04-06",
-          "value": 110.5938
+          "value": 110.6406
         }
       ]
     },
