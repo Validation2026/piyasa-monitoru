@@ -31,7 +31,7 @@ from config import ALL_YF_GROUPS, DATA_DIR
 
 YAHOO_CHART_URL = "https://query2.finance.yahoo.com/v8/finance/chart/{symbol}"
 
-def fetch_yahoo_direct(symbol: str, range_str: str = "1y", interval: str = "1d") -> list | None:
+def fetch_yahoo_direct(symbol: str, range_str: str = "5y", interval: str = "1d") -> list | None:
     """Yahoo Finance chart API'sinden veri çeker. query2 kullanır."""
 
     headers = {
@@ -85,7 +85,7 @@ def fetch_yf_download(symbol: str) -> list | None:
         return None
 
     try:
-        df = yf.download(symbol, period="1y", interval="1d", progress=False)
+        df = yf.download(symbol, period="5y", interval="1d", progress=False)
         if df.empty:
             return None
 
