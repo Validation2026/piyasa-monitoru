@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Sanayi & Hammadde",
-    "updated_at": "2026-04-06T06:26:32Z",
+    "updated_at": "2026-04-06T07:54:16Z",
     "symbol_count": 9,
     "errors": [
       "NI=F",
@@ -17,13 +17,13 @@
       "id": "HG=F",
       "name": "HG (Bakır)",
       "unit": "USD/lb",
-      "current": 5.625,
-      "change_1d_pct": 1.11,
-      "change_1w_pct": 2.89,
-      "change_1m_pct": -3.93,
-      "change_3m_pct": 2.45,
-      "change_ytd_pct": -0.27,
-      "change_1y_pct": 34.92,
+      "current": 5.5935,
+      "change_1d_pct": 0.55,
+      "change_1w_pct": 2.31,
+      "change_1m_pct": -4.47,
+      "change_3m_pct": 1.88,
+      "change_ytd_pct": -0.82,
+      "change_1y_pct": 34.17,
       "high_52w": 6.1755,
       "low_52w": 4.1275,
       "data": [
@@ -1029,7 +1029,7 @@
         },
         {
           "date": "2026-04-06",
-          "value": 5.625
+          "value": 5.5935
         }
       ]
     },
@@ -2049,13 +2049,13 @@
       "id": "ZN=F",
       "name": "ZN (Çinko)",
       "unit": "USD/ton",
-      "current": 110.6875,
-      "change_1d_pct": -0.3,
-      "change_1w_pct": 0.48,
-      "change_1m_pct": -1.97,
-      "change_3m_pct": -1.8,
-      "change_ytd_pct": -1.35,
-      "change_1y_pct": -1.23,
+      "current": 110.7656,
+      "change_1d_pct": -0.23,
+      "change_1w_pct": 0.55,
+      "change_1m_pct": -1.9,
+      "change_3m_pct": -1.73,
+      "change_ytd_pct": -1.28,
+      "change_1y_pct": -1.16,
       "high_52w": 113.8594,
       "low_52w": 109.5,
       "data": [
@@ -3061,7 +3061,7 @@
         },
         {
           "date": "2026-04-06",
-          "value": 110.6875
+          "value": 110.7656
         }
       ]
     },
