@@ -48,6 +48,7 @@ exports.handler = async function(event) {
                 manualCommodities: body.data.manualCommodities || {},
                 customMetrics: body.data.customMetrics || [],
                 timeline: body.data.timeline || [],
+                countryRisk: body.data.countryRisk || null,
                 updatedAt: new Date().toISOString()
             };
 
