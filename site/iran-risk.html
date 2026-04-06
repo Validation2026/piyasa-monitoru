@@ -30,6 +30,8 @@
 .cm-n{font-size:.62rem;color:#94a3b8;font-weight:700;text-transform:uppercase}.cm-v{font-size:.9rem;font-family:'JetBrains Mono',monospace;font-weight:700;margin:2px 0}
 .cm-c{font-size:.67rem;font-family:'JetBrains Mono',monospace;font-weight:700}
 .cm-c.u{color:#00d68f}.cm-c.d{color:#ff4757}
+.cm-war{font-size:.58rem;font-family:'JetBrains Mono',monospace;font-weight:700;margin-top:3px;padding:2px 4px;border-radius:3px;background:rgba(255,71,87,.08)}
+.cm-war.u{color:#ff4757}.cm-war.d{color:#00d68f}
 .map-box{background:#fff;border:1px solid #dde4ed;border-radius:12px;overflow:hidden;margin-bottom:16px}
 .map-box h3{padding:12px 16px 6px;font-size:.88rem;font-weight:700}
 .map-leg{padding:2px 16px 8px;display:flex;gap:12px;flex-wrap:wrap;font-size:.62rem;color:#94a3b8}
@@ -166,6 +168,7 @@ function fj(f){return fetch(D+f+'?t='+Date.now()).then(function(r){return r.json
 
 function loadCommodities(){
 var S=window._iranState||{};
+var WAR_DATE='2026-02-28';
 Promise.all([fj('commodities_energy.json'),fj('commodities_metals.json'),fj('commodities_agriculture.json')]).then(function(r){
     var datasets=r;
     var g=document.getElementById('cmGrid');
@@ -178,7 +181,22 @@ Promise.all([fj('commodities_energy.json'),fj('commodities_metals.json'),fj('com
         if(mc[c.id]){if(mc[c.id].value)val=mc[c.id].value;if(mc[c.id].change!=null)chg=mc[c.id].change}
         var cls=chg!=null?(chg>=0?'u':'d'):'';
         var sign=chg!=null?(chg>=0?'+':''):'';
-        html+='<div class="cm" title="'+c.w+'"><div class="cm-n">'+c.n+'</div><div class="cm-v">'+fp(val)+'</div><div class="cm-c '+cls+'">'+sign+(chg!=null?chg.toFixed(2)+'%':'—')+'</div></div>';
+        // Savaş öncesi değişim hesapla
+        var warPct=null;
+        if(s&&s.data&&s.data.length){
+            var preVal=null;
+            for(var j=s.data.length-1;j>=0;j--){
+                if(s.data[j].date<=WAR_DATE){preVal=s.data[j].value;break}
+            }
+            if(preVal&&preVal>0&&val)warPct=((val-preVal)/preVal)*100;
+        }
+        var warHtml='';
+        if(warPct!=null){
+            var wCls=warPct>=0?'u':'d';
+            var wSign=warPct>=0?'+':'';
+            warHtml='<div class="cm-war '+wCls+'">Savaş öncesi: '+wSign+warPct.toFixed(1)+'%</div>';
+        }
+        html+='<div class="cm" title="'+c.w+'"><div class="cm-n">'+c.n+'</div><div class="cm-v">'+fp(val)+'</div><div class="cm-c '+cls+'">'+sign+(chg!=null?chg.toFixed(2)+'%':'—')+'</div>'+warHtml+'</div>';
     });
     (S.customMetrics||[]).forEach(function(m){
         var cls=m.change>=0?'u':'d';
