@@ -16,7 +16,7 @@ var links = [
     ['endeksler','📈','Endeksler'],
     ['kripto','₿','Kripto'],
     ['iran-risk','🔴','İran Risk'],
-    ['tedarik-zinciri','🌍','Tedarik Zinciri'],
+    ['tedarik-zinciri','🚢','Tedarik Zinciri'],
     ['kuresel-risk','🌍','Küresel Risk'],
     ['ekonomik-takvim','📅','Takvim'],
     ['merkez-bankalari','🏛️','Merkez Bank.'],
