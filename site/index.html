@@ -194,7 +194,7 @@ var ib=document.getElementById('iranBannerDay');if(ib)ib.textContent=warDays+'. 
 // AI
 fetch('/api/ai-analysis?cat=genel').then(function(r){return r.json()}).then(function(d){var el=document.getElementById('indexAiAnalysis');if(el&&d.analysis)el.textContent=d.analysis}).catch(function(){});
 })();
-if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js');
+if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').then(function(reg){reg.update()});}
 </script>
 </body>
 </html>

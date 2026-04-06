@@ -364,6 +364,7 @@ document.getElementById('tlFilter').addEventListener('click',function(ev){
     renderTL(ev.target.getAttribute('data-f'));
 });
 })();
+if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').then(function(reg){reg.update()});}
 </script>
 </body>
 </html>
