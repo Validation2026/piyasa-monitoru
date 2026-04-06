@@ -27,7 +27,7 @@
         <div class="sub"></div>
         <div class="update-info" id="updateInfo"></div>
     </div>
-    <div class="ai-box"><div class="ai-header"><span>🤖 AI Piyasa Analizi</span><span class="ai-badge">Gemini</span></div><div class="ai-body" id="aiAnalysis"><span class="ai-loading">Analiz yükleniyor...</span></div></div>
+    <div class="ai-box"><div class="ai-header"><span>🤖 AI Piyasa Analizi</span><span class="ai-badge">AI</span></div><div class="ai-body" id="aiAnalysis"><span class="ai-loading">Analiz yükleniyor...</span></div></div>
     <div class="summary-row" id="summaryCards"></div>
     <div class="periods" id="periodSelector">
         <button class="pbtn" data-period="1m">1A</button>
@@ -53,7 +53,7 @@
 <script>
 (function(){
     var period='1y',allSeries=[],charts=[];
-    PM.fj('commodities_metals.json').then(function(data){
+    PM.loadData('commodities_metals.json','emtia-metaller').then(function(data){
         if(!data||!data.series||!data.series.length){document.getElementById('summaryCards').innerHTML='<div class="scard"><div class="scard-name">Veri bulunamadı.</div></div>';return}
         allSeries=data.series;
         var ui=document.getElementById('updateInfo');

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Varlik Karsilastirma — Risk Monitoru</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<style>
+.comp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:6px;margin-bottom:16px}
+.comp-item{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:8px 10px;cursor:pointer;transition:.2s;text-align:center}
+.comp-item:hover{border-color:var(--blue)}
+.comp-item.on{border-color:var(--blue);background:rgba(59,130,246,.06);box-shadow:0 0 0 2px rgba(59,130,246,.15)}
+.comp-item .ci-name{font-size:.7rem;font-weight:700;color:var(--t1);margin-bottom:2px}
+.comp-item .ci-val{font-size:.8rem;font-family:var(--mono);font-weight:700;color:var(--t1)}
+.comp-item .ci-chg{font-size:.65rem;font-family:var(--mono);font-weight:700}
+.comp-item .ci-chg.u{color:var(--green)}.comp-item .ci-chg.d{color:var(--red)}
+.chart-wrap{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px}
+.chart-wrap h3{font-size:.88rem;font-weight:700;margin-bottom:10px}
+.chart-wrap canvas{max-height:400px}
+.heat-grid{display:grid;gap:2px;margin-bottom:16px}
+.heat-cell{padding:6px 4px;text-align:center;font-size:.6rem;font-family:var(--mono);font-weight:700;border-radius:4px;line-height:1.2}
+.heat-header{font-size:.58rem;font-weight:800;color:var(--t2);padding:4px;text-align:center}
+.perf-table{width:100%;border-collapse:collapse;font-size:.75rem}
+.perf-table th{background:var(--card);padding:8px 6px;text-align:right;font-weight:700;color:var(--t2);font-size:.65rem;text-transform:uppercase;border-bottom:2px solid var(--border)}
+.perf-table th:first-child{text-align:left}
+.perf-table td{padding:7px 6px;border-bottom:1px solid var(--border);text-align:right;font-family:var(--mono)}
+.perf-table td:first-child{text-align:left;font-weight:600;font-family:var(--font)}
+.perf-table td.u{color:var(--green)}.perf-table td.d{color:var(--red)}
+.sec-title{font-size:.88rem;font-weight:700;margin:18px 0 10px;color:var(--t1)}
+.category-tabs{display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap}
+.cat-tab{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:.68rem;font-weight:700;cursor:pointer;color:var(--t2);transition:.2s}
+.cat-tab:hover{border-color:var(--blue)}.cat-tab.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+</style>
+</head>
+<body>
+<script src="assets/js/sidebar.js"></script>
+<div class="page">
+<div style="height:50px"></div>
+<div class="page-head">
+    <h1>📊 Varlik Karsilastirma & Korelasyon</h1>
+    <div class="sub">Farkli varlik siniflarini karsilastirin, korelasyonlari analiz edin</div>
+</div>
+
+<div class="sec-title">Kategori Sec</div>
+<div class="category-tabs" id="catTabs">
+    <button class="cat-tab on" data-cat="popular">⭐ Populer</button>
+    <button class="cat-tab" data-cat="energy">⛽ Enerji</button>
+    <button class="cat-tab" data-cat="metals">🥇 Madenler</button>
+    <button class="cat-tab" data-cat="currencies">💱 Doviz</button>
+    <button class="cat-tab" data-cat="indices">📈 Endeksler</button>
+    <button class="cat-tab" data-cat="crypto">₿ Kripto</button>
+    <button class="cat-tab" data-cat="bonds">📜 Tahvil</button>
+</div>
+
+<div class="sec-title">Karsilastirmak istediginiz varliklari secin (en fazla 6)</div>
+<div class="comp-grid" id="compGrid"></div>
+
+<div class="periods" id="periodSelector">
+    <button class="pbtn" data-period="1m">1A</button>
+    <button class="pbtn" data-period="3m">3A</button>
+    <button class="pbtn" data-period="6m">6A</button>
+    <button class="pbtn on" data-period="1y">1Y</button>
+    <button class="pbtn" data-period="2y">2Y</button>
+    <button class="pbtn" data-period="5y">5Y</button>
+    <button class="pbtn" data-period="ytd">YTD</button>
+    <button class="pbtn" data-period="all">Tumu</button>
+</div>
+
+<div class="chart-wrap">
+    <h3>📈 Normalize Performans (%)</h3>
+    <canvas id="compChart"></canvas>
+</div>
+
+<div class="sec-title">🔥 Korelasyon Matrisi</div>
+<div id="heatMap" style="overflow-x:auto;margin-bottom:16px"></div>
+
+<div class="sec-title">📋 Performans Tablosu</div>
+<div class="dtable" id="perfTable"></div>
+
+<div class="footer">Risk Monitoru © 2026</div>
+</div>
+
+<script src="assets/js/app.js"></script>
+<script>
+(function(){
+var FILES = {
+    popular: ['commodities_energy.json','commodities_metals.json','currencies.json','indices.json','crypto.json','bonds.json'],
+    energy: ['commodities_energy.json'],
+    metals: ['commodities_metals.json'],
+    currencies: ['currencies.json'],
+    indices: ['indices.json'],
+    crypto: ['crypto.json'],
+    bonds: ['bonds.json']
+};
+
+var POPULAR_IDS = ['BZ=F','GC=F','SI=F','^GSPC','BTC-USD','USDTRY=X','DX-Y.NYB','^TNX','ETH-USD','XU100.IS','EURUSD=X','CL=F'];
+
+var allData = {};
+var selected = [];
+var period = '1y';
+var compChart = null;
+var currentCat = 'popular';
+
+function loadAllData() {
+    var allFiles = ['commodities_energy.json','commodities_metals.json','commodities_agriculture.json','industrial.json','currencies.json','indices.json','crypto.json','bonds.json'];
+    return Promise.all(allFiles.map(function(f) {
+        return PM.fj(f).then(function(d) {
+            if (d && d.series) {
+                d.series.forEach(function(s) { allData[s.id] = s; });
+            }
+        });
+    }));
+}
+
+function getSeriesForCat(cat) {
+    if (cat === 'popular') {
+        return POPULAR_IDS.map(function(id) { return allData[id]; }).filter(Boolean);
+    }
+    var files = FILES[cat] || [];
+    var result = [];
+    Object.keys(allData).forEach(function(id) {
+        var s = allData[id];
+        if (s) result.push(s);
+    });
+    // Filter by file category
+    var catNames = {energy:'Enerji',metals:'Kiymetli Madenler & Metaller',currencies:'Doviz Kurlari',indices:'Endeksler',crypto:'Kripto Paralar',bonds:'Tahvil Faizleri'};
+    // Simpler: just return all for popular, filter by known IDs for others
+    return result;
+}
+
+function renderGrid(cat) {
+    var grid = document.getElementById('compGrid');
+    var series = [];
+
+    if (cat === 'popular') {
+        series = POPULAR_IDS.map(function(id) { return allData[id]; }).filter(Boolean);
+    } else {
+        var catMap = {energy:'Enerji',metals:'Kiymetli Madenler & Metaller',currencies:'Doviz Kurlari',indices:'Endeksler',crypto:'Kripto Paralar',bonds:'Tahvil Faizleri'};
+        var catName = catMap[cat];
+        Object.keys(allData).forEach(function(id) {
+            var s = allData[id];
+            // Match by checking if the series has data (category matching via file loading)
+            if (s) series.push(s);
+        });
+        // Filter: reload specific files
+        series = [];
+        var files = FILES[cat] || [];
+        files.forEach(function(f) {
+            // We need to re-check which series came from which file
+        });
+    }
+
+    // Better approach: tag series by source file during loading
+    grid.innerHTML = '';
+    var items = [];
+
+    if (cat === 'popular') {
+        items = POPULAR_IDS.map(function(id) { return allData[id]; }).filter(Boolean);
+    } else {
+        // Load specific files
+        var files = FILES[cat] || [];
+        items = [];
+        Object.keys(window._fileSeriesMap || {}).forEach(function(id) {
+            var info = window._fileSeriesMap[id];
+            if (files.indexOf(info) > -1) items.push(allData[id]);
+        });
+    }
+
+    items.forEach(function(s) {
+        if (!s) return;
+        var isOn = selected.indexOf(s.id) > -1;
+        var chgCls = s.change_1d_pct != null ? (s.change_1d_pct >= 0 ? 'u' : 'd') : '';
+        var chgTxt = s.change_1d_pct != null ? ((s.change_1d_pct >= 0 ? '+' : '') + s.change_1d_pct.toFixed(2) + '%') : '—';
+        var div = document.createElement('div');
+        div.className = 'comp-item' + (isOn ? ' on' : '');
+        div.setAttribute('data-id', s.id);
+        div.innerHTML = '<div class="ci-name">' + s.name + '</div><div class="ci-val">' + PM.fp(s.current) + '</div><div class="ci-chg ' + chgCls + '">' + chgTxt + '</div>';
+        div.onclick = function() { toggleSelect(s.id); };
+        grid.appendChild(div);
+    });
+}
+
+function toggleSelect(id) {
+    var idx = selected.indexOf(id);
+    if (idx > -1) {
+        selected.splice(idx, 1);
+    } else {
+        if (selected.length >= 6) { selected.shift(); }
+        selected.push(id);
+    }
+    // Update grid highlights
+    document.querySelectorAll('.comp-item').forEach(function(el) {
+        el.classList.toggle('on', selected.indexOf(el.getAttribute('data-id')) > -1);
+    });
+    updateCharts();
+}
+
+function updateCharts() {
+    var seriesList = selected.map(function(id) { return allData[id]; }).filter(Boolean);
+
+    // Comparison chart
+    if (compChart) { compChart.destroy(); compChart = null; }
+    if (seriesList.length > 0) {
+        compChart = PM.buildComparisonChart('compChart', seriesList, period);
+    }
+
+    // Correlation matrix
+    buildCorrelation(seriesList);
+
+    // Performance table
+    buildPerfTable(seriesList);
+}
+
+function buildCorrelation(seriesList) {
+    var el = document.getElementById('heatMap');
+    if (seriesList.length < 2) { el.innerHTML = '<div style="color:var(--t3);font-size:.8rem;padding:10px">En az 2 varlik secin.</div>'; return; }
+
+    var n = seriesList.length;
+    var cols = n + 1;
+    el.style.display = 'grid';
+
+    // Get overlapping data for correlation
+    var filtered = seriesList.map(function(s) {
+        return PM.filterPeriod(s.data, period);
+    });
+
+    // Build date-aligned values
+    var dateMap = {};
+    filtered.forEach(function(fdata, i) {
+        fdata.forEach(function(d) {
+            if (!dateMap[d.date]) dateMap[d.date] = new Array(n).fill(null);
+            dateMap[d.date][i] = d.value;
+        });
+    });
+
+    var dates = Object.keys(dateMap).sort();
+    var aligned = [];
+    dates.forEach(function(dt) {
+        var row = dateMap[dt];
+        var allValid = true;
+        for (var i = 0; i < n; i++) { if (row[i] == null) allValid = false; }
+        if (allValid) aligned.push(row);
+    });
+
+    // Calculate returns
+    var returns = [];
+    for (var i = 1; i < aligned.length; i++) {
+        var ret = [];
+        for (var j = 0; j < n; j++) {
+            ret.push(aligned[i][j] / aligned[i-1][j] - 1);
+        }
+        returns.push(ret);
+    }
+
+    // Correlation matrix
+    function corr(a, b) {
+        if (returns.length < 5) return 0;
+        var ma = 0, mb = 0;
+        returns.forEach(function(r) { ma += r[a]; mb += r[b]; });
+        ma /= returns.length; mb /= returns.length;
+        var num = 0, da = 0, db = 0;
+        returns.forEach(function(r) {
+            var x = r[a] - ma, y = r[b] - mb;
+            num += x * y; da += x * x; db += y * y;
+        });
+        var denom = Math.sqrt(da * db);
+        return denom > 0 ? num / denom : 0;
+    }
+
+    var html = '<div style="display:grid;grid-template-columns:60px repeat(' + n + ',1fr);gap:2px">';
+    html += '<div class="heat-header"></div>';
+    seriesList.forEach(function(s) {
+        var short = s.name.length > 8 ? s.name.substring(0, 8) : s.name;
+        html += '<div class="heat-header">' + short + '</div>';
+    });
+
+    for (var i = 0; i < n; i++) {
+        var short = seriesList[i].name.length > 8 ? seriesList[i].name.substring(0, 8) : seriesList[i].name;
+        html += '<div class="heat-header" style="text-align:right;padding-right:6px">' + short + '</div>';
+        for (var j = 0; j < n; j++) {
+            var c = i === j ? 1 : corr(i, j);
+            var bg = corrColor(c);
+            html += '<div class="heat-cell" style="background:' + bg + ';color:' + (Math.abs(c) > 0.5 ? '#fff' : 'var(--t1)') + '">' + c.toFixed(2) + '</div>';
+        }
+    }
+    html += '</div>';
+    el.innerHTML = html;
+}
+
+function corrColor(v) {
+    if (v >= 0.7) return '#16a34a';
+    if (v >= 0.4) return '#4ade80';
+    if (v >= 0.1) return '#bbf7d0';
+    if (v > -0.1) return '#f1f5f9';
+    if (v > -0.4) return '#fecaca';
+    if (v > -0.7) return '#f87171';
+    return '#dc2626';
+}
+
+function buildPerfTable(seriesList) {
+    var el = document.getElementById('perfTable');
+    if (!seriesList.length) { el.innerHTML = ''; return; }
+    var html = '<table class="perf-table"><thead><tr><th>Varlik</th><th>Fiyat</th><th>1G</th><th>1H</th><th>1A</th><th>YTD</th><th>1Y</th><th>52H Aralik</th></tr></thead><tbody>';
+    seriesList.forEach(function(s) {
+        function cv(p) { if (p == null) return '<td class="d" style="color:var(--t3)">—</td>'; return '<td class="' + (p >= 0 ? 'u' : 'd') + '">' + (p >= 0 ? '+' : '') + p.toFixed(2) + '%</td>'; }
+        html += '<tr><td>' + s.name + '</td><td style="font-family:var(--mono)">' + PM.fp(s.current) + ' ' + (s.unit || '') + '</td>' + cv(s.change_1d_pct) + cv(s.change_1w_pct) + cv(s.change_1m_pct) + cv(s.change_ytd_pct) + cv(s.change_1y_pct) + '<td style="font-family:var(--mono);font-size:.7rem;color:var(--t3)">' + (s.low_52w != null ? PM.fp(s.low_52w) + ' — ' + PM.fp(s.high_52w) : '—') + '</td></tr>';
+    });
+    html += '</tbody></table>';
+    el.innerHTML = html;
+}
+
+// Initialize
+window._fileSeriesMap = {};
+var allFiles = [
+    {f:'commodities_energy.json',cats:['energy']},
+    {f:'commodities_metals.json',cats:['metals']},
+    {f:'commodities_agriculture.json',cats:['agriculture']},
+    {f:'industrial.json',cats:['industrial']},
+    {f:'currencies.json',cats:['currencies']},
+    {f:'indices.json',cats:['indices']},
+    {f:'crypto.json',cats:['crypto']},
+    {f:'bonds.json',cats:['bonds']}
+];
+
+Promise.all(allFiles.map(function(item) {
+    return PM.fj(item.f).then(function(d) {
+        if (d && d.series) {
+            d.series.forEach(function(s) {
+                allData[s.id] = s;
+                window._fileSeriesMap[s.id] = item.f;
+            });
+        }
+    });
+})).then(function() {
+    // Default selection
+    selected = ['BZ=F', 'GC=F', '^GSPC', 'BTC-USD'];
+    renderGrid('popular');
+    updateCharts();
+});
+
+// Category tabs
+document.getElementById('catTabs').addEventListener('click', function(e) {
+    if (!e.target.classList.contains('cat-tab')) return;
+    document.querySelectorAll('.cat-tab').forEach(function(b) { b.classList.remove('on'); });
+    e.target.classList.add('on');
+    currentCat = e.target.getAttribute('data-cat');
+    renderGrid(currentCat);
+});
+
+// Period selector
+document.getElementById('periodSelector').addEventListener('click', function(e) {
+    if (!e.target.classList.contains('pbtn')) return;
+    document.querySelectorAll('.pbtn').forEach(function(b) { b.classList.remove('on'); });
+    e.target.classList.add('on');
+    period = e.target.getAttribute('data-period');
+    updateCharts();
+});
+
+})();
+</script>
+</body>
+</html>

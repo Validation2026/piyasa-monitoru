@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Veri Admin</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui;background:#f0f4f8;color:#0f172a;padding:20px}
+.c{max-width:700px;margin:0 auto}
+h1{font-size:1.2rem;font-weight:800;margin-bottom:14px}
+.card{background:#fff;border:1px solid #dde4ed;border-radius:10px;padding:14px;margin-bottom:12px}
+.ct{font-size:.65rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+label{font-size:.68rem;font-weight:600;color:#64748b;display:block;margin-bottom:3px}
+input,select{width:100%;border:1px solid #dde4ed;border-radius:6px;padding:7px 9px;font-size:.82rem;outline:none;background:#f8fafc;margin-bottom:6px}
+input:focus,select:focus{border-color:#3b82f6}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.btn{background:#3b82f6;color:#fff;border:none;border-radius:8px;padding:11px;font-weight:800;font-size:.82rem;cursor:pointer;width:100%;margin-top:6px}
+.btn:hover{background:#2563eb}
+.btn-back{background:#64748b;margin-bottom:10px}
+.btn-back:hover{background:#475569}
+.status{text-align:center;margin-top:8px;font-size:.75rem;color:#64748b}
+.page-tabs{display:flex;gap:4px;margin-bottom:14px;flex-wrap:wrap}
+.ptab{background:#fff;border:1px solid #dde4ed;border-radius:6px;padding:6px 12px;font-size:.7rem;font-weight:700;cursor:pointer;color:#64748b;transition:.2s;text-decoration:none}
+.ptab:hover{border-color:#3b82f6;color:#3b82f6}
+.ptab.on{background:#3b82f6;color:#fff;border-color:#3b82f6}
+.series-item{background:#f8fafc;border:1px solid #dde4ed;border-radius:8px;padding:10px;margin-bottom:8px}
+.series-name{font-weight:700;font-size:.8rem;margin-bottom:6px;color:#0f172a}
+.series-current{font-size:.7rem;color:#94a3b8;margin-bottom:4px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.info-box{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px;margin-bottom:12px;font-size:.72rem;color:#1e40af;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="c">
+<a href="admin.html" class="btn btn-back" style="display:inline-block;text-decoration:none;text-align:center;width:auto;padding:8px 16px;margin-bottom:14px">← Iran Admin</a>
+<h1>📊 Veri Admin Paneli</h1>
+
+<div class="card">
+<label>PIN</label>
+<input type="password" id="pin" placeholder="PIN girin">
+</div>
+
+<div class="page-tabs" id="pageTabs"></div>
+
+<div class="info-box" id="infoBox">
+Sayfa secin ve verileri duzenleyin. Bos birakilan alanlar Yahoo Finance verisini kullanir.
+</div>
+
+<div id="seriesContainer"></div>
+
+<button class="btn" id="saveBtn">💾 KAYDET</button>
+<div class="status" id="status"></div>
+</div>
+
+<script>
+var PAGES = [
+    { id: 'tahviller', name: '📜 Tahvil', file: 'bonds.json' },
+    { id: 'emtia-enerji', name: '⛽ Enerji', file: 'commodities_energy.json' },
+    { id: 'emtia-metaller', name: '🥇 Madenler', file: 'commodities_metals.json' },
+    { id: 'emtia-tarim', name: '🌾 Tarim', file: 'commodities_agriculture.json' },
+    { id: 'sanayi', name: '🏭 Sanayi', file: 'industrial.json' },
+    { id: 'kurlar', name: '💱 Doviz', file: 'currencies.json' },
+    { id: 'endeksler', name: '📈 Endeksler', file: 'indices.json' },
+    { id: 'kripto', name: '₿ Kripto', file: 'crypto.json' }
+];
+
+var currentPage = null;
+var currentData = null;
+var savedOverrides = {};
+
+// Render tabs
+var tabsEl = document.getElementById('pageTabs');
+tabsEl.innerHTML = PAGES.map(function(p) {
+    return '<button class="ptab" data-page="' + p.id + '">' + p.name + '</button>';
+}).join('');
+
+tabsEl.addEventListener('click', function(e) {
+    if (!e.target.classList.contains('ptab')) return;
+    document.querySelectorAll('.ptab').forEach(function(b) { b.classList.remove('on'); });
+    e.target.classList.add('on');
+    loadPage(e.target.getAttribute('data-page'));
+});
+
+function loadPage(pageId) {
+    currentPage = PAGES.find(function(p) { return p.id === pageId; });
+    if (!currentPage) return;
+
+    document.getElementById('infoBox').textContent = currentPage.name + ' verileri yukleniyor...';
+
+    // Load both JSON data and saved overrides
+    Promise.all([
+        fetch('data/' + currentPage.file + '?t=' + Date.now()).then(function(r) { return r.json(); }).catch(function() { return null; }),
+        fetch('/api/page-state?page=' + pageId).then(function(r) { return r.json(); }).catch(function() { return { overrides: {} }; })
+    ]).then(function(results) {
+        currentData = results[0];
+        savedOverrides = (results[1] && results[1].overrides) ? results[1].overrides : {};
+
+        if (!currentData || !currentData.series) {
+            document.getElementById('seriesContainer').innerHTML = '<div class="card">Veri bulunamadi.</div>';
+            return;
+        }
+
+        var updatedAt = results[1] && results[1].updatedAt
+            ? 'Son admin guncelleme: ' + new Date(results[1].updatedAt).toLocaleString('tr-TR')
+            : 'Henuz admin duzenlemesi yapilmamis';
+        document.getElementById('infoBox').textContent = currentPage.name + ' — ' + currentData.series.length + ' seri | ' + updatedAt;
+
+        renderSeries();
+    });
+}
+
+function renderSeries() {
+    var el = document.getElementById('seriesContainer');
+    var html = '';
+    currentData.series.forEach(function(s) {
+        var ov = savedOverrides[s.id] || {};
+        html += '<div class="series-item" data-id="' + s.id + '">' +
+            '<div class="series-name">' + s.name + ' <span style="font-size:.65rem;color:#94a3b8">(' + s.id + ')</span></div>' +
+            '<div class="series-current">Mevcut: ' + (s.current != null ? s.current : '—') + ' ' + (s.unit || '') + ' | 1G: ' + (s.change_1d_pct != null ? s.change_1d_pct + '%' : '—') + '</div>' +
+            '<div class="row3">' +
+            '<div><label>Fiyat Override</label><input type="number" step="any" class="ov-value" value="' + (ov.value != null ? ov.value : '') + '" placeholder="' + (s.current || '') + '"></div>' +
+            '<div><label>1G % Override</label><input type="number" step="any" class="ov-1d" value="' + (ov.change_1d != null ? ov.change_1d : '') + '" placeholder="' + (s.change_1d_pct || '') + '"></div>' +
+            '<div><label>1H % Override</label><input type="number" step="any" class="ov-1w" value="' + (ov.change_1w != null ? ov.change_1w : '') + '" placeholder="' + (s.change_1w_pct || '') + '"></div>' +
+            '</div>' +
+            '</div>';
+    });
+    el.innerHTML = html;
+}
+
+document.getElementById('saveBtn').onclick = function() {
+    var pin = document.getElementById('pin').value;
+    if (!pin) { alert('PIN girin!'); return; }
+    if (!currentPage) { alert('Bir sayfa secin!'); return; }
+
+    var overrides = {};
+    document.querySelectorAll('.series-item').forEach(function(item) {
+        var id = item.getAttribute('data-id');
+        var val = item.querySelector('.ov-value').value;
+        var d1 = item.querySelector('.ov-1d').value;
+        var w1 = item.querySelector('.ov-1w').value;
+        if (val || d1 || w1) {
+            overrides[id] = {};
+            if (val) overrides[id].value = parseFloat(val);
+            if (d1) overrides[id].change_1d = parseFloat(d1);
+            if (w1) overrides[id].change_1w = parseFloat(w1);
+        }
+    });
+
+    document.getElementById('status').textContent = 'Kaydediliyor...';
+    fetch('/api/page-state?page=' + currentPage.id, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pin: pin, data: { overrides: overrides } })
+    }).then(function(r) { return r.json(); }).then(function(d) {
+        if (d.success) document.getElementById('status').textContent = '✅ Kaydedildi!';
+        else document.getElementById('status').textContent = '❌ Hata: ' + (d.error || 'Bilinmeyen');
+    }).catch(function(e) { document.getElementById('status').textContent = '❌ Baglanti hatasi: ' + e.message; });
+};
+
+// Auto-select from URL params
+var urlPage = new URLSearchParams(window.location.search).get('page');
+if (urlPage) {
+    var tab = document.querySelector('.ptab[data-page="' + urlPage + '"]');
+    if (tab) { tab.classList.add('on'); loadPage(urlPage); }
+}
+</script>
+</body>
+</html>

@@ -15,6 +15,7 @@ var links = [
     ['tahviller','📜','Tahvil'],
     ['endeksler','📈','Endeksler'],
     ['kripto','₿','Kripto'],
+    ['karsilastirma','📊','Karşılaştır'],
     ['iran-risk','🔴','İran Risk'],
     ['tedarik-zinciri','🚢','Tedarik Zinciri'],
     ['kuresel-risk','🌍','Küresel Risk'],

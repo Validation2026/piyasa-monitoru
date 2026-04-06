@@ -110,5 +110,37 @@ function buildComparisonChart(canvasId,seriesList,period){
     return new Chart(c,{type:'line',data:{labels:allLabels,datasets:datasets},options:{responsive:true,maintainAspectRatio:false,animation:{duration:600},interaction:{mode:'index',intersect:false},plugins:{legend:{display:true,position:'top',labels:{color:txt,font:{size:11,family:"'Outfit'"},boxWidth:12,padding:12}},tooltip:{backgroundColor:dark?'#1e293b':'#fff',titleColor:dark?'#e8edf5':'#0f172a',bodyColor:dark?'#8a99b2':'#475569',borderColor:dark?'#334155':'#dde4ed',borderWidth:1,padding:10,callbacks:{label:function(ctx){return ctx.dataset.label+': '+(ctx.raw>=0?'+':'')+ctx.raw.toFixed(2)+'%'}}}},scales:{x:{grid:{color:grid,drawBorder:false},ticks:{color:txt,font:{size:10,family:"'JetBrains Mono'"},maxTicksLimit:6,callback:function(v){var l=this.getLabelForValue(v);var p=l.split('-');if(p.length>=2)return MO[parseInt(p[1])-1]+' '+p[0].slice(2);return l}}},y:{grid:{color:grid,drawBorder:false},ticks:{color:txt,font:{size:10,family:"'JetBrains Mono'"},callback:function(v){return(v>=0?'+':'')+v.toFixed(0)+'%'}}}}}});
 }
 
-return{fj:fj,fs:fs,fp:fp,fc:fc,cc:cc,gc:gc,filterPeriod:filterPeriod,miniSpark:miniSpark,makeChart:makeChart,buildSummary:buildSummary,buildCharts:buildCharts,buildTable:buildTable,buildComparisonChart:buildComparisonChart};
+function applyOverrides(seriesList, overrides) {
+    if (!overrides || !seriesList) return seriesList;
+    seriesList.forEach(function(s) {
+        if (!s || !overrides[s.id]) return;
+        var ov = overrides[s.id];
+        if (ov.value != null) s.current = ov.value;
+        if (ov.change_1d != null) s.change_1d_pct = ov.change_1d;
+        if (ov.change_1w != null) s.change_1w_pct = ov.change_1w;
+    });
+    return seriesList;
+}
+
+function loadOverrides(pageId) {
+    return fetch('/api/page-state?page=' + pageId).then(function(r) { return r.json(); }).then(function(d) {
+        return (d && d.overrides) ? d.overrides : {};
+    }).catch(function() { return {}; });
+}
+
+function loadData(file, pageId) {
+    return Promise.all([
+        fj(file),
+        pageId ? loadOverrides(pageId) : Promise.resolve({})
+    ]).then(function(results) {
+        var data = results[0];
+        var overrides = results[1];
+        if (data && data.series && overrides) {
+            applyOverrides(data.series, overrides);
+        }
+        return data;
+    });
+}
+
+return{fj:fj,fs:fs,fp:fp,fc:fc,cc:cc,gc:gc,filterPeriod:filterPeriod,miniSpark:miniSpark,makeChart:makeChart,buildSummary:buildSummary,buildCharts:buildCharts,buildTable:buildTable,buildComparisonChart:buildComparisonChart,applyOverrides:applyOverrides,loadOverrides:loadOverrides,loadData:loadData};
 })();

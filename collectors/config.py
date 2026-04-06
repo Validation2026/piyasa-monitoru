@@ -83,12 +83,14 @@ BONDS = {
     "file": "bonds.json",
     "category": "Tahvil Faizleri",
     "symbols": {
-        "2YY=F": {"name": "ABD 2 Yıllık",  "unit": "%"},
-        "^FVX":  {"name": "ABD 5 Yıllık",  "unit": "%"},
-        "^TNX":  {"name": "ABD 10 Yıllık", "unit": "%"},
-        "^TYX":  {"name": "ABD 30 Yıllık", "unit": "%"},
-        "JP10Y=RR": {"name": "10 Yıllık Japonya", "unit": "%"},
-        "JP2Y=RR": {"name": "2 Yıllık Japonya", "unit": "%"},
+        "2YY=F":    {"name": "ABD 2 Yıllık",       "unit": "%"},
+        "^FVX":     {"name": "ABD 5 Yıllık",       "unit": "%"},
+        "^TNX":     {"name": "ABD 10 Yıllık",      "unit": "%"},
+        "^TYX":     {"name": "ABD 30 Yıllık",      "unit": "%"},
+        "JP2Y=RR":  {"name": "Japonya 2 Yıllık",   "unit": "%"},
+        "JP5Y=RR":  {"name": "Japonya 5 Yıllık",   "unit": "%"},
+        "JP10Y=RR": {"name": "Japonya 10 Yıllık",  "unit": "%"},
+        "JP30Y=RR": {"name": "Japonya 30 Yıllık",  "unit": "%"},
     }
 }
 
