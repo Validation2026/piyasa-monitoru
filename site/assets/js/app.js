@@ -14,10 +14,27 @@ function fc(p){if(p==null)return'<span class="chg" style="color:var(--t3)">—</
 function cc(p){return p!=null?(p>=0?'u':'d'):''}
 function gc(i){return COLORS[i%COLORS.length]}
 
-function filterPeriod(data,period){
-    if(!data||!data.length)return[];if(period==='all')return data;var now=new Date();var cut;
-    switch(period){case'1m':cut=new Date(now.getTime()-30*864e5);break;case'3m':cut=new Date(now.getTime()-90*864e5);break;case'6m':cut=new Date(now.getTime()-180*864e5);break;case'1y':cut=new Date(now.getTime()-365*864e5);break;case'2y':cut=new Date(now.getTime()-730*864e5);break;case'3y':cut=new Date(now.getTime()-1095*864e5);break;case'5y':cut=new Date(now.getTime()-1825*864e5);break;case'ytd':cut=new Date(now.getFullYear(),0,1);break;default:return data}
-    var cs=cut.toISOString().split('T')[0];return data.filter(function(d){return d.date>=cs})
+function filterPeriod(data, period) {
+    if (!data || !data.length) return [];
+    if (period === 'all') return data;
+    
+    var now = new Date();
+    var cut;
+    
+    switch (period) {
+        case '1m': cut = new Date(now.getTime() - 30 * 864e5); break;
+        case '3m': cut = new Date(now.getTime() - 90 * 864e5); break;
+        case '6m': cut = new Date(now.getTime() - 180 * 864e5); break;
+        case '1y': cut = new Date(now.getTime() - 365 * 864e5); break;
+        case '2y': cut = new Date(now.getTime() - 730 * 864e5); break;
+        case '3y': cut = new Date(now.getTime() - 1095 * 864e5); break;
+        case '5y': cut = new Date(now.getTime() - 1825 * 864e5); break;
+        case 'ytd': cut = new Date(now.getFullYear(), 0, 1); break;
+        default: return data;
+    }
+    
+    var cs = cut.toISOString().split('T')[0];
+    return data.filter(function(d) { return d.date >= cs });
 }
 
 function miniSpark(canvasId,data,color){
