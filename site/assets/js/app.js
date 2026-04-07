@@ -175,3 +175,64 @@ document.addEventListener("click", function(e) {
         }, 50);
     }
 });
+
+/* ══════════════════════════════════════════
+   EVRENSEL ZAMAN FİLTRESİ (TÜM GRAFİKLER İÇİN)
+   ══════════════════════════════════════════ */
+document.addEventListener("click", function(e) {
+    if (e.target.classList.contains('tf-btn')) {
+        var btn = e.target;
+        var container = btn.parentElement;
+        var tf = btn.getAttribute('data-tf');
+        var chartId = container.getAttribute('data-chart-id');
+        
+        // Aktif buton görselini değiştir
+        container.querySelectorAll('.tf-btn').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+
+        // İlgili Chart.js grafiğini bul
+        var chartInstance = Chart.getChart(chartId);
+        
+        if (chartInstance) {
+            // Eğer grafiğin orijinal (5 yıllık) 100% verisini henüz yedeklemediysek, ilk tıklamada yedekle
+            if (!chartInstance.originalLabels) {
+                chartInstance.originalLabels = [...chartInstance.data.labels];
+                chartInstance.originalData = [...chartInstance.data.datasets[0].data];
+            }
+
+            var cutoffDate = new Date();
+            var isYTD = false;
+
+            // Tarih sınırını belirle
+            if(tf === '1A') cutoffDate.setMonth(cutoffDate.getMonth() - 1);
+            else if(tf === '3A') cutoffDate.setMonth(cutoffDate.getMonth() - 3);
+            else if(tf === '6A') cutoffDate.setMonth(cutoffDate.getMonth() - 6);
+            else if(tf === '1Y') cutoffDate.setFullYear(cutoffDate.getFullYear() - 1);
+            else if(tf === '2Y') cutoffDate.setFullYear(cutoffDate.getFullYear() - 2);
+            else if(tf === '3Y') cutoffDate.setFullYear(cutoffDate.getFullYear() - 3);
+            else if(tf === '5Y') cutoffDate.setFullYear(cutoffDate.getFullYear() - 5);
+            else if(tf === 'YTD') {
+                cutoffDate = new Date(cutoffDate.getFullYear(), 0, 1); // Bu yılın başı
+                isYTD = true;
+            }
+
+            var filteredLabels = [];
+            var filteredData = [];
+
+            // Orijinal veriden sadece cutoffDate'ten büyük olanları (daha yeni olanları) süz
+            for (var i = 0; i < chartInstance.originalLabels.length; i++) {
+                var itemDate = new Date(chartInstance.originalLabels[i]);
+                
+                if (tf === 'Tümü' || itemDate >= cutoffDate) {
+                    filteredLabels.push(chartInstance.originalLabels[i]);
+                    filteredData.push(chartInstance.originalData[i]);
+                }
+            }
+
+            // Grafiğe yeni kesilmiş veriyi ver ve güncelleyip çiz
+            chartInstance.data.labels = filteredLabels;
+            chartInstance.data.datasets[0].data = filteredData;
+            chartInstance.update();
+        }
+    }
+});
