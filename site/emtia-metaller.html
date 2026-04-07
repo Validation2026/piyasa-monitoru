@@ -66,13 +66,6 @@
         charts=PM.buildCharts('chartsGrid',allSeries,period);
         PM.buildTable('dataTable',allSeries);
     });
-    document.getElementById('periodSelector').addEventListener('click',function(e){
-        if(!e.target.classList.contains('pbtn'))return;
-        document.querySelectorAll('.pbtn').forEach(function(b){b.classList.remove('on')});
-        e.target.classList.add('on');period=e.target.getAttribute('data-period');
-        if(charts)charts.forEach(function(c){c.destroy()});
-        charts=PM.buildCharts('chartsGrid',allSeries,period);
-    });
     fetch('/api/ai-analysis?cat=emtia-metaller').then(function(r){return r.json()}).then(function(d){
         var el=document.getElementById('aiAnalysis');if(el&&d.analysis)el.textContent=d.analysis;
     }).catch(function(){var el=document.getElementById('aiAnalysis');if(el)el.innerHTML='<span class="ai-loading">Analiz yüklenemiyor.</span>'});
