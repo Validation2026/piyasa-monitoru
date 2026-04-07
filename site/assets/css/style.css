@@ -458,3 +458,90 @@ tbody tr:hover {
     background-color: var(--bg2) !important; /* Üzerine gelince rengi hafif koyulaşır */
     transform: translateX(4px); /* Çok hafif sağa kayar, okuma kolaylığı sağlar */
 }
+
+/* ══════════════════════════════════════════
+   AKILLI TAM EKRAN (BUTONLU) MODU
+   ══════════════════════════════════════════ */
+
+/* Grafiğin arka plan kutusunu referans alması için */
+.chart-box-relative {
+    position: relative !important;
+}
+
+/* Sağ Üstteki Büyütme Butonu (Varsayılan olarak gizli) */
+.chart-expand-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--t2);
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    opacity: 0; /* Üzerine gelene kadar görünmez */
+    transition: all 0.2s ease;
+    z-index: 10;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+/* Kutunun üstüne gelince buton yumuşakça belirsin */
+.chart-box-relative:hover .chart-expand-btn {
+    opacity: 1;
+}
+
+.chart-expand-btn:hover {
+    background: var(--blue);
+    color: #fff;
+    border-color: var(--blue);
+    transform: scale(1.05);
+}
+
+/* Tam Ekran Modu (Kartın kendisi büyür) */
+.tv-fullscreen-mode {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 999999 !important;
+    background: var(--bg) !important;
+    padding: 60px 40px 40px 40px !important; 
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+}
+
+/* Tam ekrandayken grafiğin boyutları HD kalitede yayılır */
+.tv-fullscreen-mode canvas {
+    height: 85vh !important;
+    width: 100% !important;
+    margin-top: 15px !important;
+}
+
+/* Tam ekrandayken buton kırmızı bir ÇARPI'ya dönüşür */
+.tv-fullscreen-mode .chart-expand-btn {
+    opacity: 1;
+    top: 20px;
+    right: 30px;
+    width: 45px;
+    height: 45px;
+    font-size: 1.5rem;
+    background: var(--red);
+    color: white;
+    border: none;
+    border-radius: 50%; /* Çarpı butonu yuvarlak daha şık durur */
+}
+
+.tv-fullscreen-mode .chart-expand-btn:hover {
+    background: #e63946; /* Üstüne gelince koyu kırmızı */
+    transform: rotate(90deg); /* Havalı bir dönme efekti */
+}
