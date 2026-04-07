@@ -17,7 +17,7 @@ COMMODITIES_ENERGY = {
         "BZ=F":  {"name": "BZ (Brent)",        "unit": "USD/bbl"},
         "CL=F":  {"name": "CL (WTI)",           "unit": "USD/bbl"},
         "NG=F":  {"name": "NG (Doğalgaz)",  "unit": "USD/MMBtu"},
-        "MTF=F": {"name": "TTF (Avrupa Gaz)", "unit": "EUR/MWh"},
+        "TTF=F": {"name": "TTF (Avrupa Gaz)", "unit": "EUR/MWh"},
         "HO=F":  {"name": "HO (Isıtma Yağı)",          "unit": "USD/gal"},
         "RB=F":  {"name": "RB (Benzin)",         "unit": "USD/gal"},
     }
