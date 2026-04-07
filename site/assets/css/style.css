@@ -390,3 +390,71 @@ canvas {
     color: #fff;
     border-color: var(--blue);
 }
+
+/* ══════════════════════════════════════════
+   MİKRO ANİMASYONLAR (YENİ)
+   ══════════════════════════════════════════ */
+
+/* 1. Sayfa Yüklenirken Yukarıdan Yumuşak Giriş (Başlıklar için) */
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.page-head h1, .sec-title {
+    animation: fadeInDown 0.6s ease-out forwards;
+}
+
+/* 2. Sayfa Yüklenirken Aşağıdan Yukarı Giriş (Kartlar ve Grafikler için) */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Özet kartları, AI kutusu ve grafikler sırayla gelsin diye ufak gecikmeler ekledik */
+.ai-box {
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.summary-row {
+    animation: fadeInUp 0.7s ease-out forwards;
+}
+
+.charts {
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.dtable, table {
+    animation: fadeInUp 0.9s ease-out forwards;
+}
+
+/* 3. Özet Kartlarına (scard) Havalı Hover (Üzerine Gelme) Efekti */
+.scard {
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.scard:hover {
+    transform: translateY(-5px) !important; /* Hafifçe havaya kalkar */
+    box-shadow: 0 8px 15px rgba(0,0,0,0.05) !important; /* Altında gölge belirir */
+}
+
+/* 4. AI Rozeti İçin Kalp Atışı (Pulse) Efekti */
+@keyframes pulseSoft {
+    0% { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.4); }
+    70% { box-shadow: 0 0 0 6px rgba(167, 139, 250, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0); }
+}
+
+.ai-badge {
+    animation: pulseSoft 2s infinite; /* Sürekli hafifçe parlar */
+}
+
+/* 5. Tablo Satırlarına İnteraktif Vurgu */
+tbody tr {
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+tbody tr:hover {
+    background-color: var(--bg2) !important; /* Üzerine gelince rengi hafif koyulaşır */
+    transform: translateX(4px); /* Çok hafif sağa kayar, okuma kolaylığı sağlar */
+}
