@@ -1,4 +1,4 @@
-const CACHE = 'piyasa-v4';
+const CACHE = 'piyasa-v5';
 
 self.addEventListener('install', e => {
     self.skipWaiting();

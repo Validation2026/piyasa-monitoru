@@ -30,6 +30,9 @@
 .cm-n{font-size:.62rem;color:#94a3b8;font-weight:700;text-transform:uppercase}.cm-v{font-size:.9rem;font-family:'JetBrains Mono',monospace;font-weight:700;margin:2px 0}
 .cm-c{font-size:.67rem;font-family:'JetBrains Mono',monospace;font-weight:700}
 .cm-c.u{color:#00d68f}.cm-c.d{color:#ff4757}
+.cm-extra{display:flex;justify-content:space-between;gap:4px;margin-top:4px;font-size:.55rem;font-family:'JetBrains Mono',monospace;font-weight:700}
+.cm-extra .lbl{color:#94a3b8;font-weight:600}
+.cm-extra .v.u{color:#00d68f}.cm-extra .v.d{color:#ff4757}.cm-extra .v.n{color:#94a3b8}
 .cm-war{font-size:.58rem;font-family:'JetBrains Mono',monospace;font-weight:700;margin-top:3px;padding:2px 4px;border-radius:3px;background:rgba(255,71,87,.08)}
 .cm-war.u{color:#ff4757}.cm-war.d{color:#00d68f}
 .map-box{background:#fff;border:1px solid #dde4ed;border-radius:12px;overflow:hidden;margin-bottom:16px}
@@ -219,7 +222,10 @@ Promise.all([fj('commodities_energy.json'),fj('commodities_metals.json'),fj('com
             var wSign=warPct>=0?'+':'';
             warHtml='<div class="cm-war '+wCls+'">Savaş öncesi: '+wSign+warPct.toFixed(1)+'%</div>';
         }
-        html+='<div class="cm" title="'+c.w+'"><div class="cm-n">'+c.n+'</div><div class="cm-v">'+fp(val)+'</div><div class="cm-c '+cls+'">'+sign+(chg!=null?chg.toFixed(2)+'%':'—')+'</div>'+warHtml+'</div>';
+        function pp(p){if(p==null)return'<span class="v n">—</span>';var k=p>=0?'u':'d';var sn=p>=0?'+':'';return'<span class="v '+k+'">'+sn+p.toFixed(2)+'%</span>'}
+        var m1=s?s.change_1m_pct:null, ytd=s?s.change_ytd_pct:null, y1=s?s.change_1y_pct:null;
+        var extra='<div class="cm-extra"><span><span class="lbl">1A </span>'+pp(m1)+'</span><span><span class="lbl">YTD </span>'+pp(ytd)+'</span><span><span class="lbl">1Y </span>'+pp(y1)+'</span></div>';
+        html+='<div class="cm" title="'+c.w+'"><div class="cm-n">'+c.n+'</div><div class="cm-v">'+fp(val)+'</div><div class="cm-c '+cls+'">'+sign+(chg!=null?chg.toFixed(2)+'%':'—')+'</div>'+extra+warHtml+'</div>';
     });
     (S.customMetrics||[]).forEach(function(m){
         var cls=m.change>=0?'u':'d';
