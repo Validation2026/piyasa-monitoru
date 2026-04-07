@@ -236,22 +236,19 @@ document.addEventListener("click", function(e) {
 });
 
 /* ══════════════════════════════════════════
-   AKILLI TAM EKRAN BUTON İŞLEYİCİSİ (HD & DÜZELTİLMİŞ)
+   AKILLI TAM EKRAN (DİNAMİK SAYFALAR İÇİN KESİN ÇÖZÜM)
    ══════════════════════════════════════════ */
 
-// 1. Ekranda farenin hareketini dinle
-document.addEventListener('mouseover', function(e) {
-    var canvas = null;
-    
-    if (e.target.tagName && e.target.tagName.toLowerCase() === 'canvas') {
-        canvas = e.target;
-    } else if (e.target.querySelector && e.target.querySelector('canvas')) {
-        canvas = e.target.querySelector('canvas');
-    }
-
-    if (canvas) {
-        var container = canvas.parentElement;
+// 1. Dinamik grafikleri sürekli tarayıp butonları "Ana Karta" yerleştir
+setInterval(function() {
+    for (var id in Chart.instances) {
+        var chart = Chart.instances[id];
+        var canvas = chart.canvas;
         
+        // SİHİR BURADA: Sadece grafiği değil, onu saran "en dış kartı" buluyoruz
+        var container = canvas.closest('.charts > div') || canvas.parentElement;
+        
+        // Eğer bu karta daha önce buton eklemediysek ekle
         if (!container.classList.contains('chart-box-relative')) {
             container.classList.add('chart-box-relative');
             
@@ -260,10 +257,15 @@ document.addEventListener('mouseover', function(e) {
             btn.innerHTML = '⛶'; 
             btn.title = 'Tam Ekran';
             
+            // Kartın CSS position değeri static ise butonu tutabilmesi için relative yapıyoruz
+            if (window.getComputedStyle(container).position === 'static') {
+                container.style.position = 'relative';
+            }
+            
             container.appendChild(btn);
         }
     }
-});
+}, 1000); // Her saniye yeni grafik var mı diye kontrol eder, sistemi hiç yormaz.
 
 // 2. Büyütme/Kapatma butonuna tıklanma olayını dinle
 document.addEventListener('click', function(e) {
@@ -271,8 +273,6 @@ document.addEventListener('click', function(e) {
         var btn = e.target;
         var container = btn.parentElement;
         var canvas = container.querySelector('canvas');
-        
-        // Grafiğin Chart.js kimliğini (instance) yakala
         var chartInstance = Chart.getChart(canvas);
         
         container.classList.toggle('tv-fullscreen-mode');
@@ -283,27 +283,25 @@ document.addEventListener('click', function(e) {
             btn.innerHTML = '✖';
             btn.title = 'Kapat';
             
-            // SİHİRLİ DOKUNUŞ: Chart.js'in oran inadını kırıyoruz
             if (chartInstance) {
-                chartInstance.options.maintainAspectRatio = false;
+                chartInstance.options.maintainAspectRatio = false; // Oran inadını kır
+                chartInstance.update('none'); // Animasyonsuz anında güncelle
             }
         } else {
             // NORMAL EKRANA DÖNÜŞ
-            document.body.style.overflow = 'auto';
+            document.body.style.overflow = '';
             btn.innerHTML = '⛶';
             btn.title = 'Tam Ekran';
             
-            // Kapatırken oran korumasını geri açıyoruz ki sayfa düzeni bozulmasın
             if (chartInstance) {
-                chartInstance.options.maintainAspectRatio = true;
+                chartInstance.options.maintainAspectRatio = true; // Oran korumasını geri aç
+                chartInstance.update('none');
             }
         }
         
-        // Grafiği yeni kurallarla zorla baştan çizdir
+        // Yeni ekran boyutuna göre grafiği HD kalitede zorla çizdir
         setTimeout(function() {
-            if (chartInstance) {
-                chartInstance.resize();
-            }
+            if (chartInstance) chartInstance.resize();
             window.dispatchEvent(new Event('resize'));
         }, 50);
     }
