@@ -365,7 +365,7 @@ canvas {
     flex-wrap: wrap;
     gap: 6px;
     margin-bottom: 12px;
-    justify-content: flex-end; /* Sağ yaslı dursun, daha şık olur */
+    justify-content: flex-start; /* Sağ yaslı dursun, daha şık olur */
 }
 
 .tf-btn {
