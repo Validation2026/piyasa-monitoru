@@ -356,3 +356,37 @@ canvas {
     width: 100% !important;
     margin-top: 10px !important;
 }
+
+/* ══════════════════════════════════════════
+   EVRENSEL ZAMAN FİLTRESİ BUTONLARI
+   ══════════════════════════════════════════ */
+.chart-timeframes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+    justify-content: flex-end; /* Sağ yaslı dursun, daha şık olur */
+}
+
+.tf-btn {
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--t2);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    font-family: var(--fm);
+}
+
+.tf-btn:hover {
+    background: var(--bg2);
+}
+
+.tf-btn.active {
+    background: var(--blue);
+    color: #fff;
+    border-color: var(--blue);
+}
