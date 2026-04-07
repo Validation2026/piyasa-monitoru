@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Tahvil Faizleri",
-    "updated_at": "2026-04-07T12:40:52Z",
+    "updated_at": "2026-04-07T12:43:26Z",
     "symbol_count": 4,
     "errors": []
   },
@@ -9731,13 +9731,13 @@
       "id": "^TNX",
       "name": "ABD 10 Yıllık",
       "unit": "%",
-      "current": 4.337,
-      "change_1d_pct": 0.05,
-      "change_1w_pct": -0.12,
-      "change_1m_pct": 4.61,
-      "change_3m_pct": 5.01,
-      "change_ytd_pct": 3.58,
-      "change_1y_pct": 162.37,
+      "current": 4.335,
+      "change_1d_pct": 0.0,
+      "change_1w_pct": -0.16,
+      "change_1m_pct": 4.56,
+      "change_3m_pct": 4.96,
+      "change_ytd_pct": 3.53,
+      "change_1y_pct": 162.25,
       "high_52w": 4.988,
       "low_52w": 1.174,
       "data": [
@@ -14763,7 +14763,7 @@
         },
         {
           "date": "2026-04-07",
-          "value": 4.337
+          "value": 4.335
         }
       ]
     },
@@ -14771,13 +14771,13 @@
       "id": "^TYX",
       "name": "ABD 30 Yıllık",
       "unit": "%",
-      "current": 4.904,
-      "change_1d_pct": 0.27,
-      "change_1w_pct": -0.02,
-      "change_1m_pct": 3.2,
-      "change_3m_pct": 1.89,
-      "change_ytd_pct": 0.82,
-      "change_1y_pct": 110.02,
+      "current": 4.903,
+      "change_1d_pct": 0.25,
+      "change_1w_pct": -0.04,
+      "change_1m_pct": 3.18,
+      "change_3m_pct": 1.87,
+      "change_ytd_pct": 0.8,
+      "change_1y_pct": 109.98,
       "high_52w": 5.103,
       "low_52w": 1.678,
       "data": [
@@ -19803,7 +19803,7 @@
         },
         {
           "date": "2026-04-07",
-          "value": 4.904
+          "value": 4.903
         }
       ]
     }
