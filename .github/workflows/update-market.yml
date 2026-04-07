@@ -1,11 +1,12 @@
 name: Update Market Data
 
 on:
+  push:
+    branches: [main]
   schedule:
-    # Her 5 dakikada bir tetiklenir; saat/gün filtresi script icinde yapilir.
-    # Boylece GitHub'in karmasik cron ifadelerini atlama riski azalir.
-    - cron: '*/5 * * * *'
-  workflow_dispatch:  # Manuel tetikleme butonu
+    # Her 10 dakikada bir tetiklenir; saat/gun filtresi script icinde TR saatine gore yapilir
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
 
 concurrency:
   group: update-market
@@ -18,26 +19,27 @@ jobs:
       contents: write
 
     steps:
-      - name: Time window check (TSI 09-18)
+      - name: Time window check (TR saati)
         id: window
+        if: github.event_name == 'schedule'
         run: |
-          # TSI = UTC+3
           HOUR=$(TZ='Europe/Istanbul' date +%H)
-          DOW=$(TZ='Europe/Istanbul' date +%u)   # 1=Mon ... 7=Sun
+          DOW=$(TZ='Europe/Istanbul' date +%u)   # 1=Pzt ... 7=Pzr
           MIN=$(TZ='Europe/Istanbul' date +%M)
-          echo "TSI hour=$HOUR dow=$DOW min=$MIN"
+          echo "TR hour=$HOUR dow=$DOW min=$MIN"
 
-          if [ "$HOUR" -lt 9 ] || [ "$HOUR" -gt 18 ]; then
-            echo "Disarida (saat). Atlaniyor."
+          # 08-18 disindaysa atla
+          if [ "$HOUR" -lt 8 ] || [ "$HOUR" -gt 18 ]; then
+            echo "Saat penceresi disinda. Atlaniyor."
             echo "skip=true" >> $GITHUB_OUTPUT
             exit 0
           fi
 
-          # Hafta sonu: sadece her 3 saatte bir (09,12,15,18) ve dakika < 6
+          # Hafta sonu (Cmt/Pzr): sadece 4 saatte bir (08, 12, 16) ve dakika < 11
           if [ "$DOW" -ge 6 ]; then
-            REM=$(( HOUR % 3 ))
-            if [ "$REM" -ne 0 ] || [ "$MIN" -ge 6 ]; then
-              echo "Hafta sonu 3 saatlik dilim disinda. Atlaniyor."
+            REM=$(( (HOUR - 8) % 4 ))
+            if [ "$REM" -ne 0 ] || [ "$MIN" -ge 11 ]; then
+              echo "Hafta sonu 4 saatlik dilim disinda. Atlaniyor."
               echo "skip=true" >> $GITHUB_OUTPUT
               exit 0
             fi
@@ -46,35 +48,35 @@ jobs:
           echo "skip=false" >> $GITHUB_OUTPUT
 
       - name: Checkout repo
-        if: steps.window.outputs.skip != 'true'
+        if: github.event_name != 'schedule' || steps.window.outputs.skip != 'true'
         uses: actions/checkout@v4
 
       - name: Setup Python
-        if: steps.window.outputs.skip != 'true'
+        if: github.event_name != 'schedule' || steps.window.outputs.skip != 'true'
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
 
       - name: Install dependencies
-        if: steps.window.outputs.skip != 'true'
+        if: github.event_name != 'schedule' || steps.window.outputs.skip != 'true'
         run: pip install -r collectors/requirements.txt
 
       - name: Run Yahoo Finance collector
-        if: steps.window.outputs.skip != 'true'
+        if: github.event_name != 'schedule' || steps.window.outputs.skip != 'true'
         run: python collectors/yahoo_finance.py
 
       - name: Copy data to site
-        if: steps.window.outputs.skip != 'true'
+        if: github.event_name != 'schedule' || steps.window.outputs.skip != 'true'
         run: |
           mkdir -p site/data
           cp data/*.json site/data/
 
       - name: Commit & Push
-        if: steps.window.outputs.skip != 'true'
+        if: github.event_name != 'schedule' || steps.window.outputs.skip != 'true'
         run: |
           git config user.name "Market Data Bot"
           git config user.email "bot@piyasa-monitoru.dev"
           git add data/ site/data/
-          git diff --staged --quiet || git commit -m "📊 Piyasa verileri güncellendi [$(date -u +%Y-%m-%d\ %H:%M)]"
+          git diff --staged --quiet || git commit -m "📊 Piyasa verileri güncellendi [$(TZ='Europe/Istanbul' date +%Y-%m-%d\ %H:%M)]"
           git push
