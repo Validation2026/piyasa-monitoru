@@ -47,7 +47,7 @@
 <script src="assets/js/app.js"></script>
 <script>
 (function(){
-    var period='1y',allSeries=[],charts=[];
+    var period='5y',allSeries=[],charts=[];
     PM.loadData('commodities_agriculture.json','emtia-tarim').then(function(data){
         if(!data||!data.series||!data.series.length){document.getElementById('summaryCards').innerHTML='<div class="scard"><div class="scard-name">Veri bulunamadı.</div></div>';return}
         allSeries=data.series;
