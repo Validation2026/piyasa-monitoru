@@ -67,15 +67,6 @@
         charts=PM.buildCharts('chartsGrid',allSeries,period);
         PM.buildTable('dataTable',allSeries);
     });
-    document.getElementById('periodSelector').addEventListener('click',function(e){
-        if(!e.target.classList.contains('pbtn'))return;
-        document.querySelectorAll('.pbtn').forEach(function(b){b.classList.remove('on')});
-        e.target.classList.add('on');period=e.target.getAttribute('data-period');
-        if(charts&&charts.length)charts.forEach(function(c){if(c&&c.destroy)c.destroy()});
-        charts=[];
-        var grid=document.getElementById('chartsGrid');if(grid)grid.innerHTML='';
-        charts=PM.buildCharts('chartsGrid',allSeries,period);
-    });
     fetch('/api/ai-analysis?cat=emtia-enerji').then(function(r){return r.json()}).then(function(d){
         var el=document.getElementById('aiAnalysis');if(el&&d.analysis)el.textContent=d.analysis;
     }).catch(function(){var el=document.getElementById('aiAnalysis');if(el)el.innerHTML='<span class="ai-loading">Analiz yüklenemiyor.</span>'});
