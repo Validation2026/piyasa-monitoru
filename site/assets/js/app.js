@@ -150,22 +150,28 @@ function loadData(file, pageId) {
 return{fj:fj,fs:fs,fp:fp,fc:fc,cc:cc,gc:gc,filterPeriod:filterPeriod,miniSpark:miniSpark,makeChart:makeChart,buildSummary:buildSummary,buildCharts:buildCharts,buildTable:buildTable,buildComparisonChart:buildComparisonChart,applyOverrides:applyOverrides,loadOverrides:loadOverrides,loadData:loadData};
 })();
 
-/* ══════════════════════════════
-   GRAFİK TAM EKRAN (ZOOM) İŞLEVİ
-   ══════════════════════════════ */
+/* ══════════════════════════════════════════
+   TRADINGVIEW STİLİ TAM EKRAN İŞLEVİ (HD)
+   ══════════════════════════════════════════ */
 document.addEventListener("click", function(e) {
-    // Sadece canvas (grafik) elementlerine tıklanınca çalışır
+    // Tıklanan şey grafik (canvas) ise
     if (e.target.tagName.toLowerCase() === 'canvas') {
         var canvas = e.target;
+        // Grafiği değil, onu saran "kart" div'ini tam ekran yapıyoruz (Başlıklar da gelsin diye)
+        var chartContainer = canvas.parentElement; 
         
-        // Tam ekran sınıfını açıp kapat
-        canvas.classList.toggle('chart-fullscreen-mode');
+        chartContainer.classList.toggle('tv-fullscreen-mode');
         
         // Arka planın kaymasını engelle
-        if (canvas.classList.contains('chart-fullscreen-mode')) {
+        if (chartContainer.classList.contains('tv-fullscreen-mode')) {
             document.body.style.overflow = 'hidden';
         } else {
             document.body.style.overflow = 'auto';
         }
+        
+        // SİHİRLİ KISIM: Chart.js'in grafiği bulanıklaştırmadan HD kalitede baştan çizmesini zorla
+        setTimeout(function() {
+            window.dispatchEvent(new Event('resize'));
+        }, 50);
     }
 });
