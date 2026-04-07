@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Endeksler",
-    "updated_at": "2026-04-07T12:11:23Z",
+    "updated_at": "2026-04-07T12:21:09Z",
     "symbol_count": 17,
     "errors": []
   },
@@ -11,13 +11,13 @@
       "id": "XU100.IS",
       "name": "BIST 100",
       "unit": "TRY",
-      "current": 13040.5,
-      "change_1d_pct": -0.55,
-      "change_1w_pct": 1.95,
-      "change_1m_pct": -0.29,
-      "change_3m_pct": 13.41,
-      "change_ytd_pct": 13.41,
-      "change_1y_pct": 819.71,
+      "current": 13028.3496,
+      "change_1d_pct": -0.64,
+      "change_1w_pct": 1.86,
+      "change_1m_pct": -0.39,
+      "change_3m_pct": 13.31,
+      "change_ytd_pct": 13.31,
+      "change_1y_pct": 818.85,
       "high_52w": 14339.2998,
       "low_52w": 1330.5,
       "data": [
@@ -5011,7 +5011,7 @@
         },
         {
           "date": "2026-04-07",
-          "value": 13040.5
+          "value": 13028.3496
         }
       ]
     },
@@ -5019,13 +5019,13 @@
       "id": "XU030.IS",
       "name": "BIST 30",
       "unit": "TRY",
-      "current": 14869.6299,
-      "change_1d_pct": -0.68,
-      "change_1w_pct": 2.42,
-      "change_1m_pct": -0.2,
-      "change_3m_pct": 18.82,
-      "change_ytd_pct": 18.82,
-      "change_1y_pct": 922.6,
+      "current": 14855.0,
+      "change_1d_pct": -0.77,
+      "change_1w_pct": 2.32,
+      "change_1m_pct": -0.3,
+      "change_3m_pct": 18.71,
+      "change_ytd_pct": 18.71,
+      "change_1y_pct": 921.59,
       "high_52w": 15828.2002,
       "low_52w": 1397.1,
       "data": [
@@ -9987,7 +9987,7 @@
         },
         {
           "date": "2026-04-07",
-          "value": 14869.6299
+          "value": 14855.0
         }
       ]
     },
@@ -30139,13 +30139,13 @@
       "id": "^STOXX50E",
       "name": "Euro Stoxx 50",
       "unit": "EUR",
-      "current": 5670.2002,
-      "change_1d_pct": -0.4,
-      "change_1w_pct": 2.99,
-      "change_1m_pct": -3.42,
-      "change_3m_pct": -1.42,
-      "change_ytd_pct": -4.28,
-      "change_1y_pct": 43.3,
+      "current": 5672.29,
+      "change_1d_pct": -0.36,
+      "change_1w_pct": 3.02,
+      "change_1m_pct": -3.38,
+      "change_3m_pct": -1.38,
+      "change_ytd_pct": -4.24,
+      "change_1y_pct": 43.36,
       "high_52w": 6173.3198,
       "low_52w": 3279.04,
       "data": [
@@ -35179,7 +35179,7 @@
         },
         {
           "date": "2026-04-07",
-          "value": 5670.2002
+          "value": 5672.29
         }
       ]
     },
@@ -35187,13 +35187,13 @@
       "id": "^FTSE",
       "name": "FTSE 100",
       "unit": "GBP",
-      "current": 10427.1299,
-      "change_1d_pct": -0.09,
-      "change_1w_pct": 4.61,
-      "change_1m_pct": -1.33,
-      "change_3m_pct": 4.99,
-      "change_ytd_pct": 4.78,
-      "change_1y_pct": 51.44,
+      "current": 10424.3701,
+      "change_1d_pct": -0.11,
+      "change_1w_pct": 4.58,
+      "change_1m_pct": -1.36,
+      "change_3m_pct": 4.96,
+      "change_ytd_pct": 4.76,
+      "change_1y_pct": 51.4,
       "high_52w": 10910.5996,
       "low_52w": 6826.2002,
       "data": [
@@ -40243,7 +40243,7 @@
         },
         {
           "date": "2026-04-07",
-          "value": 10427.1299
+          "value": 10424.3701
         }
       ]
     },
@@ -40251,13 +40251,13 @@
       "id": "^GDAXI",
       "name": "DAX 40",
       "unit": "EUR",
-      "current": 23088.7402,
-      "change_1d_pct": -0.34,
-      "change_1w_pct": 3.53,
-      "change_1m_pct": -4.61,
-      "change_3m_pct": -5.72,
-      "change_ytd_pct": -5.91,
-      "change_1y_pct": 52.14,
+      "current": 23091.1504,
+      "change_1d_pct": -0.33,
+      "change_1w_pct": 3.54,
+      "change_1m_pct": -4.6,
+      "change_3m_pct": -5.71,
+      "change_ytd_pct": -5.9,
+      "change_1y_pct": 52.15,
       "high_52w": 25420.6602,
       "low_52w": 11975.5498,
       "data": [
@@ -45359,7 +45359,7 @@
         },
         {
           "date": "2026-04-07",
-          "value": 23088.7402
+          "value": 23091.1504
         }
       ]
     },
@@ -45367,13 +45367,13 @@
       "id": "^FCHI",
       "name": "CAC 40",
       "unit": "EUR",
-      "current": 7979.1602,
-      "change_1d_pct": 0.21,
-      "change_1w_pct": 3.6,
-      "change_1m_pct": -2.31,
-      "change_3m_pct": -2.09,
-      "change_ytd_pct": -2.64,
-      "change_1y_pct": 30.15,
+      "current": 7981.0801,
+      "change_1d_pct": 0.23,
+      "change_1w_pct": 3.62,
+      "change_1m_pct": -2.29,
+      "change_3m_pct": -2.07,
+      "change_ytd_pct": -2.61,
+      "change_1y_pct": 30.18,
       "high_52w": 8620.9297,
       "low_52w": 5676.8701,
       "data": [
@@ -50503,7 +50503,7 @@
         },
         {
           "date": "2026-04-07",
-          "value": 7979.1602
+          "value": 7981.0801
         }
       ]
     },
