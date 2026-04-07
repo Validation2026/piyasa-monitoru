@@ -236,14 +236,13 @@ document.addEventListener("click", function(e) {
 });
 
 /* ══════════════════════════════════════════
-   AKILLI TAM EKRAN BUTON İŞLEYİCİSİ
+   AKILLI TAM EKRAN BUTON İŞLEYİCİSİ (HD & DÜZELTİLMİŞ)
    ══════════════════════════════════════════ */
 
 // 1. Ekranda farenin hareketini dinle
 document.addEventListener('mouseover', function(e) {
     var canvas = null;
     
-    // Fare bir grafiğin (canvas) veya onu saran kutunun üzerine geldiyse grafiği tespit et
     if (e.target.tagName && e.target.tagName.toLowerCase() === 'canvas') {
         canvas = e.target;
     } else if (e.target.querySelector && e.target.querySelector('canvas')) {
@@ -253,13 +252,12 @@ document.addEventListener('mouseover', function(e) {
     if (canvas) {
         var container = canvas.parentElement;
         
-        // Eğer bu grafiğin kutusuna daha önce Büyütme Butonu eklemediysek, anında ekle
         if (!container.classList.contains('chart-box-relative')) {
             container.classList.add('chart-box-relative');
             
             var btn = document.createElement('button');
             btn.className = 'chart-expand-btn';
-            btn.innerHTML = '⛶'; // Unicode Büyütme İkonu
+            btn.innerHTML = '⛶'; 
             btn.title = 'Tam Ekran';
             
             container.appendChild(btn);
@@ -272,24 +270,40 @@ document.addEventListener('click', function(e) {
     if (e.target.classList.contains('chart-expand-btn')) {
         var btn = e.target;
         var container = btn.parentElement;
+        var canvas = container.querySelector('canvas');
         
-        // Tam ekran modunu aç/kapat
+        // Grafiğin Chart.js kimliğini (instance) yakala
+        var chartInstance = Chart.getChart(canvas);
+        
         container.classList.toggle('tv-fullscreen-mode');
         
         if (container.classList.contains('tv-fullscreen-mode')) {
-            // Tam ekrana geçildiğinde:
-            document.body.style.overflow = 'hidden'; // Arka plan kaymasını durdur
-            btn.innerHTML = '✖'; // Butonu Çarpı yap
+            // TAM EKRANA GEÇİŞ
+            document.body.style.overflow = 'hidden';
+            btn.innerHTML = '✖';
             btn.title = 'Kapat';
+            
+            // SİHİRLİ DOKUNUŞ: Chart.js'in oran inadını kırıyoruz
+            if (chartInstance) {
+                chartInstance.options.maintainAspectRatio = false;
+            }
         } else {
-            // Tam ekrandan çıkıldığında:
-            document.body.style.overflow = 'auto'; // Arka plan kaymasını geri aç
-            btn.innerHTML = '⛶'; // Butonu Büyüteç yap
+            // NORMAL EKRANA DÖNÜŞ
+            document.body.style.overflow = 'auto';
+            btn.innerHTML = '⛶';
             btn.title = 'Tam Ekran';
+            
+            // Kapatırken oran korumasını geri açıyoruz ki sayfa düzeni bozulmasın
+            if (chartInstance) {
+                chartInstance.options.maintainAspectRatio = true;
+            }
         }
         
-        // SİHİRLİ DOKUNUŞ: Grafiği HD kalitede yeni boyuta göre anında baştan çiz
+        // Grafiği yeni kurallarla zorla baştan çizdir
         setTimeout(function() {
+            if (chartInstance) {
+                chartInstance.resize();
+            }
             window.dispatchEvent(new Event('resize'));
         }, 50);
     }
