@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Döviz Kurları",
-    "updated_at": "2026-04-07T08:36:46Z",
+    "updated_at": "2026-04-07T09:48:20Z",
     "symbol_count": 16,
     "errors": [
       "CNYTRY=X",
@@ -14,14 +14,14 @@
       "id": "USDTRY=X",
       "name": "USD/TRY",
       "unit": "TRY",
-      "current": 44.6056,
-      "change_1d_pct": 0.05,
-      "change_1w_pct": 0.3,
-      "change_1m_pct": 1.3,
-      "change_3m_pct": 3.71,
-      "change_ytd_pct": 3.75,
-      "change_1y_pct": 447.65,
-      "high_52w": 44.6056,
+      "current": 44.6,
+      "change_1d_pct": 0.04,
+      "change_1w_pct": 0.28,
+      "change_1m_pct": 1.29,
+      "change_3m_pct": 3.69,
+      "change_ytd_pct": 3.74,
+      "change_1y_pct": 447.58,
+      "high_52w": 44.6,
       "low_52w": 8.0288,
       "data": [
         {
@@ -5222,7 +5222,7 @@
         },
         {
           "date": "2026-04-07",
-          "value": 44.6056
+          "value": 44.6
         }
       ]
     },
@@ -5230,13 +5230,13 @@
       "id": "EURTRY=X",
       "name": "EUR/TRY",
       "unit": "TRY",
-      "current": 51.6203,
+      "current": 51.6244,
       "change_1d_pct": 0.56,
-      "change_1w_pct": 1.26,
-      "change_1m_pct": 1.11,
-      "change_3m_pct": 2.45,
+      "change_1w_pct": 1.27,
+      "change_1m_pct": 1.12,
+      "change_3m_pct": 2.46,
       "change_ytd_pct": 2.27,
-      "change_1y_pct": 434.57,
+      "change_1y_pct": 434.61,
       "high_52w": 52.1954,
       "low_52w": 9.6102,
       "data": [
@@ -10438,7 +10438,7 @@
         },
         {
           "date": "2026-04-07",
-          "value": 51.6203
+          "value": 51.6244
         }
       ]
     },
@@ -10446,13 +10446,13 @@
       "id": "GBPTRY=X",
       "name": "GBP/TRY",
       "unit": "TRY",
-      "current": 59.1595,
-      "change_1d_pct": 0.59,
-      "change_1w_pct": 0.95,
-      "change_1m_pct": 0.71,
-      "change_3m_pct": 2.27,
-      "change_ytd_pct": 2.21,
-      "change_1y_pct": 426.0,
+      "current": 59.1887,
+      "change_1d_pct": 0.64,
+      "change_1w_pct": 1.0,
+      "change_1m_pct": 0.75,
+      "change_3m_pct": 2.32,
+      "change_ytd_pct": 2.26,
+      "change_1y_pct": 426.26,
       "high_52w": 60.0847,
       "low_52w": 11.0576,
       "data": [
@@ -15654,7 +15654,7 @@
         },
         {
           "date": "2026-04-07",
-          "value": 59.1595
+          "value": 59.1887
         }
       ]
     },
@@ -15662,13 +15662,13 @@
       "id": "CHFTRY=X",
       "name": "CHF/TRY",
       "unit": "TRY",
-      "current": 55.8631,
-      "change_1d_pct": 0.37,
-      "change_1w_pct": 0.43,
-      "change_1m_pct": -0.83,
-      "change_3m_pct": 2.96,
-      "change_ytd_pct": 3.0,
-      "change_1y_pct": 539.39,
+      "current": 55.8771,
+      "change_1d_pct": 0.4,
+      "change_1w_pct": 0.46,
+      "change_1m_pct": -0.8,
+      "change_3m_pct": 2.99,
+      "change_ytd_pct": 3.03,
+      "change_1y_pct": 539.55,
       "high_52w": 57.1442,
       "low_52w": 8.7082,
       "data": [
@@ -20870,7 +20870,7 @@
         },
         {
           "date": "2026-04-07",
-          "value": 55.8631
+          "value": 55.8771
         }
       ]
     },
@@ -20878,19 +20878,19 @@
       "id": "JPYTRY=X",
       "name": "JPY/TRY",
       "unit": "TRY",
-      "current": 0.2794,
+      "current": 0.2795,
       "change_1d_pct": null,
       "change_1w_pct": null,
       "change_1m_pct": null,
       "change_3m_pct": null,
       "change_ytd_pct": null,
       "change_1y_pct": null,
-      "high_52w": 0.2794,
-      "low_52w": 0.2794,
+      "high_52w": 0.2795,
+      "low_52w": 0.2795,
       "data": [
         {
           "date": "2026-04-07",
-          "value": 0.2794
+          "value": 0.2795
         }
       ]
     },
@@ -20898,19 +20898,19 @@
       "id": "CADTRY=X",
       "name": "CAD/TRY",
       "unit": "TRY",
-      "current": 32.0504,
+      "current": 32.0489,
       "change_1d_pct": null,
       "change_1w_pct": null,
       "change_1m_pct": null,
       "change_3m_pct": null,
       "change_ytd_pct": null,
       "change_1y_pct": null,
-      "high_52w": 32.0504,
-      "low_52w": 32.0504,
+      "high_52w": 32.0489,
+      "low_52w": 32.0489,
       "data": [
         {
           "date": "2026-04-07",
-          "value": 32.0504
+          "value": 32.0489
         }
       ]
     },
@@ -20918,19 +20918,19 @@
       "id": "AUDTRY=X",
       "name": "AUD/TRY",
       "unit": "TRY",
-      "current": 30.9295,
+      "current": 30.9541,
       "change_1d_pct": null,
       "change_1w_pct": null,
       "change_1m_pct": null,
       "change_3m_pct": null,
       "change_ytd_pct": null,
       "change_1y_pct": null,
-      "high_52w": 30.9295,
-      "low_52w": 30.9295,
+      "high_52w": 30.9541,
+      "low_52w": 30.9541,
       "data": [
         {
           "date": "2026-04-07",
-          "value": 30.9295
+          "value": 30.9541
         }
       ]
     },
@@ -26154,13 +26154,13 @@
       "id": "GBPUSD=X",
       "name": "GBP/USD",
       "unit": "USD",
-      "current": 1.3265,
-      "change_1d_pct": 0.6,
-      "change_1w_pct": 0.7,
-      "change_1m_pct": -0.69,
-      "change_3m_pct": -1.29,
-      "change_ytd_pct": -1.55,
-      "change_1y_pct": -4.09,
+      "current": 1.3268,
+      "change_1d_pct": 0.62,
+      "change_1w_pct": 0.72,
+      "change_1m_pct": -0.67,
+      "change_3m_pct": -1.27,
+      "change_ytd_pct": -1.53,
+      "change_1y_pct": -4.07,
       "high_52w": 1.4227,
       "low_52w": 1.0728,
       "data": [
@@ -31362,7 +31362,7 @@
         },
         {
           "date": "2026-04-07",
-          "value": 1.3265
+          "value": 1.3268
         }
       ]
     },
@@ -31370,13 +31370,13 @@
       "id": "USDJPY=X",
       "name": "USD/JPY",
       "unit": "JPY",
-      "current": 159.582,
+      "current": 159.595,
       "change_1d_pct": -0.12,
-      "change_1w_pct": -0.16,
-      "change_1m_pct": 1.3,
-      "change_3m_pct": 1.65,
-      "change_ytd_pct": 1.82,
-      "change_1y_pct": 45.35,
+      "change_1w_pct": -0.15,
+      "change_1m_pct": 1.31,
+      "change_3m_pct": 1.66,
+      "change_ytd_pct": 1.83,
+      "change_1y_pct": 45.36,
       "high_52w": 161.621,
       "low_52w": 107.874,
       "data": [
@@ -36578,7 +36578,7 @@
         },
         {
           "date": "2026-04-07",
-          "value": 159.582
+          "value": 159.595
         }
       ]
     },
@@ -36586,13 +36586,13 @@
       "id": "USDCHF=X",
       "name": "USD/CHF",
       "unit": "CHF",
-      "current": 0.7984,
-      "change_1d_pct": -0.35,
-      "change_1w_pct": -0.19,
-      "change_1m_pct": 2.27,
-      "change_3m_pct": 0.63,
-      "change_ytd_pct": 0.81,
-      "change_1y_pct": -14.28,
+      "current": 0.7983,
+      "change_1d_pct": -0.36,
+      "change_1w_pct": -0.2,
+      "change_1m_pct": 2.25,
+      "change_3m_pct": 0.62,
+      "change_ytd_pct": 0.8,
+      "change_1y_pct": -14.29,
       "high_52w": 1.0134,
       "low_52w": 0.7632,
       "data": [
@@ -41794,7 +41794,7 @@
         },
         {
           "date": "2026-04-07",
-          "value": 0.7984
+          "value": 0.7983
         }
       ]
     },
@@ -41802,13 +41802,13 @@
       "id": "AUDUSD=X",
       "name": "AUD/USD",
       "unit": "USD",
-      "current": 0.6936,
-      "change_1d_pct": 0.73,
-      "change_1w_pct": 1.31,
-      "change_1m_pct": -1.07,
-      "change_3m_pct": 3.77,
-      "change_ytd_pct": 3.86,
-      "change_1y_pct": -9.53,
+      "current": 0.694,
+      "change_1d_pct": 0.78,
+      "change_1w_pct": 1.37,
+      "change_1m_pct": -1.01,
+      "change_3m_pct": 3.83,
+      "change_ytd_pct": 3.92,
+      "change_1y_pct": -9.48,
       "high_52w": 0.7859,
       "low_52w": 0.5955,
       "data": [
@@ -47010,7 +47010,7 @@
         },
         {
           "date": "2026-04-07",
-          "value": 0.6936
+          "value": 0.694
         }
       ]
     },
@@ -47018,13 +47018,13 @@
       "id": "USDCAD=X",
       "name": "USD/CAD",
       "unit": "CAD",
-      "current": 1.3917,
-      "change_1d_pct": -0.21,
-      "change_1w_pct": -0.08,
-      "change_1m_pct": 1.81,
-      "change_3m_pct": 1.24,
-      "change_ytd_pct": 1.47,
-      "change_1y_pct": 10.71,
+      "current": 1.3919,
+      "change_1d_pct": -0.19,
+      "change_1w_pct": -0.06,
+      "change_1m_pct": 1.82,
+      "change_3m_pct": 1.25,
+      "change_ytd_pct": 1.48,
+      "change_1y_pct": 10.72,
       "high_52w": 1.4717,
       "low_52w": 1.2038,
       "data": [
@@ -52226,7 +52226,7 @@
         },
         {
           "date": "2026-04-07",
-          "value": 1.3917
+          "value": 1.3919
         }
       ]
     },
@@ -57450,13 +57450,13 @@
       "id": "USDCNY=X",
       "name": "USD/CNY",
       "unit": "CNY",
-      "current": 6.8579,
-      "change_1d_pct": -0.36,
-      "change_1w_pct": -0.78,
-      "change_1m_pct": -0.57,
-      "change_3m_pct": -1.93,
-      "change_ytd_pct": -1.98,
-      "change_1y_pct": 4.88,
+      "current": 6.857,
+      "change_1d_pct": -0.37,
+      "change_1w_pct": -0.79,
+      "change_1m_pct": -0.58,
+      "change_3m_pct": -1.95,
+      "change_ytd_pct": -1.99,
+      "change_1y_pct": 4.87,
       "high_52w": 7.35,
       "low_52w": 6.3084,
       "data": [
@@ -62658,7 +62658,7 @@
         },
         {
           "date": "2026-04-07",
-          "value": 6.8579
+          "value": 6.857
         }
       ]
     },
@@ -62666,13 +62666,13 @@
       "id": "DX-Y.NYB",
       "name": "Dolar Endeksi (DXY)",
       "unit": "",
-      "current": 99.893,
-      "change_1d_pct": -0.09,
-      "change_1w_pct": -0.61,
-      "change_1m_pct": 0.58,
-      "change_3m_pct": 1.68,
-      "change_ytd_pct": 1.5,
-      "change_1y_pct": 8.04,
+      "current": 99.821,
+      "change_1d_pct": -0.16,
+      "change_1w_pct": -0.69,
+      "change_1m_pct": 0.5,
+      "change_3m_pct": 1.61,
+      "change_ytd_pct": 1.42,
+      "change_1y_pct": 7.96,
       "high_52w": 114.11,
       "low_52w": 89.64,
       "data": [
@@ -67706,7 +67706,7 @@
         },
         {
           "date": "2026-04-07",
-          "value": 99.893
+          "value": 99.821
         }
       ]
     }
