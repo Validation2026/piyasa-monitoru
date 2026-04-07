@@ -234,3 +234,63 @@ document.addEventListener("click", function(e) {
         }
     }
 });
+
+/* ══════════════════════════════════════════
+   AKILLI TAM EKRAN BUTON İŞLEYİCİSİ
+   ══════════════════════════════════════════ */
+
+// 1. Ekranda farenin hareketini dinle
+document.addEventListener('mouseover', function(e) {
+    var canvas = null;
+    
+    // Fare bir grafiğin (canvas) veya onu saran kutunun üzerine geldiyse grafiği tespit et
+    if (e.target.tagName && e.target.tagName.toLowerCase() === 'canvas') {
+        canvas = e.target;
+    } else if (e.target.querySelector && e.target.querySelector('canvas')) {
+        canvas = e.target.querySelector('canvas');
+    }
+
+    if (canvas) {
+        var container = canvas.parentElement;
+        
+        // Eğer bu grafiğin kutusuna daha önce Büyütme Butonu eklemediysek, anında ekle
+        if (!container.classList.contains('chart-box-relative')) {
+            container.classList.add('chart-box-relative');
+            
+            var btn = document.createElement('button');
+            btn.className = 'chart-expand-btn';
+            btn.innerHTML = '⛶'; // Unicode Büyütme İkonu
+            btn.title = 'Tam Ekran';
+            
+            container.appendChild(btn);
+        }
+    }
+});
+
+// 2. Büyütme/Kapatma butonuna tıklanma olayını dinle
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('chart-expand-btn')) {
+        var btn = e.target;
+        var container = btn.parentElement;
+        
+        // Tam ekran modunu aç/kapat
+        container.classList.toggle('tv-fullscreen-mode');
+        
+        if (container.classList.contains('tv-fullscreen-mode')) {
+            // Tam ekrana geçildiğinde:
+            document.body.style.overflow = 'hidden'; // Arka plan kaymasını durdur
+            btn.innerHTML = '✖'; // Butonu Çarpı yap
+            btn.title = 'Kapat';
+        } else {
+            // Tam ekrandan çıkıldığında:
+            document.body.style.overflow = 'auto'; // Arka plan kaymasını geri aç
+            btn.innerHTML = '⛶'; // Butonu Büyüteç yap
+            btn.title = 'Tam Ekran';
+        }
+        
+        // SİHİRLİ DOKUNUŞ: Grafiği HD kalitede yeni boyuta göre anında baştan çiz
+        setTimeout(function() {
+            window.dispatchEvent(new Event('resize'));
+        }, 50);
+    }
+});
