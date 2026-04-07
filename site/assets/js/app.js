@@ -132,8 +132,12 @@ function loadOverrides(pageId) {
 }
 
 function loadData(file, pageId) {
-    // Veriyi hemen yükle, override'ları beklemeden
-    return fj(file);
+    // Veri ve override'lari paralel yukle, override'lari uygula
+    return Promise.all([fj(file), loadOverrides(pageId)]).then(function(r){
+        var data = r[0], ov = r[1];
+        if (data && data.series && ov) applyOverrides(data.series, ov);
+        return data;
+    });
 }
 
 return{fj:fj,fs:fs,fp:fp,fc:fc,cc:cc,gc:gc,filterPeriod:filterPeriod,miniSpark:miniSpark,makeChart:makeChart,buildSummary:buildSummary,buildCharts:buildCharts,buildTable:buildTable,buildComparisonChart:buildComparisonChart,applyOverrides:applyOverrides,loadOverrides:loadOverrides,loadData:loadData};

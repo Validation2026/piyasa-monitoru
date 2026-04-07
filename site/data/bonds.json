@@ -3,7 +3,7 @@
     "source": "Yahoo Finance",
     "category": "Tahvil Faizleri",
     "updated_at": "2026-04-07T07:24:12Z",
-    "symbol_count": 8,
+    "symbol_count": 4,
     "errors": []
   },
   "series": [
@@ -19804,86 +19804,6 @@
         {
           "date": "2026-04-06",
           "value": 4.891
-        }
-      ]
-    },
-    {
-      "id": "JP2Y=RR",
-      "name": "Japonya 2 Yıllık",
-      "unit": "%",
-      "current": 0.72,
-      "change_1d_pct": 0.0,
-      "change_1w_pct": null,
-      "change_1m_pct": null,
-      "change_3m_pct": null,
-      "change_ytd_pct": null,
-      "change_1y_pct": null,
-      "high_52w": 0.72,
-      "low_52w": 0.72,
-      "data": [
-        {
-          "date": "2026-04-07",
-          "value": 0.72
-        }
-      ]
-    },
-    {
-      "id": "JP5Y=RR",
-      "name": "Japonya 5 Yıllık",
-      "unit": "%",
-      "current": 1.08,
-      "change_1d_pct": 0.0,
-      "change_1w_pct": null,
-      "change_1m_pct": null,
-      "change_3m_pct": null,
-      "change_ytd_pct": null,
-      "change_1y_pct": null,
-      "high_52w": 1.08,
-      "low_52w": 1.08,
-      "data": [
-        {
-          "date": "2026-04-07",
-          "value": 1.08
-        }
-      ]
-    },
-    {
-      "id": "JP10Y=RR",
-      "name": "Japonya 10 Yıllık",
-      "unit": "%",
-      "current": 1.47,
-      "change_1d_pct": 0.0,
-      "change_1w_pct": null,
-      "change_1m_pct": null,
-      "change_3m_pct": null,
-      "change_ytd_pct": null,
-      "change_1y_pct": null,
-      "high_52w": 1.47,
-      "low_52w": 1.47,
-      "data": [
-        {
-          "date": "2026-04-07",
-          "value": 1.47
-        }
-      ]
-    },
-    {
-      "id": "JP30Y=RR",
-      "name": "Japonya 30 Yıllık",
-      "unit": "%",
-      "current": 2.68,
-      "change_1d_pct": 0.0,
-      "change_1w_pct": null,
-      "change_1m_pct": null,
-      "change_3m_pct": null,
-      "change_ytd_pct": null,
-      "change_1y_pct": null,
-      "high_52w": 2.68,
-      "low_52w": 2.68,
-      "data": [
-        {
-          "date": "2026-04-07",
-          "value": 2.68
         }
       ]
     }

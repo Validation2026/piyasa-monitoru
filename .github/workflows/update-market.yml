@@ -2,11 +2,14 @@ name: Update Market Data
 
 on:
   schedule:
-    # Hafta içi (Pazartesi-Cuma) TSİ 09:00 - 18:00 arası her 5 dakikada bir (UTC 06:00 - 15:00)
-    - cron: '*/5 6-15 * * 1-5'
-    # Hafta sonu (Cumartesi-Pazar) TSİ 09:00 - 18:00 arası her 3 saatte bir (UTC 06:00, 09:00, 12:00, 15:00)
-    - cron: '0 6-15/3 * * 0,6'
+    # Her 5 dakikada bir tetiklenir; saat/gün filtresi script icinde yapilir.
+    # Boylece GitHub'in karmasik cron ifadelerini atlama riski azalir.
+    - cron: '*/5 * * * *'
   workflow_dispatch:  # Manuel tetikleme butonu
+
+concurrency:
+  group: update-market
+  cancel-in-progress: false
 
 jobs:
   update-yahoo:
@@ -15,27 +18,60 @@ jobs:
       contents: write
 
     steps:
+      - name: Time window check (TSI 09-18)
+        id: window
+        run: |
+          # TSI = UTC+3
+          HOUR=$(TZ='Europe/Istanbul' date +%H)
+          DOW=$(TZ='Europe/Istanbul' date +%u)   # 1=Mon ... 7=Sun
+          MIN=$(TZ='Europe/Istanbul' date +%M)
+          echo "TSI hour=$HOUR dow=$DOW min=$MIN"
+
+          if [ "$HOUR" -lt 9 ] || [ "$HOUR" -gt 18 ]; then
+            echo "Disarida (saat). Atlaniyor."
+            echo "skip=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # Hafta sonu: sadece her 3 saatte bir (09,12,15,18) ve dakika < 6
+          if [ "$DOW" -ge 6 ]; then
+            REM=$(( HOUR % 3 ))
+            if [ "$REM" -ne 0 ] || [ "$MIN" -ge 6 ]; then
+              echo "Hafta sonu 3 saatlik dilim disinda. Atlaniyor."
+              echo "skip=true" >> $GITHUB_OUTPUT
+              exit 0
+            fi
+          fi
+
+          echo "skip=false" >> $GITHUB_OUTPUT
+
       - name: Checkout repo
+        if: steps.window.outputs.skip != 'true'
         uses: actions/checkout@v4
 
       - name: Setup Python
+        if: steps.window.outputs.skip != 'true'
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
 
       - name: Install dependencies
+        if: steps.window.outputs.skip != 'true'
         run: pip install -r collectors/requirements.txt
 
       - name: Run Yahoo Finance collector
+        if: steps.window.outputs.skip != 'true'
         run: python collectors/yahoo_finance.py
 
       - name: Copy data to site
+        if: steps.window.outputs.skip != 'true'
         run: |
           mkdir -p site/data
           cp data/*.json site/data/
 
       - name: Commit & Push
+        if: steps.window.outputs.skip != 'true'
         run: |
           git config user.name "Market Data Bot"
           git config user.email "bot@piyasa-monitoru.dev"

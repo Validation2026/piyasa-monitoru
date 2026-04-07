@@ -33,12 +33,6 @@
     </div>
     <div class="ai-box"><div class="ai-header"><span>🤖 AI Piyasa Analizi</span><span class="ai-badge">AI</span></div><div class="ai-body" id="aiAnalysis"><span class="ai-loading">Analiz yükleniyor...</span></div></div>
 
-    <div class="country-tabs" id="countryTabs">
-        <button class="country-tab on" data-country="all">Tümü</button>
-        <button class="country-tab" data-country="us">🇺🇸 ABD</button>
-        <button class="country-tab" data-country="jp">🇯🇵 Japonya</button>
-    </div>
-
     <div class="summary-row" id="summaryCards"></div>
     <div class="periods" id="periodSelector">
         <button class="pbtn" data-period="1m">1A</button>
@@ -58,24 +52,16 @@
 <script src="assets/js/app.js"></script>
 <script>
 (function(){
-    var period='all', allSeries=[], chartInstances=[], activeSeries=[], country='all';
-
-    var US_IDS = ['2YY=F', '^FVX', '^TNX', '^TYX'];
-    var JP_IDS = ['JP2Y=RR', 'JP5Y=RR', 'JP10Y=RR', 'JP30Y=RR'];
-
-    function filterByCountry(series, c) {
-        if (c === 'all') return series;
-        if (c === 'us') return series.filter(function(s) { return US_IDS.indexOf(s.id) > -1; });
-        if (c === 'jp') return series.filter(function(s) { return JP_IDS.indexOf(s.id) > -1; });
-        return series;
-    }
+    var period='all', allSeries=[], chartInstances=[], activeSeries=[];
 
     function rebuildAll() {
-        activeSeries = filterByCountry(allSeries, country);
+        activeSeries = allSeries;
         if (chartInstances && chartInstances.length) {
             chartInstances.forEach(function(c) { if (c && c.destroy) c.destroy(); });
         }
         chartInstances = [];
+        var grid = document.getElementById('chartsGrid');
+        if (grid) grid.innerHTML = '';
         PM.buildSummary('summaryCards', activeSeries);
         chartInstances = PM.buildCharts('chartsGrid', activeSeries, period);
         PM.buildTable('dataTable', activeSeries);
@@ -107,15 +93,6 @@
         var grid = document.getElementById('chartsGrid');
         if (grid) grid.innerHTML = '';
         chartInstances = PM.buildCharts('chartsGrid', activeSeries, period);
-    });
-
-    // Country filter tabs
-    document.getElementById('countryTabs').addEventListener('click', function(e) {
-        if (!e.target.classList.contains('country-tab')) return;
-        document.querySelectorAll('.country-tab').forEach(function(b) { b.classList.remove('on'); });
-        e.target.classList.add('on');
-        country = e.target.getAttribute('data-country');
-        rebuildAll();
     });
 
     fetch('/api/ai-analysis?cat=tahviller').then(function(r){return r.json()}).then(function(d){

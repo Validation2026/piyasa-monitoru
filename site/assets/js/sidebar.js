@@ -18,18 +18,29 @@ var links = [
     ['karsilastirma','📊','Karşılaştır'],
     ['iran-risk','🔴','İran Risk'],
     ['tedarik-zinciri','🚢','Tedarik Zinciri'],
-    ['kuresel-risk','🌍','Küresel Risk'],
     ['ekonomik-takvim','📅','Takvim'],
     ['merkez-bankalari','🏛️','Merkez Bank.'],
-    ['ulke-risk','🌐','Ülke Risk']
+    ['ulke-risk','🌐','Ülke Risk'],
+    {ext:'https://tufeai.netlify.app/',icon:'🧮',label:'TÜFE-AI'}
 ];
 
+function buildHref(l){
+    if(l && l.ext) return l.ext;
+    return l[0]+'.html';
+}
+function isExt(l){ return !!(l && l.ext); }
+function lIcon(l){ return l.ext?l.icon:l[1]; }
+function lLabel(l){ return l.ext?l.label:l[2]; }
+function lKey(l){ return l.ext?('ext-'+l.label):l[0]; }
+
 var sidebarLinks = links.map(function(l){
-    return '<a class="sb-direct" href="'+l[0]+'.html" data-page="'+l[0]+'"><span class="sb-icon">'+l[1]+'</span> '+l[2]+'</a>';
+    var target=isExt(l)?' target="_blank" rel="noopener"':'';
+    return '<a class="sb-direct" href="'+buildHref(l)+'"'+target+' data-page="'+lKey(l)+'"><span class="sb-icon">'+lIcon(l)+'</span> '+lLabel(l)+'</a>';
 }).join('');
 
 var mobileLinks = links.map(function(l){
-    return '<a class="mb-link" href="'+l[0]+'.html" data-page="'+l[0]+'">'+l[1]+' '+l[2]+'</a>';
+    var target=isExt(l)?' target="_blank" rel="noopener"':'';
+    return '<a class="mb-link" href="'+buildHref(l)+'"'+target+' data-page="'+lKey(l)+'">'+lIcon(l)+' '+lLabel(l)+'</a>';
 }).join('');
 
 var HTML = '' +
@@ -82,5 +93,29 @@ function tick(){
     el.textContent=String(n.getDate()).padStart(2,'0')+'.'+String(n.getMonth()+1).padStart(2,'0')+'.'+n.getFullYear()+' '+String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');
 }
 setInterval(tick,30000);tick();
+
+// Otomatik yenileme: admin paneli kaydedince ilgili sayfa kendiliginden refresh olur
+(function(){
+    var pageId = location.pathname.split('/').pop().replace('.html','') || 'index';
+    // Iran sayfasi icin iran-state, diger sayfalar icin page-state
+    var endpoint = pageId === 'iran-risk' ? '/api/iran-state' : '/api/page-state?page=' + pageId;
+    var lastStamp = null;
+    var initialized = false;
+
+    function check(){
+        if (document.hidden) return;
+        fetch(endpoint, {cache:'no-store'}).then(function(r){return r.json()}).then(function(d){
+            if(!d) return;
+            var stamp = d.updatedAt || d.lastUpdated || (d.meta && d.meta.updated_at) || null;
+            if(!initialized){ lastStamp = stamp; initialized = true; return; }
+            if(stamp && stamp !== lastStamp){
+                lastStamp = stamp;
+                location.reload();
+            }
+        }).catch(function(){});
+    }
+    setInterval(check, 12000);
+    setTimeout(check, 1500);
+})();
 
 })();

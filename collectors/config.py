@@ -87,10 +87,6 @@ BONDS = {
         "^FVX":     {"name": "ABD 5 Yıllık",       "unit": "%"},
         "^TNX":     {"name": "ABD 10 Yıllık",      "unit": "%"},
         "^TYX":     {"name": "ABD 30 Yıllık",      "unit": "%"},
-        "JP2Y=RR":  {"name": "Japonya 2 Yıllık",   "unit": "%"},
-        "JP5Y=RR":  {"name": "Japonya 5 Yıllık",   "unit": "%"},
-        "JP10Y=RR": {"name": "Japonya 10 Yıllık",  "unit": "%"},
-        "JP30Y=RR": {"name": "Japonya 30 Yıllık",  "unit": "%"},
     }
 }
 
