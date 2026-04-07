@@ -98,19 +98,26 @@ function buildComparisonChart(canvasId,seriesList,period){
     var dark=document.documentElement.getAttribute('data-theme')!=='light';
     var grid=dark?'rgba(255,255,255,.05)':'rgba(0,0,0,.05)';var txt=dark?'#8a99b2':'#475569';
     var MO=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
-    var datasets=[];
-    var maxLen=0;var allLabels=[];
+    // Tum tarihlerin birlesimi: x ekseni butun grafik boyunca uzansin
+    var dateSet={};
+    var perSeries=[];
     seriesList.forEach(function(s,i){
-        if(!s||!s.data)return;
+        if(!s||!s.data){perSeries.push(null);return;}
         var filtered=downsample(filterPeriod(s.data,period||'1y'),300);
-        if(!filtered.length)return;
-        var base=filtered[0].value;if(!base)return;
-        var vals=filtered.map(function(d){return((d.value-base)/base)*100});
-        var labels=filtered.map(function(d){return d.date});
-        if(labels.length>maxLen){maxLen=labels.length;allLabels=labels}
-        datasets.push({label:s.name,data:vals,borderColor:gc(i),backgroundColor:'transparent',tension:.3,pointRadius:0,pointHoverRadius:4,borderWidth:2});
+        if(!filtered.length){perSeries.push(null);return;}
+        var base=filtered[0].value;if(!base){perSeries.push(null);return;}
+        var map={};
+        filtered.forEach(function(d){map[d.date]=((d.value-base)/base)*100;dateSet[d.date]=1});
+        perSeries.push({s:s,i:i,map:map});
     });
-    return new Chart(c,{type:'line',data:{labels:allLabels,datasets:datasets},options:{responsive:true,maintainAspectRatio:false,animation:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:true,position:'top',labels:{color:txt,font:{size:11,family:"'Outfit'"},boxWidth:12,padding:12}},tooltip:{backgroundColor:dark?'#1e293b':'#fff',titleColor:dark?'#e8edf5':'#0f172a',bodyColor:dark?'#8a99b2':'#475569',borderColor:dark?'#334155':'#dde4ed',borderWidth:1,padding:10,callbacks:{label:function(ctx){return ctx.dataset.label+': '+(ctx.raw>=0?'+':'')+ctx.raw.toFixed(2)+'%'}}}},scales:{x:{grid:{color:grid,drawBorder:false},ticks:{color:txt,font:{size:10,family:"'JetBrains Mono'"},maxTicksLimit:6,callback:function(v){var l=this.getLabelForValue(v);var p=l.split('-');if(p.length>=2)return MO[parseInt(p[1])-1]+' '+p[0].slice(2);return l}}},y:{grid:{color:grid,drawBorder:false},ticks:{color:txt,font:{size:10,family:"'JetBrains Mono'"},callback:function(v){return(v>=0?'+':'')+v.toFixed(0)+'%'}}}}}});
+    var allLabels=Object.keys(dateSet).sort();
+    var datasets=[];
+    perSeries.forEach(function(ps){
+        if(!ps)return;
+        var data=allLabels.map(function(dt){return ps.map[dt]!=null?ps.map[dt]:null});
+        datasets.push({label:ps.s.name,data:data,borderColor:gc(ps.i),backgroundColor:'transparent',tension:.3,pointRadius:0,pointHoverRadius:4,borderWidth:2,spanGaps:true});
+    });
+    return new Chart(c,{type:'line',data:{labels:allLabels,datasets:datasets},options:{responsive:true,maintainAspectRatio:false,animation:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:true,position:'top',labels:{color:txt,font:{size:11,family:"'Outfit'"},boxWidth:12,padding:12}},tooltip:{backgroundColor:dark?'#1e293b':'#fff',titleColor:dark?'#e8edf5':'#0f172a',bodyColor:dark?'#8a99b2':'#475569',borderColor:dark?'#334155':'#dde4ed',borderWidth:1,padding:10,callbacks:{label:function(ctx){if(ctx.raw==null)return'';return ctx.dataset.label+': '+(ctx.raw>=0?'+':'')+ctx.raw.toFixed(2)+'%'}}}},scales:{x:{grid:{color:grid,drawBorder:false},ticks:{color:txt,font:{size:10,family:"'JetBrains Mono'"},maxTicksLimit:6,callback:function(v){var l=this.getLabelForValue(v);var p=l.split('-');if(p.length>=2)return MO[parseInt(p[1])-1]+' '+p[0].slice(2);return l}}},y:{grid:{color:grid,drawBorder:false},ticks:{color:txt,font:{size:10,family:"'JetBrains Mono'"},callback:function(v){return(v>=0?'+':'')+v.toFixed(0)+'%'}}}}}});
 }
 
 function applyOverrides(seriesList, overrides) {
