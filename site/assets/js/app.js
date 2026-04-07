@@ -230,6 +230,12 @@ document.addEventListener("click", function(e) {
                 chartInstance.data.labels = filteredLabels;
                 chartInstance.data.datasets[0].data = filteredData;
                 chartInstance.update();
+
+                // 🌟 SİHİRLİ ANİMASYON TETİKLEYİCİSİ 🌟
+                // Animasyonu önce silip, tarayıcıyı zorla yenileyip (reflow), tekrar ekliyoruz
+                chartInstance.canvas.style.animation = 'none';
+                chartInstance.canvas.offsetHeight; /* Tarayıcıyı kandırıp animasyonu sıfırlıyoruz */
+                chartInstance.canvas.style.animation = 'fadeInUp 0.5s ease-out forwards';
             }
         }
     }
