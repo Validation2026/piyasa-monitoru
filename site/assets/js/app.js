@@ -149,3 +149,23 @@ function loadData(file, pageId) {
 
 return{fj:fj,fs:fs,fp:fp,fc:fc,cc:cc,gc:gc,filterPeriod:filterPeriod,miniSpark:miniSpark,makeChart:makeChart,buildSummary:buildSummary,buildCharts:buildCharts,buildTable:buildTable,buildComparisonChart:buildComparisonChart,applyOverrides:applyOverrides,loadOverrides:loadOverrides,loadData:loadData};
 })();
+
+/* ══════════════════════════════
+   GRAFİK TAM EKRAN (ZOOM) İŞLEVİ
+   ══════════════════════════════ */
+document.addEventListener("click", function(e) {
+    // Sadece canvas (grafik) elementlerine tıklanınca çalışır
+    if (e.target.tagName.toLowerCase() === 'canvas') {
+        var canvas = e.target;
+        
+        // Tam ekran sınıfını açıp kapat
+        canvas.classList.toggle('chart-fullscreen-mode');
+        
+        // Arka planın kaymasını engelle
+        if (canvas.classList.contains('chart-fullscreen-mode')) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'auto';
+        }
+    }
+});
