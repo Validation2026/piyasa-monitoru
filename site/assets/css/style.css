@@ -545,3 +545,60 @@ tbody tr:hover {
     background: #e63946; /* Üstüne gelince koyu kırmızı */
     transform: rotate(90deg); /* Havalı bir dönme efekti */
 }
+
+/* ══════════════════════════════════════════
+   MOBİL OPTİMİZASYON (YENİ SİSTEMLER İÇİN)
+   ══════════════════════════════════════════ */
+@media (max-width: 768px) {
+    
+    /* 1. Büyütme Butonu Mobilde Hep Görünür Olsun */
+    /* (Mobilde hover olmadığı için buton gizli kalmasın) */
+    .chart-expand-btn {
+        opacity: 1 !important;
+        top: 5px !important;
+        right: 5px !important;
+        width: 32px !important;
+        height: 32px !important;
+        font-size: 1rem !important;
+        background: rgba(255, 255, 255, 0.8) !important; /* Grafiğin üstünde daha net okunsun */
+        backdrop-filter: blur(4px);
+    }
+    [data-theme=dark] .chart-expand-btn {
+        background: rgba(30, 41, 59, 0.8) !important;
+    }
+
+    /* 2. Tam Ekran Modu Mobilde Ekrana Tam Otursun */
+    /* (Mobilde kenar boşluklarını kısıyoruz ki grafik ezilmesin) */
+    .tv-fullscreen-mode {
+        padding: 50px 10px 20px 10px !important; 
+    }
+
+    /* Çarpı butonu mobilde parmakla basması kolay bir yere geçsin */
+    .tv-fullscreen-mode .chart-expand-btn {
+        top: 10px !important;
+        right: 10px !important;
+        width: 40px !important;
+        height: 40px !important;
+        font-size: 1.2rem !important;
+        background: var(--red) !important;
+    }
+
+    /* 3. Zaman Filtreleri (1A, 3A, 5Y vs.) Parmak Dostu Olsun */
+    .chart-timeframes {
+        justify-content: center !important; /* Butonları ortaya topla */
+        gap: 4px !important;
+    }
+
+    .tf-btn {
+        padding: 8px 10px !important; /* Parmakla basma alanı (Touch Target) büyütüldü */
+        font-size: 0.75rem !important;
+        flex-grow: 1; /* Butonlar ekrana homojen yayılsın */
+        text-align: center;
+    }
+    
+    /* Mobilde bazı ChartJS Tooltip (Açıklama) kutuları çok büyük kalabiliyor, onu sınırlayalım */
+    #chartjs-tooltip {
+        font-size: 0.75rem !important;
+        padding: 6px !important;
+    }
+}
