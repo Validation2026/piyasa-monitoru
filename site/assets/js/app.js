@@ -312,3 +312,23 @@ document.addEventListener('click', function(e) {
         }, 50);
     }
 });
+
+/* ══════════════════════════════════════════
+   AKILLI OTOMATİK YENİLEME (MOBİL İÇİN)
+   ══════════════════════════════════════════ */
+(function() {
+    var lastSeen = Date.now();
+    
+    // Kullanıcı sekmeye her geri döndüğünde çalışır
+    document.addEventListener('visibilitychange', function() {
+        if (document.visibilityState === 'visible') {
+            var now = Date.now();
+            // Eğer kullanıcı sayfadan çıkalı 2 dakikadan (120.000 milisaniye) fazla olmuşsa
+            if (now - lastSeen > 120000) {
+                // true parametresi ile tarayıcı önbelleğini ezip zorla yeniler
+                window.location.reload(true); 
+            }
+            lastSeen = now;
+        }
+    });
+})();
