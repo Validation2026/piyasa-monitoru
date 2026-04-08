@@ -19,6 +19,37 @@
         .ai-badge{font-size:.58rem;font-family:var(--mono);font-weight:700;background:rgba(167,139,250,.15);color:var(--purple);padding:2px 8px;border-radius:4px}
         .ai-body{font-size:.82rem;color:var(--t2);line-height:1.7;white-space:pre-wrap}
         .ai-loading{color:var(--t3);font-style:italic}
+
+        /* ══════════════════════════════════════════
+           PREMIUM SAYFA ANİMASYONLARI
+           ══════════════════════════════════════════ */
+        
+        /* 1. Şelale (Cascade) Giriş Animasyonu */
+        @keyframes slideUpFade { 
+            from { opacity: 0; transform: translateY(20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        
+        /* Sayfa yüklenirken elemanlar sırayla düşsün */
+        .page-head { opacity: 0; animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; animation-delay: 0.1s; }
+        .ai-box { opacity: 0; animation: slideUpFade 0.6s ease-out forwards; animation-delay: 0.2s; }
+        .summary-row { opacity: 0; animation: slideUpFade 0.6s ease-out forwards; animation-delay: 0.3s; }
+        .global-timeframes { opacity: 0; animation: slideUpFade 0.6s ease-out forwards; animation-delay: 0.4s; }
+        .charts { opacity: 0; animation: slideUpFade 0.6s ease-out forwards; animation-delay: 0.5s; }
+        .dtable { opacity: 0; animation: slideUpFade 0.6s ease-out forwards; animation-delay: 0.6s; }
+        .sec-title, table { opacity: 0; animation: slideUpFade 0.6s ease-out forwards; animation-delay: 0.7s; }
+
+        /* 2. Nefes Alan (Pulse) AI Rozeti */
+        @keyframes breathBadge { 
+            0% { box-shadow: 0 0 0 0 rgba(167,139,250,0.4); } 
+            70% { box-shadow: 0 0 0 6px rgba(167,139,250,0); } 
+            100% { box-shadow: 0 0 0 0 rgba(167,139,250,0); } 
+        }
+        .ai-badge { animation: breathBadge 2s infinite; }
+
+        /* 3. İnteraktif Tablo Satırları (OPEC Tablosu İçin) */
+        tbody tr { transition: background-color 0.2s ease, transform 0.2s ease; }
+        tbody tr:hover { background-color: var(--bg2) !important; transform: translateX(4px); }
     </style>
 </head>
 <body>
@@ -60,6 +91,10 @@
 <script src="assets/js/app.js"></script>
 <script>
 (function(){
+    // Grafikleri sayfa yüklendiğinde ufak animasyonla çizmesi için ekstra şıklık
+    Chart.defaults.animation.duration = 1000;
+    Chart.defaults.animation.easing = 'easeOutQuart';
+
     var period='5y',allSeries=[],charts=[];
     PM.loadData('commodities_energy.json','emtia-enerji').then(function(data){
         if(!data||!data.series||!data.series.length){document.getElementById('summaryCards').innerHTML='<div class="scard"><div class="scard-name">Veri bulunamadı.</div></div>';return}
