@@ -125,6 +125,10 @@
 }
 .ai-breath { animation: breathBadge 2s infinite; }
 
+/* 6. HAREKETLİ SINIR ÇİZGİSİ (YENİDEN EKLENDİ) */
+.animated-border { stroke-dasharray: 8, 8 !important; animation: borderFlow 3s linear infinite; }
+@keyframes borderFlow { to { stroke-dashoffset: -32; } }
+
 </style>
 </head>
 <body>
@@ -288,7 +292,14 @@ Promise.all([fj('commodities_energy.json'),fj('commodities_metals.json'),fj('com
 var map=L.map('warMap',{scrollWheelZoom:false}).setView([30,50],5);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{maxZoom:12}).addTo(map);
 
-// İRAN SINIRI BURADAN SİLİNDİ (İSTEĞİN ÜZERİNE)
+// İran sınırı (Hareketli animasyon tekrar eklendi)
+L.polygon([[39.78,44.77],[39.4,47.8],[38.41,48.87],[37.33,49.11],[36.65,52.76],[37.36,54.83],[37.07,57.37],[35.14,61.16],[31.3,61.7],[29.86,60.87],[26.12,61.6],[25.06,61.5],[25.38,57.79],[26.36,55.34],[27.09,56.18],[26.56,56.34],[26.65,55.07],[27.82,52],[29.24,50.08],[30.98,48.01],[32.47,45.44],[35.82,45.83],[37.15,44.56],[38.27,44.28],[39.78,44.77]],{
+    color:'#ff4757',
+    weight:2,
+    fillColor:'#ff4757',
+    fillOpacity:.06,
+    className: 'animated-border'
+}).addTo(map);
 
 // Üsler
 var bases=[
