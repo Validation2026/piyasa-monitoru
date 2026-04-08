@@ -68,6 +68,27 @@
 .tl-tg{display:inline-block;font-size:.55rem;font-weight:700;padding:1px 5px;border-radius:3px;margin-top:3px;text-transform:uppercase}
 .tg-mil{background:#fee2e2;color:#dc2626}.tg-dip{background:#dbeafe;color:#2563eb}.tg-eco{background:#fef3c7;color:#d97706}.tg-nuk{background:#f3e8ff;color:#7c3aed}
 @media(max-width:768px){.top-row{grid-template-columns:1fr}#warMap{height:300px}.cm-grid{grid-template-columns:repeat(3,1fr)}.war-day{font-size:2rem}.war-label{font-size:.55rem;letter-spacing:.5px}}
+
+/* ══════════════════════════════════════════
+   HARİTA ANİMASYONLARI (İRAN RİSK)
+   ══════════════════════════════════════════ */
+/* 1. Sınır Çizgisi Animasyonu */
+.animated-border {
+    stroke-dasharray: 8, 8 !important;
+    animation: borderFlow 3s linear infinite;
+}
+@keyframes borderFlow {
+    to { stroke-dashoffset: -32; }
+}
+
+/* 2. Saldırı (Radar) Şok Dalgası */
+.strike-pulse {
+    animation: radarPulse 1.5s ease-out infinite;
+}
+@keyframes radarPulse {
+    0% { stroke-width: 2; stroke-opacity: 0.8; }
+    100% { stroke-width: 35; stroke-opacity: 0; }
+}
 </style>
 </head>
 <body>
@@ -94,9 +115,9 @@
     </div>
     <div class="ai-body" id="aiBox">
         <div><strong style="color: var(--t1);">📌 Durum Analizi:</strong> Taraflar arasında sağlanan geçici ateşkes, piyasalardaki ani panik havasını dağıtmış ve kısa vadeli bir rahatlama sağlamıştır. Ancak anlaşmanın "geçici" statüsü, risklerin tamamen ortadan kalkmadığını, sadece ötelendiğini göstermektedir.</div>
-        
+
         <div><strong style="color: var(--t1);">🌍 Jeopolitik:</strong> Diplomatik kanalların açılması olumlu bir sinyal olsa da, bölgedeki yapısal sorunlar çözümsüz kalmaya devam etmektedir. Bu bekleme süresinde tarafların, vekil (proxy) grupların atacağı adımlar ve uluslararası arabulucuların tutumu bir sonraki kırılmanın yönünü tayin edecektir.</div>
-        
+
         <div><strong style="color: var(--t1);">📈 Ekopolitik:</strong> Jeopolitik risk priminin düşmesiyle petrol (Brent/WTI) fiyatlarında savaş korkusuyla oluşan köpük erimiş, bu durum küresel enflasyon endişelerini anlık olarak hafifletmiştir. Güvenli liman Altın'da (XAU) kar satışları izlenmektedir. Ateşkesin kalıcı olması halinde risk varlıklarına para girişi hızlanabilir; olası bir ihlalde ise enerji ve değerli metallerde sert yukarı yönlü şoklar yaşanması muhtemeldir.</div>
     </div>
 </div>
@@ -135,7 +156,6 @@
 
 <script>
 (function(){
-// WAR DA
 
 // STATE — API'den oku (tüm cihazlarda aynı)
 fetch('/api/iran-state').then(function(r){return r.json()}).then(function(S){
@@ -215,8 +235,14 @@ Promise.all([fj('commodities_energy.json'),fj('commodities_metals.json'),fj('com
 var map=L.map('warMap',{scrollWheelZoom:false}).setView([30,50],5);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{maxZoom:12}).addTo(map);
 
-// İran sınırı
-L.polygon([[39.78,44.77],[39.4,47.8],[38.41,48.87],[37.33,49.11],[36.65,52.76],[37.36,54.83],[37.07,57.37],[35.14,61.16],[31.3,61.7],[29.86,60.87],[26.12,61.6],[25.06,61.5],[25.38,57.79],[26.36,55.34],[27.09,56.18],[26.56,56.34],[26.65,55.07],[27.82,52],[29.24,50.08],[30.98,48.01],[32.47,45.44],[35.82,45.83],[37.15,44.56],[38.27,44.28],[39.78,44.77]],{color:'#ff4757',weight:2,fillColor:'#ff4757',fillOpacity:.06,dashArray:'6,4'}).addTo(map);
+// İran sınırı (Hareketli animasyon eklendi)
+L.polygon([[39.78,44.77],[39.4,47.8],[38.41,48.87],[37.33,49.11],[36.65,52.76],[37.36,54.83],[37.07,57.37],[35.14,61.16],[31.3,61.7],[29.86,60.87],[26.12,61.6],[25.06,61.5],[25.38,57.79],[26.36,55.34],[27.09,56.18],[26.56,56.34],[26.65,55.07],[27.82,52],[29.24,50.08],[30.98,48.01],[32.47,45.44],[35.82,45.83],[37.15,44.56],[38.27,44.28],[39.78,44.77]],{
+    color:'#ff4757',
+    weight:2,
+    fillColor:'#ff4757',
+    fillOpacity:.06,
+    className: 'animated-border'
+}).addTo(map);
 
 // Üsler
 var bases=[
@@ -259,7 +285,7 @@ function renderAll(){
     allNews.sort(function(a,b){return new Date(b.date)-new Date(a.date)});
     allNews.forEach(function(n){if(!seen[n.title]){seen[n.title]=1;uniq.push(n)}});
 
-    // Strikes
+    // Strikes (Saldırı noktalarına radar/şok dalgası eklendi)
     strikeLayer.clearLayers();
     var struck={};
     uniq.forEach(function(n){
@@ -271,8 +297,23 @@ function renderAll(){
                     struck[key]=1;
                     var jlat=KW[kw][0]+(Math.random()*.1-.05);
                     var jlon=KW[kw][1]+(Math.random()*.1-.05);
-                    L.circleMarker([jlat,jlon],{radius:13,color:'#ff4757',fillColor:'#ff4757',fillOpacity:.4,weight:3}).addTo(strikeLayer).bindPopup('<b style="color:#ff4757">🔴 SALDIRI</b><br><small>'+n.title.substring(0,80)+'...</small>');
-                    L.circleMarker([jlat,jlon],{radius:20,color:'#ff4757',fillOpacity:0,weight:1.5,opacity:.25}).addTo(strikeLayer);
+
+                    // Sabit Merkez Noktası
+                    L.circleMarker([jlat,jlon],{
+                        radius:10,
+                        color:'#ff4757',
+                        fillColor:'#ff4757',
+                        fillOpacity:.8,
+                        weight:2
+                    }).addTo(strikeLayer).bindPopup('<b style="color:#ff4757">🔴 SALDIRI</b><br><small>'+n.title.substring(0,80)+'...</small>');
+
+                    // Radar Şok Dalgası (Animasyonlu Halka)
+                    L.circleMarker([jlat,jlon],{
+                        radius:10,
+                        color:'#ff4757',
+                        fillOpacity:0,
+                        className: 'strike-pulse'
+                    }).addTo(strikeLayer);
                 }
             }
         }
