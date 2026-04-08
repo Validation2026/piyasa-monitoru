@@ -22,10 +22,11 @@
 .g-score{font-size:2.5rem;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1}
 .g-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-top:4px;color:#64748b}
 .g-bar{height:6px;border-radius:3px;background:#e2e8f0;margin-top:10px;overflow:hidden}
-.g-fill{height:100%;border-radius:3px;transition:width .5s}
+.g-fill{height:100%;border-radius:3px;transition:width 1.5s cubic-bezier(0.22, 1, 0.36, 1);} /* Animasyon süresi uzatıldı */
 .hz-card{background:#fff;border:1px solid #dde4ed;border-radius:12px;padding:16px;display:flex;align-items:center;gap:12px}
 .hz-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0}
 .hz-txt{font-size:.95rem;font-weight:800}
+
 /* Sıkılaştırılmış AI Kutusu Tasarımı */
 .ai-box {background:var(--card); border:1px solid var(--border); border-radius:var(--r); padding:10px 14px !important; margin-bottom:14px !important; border-top:3px solid var(--purple)}
 .ai-header {display:flex; align-items:center; gap:8px; margin-bottom:6px !important}
@@ -70,25 +71,38 @@
 @media(max-width:768px){.top-row{grid-template-columns:1fr}#warMap{height:300px}.cm-grid{grid-template-columns:repeat(3,1fr)}.war-day{font-size:2rem}.war-label{font-size:.55rem;letter-spacing:.5px}}
 
 /* ══════════════════════════════════════════
-   HARİTA ANİMASYONLARI (İRAN RİSK)
+   HARİTA VE PREMIUM ANİMASYONLAR
    ══════════════════════════════════════════ */
 /* 1. Sınır Çizgisi Animasyonu */
-.animated-border {
-    stroke-dasharray: 8, 8 !important;
-    animation: borderFlow 3s linear infinite;
-}
-@keyframes borderFlow {
-    to { stroke-dashoffset: -32; }
-}
+.animated-border { stroke-dasharray: 8, 8 !important; animation: borderFlow 3s linear infinite; }
+@keyframes borderFlow { to { stroke-dashoffset: -32; } }
 
 /* 2. Saldırı (Radar) Şok Dalgası */
-.strike-pulse {
-    animation: radarPulse 1.5s ease-out infinite;
+.strike-pulse { animation: radarPulse 1.5s ease-out infinite; }
+@keyframes radarPulse { 0% { stroke-width: 2; stroke-opacity: 0.8; } 100% { stroke-width: 35; stroke-opacity: 0; } }
+
+/* 3. Kart Şelale (Cascade) Giriş Efekti */
+.cm {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+    animation: cardPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
-@keyframes radarPulse {
-    0% { stroke-width: 2; stroke-opacity: 0.8; }
-    100% { stroke-width: 35; stroke-opacity: 0; }
+@keyframes cardPop {
+    to { opacity: 1; transform: translateY(0) scale(1); }
 }
+
+/* 4. Timeline (Zaman Çizelgesi) Sinyal Efekti */
+.tl-d.red { animation: pulseRed 2s infinite; }
+@keyframes pulseRed { 0% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.6); } 70% { box-shadow: 0 0 0 8px rgba(255, 71, 87, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0); } }
+
+.tl-d.blue { animation: pulseBlue 2s infinite; }
+@keyframes pulseBlue { 0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.6); } 70% { box-shadow: 0 0 0 8px rgba(59, 130, 246, 0); } 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); } }
+
+.tl-d.orange { animation: pulseOrange 2s infinite; }
+@keyframes pulseOrange { 0% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.6); } 70% { box-shadow: 0 0 0 8px rgba(249, 115, 22, 0); } 100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0); } }
+
+.tl-d.purple { animation: pulsePurple 2s infinite; }
+@keyframes pulsePurple { 0% { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.6); } 70% { box-shadow: 0 0 0 8px rgba(167, 139, 250, 0); } 100% { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0); } }
 </style>
 </head>
 <body>
@@ -104,8 +118,8 @@
 
 
 <div class="top-row">
-<div class="g-card"><div class="g-label" id="rLabel">RİSK SEVİYESİ</div><div class="g-score" id="rScore">—</div><div class="g-bar"><div class="g-fill" id="rFill"></div></div></div>
-<div class="hz-card"><div class="hz-dot" id="hDot" style="background:#00d68f"></div><div><div class="hz-txt" id="hTxt">AÇIK / GÜVENLİ</div><div style="font-size:.68rem;color:#94a3b8;margin-top:2px">Hürmüz Boğazı — Dünya petrolünün %20'si</div></div></div>
+<div class="g-card"><div class="g-label" id="rLabel">RİSK SEVİYESİ</div><div class="g-score" id="rScore">0</div><div class="g-bar"><div class="g-fill" id="rFill" style="width: 0%;"></div></div></div>
+<div class="hz-card"><div class="hz-dot" id="hDot" style="background:#00d68f"></div><div><div class="hz-txt" id="hTxt">Yükleniyor...</div><div style="font-size:.68rem;color:#94a3b8;margin-top:2px">Hürmüz Boğazı — Dünya petrolünün %20'si</div></div></div>
 </div>
 
 <div class="ai-box">
@@ -115,9 +129,9 @@
     </div>
     <div class="ai-body" id="aiBox">
         <div><strong style="color: var(--t1);">📌 Durum Analizi:</strong> Taraflar arasında sağlanan geçici ateşkes, piyasalardaki ani panik havasını dağıtmış ve kısa vadeli bir rahatlama sağlamıştır. Ancak anlaşmanın "geçici" statüsü, risklerin tamamen ortadan kalkmadığını, sadece ötelendiğini göstermektedir.</div>
-
+        
         <div><strong style="color: var(--t1);">🌍 Jeopolitik:</strong> Diplomatik kanalların açılması olumlu bir sinyal olsa da, bölgedeki yapısal sorunlar çözümsüz kalmaya devam etmektedir. Bu bekleme süresinde tarafların, vekil (proxy) grupların atacağı adımlar ve uluslararası arabulucuların tutumu bir sonraki kırılmanın yönünü tayin edecektir.</div>
-
+        
         <div><strong style="color: var(--t1);">📈 Ekopolitik:</strong> Jeopolitik risk priminin düşmesiyle petrol (Brent/WTI) fiyatlarında savaş korkusuyla oluşan köpük erimiş, bu durum küresel enflasyon endişelerini anlık olarak hafifletmiştir. Güvenli liman Altın'da (XAU) kar satışları izlenmektedir. Ateşkesin kalıcı olması halinde risk varlıklarına para girişi hızlanabilir; olası bir ihlalde ise enerji ve değerli metallerde sert yukarı yönlü şoklar yaşanması muhtemeldir.</div>
     </div>
 </div>
@@ -162,10 +176,26 @@ fetch('/api/iran-state').then(function(r){return r.json()}).then(function(S){
     var score=S.riskScore||50;
     var hurmuz=S.hurmuzStatus||'AÇIK / GÜVENLİ';
 
-    // RISK
+    // RISK SKORU DİJİTAL SAYAÇ ANİMASYONU
     var el=document.getElementById('rScore'),fl=document.getElementById('rFill'),lb=document.getElementById('rLabel');
-    el.textContent=score;
-    fl.style.width=score+'%';
+    
+    // Sayı Saydırma
+    let startTimestamp = null;
+    const duration = 1500; // 1.5 saniyede sayacak
+    const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        // Hızlı başlayıp yavaş biten (ease-out) formülü
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.floor(easeOut * score);
+        if (progress < 1) window.requestAnimationFrame(step);
+        else el.textContent = score;
+    };
+    window.requestAnimationFrame(step);
+
+    // Barı doldur ve renkleri ayarla
+    setTimeout(() => { fl.style.width=score+'%'; }, 100);
+    
     if(score>75){fl.style.background='#ff4757';el.style.color='#ff4757';lb.textContent='🚨 KRİTİK'}
     else if(score>50){fl.style.background='#fbbf24';el.style.color='#f59e0b';lb.textContent='⚠️ YÜKSEK RİSK'}
     else if(score>25){fl.style.background='#22d3ee';el.style.color='#0ea5e9';lb.textContent='ℹ️ ORTA RİSK'}
@@ -211,7 +241,7 @@ Promise.all([fj('commodities_energy.json'),fj('commodities_metals.json'),fj('com
     var g=document.getElementById('cmGrid');
     var mc=S.manualCommodities||{};
     var html='';
-    COMMS.forEach(function(c){
+    COMMS.forEach(function(c, index){
         var s=null;
         for(var i=0;i<datasets.length;i++){s=fs(datasets[i],c.id);if(s)break}
         var val=s?s.current:0,chg=s?s.change_1d_pct:null;
@@ -221,11 +251,14 @@ Promise.all([fj('commodities_energy.json'),fj('commodities_metals.json'),fj('com
         function pp(p){if(p==null)return'<span class="v n">—</span>';var k=p>=0?'u':'d';var sn=p>=0?'+':'';return'<span class="v '+k+'">'+sn+p.toFixed(2)+'%</span>'}
         var m1=s?s.change_1m_pct:null, ytd=s?s.change_ytd_pct:null, y1=s?s.change_1y_pct:null;
         var extra='<div class="cm-extra"><span><span class="lbl">1A </span>'+pp(m1)+'</span><span><span class="lbl">YTD </span>'+pp(ytd)+'</span><span><span class="lbl">1Y </span>'+pp(y1)+'</span></div>';
-        html+='<div class="cm" title="'+c.w+'"><div class="cm-n">'+c.n+'</div><div class="cm-v">'+fp(val)+'</div><div class="cm-c '+cls+'">'+sign+(chg!=null?chg.toFixed(2)+'%':'—')+'</div>'+extra+'</div>';
+        
+        // ŞELALE (CASCADE) GECİKMESİ EKLENDİ
+        html+='<div class="cm" title="'+c.w+'" style="animation-delay:'+(index * 0.05)+'s"><div class="cm-n">'+c.n+'</div><div class="cm-v">'+fp(val)+'</div><div class="cm-c '+cls+'">'+sign+(chg!=null?chg.toFixed(2)+'%':'—')+'</div>'+extra+'</div>';
     });
-    (S.customMetrics||[]).forEach(function(m){
+    (S.customMetrics||[]).forEach(function(m, idx){
         var cls=m.change>=0?'u':'d';
-        html+='<div class="cm" style="border-color:#a78bfa"><div class="cm-n">'+m.name+(m.unit?' ('+m.unit+')':'')+'</div><div class="cm-v">'+fp(m.value)+'</div><div class="cm-c '+cls+'">'+(m.change>=0?'+':'')+m.change.toFixed(2)+'%</div></div>';
+        var delay = (COMMS.length + idx) * 0.05; // Kaldığı yerden devam etsin
+        html+='<div class="cm" style="border-color:#a78bfa; animation-delay:'+delay+'s"><div class="cm-n">'+m.name+(m.unit?' ('+m.unit+')':'')+'</div><div class="cm-v">'+fp(m.value)+'</div><div class="cm-c '+cls+'">'+(m.change>=0?'+':'')+m.change.toFixed(2)+'%</div></div>';
     });
     g.innerHTML=html;
 });
@@ -297,7 +330,7 @@ function renderAll(){
                     struck[key]=1;
                     var jlat=KW[kw][0]+(Math.random()*.1-.05);
                     var jlon=KW[kw][1]+(Math.random()*.1-.05);
-
+                    
                     // Sabit Merkez Noktası
                     L.circleMarker([jlat,jlon],{
                         radius:10,
@@ -306,7 +339,7 @@ function renderAll(){
                         fillOpacity:.8,
                         weight:2
                     }).addTo(strikeLayer).bindPopup('<b style="color:#ff4757">🔴 SALDIRI</b><br><small>'+n.title.substring(0,80)+'...</small>');
-
+                    
                     // Radar Şok Dalgası (Animasyonlu Halka)
                     L.circleMarker([jlat,jlon],{
                         radius:10,
