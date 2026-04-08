@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Endeksler",
-    "updated_at": "2026-04-08T11:31:41Z",
+    "updated_at": "2026-04-08T11:36:44Z",
     "symbol_count": 17,
     "errors": []
   },
@@ -11,13 +11,13 @@
       "id": "XU100.IS",
       "name": "BIST 100",
       "unit": "TRY",
-      "current": 13576.6201,
-      "change_1d_pct": 5.07,
-      "change_1w_pct": 4.94,
-      "change_1m_pct": 6.13,
-      "change_3m_pct": 16.02,
-      "change_ytd_pct": 18.07,
-      "change_1y_pct": 858.39,
+      "current": 13566.8701,
+      "change_1d_pct": 4.99,
+      "change_1w_pct": 4.86,
+      "change_1m_pct": 6.05,
+      "change_3m_pct": 15.94,
+      "change_ytd_pct": 17.99,
+      "change_1y_pct": 857.71,
       "high_52w": 14339.2998,
       "low_52w": 1330.5,
       "data": [
@@ -5011,7 +5011,7 @@
         },
         {
           "date": "2026-04-08",
-          "value": 13576.6201
+          "value": 13566.8701
         }
       ]
     },
@@ -5019,13 +5019,13 @@
       "id": "XU030.IS",
       "name": "BIST 30",
       "unit": "TRY",
-      "current": 15572.4404,
-      "change_1d_pct": 5.51,
-      "change_1w_pct": 6.03,
-      "change_1m_pct": 7.16,
-      "change_3m_pct": 22.24,
-      "change_ytd_pct": 24.44,
-      "change_1y_pct": 972.78,
+      "current": 15558.0498,
+      "change_1d_pct": 5.41,
+      "change_1w_pct": 5.93,
+      "change_1m_pct": 7.06,
+      "change_3m_pct": 22.12,
+      "change_ytd_pct": 24.33,
+      "change_1y_pct": 971.79,
       "high_52w": 15828.2002,
       "low_52w": 1397.1,
       "data": [
@@ -9987,7 +9987,7 @@
         },
         {
           "date": "2026-04-08",
-          "value": 15572.4404
+          "value": 15558.0498
         }
       ]
     },
@@ -30139,13 +30139,13 @@
       "id": "^STOXX50E",
       "name": "Euro Stoxx 50",
       "unit": "EUR",
-      "current": 5915.1699,
-      "change_1d_pct": 5.01,
-      "change_1w_pct": 6.74,
-      "change_1m_pct": 2.29,
-      "change_3m_pct": 2.05,
-      "change_ytd_pct": -0.14,
-      "change_1y_pct": 48.7,
+      "current": 5914.3101,
+      "change_1d_pct": 4.99,
+      "change_1w_pct": 6.72,
+      "change_1m_pct": 2.27,
+      "change_3m_pct": 2.04,
+      "change_ytd_pct": -0.16,
+      "change_1y_pct": 48.68,
       "high_52w": 6173.3198,
       "low_52w": 3279.04,
       "data": [
@@ -35179,7 +35179,7 @@
         },
         {
           "date": "2026-04-08",
-          "value": 5915.1699
+          "value": 5914.3101
         }
       ]
     },
@@ -35187,7 +35187,7 @@
       "id": "^FTSE",
       "name": "FTSE 100",
       "unit": "GBP",
-      "current": 10651.7402,
+      "current": 10651.5898,
       "change_1d_pct": 2.93,
       "change_1w_pct": 5.17,
       "change_1m_pct": 2.28,
@@ -40243,7 +40243,7 @@
         },
         {
           "date": "2026-04-08",
-          "value": 10651.7402
+          "value": 10651.5898
         }
       ]
     },
@@ -40251,13 +40251,13 @@
       "id": "^GDAXI",
       "name": "DAX 40",
       "unit": "EUR",
-      "current": 24075.4297,
-      "change_1d_pct": 5.03,
-      "change_1w_pct": 6.7,
-      "change_1m_pct": 1.09,
-      "change_3m_pct": -1.89,
-      "change_ytd_pct": -1.89,
-      "change_1y_pct": 58.36,
+      "current": 24073.3203,
+      "change_1d_pct": 5.02,
+      "change_1w_pct": 6.69,
+      "change_1m_pct": 1.08,
+      "change_3m_pct": -1.9,
+      "change_ytd_pct": -1.9,
+      "change_1y_pct": 58.35,
       "high_52w": 25420.6602,
       "low_52w": 11975.5498,
       "data": [
@@ -45359,7 +45359,7 @@
         },
         {
           "date": "2026-04-08",
-          "value": 24075.4297
+          "value": 24073.3203
         }
       ]
     },
@@ -45367,7 +45367,7 @@
       "id": "^FCHI",
       "name": "CAC 40",
       "unit": "EUR",
-      "current": 8271.9902,
+      "current": 8272.1104,
       "change_1d_pct": 4.59,
       "change_1w_pct": 6.43,
       "change_1m_pct": 2.81,
@@ -50503,7 +50503,7 @@
         },
         {
           "date": "2026-04-08",
-          "value": 8271.9902
+          "value": 8272.1104
         }
       ]
     },
