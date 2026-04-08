@@ -22,7 +22,7 @@
 .g-score{font-size:2.5rem;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1}
 .g-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-top:4px;color:#64748b}
 .g-bar{height:6px;border-radius:3px;background:#e2e8f0;margin-top:10px;overflow:hidden}
-.g-fill{height:100%;border-radius:3px;transition:width 1.5s cubic-bezier(0.22, 1, 0.36, 1);} /* Animasyon süresi uzatıldı */
+.g-fill{height:100%;border-radius:3px;transition:width 1.5s cubic-bezier(0.22, 1, 0.36, 1);} 
 .hz-card{background:#fff;border:1px solid #dde4ed;border-radius:12px;padding:16px;display:flex;align-items:center;gap:12px}
 .hz-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0}
 .hz-txt{font-size:.95rem;font-weight:800}
@@ -71,11 +71,24 @@
 @media(max-width:768px){.top-row{grid-template-columns:1fr}#warMap{height:300px}.cm-grid{grid-template-columns:repeat(3,1fr)}.war-day{font-size:2rem}.war-label{font-size:.55rem;letter-spacing:.5px}}
 
 /* ══════════════════════════════════════════
-   HARİTA VE PREMIUM ANİMASYONLAR
+   HARİTA VE PREMIUM ANİMASYONLAR (YENİ AKIŞ EKLENDİ)
    ══════════════════════════════════════════ */
-/* 1. Sınır Çizgisi Animasyonu */
-.animated-border { stroke-dasharray: 8, 8 !important; animation: borderFlow 3s linear infinite; }
-@keyframes borderFlow { to { stroke-dashoffset: -32; } }
+   
+/* 1. Şelale (Cascade) Giriş Animasyonu */
+@keyframes slideUpFade { 
+    from { opacity: 0; transform: translateY(20px); } 
+    to { opacity: 1; transform: translateY(0); } 
+}
+
+/* Sayfa elemanları sırayla düşsün */
+.page-head { opacity: 0; animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; animation-delay: 0.1s; }
+.war-banner { opacity: 0; animation: slideUpFade 0.5s ease-out forwards; animation-delay: 0.2s; }
+.top-row { opacity: 0; animation: slideUpFade 0.5s ease-out forwards; animation-delay: 0.3s; }
+.ai-box { opacity: 0; animation: slideUpFade 0.5s ease-out forwards; animation-delay: 0.4s; }
+.sec-title, .cm-grid { opacity: 0; animation: slideUpFade 0.5s ease-out forwards; animation-delay: 0.5s; }
+.map-box { opacity: 0; animation: slideUpFade 0.5s ease-out forwards; animation-delay: 0.6s; }
+#tlFilter, #tlBox { opacity: 0; animation: slideUpFade 0.5s ease-out forwards; animation-delay: 0.7s; }
+.news-box, .footer { opacity: 0; animation: slideUpFade 0.5s ease-out forwards; animation-delay: 0.8s; }
 
 /* 2. Saldırı (Radar) Şok Dalgası */
 .strike-pulse { animation: radarPulse 1.5s ease-out infinite; }
@@ -103,6 +116,15 @@
 
 .tl-d.purple { animation: pulsePurple 2s infinite; }
 @keyframes pulsePurple { 0% { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.6); } 70% { box-shadow: 0 0 0 8px rgba(167, 139, 250, 0); } 100% { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0); } }
+
+/* 5. Nefes Alan AI Rozeti */
+@keyframes breathBadge { 
+    0% { box-shadow: 0 0 0 0 rgba(167,139,250,0.4); } 
+    70% { box-shadow: 0 0 0 6px rgba(167,139,250,0); } 
+    100% { box-shadow: 0 0 0 0 rgba(167,139,250,0); } 
+}
+.ai-breath { animation: breathBadge 2s infinite; }
+
 </style>
 </head>
 <body>
@@ -116,7 +138,6 @@
 <div style="font-size:.85rem;color:#e6e6e6;font-weight:500;">Bölgede diplomatik çabalar sonuç verdi, ancak riskler yakından izleniyor.</div>
 </div>
 
-
 <div class="top-row">
 <div class="g-card"><div class="g-label" id="rLabel">RİSK SEVİYESİ</div><div class="g-score" id="rScore">0</div><div class="g-bar"><div class="g-fill" id="rFill" style="width: 0%;"></div></div></div>
 <div class="hz-card"><div class="hz-dot" id="hDot" style="background:#00d68f"></div><div><div class="hz-txt" id="hTxt">Yükleniyor...</div><div style="font-size:.68rem;color:#94a3b8;margin-top:2px">Hürmüz Boğazı — Dünya petrolünün %20'si</div></div></div>
@@ -125,7 +146,7 @@
 <div class="ai-box">
     <div class="ai-header">
         <span>🤖 AI Piyasa Analizi</span>
-        <span class="ai-badge">AI</span>
+        <span class="ai-badge ai-breath">AI</span>
     </div>
     <div class="ai-body" id="aiBox">
         <div><strong style="color: var(--t1);">📌 Durum Analizi:</strong> Taraflar arasında sağlanan geçici ateşkes, piyasalardaki ani panik havasını dağıtmış ve kısa vadeli bir rahatlama sağlamıştır. Ancak anlaşmanın "geçici" statüsü, risklerin tamamen ortadan kalkmadığını, sadece ötelendiğini göstermektedir.</div>
@@ -135,7 +156,6 @@
         <div><strong style="color: var(--t1);">📈 Ekopolitik:</strong> Jeopolitik risk priminin düşmesiyle petrol (Brent/WTI) fiyatlarında savaş korkusuyla oluşan köpük erimiş, bu durum küresel enflasyon endişelerini anlık olarak hafifletmiştir. Güvenli liman Altın'da (XAU) kar satışları izlenmektedir. Ateşkesin kalıcı olması halinde risk varlıklarına para girişi hızlanabilir; olası bir ihlalde ise enerji ve değerli metallerde sert yukarı yönlü şoklar yaşanması muhtemeldir.</div>
     </div>
 </div>
-
 
 <div class="sec-title">⛽ Seçilmiş Risk Göstergeleri</div>
 <div class="cm-grid" id="cmGrid"></div>
@@ -268,14 +288,7 @@ Promise.all([fj('commodities_energy.json'),fj('commodities_metals.json'),fj('com
 var map=L.map('warMap',{scrollWheelZoom:false}).setView([30,50],5);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{maxZoom:12}).addTo(map);
 
-// İran sınırı (Hareketli animasyon eklendi)
-L.polygon([[39.78,44.77],[39.4,47.8],[38.41,48.87],[37.33,49.11],[36.65,52.76],[37.36,54.83],[37.07,57.37],[35.14,61.16],[31.3,61.7],[29.86,60.87],[26.12,61.6],[25.06,61.5],[25.38,57.79],[26.36,55.34],[27.09,56.18],[26.56,56.34],[26.65,55.07],[27.82,52],[29.24,50.08],[30.98,48.01],[32.47,45.44],[35.82,45.83],[37.15,44.56],[38.27,44.28],[39.78,44.77]],{
-    color:'#ff4757',
-    weight:2,
-    fillColor:'#ff4757',
-    fillOpacity:.06,
-    className: 'animated-border'
-}).addTo(map);
+// İRAN SINIRI BURADAN SİLİNDİ (İSTEĞİN ÜZERİNE)
 
 // Üsler
 var bases=[
