@@ -281,7 +281,7 @@ Promise.all([fj('commodities_energy.json'),fj('commodities_metals.json'),fj('ind
             var prewar = mc[c.id].past_prewar != null ? ((val - mc[c.id].past_prewar) / Math.abs(mc[c.id].past_prewar)) * 100 : null;
             var ytd = mc[c.id].past_ytd != null ? ((val - mc[c.id].past_ytd) / Math.abs(mc[c.id].past_ytd)) * 100 : null;
             
-            var extra='<div class="cm-extra"><span><span class="lbl">SAVAŞ ÖNCESİ </span>'+pp(prewar)+'</span><span><span class="lbl">YTD </span>'+pp(ytd)+'</span></div>';
+            var extra='<div class="cm-extra"><span><span class="lbl">SAVAŞ ÖNCESİ (28.02) </span>'+pp(prewar)+'</span><span><span class="lbl">YTD </span>'+pp(ytd)+'</span></div>';
             html+='<div class="cm" title="'+c.w+'" style="animation-delay:'+(index * 0.05)+'s"><div class="cm-n">'+c.n+'</div><div class="cm-v" style="margin-bottom:6px">'+fp(val)+'</div>'+extra+'</div>';
         } else {
             var chg = s ? s.change_1d_pct : null;
@@ -303,7 +303,7 @@ Promise.all([fj('commodities_energy.json'),fj('commodities_metals.json'),fj('ind
         var prewar = m.past_prewar != null ? ((val - m.past_prewar) / Math.abs(m.past_prewar)) * 100 : null;
         var ytd = m.past_ytd != null ? ((val - m.past_ytd) / Math.abs(m.past_ytd)) * 100 : null;
 
-        var extra='<div class="cm-extra"><span><span class="lbl">SAVAŞ ÖNCESİ </span>'+pp(prewar)+'</span><span><span class="lbl">YTD </span>'+pp(ytd)+'</span></div>';
+        var extra='<div class="cm-extra"><span><span class="lbl">SAVAŞ ÖNCESİ (28.02) </span>'+pp(prewar)+'</span><span><span class="lbl">YTD </span>'+pp(ytd)+'</span></div>';
 
         var delay = (COMMS.length + idx) * 0.05;
         html+='<div class="cm" style="border-color:#a78bfa; animation-delay:'+delay+'s"><div class="cm-n">'+m.name+(m.unit?' ('+m.unit+')':'')+'</div><div class="cm-v" style="margin-bottom:6px">'+fp(m.value)+'</div>'+extra+'</div>';
