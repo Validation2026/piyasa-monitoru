@@ -261,7 +261,7 @@ function fj(f){return fetch(D+f+'?t='+Date.now()).then(function(r){return r.json
 
 function loadCommodities(){
 var S=window._iranState||{};
-Promise.all([fj('commodities_energy.json'),fj('commodities_metals.json'),fj('commodities_agriculture.json')]).then(function(r){
+Promise.all([fj('commodities_energy.json'),fj('commodities_metals.json'),fj('indices.json'),fj('commodities_agriculture.json')]).then(function(r){
     var datasets=r;
     var g=document.getElementById('cmGrid');
     var mc=S.manualCommodities||{};
