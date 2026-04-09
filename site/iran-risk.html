@@ -41,7 +41,7 @@
 .cm-n{font-size:.62rem;color:#94a3b8;font-weight:700;text-transform:uppercase}.cm-v{font-size:.9rem;font-family:'JetBrains Mono',monospace;font-weight:700;margin:2px 0}
 .cm-c{font-size:.67rem;font-family:'JetBrains Mono',monospace;font-weight:700}
 .cm-c.u{color:#00d68f}.cm-c.d{color:#ff4757}
-.cm-extra{display:flex;justify-content:space-between;gap:4px;margin-top:4px;font-size:.55rem;font-family:'JetBrains Mono',monospace;font-weight:700}
+.cm-extra{display:flex;justify-content:center;gap:12px;margin-top:4px;font-size:.55rem;font-family:'JetBrains Mono',monospace;font-weight:700}
 .cm-extra .lbl{color:#94a3b8;font-weight:600}
 .cm-extra .v.u{color:#00d68f}.cm-extra .v.d{color:#ff4757}.cm-extra .v.n{color:#94a3b8}
 .cm-war{font-size:.58rem;font-family:'JetBrains Mono',monospace;font-weight:700;margin-top:3px;padding:2px 4px;border-radius:3px;background:rgba(255,71,87,.08)}
@@ -71,16 +71,12 @@
 @media(max-width:768px){.top-row{grid-template-columns:1fr}#warMap{height:300px}.cm-grid{grid-template-columns:repeat(3,1fr)}.war-day{font-size:2rem}.war-label{font-size:.55rem;letter-spacing:.5px}}
 
 /* ══════════════════════════════════════════
-   HARİTA VE PREMIUM ANİMASYONLAR (YENİ AKIŞ EKLENDİ)
+   HARİTA VE PREMIUM ANİMASYONLAR
    ══════════════════════════════════════════ */
-   
-/* 1. Şelale (Cascade) Giriş Animasyonu */
 @keyframes slideUpFade { 
     from { opacity: 0; transform: translateY(20px); } 
     to { opacity: 1; transform: translateY(0); } 
 }
-
-/* Sayfa elemanları sırayla düşsün */
 .page-head { opacity: 0; animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; animation-delay: 0.1s; }
 .war-banner { opacity: 0; animation: slideUpFade 0.5s ease-out forwards; animation-delay: 0.2s; }
 .top-row { opacity: 0; animation: slideUpFade 0.5s ease-out forwards; animation-delay: 0.3s; }
@@ -90,21 +86,12 @@
 #tlFilter, #tlBox { opacity: 0; animation: slideUpFade 0.5s ease-out forwards; animation-delay: 0.7s; }
 .news-box, .footer { opacity: 0; animation: slideUpFade 0.5s ease-out forwards; animation-delay: 0.8s; }
 
-/* 2. Saldırı (Radar) Şok Dalgası */
 .strike-pulse { animation: radarPulse 1.5s ease-out infinite; }
 @keyframes radarPulse { 0% { stroke-width: 2; stroke-opacity: 0.8; } 100% { stroke-width: 35; stroke-opacity: 0; } }
 
-/* 3. Kart Şelale (Cascade) Giriş Efekti */
-.cm {
-    opacity: 0;
-    transform: translateY(20px) scale(0.95);
-    animation: cardPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-}
-@keyframes cardPop {
-    to { opacity: 1; transform: translateY(0) scale(1); }
-}
+.cm { opacity: 0; transform: translateY(20px) scale(0.95); animation: cardPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+@keyframes cardPop { to { opacity: 1; transform: translateY(0) scale(1); } }
 
-/* 4. Timeline (Zaman Çizelgesi) Sinyal Efekti */
 .tl-d.red { animation: pulseRed 2s infinite; }
 @keyframes pulseRed { 0% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.6); } 70% { box-shadow: 0 0 0 8px rgba(255, 71, 87, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0); } }
 
@@ -117,18 +104,11 @@
 .tl-d.purple { animation: pulsePurple 2s infinite; }
 @keyframes pulsePurple { 0% { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.6); } 70% { box-shadow: 0 0 0 8px rgba(167, 139, 250, 0); } 100% { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0); } }
 
-/* 5. Nefes Alan AI Rozeti */
-@keyframes breathBadge { 
-    0% { box-shadow: 0 0 0 0 rgba(167,139,250,0.4); } 
-    70% { box-shadow: 0 0 0 6px rgba(167,139,250,0); } 
-    100% { box-shadow: 0 0 0 0 rgba(167,139,250,0); } 
-}
+@keyframes breathBadge { 0% { box-shadow: 0 0 0 0 rgba(167,139,250,0.4); } 70% { box-shadow: 0 0 0 6px rgba(167,139,250,0); } 100% { box-shadow: 0 0 0 0 rgba(167,139,250,0); } }
 .ai-breath { animation: breathBadge 2s infinite; }
 
-/* 6. HAREKETLİ SINIR ÇİZGİSİ */
 .animated-border { stroke-dasharray: 8, 8 !important; animation: borderFlow 3s linear infinite; }
 @keyframes borderFlow { to { stroke-dashoffset: -32; } }
-
 </style>
 </head>
 <body>
@@ -154,9 +134,7 @@
     </div>
     <div class="ai-body" id="aiBox">
         <div><strong style="color: var(--t1);">📌 Durum Analizi:</strong> Taraflar arasında sağlanan geçici ateşkes, piyasalardaki ani panik havasını dağıtmış ve kısa vadeli bir rahatlama sağlamıştır. Ancak anlaşmanın "geçici" statüsü, risklerin tamamen ortadan kalkmadığını, sadece ötelendiğini göstermektedir.</div>
-        
         <div><strong style="color: var(--t1);">🌍 Jeopolitik:</strong> Diplomatik kanalların açılması olumlu bir sinyal olsa da, bölgedeki yapısal sorunlar çözümsüz kalmaya devam etmektedir. Bu bekleme süresinde tarafların, vekil (proxy) grupların atacağı adımlar ve uluslararası arabulucuların tutumu bir sonraki kırılmanın yönünü tayin edecektir.</div>
-        
         <div><strong style="color: var(--t1);">📈 Ekopolitik:</strong> Jeopolitik risk priminin düşmesiyle petrol (Brent/WTI) fiyatlarında savaş korkusuyla oluşan köpük erimiş, bu durum küresel enflasyon endişelerini anlık olarak hafifletmiştir. Güvenli liman Altın'da (XAU) kar satışları izlenmektedir. Ateşkesin kalıcı olması halinde risk varlıklarına para girişi hızlanabilir; olası bir ihlalde ise enerji ve değerli metallerde sert yukarı yönlü şoklar yaşanması muhtemeldir.</div>
     </div>
 </div>
@@ -263,35 +241,34 @@ Promise.all([fj('commodities_energy.json'),fj('commodities_metals.json'),fj('com
         for(var i=0;i<datasets.length;i++){s=fs(datasets[i],c.id);if(s)break}
         
         var val=s?s.current:0;
-        var m1=s?s.change_1m_pct:null, ytd=s?s.change_ytd_pct:null, y1=s?s.change_1y_pct:null, chg=s?s.change_1d_pct:null;
+        var chg=s?s.change_1d_pct:null;
+        var prewar=s?s.change_1m_pct:null; // Savaş Öncesi olarak 1 Ay proxy kabul edilir (otomatikse)
+        var ytd=s?s.change_ytd_pct:null;
         
-        // OTOMATİK YÜZDE HESAPLAMA SİSTEMİ (Yeni)
         if(mc[c.id] && mc[c.id].value != null){
             val = mc[c.id].value;
-            // Admin panelinden eski fiyat girildiyse formülü çalıştır
-            if(mc[c.id].past_1d != null) chg = ((val - mc[c.id].past_1d) / Math.abs(mc[c.id].past_1d)) * 100;
-            if(mc[c.id].past_1m != null) m1 = ((val - mc[c.id].past_1m) / Math.abs(mc[c.id].past_1m)) * 100;
+            if(mc[c.id].past_prewar != null) {
+                prewar = ((val - mc[c.id].past_prewar) / Math.abs(mc[c.id].past_prewar)) * 100;
+                chg = prewar; // İran sayfasında ana yüzde değişimi "Savaş Öncesi"ne odaklı çalışır
+            }
             if(mc[c.id].past_ytd != null) ytd = ((val - mc[c.id].past_ytd) / Math.abs(mc[c.id].past_ytd)) * 100;
-            if(mc[c.id].past_1y != null) y1 = ((val - mc[c.id].past_1y) / Math.abs(mc[c.id].past_1y)) * 100;
         }
         
         var cls=chg!=null?(chg>=0?'u':'d'):'';
         var sign=chg!=null?(chg>=0?'+':''):'';
-        var extra='<div class="cm-extra"><span><span class="lbl">1A </span>'+pp(m1)+'</span><span><span class="lbl">YTD </span>'+pp(ytd)+'</span><span><span class="lbl">1Y </span>'+pp(y1)+'</span></div>';
+        var extra='<div class="cm-extra"><span><span class="lbl">SAVAŞ ÖNCESİ </span>'+pp(prewar)+'</span><span><span class="lbl">YTD </span>'+pp(ytd)+'</span></div>';
         
         html+='<div class="cm" title="'+c.w+'" style="animation-delay:'+(index * 0.05)+'s"><div class="cm-n">'+c.n+'</div><div class="cm-v">'+fp(val)+'</div><div class="cm-c '+cls+'">'+sign+(chg!=null?chg.toFixed(2)+'%':'—')+'</div>'+extra+'</div>';
     });
     
-    // ÖZEL VERİLER İÇİN OTOMATİK HESAPLAMA
     (S.customMetrics||[]).forEach(function(m, idx){
         var val = m.value;
-        var chg = m.past_1d != null ? ((val - m.past_1d) / Math.abs(m.past_1d)) * 100 : 0;
-        var m1 = m.past_1m != null ? ((val - m.past_1m) / Math.abs(m.past_1m)) * 100 : null;
+        var prewar = m.past_prewar != null ? ((val - m.past_prewar) / Math.abs(m.past_prewar)) * 100 : null;
         var ytd = m.past_ytd != null ? ((val - m.past_ytd) / Math.abs(m.past_ytd)) * 100 : null;
-        var y1 = m.past_1y != null ? ((val - m.past_1y) / Math.abs(m.past_1y)) * 100 : null;
+        var chg = prewar != null ? prewar : (ytd != null ? ytd : 0);
 
         var cls=chg>=0?'u':'d';
-        var extra='<div class="cm-extra"><span><span class="lbl">1A </span>'+pp(m1)+'</span><span><span class="lbl">YTD </span>'+pp(ytd)+'</span><span><span class="lbl">1Y </span>'+pp(y1)+'</span></div>';
+        var extra='<div class="cm-extra"><span><span class="lbl">SAVAŞ ÖNCESİ </span>'+pp(prewar)+'</span><span><span class="lbl">YTD </span>'+pp(ytd)+'</span></div>';
 
         var delay = (COMMS.length + idx) * 0.05;
         html+='<div class="cm" style="border-color:#a78bfa; animation-delay:'+delay+'s"><div class="cm-n">'+m.name+(m.unit?' ('+m.unit+')':'')+'</div><div class="cm-v">'+fp(m.value)+'</div><div class="cm-c '+cls+'">'+(chg>=0?'+':'')+chg.toFixed(2)+'%</div>'+extra+'</div>';
