@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Tahvil Faizleri",
-    "updated_at": "2026-04-08T15:46:20Z",
+    "updated_at": "2026-04-09T04:31:17Z",
     "symbol_count": 4,
     "errors": []
   },
@@ -13,9 +13,9 @@
       "unit": "%",
       "current": 3.806,
       "change_1d_pct": 0.0,
-      "change_1w_pct": 0.26,
+      "change_1w_pct": 0.29,
       "change_1m_pct": 11.61,
-      "change_3m_pct": 10.96,
+      "change_3m_pct": 10.06,
       "change_ytd_pct": 12.64,
       "change_1y_pct": 1670.23,
       "high_52w": 5.158,
@@ -4688,6 +4688,10 @@
         {
           "date": "2026-04-07",
           "value": 3.806
+        },
+        {
+          "date": "2026-04-08",
+          "value": 3.806
         }
       ]
     },
@@ -4695,13 +4699,13 @@
       "id": "^FVX",
       "name": "ABD 5 Yıllık",
       "unit": "%",
-      "current": 3.896,
-      "change_1d_pct": -2.01,
-      "change_1w_pct": -1.24,
-      "change_1m_pct": 4.87,
-      "change_3m_pct": 4.67,
-      "change_ytd_pct": 4.2,
-      "change_1y_pct": 363.81,
+      "current": 3.92,
+      "change_1d_pct": -1.41,
+      "change_1w_pct": -0.63,
+      "change_1m_pct": 5.52,
+      "change_3m_pct": 5.32,
+      "change_ytd_pct": 4.84,
+      "change_1y_pct": 366.67,
       "high_52w": 4.961,
       "low_52w": 0.651,
       "data": [
@@ -9727,7 +9731,7 @@
         },
         {
           "date": "2026-04-08",
-          "value": 3.896
+          "value": 3.92
         }
       ]
     },
@@ -9735,13 +9739,13 @@
       "id": "^TNX",
       "name": "ABD 10 Yıllık",
       "unit": "%",
-      "current": 4.269,
-      "change_1d_pct": -1.7,
-      "change_1w_pct": -0.97,
-      "change_1m_pct": 3.29,
-      "change_3m_pct": 2.55,
-      "change_ytd_pct": 1.96,
-      "change_1y_pct": 161.58,
+      "current": 4.291,
+      "change_1d_pct": -1.2,
+      "change_1w_pct": -0.46,
+      "change_1m_pct": 3.82,
+      "change_3m_pct": 3.07,
+      "change_ytd_pct": 2.48,
+      "change_1y_pct": 162.93,
       "high_52w": 4.988,
       "low_52w": 1.174,
       "data": [
@@ -14767,7 +14771,7 @@
         },
         {
           "date": "2026-04-08",
-          "value": 4.269
+          "value": 4.291
         }
       ]
     },
@@ -14775,13 +14779,13 @@
       "id": "^TYX",
       "name": "ABD 30 Yıllık",
       "unit": "%",
-      "current": 4.864,
-      "change_1d_pct": -1.16,
-      "change_1w_pct": -0.55,
-      "change_1m_pct": 2.29,
-      "change_3m_pct": 0.5,
-      "change_ytd_pct": 0.0,
-      "change_1y_pct": 109.47,
+      "current": 4.887,
+      "change_1d_pct": -0.69,
+      "change_1w_pct": -0.08,
+      "change_1m_pct": 2.78,
+      "change_3m_pct": 0.97,
+      "change_ytd_pct": 0.47,
+      "change_1y_pct": 110.47,
       "high_52w": 5.103,
       "low_52w": 1.678,
       "data": [
@@ -19807,7 +19811,7 @@
         },
         {
           "date": "2026-04-08",
-          "value": 4.864
+          "value": 4.887
         }
       ]
     }
