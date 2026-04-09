@@ -20,6 +20,8 @@ COMMODITIES_ENERGY = {
         "TTF=F": {"name": "TTF (Avrupa Gaz)", "unit": "EUR/MWh"},
         "HO=F":  {"name": "HO (Isıtma Yağı)",          "unit": "USD/gal"},
         "RB=F":  {"name": "RB (Benzin)",         "unit": "USD/gal"},
+        "URA":   {"name": "URA (Uranyum ETF)",         "unit": "USD"}, # Nükleer enerji trendi
+        "KRBN":  {"name": "KRBN (Karbon Kredisi ETF)", "unit": "USD"}, # Küresel karbon fiyatlaması
     }
 }
 
@@ -108,6 +110,7 @@ INDICES = {
         "^KS11":     {"name": "KOSPI",          "unit": "KRW"},
         "^TWII":     {"name": "TAIEX",          "unit": "TWD"},
         "^MERV":     {"name": "MERVAL",         "unit": "ARS"},
+        "^VIX":     {"name": "VIX (Korku Endeksi)",     "unit": "Puan"}, # S&P 500 oynaklığı
     }
 }
 
