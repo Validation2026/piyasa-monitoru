@@ -10,7 +10,7 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',system-ui;background:#f0f4f8;color:#0f172a;padding:20px}
-.c{max-width:700px;margin:0 auto} /* Panel biraz genişletildi */
+.c{max-width:700px;margin:0 auto} 
 h1{font-size:1.2rem;font-weight:800;margin-bottom:14px}
 .card{background:#fff;border:1px solid #dde4ed;border-radius:10px;padding:14px;margin-bottom:12px}
 .ct{font-size:.65rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
@@ -18,18 +18,17 @@ label{font-size:.68rem;font-weight:600;color:#64748b;display:block;margin-bottom
 input,select{width:100%;border:1px solid #dde4ed;border-radius:6px;padding:7px 9px;font-size:.82rem;outline:none;background:#f8fafc;margin-bottom:6px}
 input:focus,select:focus{border-color:#3b82f6}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.row4{display:grid;grid-template-columns:1fr .6fr .6fr .6fr auto;gap:4px;margin-bottom:4px;align-items:end}
 .btn{background:#ff4757;color:#fff;border:none;border-radius:8px;padding:11px;font-weight:800;font-size:.82rem;cursor:pointer;width:100%;margin-top:6px}
 .btn:hover{background:#e83e4e}
 .btn-sm{background:#64748b;color:#fff;border:none;border-radius:4px;padding:4px 8px;font-size:.62rem;font-weight:700;cursor:pointer}
 .btn-del{background:#fee2e2;color:#dc2626;border:none;border-radius:4px;padding:5px 7px;cursor:pointer;font-weight:700;font-size:.8rem}
 .status{text-align:center;margin-top:8px;font-size:.75rem;color:#64748b}
 
-/* YENİ: Otomatik Fiyat Hesaplama Tablosu CSS */
-.price-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 6px; }
+/* 3'lü Sadeleştirilmiş Fiyat Giriş Tablosu */
+.price-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 6px; }
 .item-box { background:#f8fafc; border:1px solid #dde4ed; border-radius:6px; padding:10px; margin-bottom:10px; }
 .item-title { font-weight:700; font-size:.85rem; color:#0f172a; margin-bottom:4px; border-bottom:1px solid #e2e8f0; padding-bottom:4px; }
-@media(max-width:600px){ .price-grid{grid-template-columns: 1fr 1fr;} .price-grid div:first-child{grid-column: span 2;} }
+@media(max-width:600px){ .price-grid{grid-template-columns: 1fr;} }
 </style>
 </head>
 <body>
@@ -80,8 +79,8 @@ input:focus,select:focus{border-color:#3b82f6}
 <div class="status" id="status"></div>
 
 <div class="card" style="margin-top:16px;text-align:center">
-<div class="ct">Diger Admin Panelleri</div>
-<a href="admin-data.html" style="display:inline-block;background:#3b82f6;color:#fff;padding:8px 16px;border-radius:6px;text-decoration:none;font-size:.75rem;font-weight:700">📊 Veri Admin (Tum Sayfalar)</a>
+<div class="ct">Diğer Admin Panelleri</div>
+<a href="admin-data.html" style="display:inline-block;background:#3b82f6;color:#fff;padding:8px 16px;border-radius:6px;text-decoration:none;font-size:.75rem;font-weight:700">📊 Veri Admin (Tüm Sayfalar)</a>
 </div>
 </div>
 
@@ -92,23 +91,19 @@ var ce=document.getElementById('comms');
 COMMS.forEach(function(c){
     var id=c[0].replace(/[^a-zA-Z0-9]/g,'_');
     ce.innerHTML+='<div class="item-box"><div class="item-title">'+c[1]+'</div><div class="price-grid">'+
-    '<div><label>Güncel</label><input type="number" step="any" id="cv_'+id+'"></div>'+
-    '<div><label>1G Eski</label><input type="number" step="any" id="c1g_'+id+'"></div>'+
-    '<div><label>1A Eski</label><input type="number" step="any" id="c1a_'+id+'"></div>'+
-    '<div><label>YTD Eski</label><input type="number" step="any" id="cytd_'+id+'"></div>'+
-    '<div><label>1Y Eski</label><input type="number" step="any" id="c1y_'+id+'"></div>'+
+    '<div><label>Güncel Fiyat</label><input type="number" step="any" id="cv_'+id+'"></div>'+
+    '<div><label>Savaş Öncesi Fiyat</label><input type="number" step="any" id="cpre_'+id+'"></div>'+
+    '<div><label>YTD Eski Fiyat</label><input type="number" step="any" id="cytd_'+id+'"></div>'+
     '</div></div>';
 });
 
-function addRow(n,u,v,c1g,c1a,cytd,c1y){
+function addRow(n,u,v,cpre,cytd){
     var d=document.createElement('div');d.className='item-box';
     d.innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr auto;gap:6px;margin-bottom:6px"><div><label>İsim</label><input type="text" class="cn" value="'+(n||'')+'"></div><div><label>Birim</label><input type="text" class="cu" value="'+(u||'')+'"></div><button class="btn-del" onclick="this.parentElement.parentElement.remove()" style="height:32px;align-self:end">✕</button></div>'+
     '<div class="price-grid">'+
-    '<div><label>Güncel</label><input type="number" step="any" class="cv" value="'+(v||'')+'"></div>'+
-    '<div><label>1G Eski</label><input type="number" step="any" class="c1g" value="'+(c1g||'')+'"></div>'+
-    '<div><label>1A Eski</label><input type="number" step="any" class="c1a" value="'+(c1a||'')+'"></div>'+
+    '<div><label>Güncel Fiyat</label><input type="number" step="any" class="cv" value="'+(v||'')+'"></div>'+
+    '<div><label>Savaş Öncesi</label><input type="number" step="any" class="cpre" value="'+(cpre||'')+'"></div>'+
     '<div><label>YTD Eski</label><input type="number" step="any" class="cytd" value="'+(cytd||'')+'"></div>'+
-    '<div><label>1Y Eski</label><input type="number" step="any" class="c1y" value="'+(c1y||'')+'"></div>'+
     '</div>';
     document.getElementById('customs').appendChild(d);
 }
@@ -164,15 +159,13 @@ fetch('/api/iran-state').then(function(r){return r.json()}).then(function(s){
             var id=c[0].replace(/[^a-zA-Z0-9]/g,'_');
             if(s.manualCommodities[c[0]]){
                 document.getElementById('cv_'+id).value=s.manualCommodities[c[0]].value||'';
-                // Eski fiyatları yükle
-                if(s.manualCommodities[c[0]].past_1d != null) document.getElementById('c1g_'+id).value=s.manualCommodities[c[0]].past_1d;
-                if(s.manualCommodities[c[0]].past_1m != null) document.getElementById('c1a_'+id).value=s.manualCommodities[c[0]].past_1m;
+                // Sadece Savaş Öncesi ve YTD
+                if(s.manualCommodities[c[0]].past_prewar != null) document.getElementById('cpre_'+id).value=s.manualCommodities[c[0]].past_prewar;
                 if(s.manualCommodities[c[0]].past_ytd != null) document.getElementById('cytd_'+id).value=s.manualCommodities[c[0]].past_ytd;
-                if(s.manualCommodities[c[0]].past_1y != null) document.getElementById('c1y_'+id).value=s.manualCommodities[c[0]].past_1y;
             }
         });
     }
-    (s.customMetrics||[]).forEach(function(m){addRow(m.name,m.unit,m.value,m.past_1d,m.past_1m,m.past_ytd,m.past_1y)});
+    (s.customMetrics||[]).forEach(function(m){addRow(m.name,m.unit,m.value,m.past_prewar,m.past_ytd)});
     (s.timeline||[]).forEach(function(e){addTlRow(e.date,e.title,e.desc,e.tag)});
     renderCREditors(s.countryRisk||CR_DEFAULTS);
 }).catch(function(){renderCREditors(CR_DEFAULTS)});
@@ -185,36 +178,28 @@ document.getElementById('saveBtn').onclick=function(){
     COMMS.forEach(function(c){
         var id=c[0].replace(/[^a-zA-Z0-9]/g,'_');
         var v=parseFloat(document.getElementById('cv_'+id).value);
-        var p1g=parseFloat(document.getElementById('c1g_'+id).value);
-        var p1a=parseFloat(document.getElementById('c1a_'+id).value);
+        var ppre=parseFloat(document.getElementById('cpre_'+id).value);
         var pytd=parseFloat(document.getElementById('cytd_'+id).value);
-        var p1y=parseFloat(document.getElementById('c1y_'+id).value);
         
         if(!isNaN(v)){
             mc[c[0]]={
                 value: v,
-                past_1d: !isNaN(p1g) ? p1g : null,
-                past_1m: !isNaN(p1a) ? p1a : null,
-                past_ytd: !isNaN(pytd) ? pytd : null,
-                past_1y: !isNaN(p1y) ? p1y : null
+                past_prewar: !isNaN(ppre) ? ppre : null,
+                past_ytd: !isNaN(pytd) ? pytd : null
             };
         }
     });
     var cm=[];
     document.querySelectorAll('#customs > .item-box').forEach(function(r){
         var n=r.querySelector('.cn').value.trim();if(!n)return;
-        var p1g=parseFloat(r.querySelector('.c1g').value);
-        var p1a=parseFloat(r.querySelector('.c1a').value);
+        var ppre=parseFloat(r.querySelector('.cpre').value);
         var pytd=parseFloat(r.querySelector('.cytd').value);
-        var p1y=parseFloat(r.querySelector('.c1y').value);
         cm.push({
             name:n,
             unit:r.querySelector('.cu').value.trim(),
             value:parseFloat(r.querySelector('.cv').value)||0,
-            past_1d: !isNaN(p1g) ? p1g : null,
-            past_1m: !isNaN(p1a) ? p1a : null,
-            past_ytd: !isNaN(pytd) ? pytd : null,
-            past_1y: !isNaN(p1y) ? p1y : null
+            past_prewar: !isNaN(ppre) ? ppre : null,
+            past_ytd: !isNaN(pytd) ? pytd : null
         });
     });
     var tl=[];
