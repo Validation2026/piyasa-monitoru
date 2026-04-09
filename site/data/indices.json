@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Endeksler",
-    "updated_at": "2026-04-09T07:01:29Z",
+    "updated_at": "2026-04-09T07:11:17Z",
     "symbol_count": 17,
     "errors": []
   },
@@ -11,13 +11,13 @@
       "id": "XU100.IS",
       "name": "BIST 100",
       "unit": "TRY",
-      "current": 12921.5996,
-      "change_1d_pct": -1.45,
-      "change_1w_pct": 1.02,
-      "change_1m_pct": -1.2,
-      "change_3m_pct": 12.38,
-      "change_ytd_pct": 12.38,
-      "change_1y_pct": 827.48,
+      "current": 13530.6104,
+      "change_1d_pct": 4.71,
+      "change_1w_pct": 4.58,
+      "change_1m_pct": 5.77,
+      "change_3m_pct": 15.63,
+      "change_ytd_pct": 17.67,
+      "change_1y_pct": 871.19,
       "high_52w": 14339.2998,
       "low_52w": 1330.5,
       "data": [
@@ -5004,6 +5004,10 @@
         {
           "date": "2026-04-07",
           "value": 12921.5996
+        },
+        {
+          "date": "2026-04-09",
+          "value": 13530.6104
         }
       ]
     },
@@ -5011,13 +5015,13 @@
       "id": "XU030.IS",
       "name": "BIST 30",
       "unit": "TRY",
-      "current": 14759.5996,
-      "change_1d_pct": -1.41,
-      "change_1w_pct": 1.66,
-      "change_1m_pct": -0.94,
-      "change_3m_pct": 17.94,
-      "change_ytd_pct": 17.94,
-      "change_1y_pct": 930.34,
+      "current": 15506.8096,
+      "change_1d_pct": 5.06,
+      "change_1w_pct": 5.58,
+      "change_1m_pct": 6.71,
+      "change_3m_pct": 21.72,
+      "change_ytd_pct": 23.92,
+      "change_1y_pct": 982.5,
       "high_52w": 15828.2002,
       "low_52w": 1397.1,
       "data": [
@@ -9972,6 +9976,10 @@
         {
           "date": "2026-04-07",
           "value": 14759.5996
+        },
+        {
+          "date": "2026-04-09",
+          "value": 15506.8096
         }
       ]
     },
@@ -55347,13 +55355,13 @@
       "id": "^HSI",
       "name": "Hang Seng",
       "unit": "HKD",
-      "current": 25804.5,
-      "change_1d_pct": 2.74,
-      "change_1w_pct": 3.42,
-      "change_1m_pct": 2.2,
-      "change_3m_pct": -0.06,
-      "change_ytd_pct": -2.03,
-      "change_1y_pct": -10.09,
+      "current": 25783.9297,
+      "change_1d_pct": 2.66,
+      "change_1w_pct": 3.33,
+      "change_1m_pct": 2.12,
+      "change_3m_pct": -0.14,
+      "change_ytd_pct": -2.11,
+      "change_1y_pct": -10.16,
       "high_52w": 29468.0,
       "low_52w": 14687.0195,
       "data": [
@@ -60263,7 +60271,7 @@
         },
         {
           "date": "2026-04-09",
-          "value": 25804.5
+          "value": 25783.9297
         }
       ]
     },
@@ -60271,13 +60279,13 @@
       "id": "000001.SS",
       "name": "Shanghai Comp.",
       "unit": "CNY",
-      "current": 3962.9541,
-      "change_1d_pct": 1.87,
-      "change_1w_pct": 1.83,
-      "change_1m_pct": -3.91,
-      "change_3m_pct": 0.56,
-      "change_ytd_pct": -1.5,
-      "change_1y_pct": 14.85,
+      "current": 3966.2292,
+      "change_1d_pct": 1.96,
+      "change_1w_pct": 1.91,
+      "change_1m_pct": -3.83,
+      "change_3m_pct": 0.64,
+      "change_ytd_pct": -1.42,
+      "change_1y_pct": 14.94,
       "high_52w": 4182.5908,
       "low_52w": 2702.1851,
       "data": [
@@ -65119,7 +65127,7 @@
         },
         {
           "date": "2026-04-09",
-          "value": 3962.9541
+          "value": 3966.2292
         }
       ]
     },
@@ -65127,13 +65135,13 @@
       "id": "^BSESN",
       "name": "BSE Sensex",
       "unit": "INR",
-      "current": 77026.7578,
-      "change_1d_pct": 3.23,
-      "change_1w_pct": 7.06,
-      "change_1m_pct": -2.64,
-      "change_3m_pct": -9.05,
-      "change_ytd_pct": -9.58,
-      "change_1y_pct": 55.32,
+      "current": 76945.8281,
+      "change_1d_pct": 3.12,
+      "change_1w_pct": 6.95,
+      "change_1m_pct": -2.74,
+      "change_3m_pct": -9.15,
+      "change_ytd_pct": -9.68,
+      "change_1y_pct": 55.16,
       "high_52w": 85836.1172,
       "low_52w": 47705.8008,
       "data": [
@@ -70059,7 +70067,7 @@
         },
         {
           "date": "2026-04-09",
-          "value": 77026.7578
+          "value": 76945.8281
         }
       ]
     },
