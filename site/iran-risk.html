@@ -125,7 +125,7 @@
 }
 .ai-breath { animation: breathBadge 2s infinite; }
 
-/* 6. HAREKETLİ SINIR ÇİZGİSİ (YENİDEN EKLENDİ) */
+/* 6. HAREKETLİ SINIR ÇİZGİSİ */
 .animated-border { stroke-dasharray: 8, 8 !important; animation: borderFlow 3s linear infinite; }
 @keyframes borderFlow { to { stroke-dashoffset: -32; } }
 
@@ -195,51 +195,41 @@
 <script>
 (function(){
 
-// STATE — API'den oku (tüm cihazlarda aynı)
 fetch('/api/iran-state').then(function(r){return r.json()}).then(function(S){
     var score=S.riskScore||50;
     var hurmuz=S.hurmuzStatus||'AÇIK / GÜVENLİ';
 
-    // RISK SKORU DİJİTAL SAYAÇ ANİMASYONU
-    var el=document.getElementById('rScore'),fl=document.getElementById('rFill'),lb=document.getElementById('rLabel');
-    
-    // Sayı Saydırma
     let startTimestamp = null;
-    const duration = 1500; // 1.5 saniyede sayacak
+    const duration = 1500;
     const step = (timestamp) => {
         if (!startTimestamp) startTimestamp = timestamp;
         const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-        // Hızlı başlayıp yavaş biten (ease-out) formülü
         const easeOut = 1 - Math.pow(1 - progress, 3);
-        el.textContent = Math.floor(easeOut * score);
+        document.getElementById('rScore').textContent = Math.floor(easeOut * score);
         if (progress < 1) window.requestAnimationFrame(step);
-        else el.textContent = score;
+        else document.getElementById('rScore').textContent = score;
     };
     window.requestAnimationFrame(step);
 
-    // Barı doldur ve renkleri ayarla
-    setTimeout(() => { fl.style.width=score+'%'; }, 100);
+    setTimeout(() => { document.getElementById('rFill').style.width=score+'%'; }, 100);
     
+    var el=document.getElementById('rScore'),lb=document.getElementById('rLabel'),fl=document.getElementById('rFill');
     if(score>75){fl.style.background='#ff4757';el.style.color='#ff4757';lb.textContent='🚨 KRİTİK'}
     else if(score>50){fl.style.background='#fbbf24';el.style.color='#f59e0b';lb.textContent='⚠️ YÜKSEK RİSK'}
     else if(score>25){fl.style.background='#22d3ee';el.style.color='#0ea5e9';lb.textContent='ℹ️ ORTA RİSK'}
     else{fl.style.background='#00d68f';el.style.color='#00d68f';lb.textContent='✅ DÜŞÜK RİSK'}
 
-    // HURMUZ
     var colors={'AÇIK / GÜVENLİ':'#00d68f','RİSKLİ':'#fbbf24','KISMEN KAPALI':'#f97316','KAPALI':'#ff4757'};
     document.getElementById('hDot').style.background=colors[hurmuz]||'#00d68f';
     document.getElementById('hTxt').textContent=hurmuz;
 
-    // COMMODITIES — state'teki manualCommodities ve customMetrics'i kullan
     window._iranState = S;
     loadCommodities();
 }).catch(function(){
-    // API başarısız → default değerler
     window._iranState = {};
     loadCommodities();
 });
 
-// COMMODITIES
 var COMMS=[
     {id:'BZ=F',f:'commodities_energy.json',n:'BZ (Brent)',w:'İran petrol ihracatı'},
     {id:'CL=F',f:'commodities_energy.json',n:'CL (WTI)',w:'Küresel arz'},
@@ -265,24 +255,46 @@ Promise.all([fj('commodities_energy.json'),fj('commodities_metals.json'),fj('com
     var g=document.getElementById('cmGrid');
     var mc=S.manualCommodities||{};
     var html='';
+    
+    function pp(p){if(p==null)return'<span class="v n">—</span>';var k=p>=0?'u':'d';var sn=p>=0?'+':'';return'<span class="v '+k+'">'+sn+p.toFixed(2)+'%</span>'}
+    
     COMMS.forEach(function(c, index){
         var s=null;
         for(var i=0;i<datasets.length;i++){s=fs(datasets[i],c.id);if(s)break}
-        var val=s?s.current:0,chg=s?s.change_1d_pct:null;
-        if(mc[c.id]){if(mc[c.id].value)val=mc[c.id].value;if(mc[c.id].change!=null)chg=mc[c.id].change}
+        
+        var val=s?s.current:0;
+        var m1=s?s.change_1m_pct:null, ytd=s?s.change_ytd_pct:null, y1=s?s.change_1y_pct:null, chg=s?s.change_1d_pct:null;
+        
+        // OTOMATİK YÜZDE HESAPLAMA SİSTEMİ (Yeni)
+        if(mc[c.id] && mc[c.id].value != null){
+            val = mc[c.id].value;
+            // Admin panelinden eski fiyat girildiyse formülü çalıştır
+            if(mc[c.id].past_1d != null) chg = ((val - mc[c.id].past_1d) / Math.abs(mc[c.id].past_1d)) * 100;
+            if(mc[c.id].past_1m != null) m1 = ((val - mc[c.id].past_1m) / Math.abs(mc[c.id].past_1m)) * 100;
+            if(mc[c.id].past_ytd != null) ytd = ((val - mc[c.id].past_ytd) / Math.abs(mc[c.id].past_ytd)) * 100;
+            if(mc[c.id].past_1y != null) y1 = ((val - mc[c.id].past_1y) / Math.abs(mc[c.id].past_1y)) * 100;
+        }
+        
         var cls=chg!=null?(chg>=0?'u':'d'):'';
         var sign=chg!=null?(chg>=0?'+':''):'';
-        function pp(p){if(p==null)return'<span class="v n">—</span>';var k=p>=0?'u':'d';var sn=p>=0?'+':'';return'<span class="v '+k+'">'+sn+p.toFixed(2)+'%</span>'}
-        var m1=s?s.change_1m_pct:null, ytd=s?s.change_ytd_pct:null, y1=s?s.change_1y_pct:null;
         var extra='<div class="cm-extra"><span><span class="lbl">1A </span>'+pp(m1)+'</span><span><span class="lbl">YTD </span>'+pp(ytd)+'</span><span><span class="lbl">1Y </span>'+pp(y1)+'</span></div>';
         
-        // ŞELALE (CASCADE) GECİKMESİ EKLENDİ
         html+='<div class="cm" title="'+c.w+'" style="animation-delay:'+(index * 0.05)+'s"><div class="cm-n">'+c.n+'</div><div class="cm-v">'+fp(val)+'</div><div class="cm-c '+cls+'">'+sign+(chg!=null?chg.toFixed(2)+'%':'—')+'</div>'+extra+'</div>';
     });
+    
+    // ÖZEL VERİLER İÇİN OTOMATİK HESAPLAMA
     (S.customMetrics||[]).forEach(function(m, idx){
-        var cls=m.change>=0?'u':'d';
-        var delay = (COMMS.length + idx) * 0.05; // Kaldığı yerden devam etsin
-        html+='<div class="cm" style="border-color:#a78bfa; animation-delay:'+delay+'s"><div class="cm-n">'+m.name+(m.unit?' ('+m.unit+')':'')+'</div><div class="cm-v">'+fp(m.value)+'</div><div class="cm-c '+cls+'">'+(m.change>=0?'+':'')+m.change.toFixed(2)+'%</div></div>';
+        var val = m.value;
+        var chg = m.past_1d != null ? ((val - m.past_1d) / Math.abs(m.past_1d)) * 100 : 0;
+        var m1 = m.past_1m != null ? ((val - m.past_1m) / Math.abs(m.past_1m)) * 100 : null;
+        var ytd = m.past_ytd != null ? ((val - m.past_ytd) / Math.abs(m.past_ytd)) * 100 : null;
+        var y1 = m.past_1y != null ? ((val - m.past_1y) / Math.abs(m.past_1y)) * 100 : null;
+
+        var cls=chg>=0?'u':'d';
+        var extra='<div class="cm-extra"><span><span class="lbl">1A </span>'+pp(m1)+'</span><span><span class="lbl">YTD </span>'+pp(ytd)+'</span><span><span class="lbl">1Y </span>'+pp(y1)+'</span></div>';
+
+        var delay = (COMMS.length + idx) * 0.05;
+        html+='<div class="cm" style="border-color:#a78bfa; animation-delay:'+delay+'s"><div class="cm-n">'+m.name+(m.unit?' ('+m.unit+')':'')+'</div><div class="cm-v">'+fp(m.value)+'</div><div class="cm-c '+cls+'">'+(chg>=0?'+':'')+chg.toFixed(2)+'%</div>'+extra+'</div>';
     });
     g.innerHTML=html;
 });
@@ -292,7 +304,6 @@ Promise.all([fj('commodities_energy.json'),fj('commodities_metals.json'),fj('com
 var map=L.map('warMap',{scrollWheelZoom:false}).setView([30,50],5);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{maxZoom:12}).addTo(map);
 
-// İran sınırı (Hareketli animasyon tekrar eklendi)
 L.polygon([[39.78,44.77],[39.4,47.8],[38.41,48.87],[37.33,49.11],[36.65,52.76],[37.36,54.83],[37.07,57.37],[35.14,61.16],[31.3,61.7],[29.86,60.87],[26.12,61.6],[25.06,61.5],[25.38,57.79],[26.36,55.34],[27.09,56.18],[26.56,56.34],[26.65,55.07],[27.82,52],[29.24,50.08],[30.98,48.01],[32.47,45.44],[35.82,45.83],[37.15,44.56],[38.27,44.28],[39.78,44.77]],{
     color:'#ff4757',
     weight:2,
@@ -301,7 +312,6 @@ L.polygon([[39.78,44.77],[39.4,47.8],[38.41,48.87],[37.33,49.11],[36.65,52.76],[
     className: 'animated-border'
 }).addTo(map);
 
-// Üsler
 var bases=[
 {lat:35.68,lon:51.38,n:'Tahran',t:'iran'},{lat:32.65,lon:51.66,n:'Isfahan',t:'iran'},{lat:33.97,lon:51.92,n:'Natanz',t:'iran'},{lat:28.83,lon:50.84,n:'Buşehr',t:'iran'},{lat:27.15,lon:56.28,n:'Bandar Abbas',t:'iran'},{lat:36.26,lon:59.61,n:'Meşhed',t:'iran'},{lat:30.28,lon:48.25,n:'Abadan',t:'iran'},{lat:29.47,lon:60.84,n:'Çahbahar',t:'iran'},
 {lat:25.29,lon:51.34,n:'Al Udeid (ABD)',t:'us'},{lat:25.12,lon:56.33,n:'Al Dhafra (ABD)',t:'us'},{lat:29.23,lon:47.97,n:'Ali Al Salem (ABD)',t:'us'},{lat:25.93,lon:50.59,n:'İsa (ABD 5. Filo)',t:'us'},{lat:36.19,lon:44.01,n:'Erbil (ABD)',t:'us'},{lat:33.31,lon:44.36,n:'Bağdat (ABD)',t:'us'},{lat:21.43,lon:39.17,n:'Cidde (ABD)',t:'us'},
@@ -311,7 +321,6 @@ var bases=[
 var tc={iran:'#2ed573',us:'#3b82f6',il:'#fbbf24',cr:'#a78bfa'};
 bases.forEach(function(b){L.circleMarker([b.lat,b.lon],{radius:b.t==='cr'?10:7,color:tc[b.t],fillColor:tc[b.t],fillOpacity:.7,weight:2}).addTo(map).bindPopup('<b>'+b.n+'</b>')});
 
-// NEWS + STRIKES
 var strikeLayer=L.layerGroup().addTo(map);
 var KW={'tahran':[35.68,51.38],'isfahan':[32.65,51.66],'natanz':[33.97,51.92],'iran':[35.68,51.38],'tel aviv':[32.08,34.78],'kudüs':[31.76,35.21],'haifa':[32.79,34.99],'israil':[31.5,34.8],'beyrut':[33.89,35.5],'lübnan':[33.89,35.5],'hizbullah':[33.89,35.5],'şam':[33.51,36.29],'halep':[36.2,37.13],'suriye':[33.51,36.29],'bağdat':[33.31,44.36],'erbil':[36.19,44.01],'irak':[33.31,44.36],'sanaa':[15.36,44.19],'yemen':[15.36,44.19],'husi':[14.79,42.95],'kızıldeniz':[15,41.5],'hürmüz':[26.56,56.24],'bandar abbas':[27.15,56.28],'golan':[33.01,35.75],'gazze':[31.5,34.47],'cidde':[21.43,39.17],'nevatim':[30.62,34.82],'hayfa':[32.79,34.99],'füze':[32.08,34.78],'saldırı':[35.68,51.38]};
 
@@ -323,7 +332,6 @@ queries.forEach(function(q,i){
     setTimeout(function(){
         fetch('/api/rss-proxy?q='+encodeURIComponent(q)).then(function(r){return r.json()}).then(function(d){
             (d.items||[]).forEach(function(it){
-                // Engelli kaynak kontrolü
                 var dominated=false;
                 var low=(it.title||'').toLowerCase()+(it.link||'').toLowerCase();
                 for(var b=0;b<BLOCKED.length;b++){if(low.indexOf(BLOCKED[b])>-1){dominated=true;break}}
@@ -337,12 +345,10 @@ queries.forEach(function(q,i){
 });
 
 function renderAll(){
-    // Dedupe
     var seen={},uniq=[];
     allNews.sort(function(a,b){return new Date(b.date)-new Date(a.date)});
     allNews.forEach(function(n){if(!seen[n.title]){seen[n.title]=1;uniq.push(n)}});
 
-    // Strikes (Saldırı noktalarına radar/şok dalgası eklendi)
     strikeLayer.clearLayers();
     var struck={};
     uniq.forEach(function(n){
@@ -355,28 +361,18 @@ function renderAll(){
                     var jlat=KW[kw][0]+(Math.random()*.1-.05);
                     var jlon=KW[kw][1]+(Math.random()*.1-.05);
                     
-                    // Sabit Merkez Noktası
                     L.circleMarker([jlat,jlon],{
-                        radius:10,
-                        color:'#ff4757',
-                        fillColor:'#ff4757',
-                        fillOpacity:.8,
-                        weight:2
+                        radius:10,color:'#ff4757',fillColor:'#ff4757',fillOpacity:.8,weight:2
                     }).addTo(strikeLayer).bindPopup('<b style="color:#ff4757">🔴 SALDIRI</b><br><small>'+n.title.substring(0,80)+'...</small>');
                     
-                    // Radar Şok Dalgası (Animasyonlu Halka)
                     L.circleMarker([jlat,jlon],{
-                        radius:10,
-                        color:'#ff4757',
-                        fillOpacity:0,
-                        className: 'strike-pulse'
+                        radius:10,color:'#ff4757',fillOpacity:0,className: 'strike-pulse'
                     }).addTo(strikeLayer);
                 }
             }
         }
     });
 
-    // News list
     var nb=document.getElementById('newsBox');
     nb.innerHTML=uniq.slice(0,15).map(function(n){
         var h=Math.floor((Date.now()-new Date(n.date).getTime())/36e5);
@@ -385,7 +381,6 @@ function renderAll(){
     }).join('')||'<div class="nw">Haber bulunamadı</div>';
 }
 
-// TIMELINE — API'den yükle, yoksa statik
 var STATIC_TLE=[
 {d:'28.02',t:'İran-İsrail doğrudan çatışma başladı',ds:'İsrail nükleer tesislere hava operasyonu, İran balistik füze karşılığı',tag:'mil',dot:'red'},
 {d:'28.02',t:'BMGK acil toplantı',ds:'ABD ve Rusya veto kullandı',tag:'dip',dot:'blue'},
@@ -421,7 +416,6 @@ function renderTL(f){
 }
 renderTL('all');
 
-// Admin'den eklenen olayları API'den yükle
 fetch('/api/iran-state').then(function(r){return r.json()}).then(function(s){
     if(s.timeline && s.timeline.length>0){
         var adminEvents=s.timeline.map(function(e){
