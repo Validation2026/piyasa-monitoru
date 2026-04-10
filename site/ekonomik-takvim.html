@@ -43,7 +43,7 @@
         <div class="sub">Merkez bankası kararları, TÜFE açıklamaları, önemli ekonomik veriler</div>
     </div>
 
-    <div class="ai-box"><div class="ai-header"><span>🤖 AI Takvim Analizi</span><span class="ai-badge">Gemini</span></div><div class="ai-body" id="aiAnalysis"><span style="color:var(--t3);font-style:italic">Analiz yükleniyor...</span></div></div>
+    <div class="ai-box"><div class="ai-header"><span>🤖 AI Takvim Analizi</span><span class="ai-badge">AI</span></div><div class="ai-body" id="aiAnalysis"><span style="color:var(--t3);font-style:italic">Analiz yükleniyor...</span></div></div>
 
     <div class="cal-card">
         <div class="cal-header">🏛️ Merkez Bankası Faiz Kararları — 2026</div>
@@ -62,43 +62,119 @@
 var today = new Date().toISOString().split('T')[0];
 
 var cbDates = [
-    {date:'2026-01-29',name:'Fed Faiz Kararı',desc:'FOMC toplantısı',impact:'high'},
-    {date:'2026-01-30',name:'ECB Faiz Kararı',desc:'Euro Bölgesi',impact:'high'},
-    {date:'2026-02-06',name:'BoE Faiz Kararı',desc:'İngiltere',impact:'med'},
-    {date:'2026-02-20',name:'TCMB Faiz Kararı',desc:'Türkiye',impact:'high'},
-    {date:'2026-03-11',name:'BoJ Faiz Kararı',desc:'Japonya',impact:'med'},
-    {date:'2026-03-18',name:'Fed Faiz Kararı',desc:'FOMC + dot plot',impact:'high'},
-    {date:'2026-03-19',name:'TCMB Faiz Kararı',desc:'Türkiye',impact:'high'},
-    {date:'2026-04-09',name:'ECB Faiz Kararı',desc:'Euro Bölgesi',impact:'high'},
-    {date:'2026-04-17',name:'TCMB Faiz Kararı',desc:'Türkiye',impact:'high'},
+    // Fed (FOMC) 2026
+    {date:'2026-01-28',name:'Fed Faiz Kararı',desc:'FOMC toplantısı',impact:'high'},
+    {date:'2026-03-18',name:'Fed Faiz Kararı',desc:'FOMC + dot plot + SEP',impact:'high'},
     {date:'2026-05-06',name:'Fed Faiz Kararı',desc:'FOMC toplantısı',impact:'high'},
-    {date:'2026-05-07',name:'BoE Faiz Kararı',desc:'İngiltere',impact:'med'},
-    {date:'2026-05-15',name:'TCMB Faiz Kararı',desc:'Türkiye',impact:'high'},
+    {date:'2026-06-17',name:'Fed Faiz Kararı',desc:'FOMC + dot plot + SEP',impact:'high'},
+    {date:'2026-07-29',name:'Fed Faiz Kararı',desc:'FOMC toplantısı',impact:'high'},
+    {date:'2026-09-16',name:'Fed Faiz Kararı',desc:'FOMC + dot plot + SEP',impact:'high'},
+    {date:'2026-10-28',name:'Fed Faiz Kararı',desc:'FOMC toplantısı',impact:'high'},
+    {date:'2026-12-16',name:'Fed Faiz Kararı',desc:'FOMC + dot plot + SEP',impact:'high'},
+    // ECB 2026
+    {date:'2026-01-22',name:'ECB Faiz Kararı',desc:'Euro Bölgesi',impact:'high'},
+    {date:'2026-03-12',name:'ECB Faiz Kararı',desc:'Euro Bölgesi',impact:'high'},
+    {date:'2026-04-16',name:'ECB Faiz Kararı',desc:'Euro Bölgesi',impact:'high'},
     {date:'2026-06-04',name:'ECB Faiz Kararı',desc:'Euro Bölgesi',impact:'high'},
-    {date:'2026-06-17',name:'Fed Faiz Kararı',desc:'FOMC + SEP',impact:'high'},
-    {date:'2026-06-19',name:'TCMB Faiz Kararı',desc:'Türkiye',impact:'high'},
-    {date:'2026-06-19',name:'BoJ Faiz Kararı',desc:'Japonya',impact:'med'},
-    {date:'2026-07-29',name:'Fed Faiz Kararı',desc:'FOMC',impact:'high'},
-    {date:'2026-07-17',name:'TCMB Faiz Kararı',desc:'Türkiye',impact:'high'},
     {date:'2026-07-16',name:'ECB Faiz Kararı',desc:'Euro Bölgesi',impact:'high'},
-    {date:'2026-09-16',name:'Fed Faiz Kararı',desc:'FOMC + dot plot',impact:'high'},
-    {date:'2026-10-28',name:'Fed Faiz Kararı',desc:'FOMC',impact:'high'},
-    {date:'2026-12-16',name:'Fed Faiz Kararı',desc:'FOMC + SEP',impact:'high'},
+    {date:'2026-09-10',name:'ECB Faiz Kararı',desc:'Euro Bölgesi',impact:'high'},
+    {date:'2026-10-29',name:'ECB Faiz Kararı',desc:'Euro Bölgesi',impact:'high'},
+    {date:'2026-12-17',name:'ECB Faiz Kararı',desc:'Euro Bölgesi',impact:'high'},
+    // BoE 2026
+    {date:'2026-02-05',name:'BoE Faiz Kararı',desc:'İngiltere Merkez Bankası',impact:'med'},
+    {date:'2026-03-19',name:'BoE Faiz Kararı',desc:'İngiltere Merkez Bankası',impact:'med'},
+    {date:'2026-05-07',name:'BoE Faiz Kararı',desc:'İngiltere Merkez Bankası',impact:'med'},
+    {date:'2026-06-18',name:'BoE Faiz Kararı',desc:'İngiltere Merkez Bankası',impact:'med'},
+    {date:'2026-08-06',name:'BoE Faiz Kararı',desc:'İngiltere Merkez Bankası',impact:'med'},
+    {date:'2026-09-17',name:'BoE Faiz Kararı',desc:'İngiltere Merkez Bankası',impact:'med'},
+    {date:'2026-11-05',name:'BoE Faiz Kararı',desc:'İngiltere Merkez Bankası',impact:'med'},
+    {date:'2026-12-17',name:'BoE Faiz Kararı',desc:'İngiltere Merkez Bankası',impact:'med'},
+    // TCMB 2026 (aylık PPK)
+    {date:'2026-01-23',name:'TCMB Faiz Kararı',desc:'Türkiye PPK',impact:'high'},
+    {date:'2026-02-20',name:'TCMB Faiz Kararı',desc:'Türkiye PPK',impact:'high'},
+    {date:'2026-03-20',name:'TCMB Faiz Kararı',desc:'Türkiye PPK',impact:'high'},
+    {date:'2026-04-17',name:'TCMB Faiz Kararı',desc:'Türkiye PPK',impact:'high'},
+    {date:'2026-05-22',name:'TCMB Faiz Kararı',desc:'Türkiye PPK',impact:'high'},
+    {date:'2026-06-19',name:'TCMB Faiz Kararı',desc:'Türkiye PPK',impact:'high'},
+    {date:'2026-07-24',name:'TCMB Faiz Kararı',desc:'Türkiye PPK',impact:'high'},
+    {date:'2026-08-21',name:'TCMB Faiz Kararı',desc:'Türkiye PPK',impact:'high'},
+    {date:'2026-09-18',name:'TCMB Faiz Kararı',desc:'Türkiye PPK',impact:'high'},
+    {date:'2026-10-23',name:'TCMB Faiz Kararı',desc:'Türkiye PPK',impact:'high'},
+    {date:'2026-11-20',name:'TCMB Faiz Kararı',desc:'Türkiye PPK',impact:'high'},
+    {date:'2026-12-25',name:'TCMB Faiz Kararı',desc:'Türkiye PPK',impact:'high'},
+    // BoJ 2026
+    {date:'2026-01-23',name:'BoJ Faiz Kararı',desc:'Japonya Merkez Bankası',impact:'med'},
+    {date:'2026-03-13',name:'BoJ Faiz Kararı',desc:'Japonya Merkez Bankası',impact:'med'},
+    {date:'2026-05-01',name:'BoJ Faiz Kararı',desc:'Japonya Merkez Bankası',impact:'med'},
+    {date:'2026-06-19',name:'BoJ Faiz Kararı',desc:'Japonya Merkez Bankası',impact:'med'},
+    {date:'2026-07-17',name:'BoJ Faiz Kararı',desc:'Japonya Merkez Bankası',impact:'med'},
+    {date:'2026-09-18',name:'BoJ Faiz Kararı',desc:'Japonya Merkez Bankası',impact:'med'},
+    {date:'2026-10-30',name:'BoJ Faiz Kararı',desc:'Japonya Merkez Bankası',impact:'med'},
+    {date:'2026-12-18',name:'BoJ Faiz Kararı',desc:'Japonya Merkez Bankası',impact:'med'},
 ];
 
 var ecoEvents = [
+    // ABD Tarım Dışı İstihdam (her ayın ilk Cuması)
+    {date:'2026-01-09',name:'ABD Tarım Dışı İstihdam',desc:'Aralık 2025 verileri',impact:'high'},
+    {date:'2026-02-06',name:'ABD Tarım Dışı İstihdam',desc:'Ocak verileri',impact:'high'},
+    {date:'2026-03-06',name:'ABD Tarım Dışı İstihdam',desc:'Şubat verileri',impact:'high'},
     {date:'2026-04-03',name:'ABD Tarım Dışı İstihdam',desc:'Mart verileri',impact:'high'},
-    {date:'2026-04-10',name:'ABD TÜFE (Mart)',desc:'Enflasyon verisi',impact:'high'},
-    {date:'2026-04-14',name:'Çin GSYİH Q1',desc:'Çeyreklik büyüme',impact:'med'},
-    {date:'2026-04-30',name:'Euro Bölgesi GSYİH Q1',desc:'İlk tahmin',impact:'med'},
-    {date:'2026-05-02',name:'Türkiye TÜFE (Nisan)',desc:'TÜİK enflasyon',impact:'high'},
-    {date:'2026-05-08',name:'ABD TÜFE (Nisan)',desc:'Enflasyon',impact:'high'},
-    {date:'2026-05-15',name:'ABD Perakende Satışlar',desc:'Tüketici harcaması',impact:'med'},
+    {date:'2026-05-08',name:'ABD Tarım Dışı İstihdam',desc:'Nisan verileri',impact:'high'},
+    {date:'2026-06-05',name:'ABD Tarım Dışı İstihdam',desc:'Mayıs verileri',impact:'high'},
+    {date:'2026-07-02',name:'ABD Tarım Dışı İstihdam',desc:'Haziran verileri',impact:'high'},
+    {date:'2026-08-07',name:'ABD Tarım Dışı İstihdam',desc:'Temmuz verileri',impact:'high'},
+    {date:'2026-09-04',name:'ABD Tarım Dışı İstihdam',desc:'Ağustos verileri',impact:'high'},
+    {date:'2026-10-02',name:'ABD Tarım Dışı İstihdam',desc:'Eylül verileri',impact:'high'},
+    {date:'2026-11-06',name:'ABD Tarım Dışı İstihdam',desc:'Ekim verileri',impact:'high'},
+    {date:'2026-12-04',name:'ABD Tarım Dışı İstihdam',desc:'Kasım verileri',impact:'high'},
+    // ABD TÜFE (genelde ayın 10-13'ü arası)
+    {date:'2026-01-14',name:'ABD TÜFE (Aralık)',desc:'Enflasyon verisi',impact:'high'},
+    {date:'2026-02-11',name:'ABD TÜFE (Ocak)',desc:'Enflasyon verisi',impact:'high'},
+    {date:'2026-03-11',name:'ABD TÜFE (Şubat)',desc:'Enflasyon verisi',impact:'high'},
+    {date:'2026-04-14',name:'ABD TÜFE (Mart)',desc:'Enflasyon verisi',impact:'high'},
+    {date:'2026-05-12',name:'ABD TÜFE (Nisan)',desc:'Enflasyon verisi',impact:'high'},
+    {date:'2026-06-10',name:'ABD TÜFE (Mayıs)',desc:'Enflasyon verisi',impact:'high'},
+    {date:'2026-07-14',name:'ABD TÜFE (Haziran)',desc:'Enflasyon verisi',impact:'high'},
+    {date:'2026-08-12',name:'ABD TÜFE (Temmuz)',desc:'Enflasyon verisi',impact:'high'},
+    {date:'2026-09-11',name:'ABD TÜFE (Ağustos)',desc:'Enflasyon verisi',impact:'high'},
+    {date:'2026-10-13',name:'ABD TÜFE (Eylül)',desc:'Enflasyon verisi',impact:'high'},
+    {date:'2026-11-12',name:'ABD TÜFE (Ekim)',desc:'Enflasyon verisi',impact:'high'},
+    {date:'2026-12-10',name:'ABD TÜFE (Kasım)',desc:'Enflasyon verisi',impact:'high'},
+    // Türkiye TÜFE (her ayın 3'ü)
+    {date:'2026-01-05',name:'Türkiye TÜFE (Aralık)',desc:'TÜİK enflasyon',impact:'high'},
+    {date:'2026-02-03',name:'Türkiye TÜFE (Ocak)',desc:'TÜİK enflasyon',impact:'high'},
+    {date:'2026-03-03',name:'Türkiye TÜFE (Şubat)',desc:'TÜİK enflasyon',impact:'high'},
+    {date:'2026-04-03',name:'Türkiye TÜFE (Mart)',desc:'TÜİK enflasyon',impact:'high'},
+    {date:'2026-05-04',name:'Türkiye TÜFE (Nisan)',desc:'TÜİK enflasyon',impact:'high'},
     {date:'2026-06-03',name:'Türkiye TÜFE (Mayıs)',desc:'TÜİK enflasyon',impact:'high'},
-    {date:'2026-06-05',name:'ABD Tarım Dışı İstihdam',desc:'Mayıs',impact:'high'},
-    {date:'2026-06-10',name:'ABD TÜFE (Mayıs)',desc:'Enflasyon',impact:'high'},
-    {date:'2026-07-03',name:'Türkiye TÜFE (Haziran)',desc:'TÜİK',impact:'high'},
-    {date:'2026-07-30',name:'ABD GSYİH Q2',desc:'İlk tahmin',impact:'high'},
+    {date:'2026-07-03',name:'Türkiye TÜFE (Haziran)',desc:'TÜİK enflasyon',impact:'high'},
+    {date:'2026-08-03',name:'Türkiye TÜFE (Temmuz)',desc:'TÜİK enflasyon',impact:'high'},
+    {date:'2026-09-03',name:'Türkiye TÜFE (Ağustos)',desc:'TÜİK enflasyon',impact:'high'},
+    {date:'2026-10-05',name:'Türkiye TÜFE (Eylül)',desc:'TÜİK enflasyon',impact:'high'},
+    {date:'2026-11-03',name:'Türkiye TÜFE (Ekim)',desc:'TÜİK enflasyon',impact:'high'},
+    {date:'2026-12-03',name:'Türkiye TÜFE (Kasım)',desc:'TÜİK enflasyon',impact:'high'},
+    // ABD GSYİH (çeyreklik ilk tahmin)
+    {date:'2026-01-29',name:'ABD GSYİH Q4 2025',desc:'İlk tahmin',impact:'high'},
+    {date:'2026-04-29',name:'ABD GSYİH Q1',desc:'İlk tahmin',impact:'high'},
+    {date:'2026-07-29',name:'ABD GSYİH Q2',desc:'İlk tahmin',impact:'high'},
+    {date:'2026-10-28',name:'ABD GSYİH Q3',desc:'İlk tahmin',impact:'high'},
+    // Çin GSYİH
+    {date:'2026-04-16',name:'Çin GSYİH Q1',desc:'Çeyreklik büyüme',impact:'med'},
+    {date:'2026-07-15',name:'Çin GSYİH Q2',desc:'Çeyreklik büyüme',impact:'med'},
+    {date:'2026-10-19',name:'Çin GSYİH Q3',desc:'Çeyreklik büyüme',impact:'med'},
+    // Euro Bölgesi GSYİH
+    {date:'2026-04-30',name:'Euro Bölgesi GSYİH Q1',desc:'İlk tahmin',impact:'med'},
+    {date:'2026-07-31',name:'Euro Bölgesi GSYİH Q2',desc:'İlk tahmin',impact:'med'},
+    {date:'2026-10-30',name:'Euro Bölgesi GSYİH Q3',desc:'İlk tahmin',impact:'med'},
+    // Türkiye GSYİH
+    {date:'2026-03-31',name:'Türkiye GSYİH Q4 2025',desc:'TÜİK büyüme verisi',impact:'high'},
+    {date:'2026-06-30',name:'Türkiye GSYİH Q1',desc:'TÜİK büyüme verisi',impact:'high'},
+    {date:'2026-09-30',name:'Türkiye GSYİH Q2',desc:'TÜİK büyüme verisi',impact:'high'},
+    // ABD Perakende Satışlar
+    {date:'2026-04-15',name:'ABD Perakende Satışlar',desc:'Mart tüketici harcaması',impact:'med'},
+    {date:'2026-05-15',name:'ABD Perakende Satışlar',desc:'Nisan tüketici harcaması',impact:'med'},
+    {date:'2026-06-16',name:'ABD Perakende Satışlar',desc:'Mayıs tüketici harcaması',impact:'med'},
+    {date:'2026-07-16',name:'ABD Perakende Satışlar',desc:'Haziran tüketici harcaması',impact:'med'},
 ];
 
 function renderEvents(containerId, events){
