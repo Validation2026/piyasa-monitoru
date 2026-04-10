@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="tr" data-theme="light">
 <head>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kripto Paralar — Risk Monitörü</title>
@@ -29,12 +32,16 @@
     </div>
     <div class="ai-box"><div class="ai-header"><span>🤖 AI Piyasa Analizi</span><span class="ai-badge">AI</span></div><div class="ai-body" id="aiAnalysis"><span class="ai-loading">Analiz yükleniyor...</span></div></div>
     <div class="summary-row" id="summaryCards"></div>
-    <div class="periods" id="periodSelector">
-        <button class="pbtn" data-period="1m">1A</button>
-        <button class="pbtn" data-period="3m">3A</button>
-        <button class="pbtn" data-period="6m">6A</button>
-        <button class="pbtn on" data-period="1y">1Y</button>
-        <button class="pbtn" data-period="ytd">YTD</button>
+    <div class="chart-timeframes global-timeframes">
+        <button class="tf-btn" data-tf="1A">1A</button>
+        <button class="tf-btn" data-tf="3A">3A</button>
+        <button class="tf-btn" data-tf="6A">6A</button>
+        <button class="tf-btn" data-tf="YTD">YTD</button>
+        <button class="tf-btn" data-tf="1Y">1Y</button>
+        <button class="tf-btn" data-tf="2Y">2Y</button>
+        <button class="tf-btn" data-tf="3Y">3Y</button>
+        <button class="tf-btn" data-tf="5Y">5Y</button>
+        <button class="tf-btn active" data-tf="Tümü">Tümü</button>
     </div>
     <div class="charts" id="chartsGrid"></div>
     <div class="dtable" id="dataTable"></div>
@@ -54,7 +61,7 @@
 <script src="assets/js/app.js"></script>
 <script>
 (function(){
-    var period='1y',allSeries=[],charts=[];
+    var period='5y',allSeries=[],charts=[];
     PM.loadData('crypto.json','kripto').then(function(data){
         if(!data||!data.series||!data.series.length){document.getElementById('summaryCards').innerHTML='<div class="scard"><div class="scard-name">Veri bulunamadı.</div></div>';return}
         allSeries=data.series;
@@ -63,13 +70,6 @@
         PM.buildSummary('summaryCards',allSeries);
         charts=PM.buildCharts('chartsGrid',allSeries,period);
         PM.buildTable('dataTable',allSeries);
-    });
-    document.getElementById('periodSelector').addEventListener('click',function(e){
-        if(!e.target.classList.contains('pbtn'))return;
-        document.querySelectorAll('.pbtn').forEach(function(b){b.classList.remove('on')});
-        e.target.classList.add('on');period=e.target.getAttribute('data-period');
-        if(charts)charts.forEach(function(c){c.destroy()});
-        charts=PM.buildCharts('chartsGrid',allSeries,period);
     });
     fetch('/api/ai-analysis?cat=kripto').then(function(r){return r.json()}).then(function(d){
         var el=document.getElementById('aiAnalysis');if(el&&d.analysis)el.textContent=d.analysis;

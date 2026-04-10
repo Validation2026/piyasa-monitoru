@@ -17,9 +17,11 @@ COMMODITIES_ENERGY = {
         "BZ=F":  {"name": "BZ (Brent)",        "unit": "USD/bbl"},
         "CL=F":  {"name": "CL (WTI)",           "unit": "USD/bbl"},
         "NG=F":  {"name": "NG (Doğalgaz)",  "unit": "USD/MMBtu"},
-        "MTF=F": {"name": "TTF (Avrupa Gaz)", "unit": "EUR/MWh"},
+        "TTF=F": {"name": "TTF (Avrupa Gaz)", "unit": "EUR/MWh"},
         "HO=F":  {"name": "HO (Isıtma Yağı)",          "unit": "USD/gal"},
         "RB=F":  {"name": "RB (Benzin)",         "unit": "USD/gal"},
+        "URA":   {"name": "URA (Uranyum ETF)",         "unit": "USD"}, # Nükleer enerji trendi
+        "KRBN":  {"name": "KRBN (Karbon Kredisi ETF)", "unit": "USD"}, # Küresel karbon fiyatlaması
     }
 }
 
@@ -62,9 +64,6 @@ CURRENCIES = {
         "EURTRY=X": {"name": "EUR/TRY", "unit": "TRY"},
         "GBPTRY=X": {"name": "GBP/TRY", "unit": "TRY"},
         "CHFTRY=X": {"name": "CHF/TRY", "unit": "TRY"},
-        "JPYTRY=X": {"name": "JPY/TRY", "unit": "TRY"},
-        "CADTRY=X": {"name": "CAD/TRY", "unit": "TRY"},
-        "AUDTRY=X": {"name": "AUD/TRY", "unit": "TRY"},
         "CNYTRY=X": {"name": "CNY/TRY", "unit": "TRY"},
         "SARTRY=X": {"name": "SAR/TRY", "unit": "TRY"},
         "EURUSD=X": {"name": "EUR/USD", "unit": "USD"},
@@ -111,6 +110,7 @@ INDICES = {
         "^KS11":     {"name": "KOSPI",          "unit": "KRW"},
         "^TWII":     {"name": "TAIEX",          "unit": "TWD"},
         "^MERV":     {"name": "MERVAL",         "unit": "ARS"},
+        "^VIX":     {"name": "VIX (Korku Endeksi)",     "unit": "Puan"}, # S&P 500 oynaklığı
     }
 }
 

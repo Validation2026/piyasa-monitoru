@@ -98,19 +98,26 @@ function buildComparisonChart(canvasId,seriesList,period){
     var dark=document.documentElement.getAttribute('data-theme')!=='light';
     var grid=dark?'rgba(255,255,255,.05)':'rgba(0,0,0,.05)';var txt=dark?'#8a99b2':'#475569';
     var MO=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
-    var datasets=[];
-    var maxLen=0;var allLabels=[];
+    // Tum tarihlerin birlesimi: x ekseni butun grafik boyunca uzansin
+    var dateSet={};
+    var perSeries=[];
     seriesList.forEach(function(s,i){
-        if(!s||!s.data)return;
+        if(!s||!s.data){perSeries.push(null);return;}
         var filtered=downsample(filterPeriod(s.data,period||'1y'),300);
-        if(!filtered.length)return;
-        var base=filtered[0].value;if(!base)return;
-        var vals=filtered.map(function(d){return((d.value-base)/base)*100});
-        var labels=filtered.map(function(d){return d.date});
-        if(labels.length>maxLen){maxLen=labels.length;allLabels=labels}
-        datasets.push({label:s.name,data:vals,borderColor:gc(i),backgroundColor:'transparent',tension:.3,pointRadius:0,pointHoverRadius:4,borderWidth:2});
+        if(!filtered.length){perSeries.push(null);return;}
+        var base=filtered[0].value;if(!base){perSeries.push(null);return;}
+        var map={};
+        filtered.forEach(function(d){map[d.date]=((d.value-base)/base)*100;dateSet[d.date]=1});
+        perSeries.push({s:s,i:i,map:map});
     });
-    return new Chart(c,{type:'line',data:{labels:allLabels,datasets:datasets},options:{responsive:true,maintainAspectRatio:false,animation:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:true,position:'top',labels:{color:txt,font:{size:11,family:"'Outfit'"},boxWidth:12,padding:12}},tooltip:{backgroundColor:dark?'#1e293b':'#fff',titleColor:dark?'#e8edf5':'#0f172a',bodyColor:dark?'#8a99b2':'#475569',borderColor:dark?'#334155':'#dde4ed',borderWidth:1,padding:10,callbacks:{label:function(ctx){return ctx.dataset.label+': '+(ctx.raw>=0?'+':'')+ctx.raw.toFixed(2)+'%'}}}},scales:{x:{grid:{color:grid,drawBorder:false},ticks:{color:txt,font:{size:10,family:"'JetBrains Mono'"},maxTicksLimit:6,callback:function(v){var l=this.getLabelForValue(v);var p=l.split('-');if(p.length>=2)return MO[parseInt(p[1])-1]+' '+p[0].slice(2);return l}}},y:{grid:{color:grid,drawBorder:false},ticks:{color:txt,font:{size:10,family:"'JetBrains Mono'"},callback:function(v){return(v>=0?'+':'')+v.toFixed(0)+'%'}}}}}});
+    var allLabels=Object.keys(dateSet).sort();
+    var datasets=[];
+    perSeries.forEach(function(ps){
+        if(!ps)return;
+        var data=allLabels.map(function(dt){return ps.map[dt]!=null?ps.map[dt]:null});
+        datasets.push({label:ps.s.name,data:data,borderColor:gc(ps.i),backgroundColor:'transparent',tension:.3,pointRadius:0,pointHoverRadius:4,borderWidth:2,spanGaps:true});
+    });
+    return new Chart(c,{type:'line',data:{labels:allLabels,datasets:datasets},options:{responsive:true,maintainAspectRatio:false,animation:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:true,position:'top',labels:{color:txt,font:{size:11,family:"'Outfit'"},boxWidth:12,padding:12}},tooltip:{backgroundColor:dark?'#1e293b':'#fff',titleColor:dark?'#e8edf5':'#0f172a',bodyColor:dark?'#8a99b2':'#475569',borderColor:dark?'#334155':'#dde4ed',borderWidth:1,padding:10,callbacks:{label:function(ctx){if(ctx.raw==null)return'';return ctx.dataset.label+': '+(ctx.raw>=0?'+':'')+ctx.raw.toFixed(2)+'%'}}}},scales:{x:{grid:{color:grid,drawBorder:false},ticks:{color:txt,font:{size:10,family:"'JetBrains Mono'"},maxTicksLimit:6,callback:function(v){var l=this.getLabelForValue(v);var p=l.split('-');if(p.length>=2)return MO[parseInt(p[1])-1]+' '+p[0].slice(2);return l}}},y:{grid:{color:grid,drawBorder:false},ticks:{color:txt,font:{size:10,family:"'JetBrains Mono'"},callback:function(v){return(v>=0?'+':'')+v.toFixed(0)+'%'}}}}}});
 }
 
 function applyOverrides(seriesList, overrides) {
@@ -141,4 +148,187 @@ function loadData(file, pageId) {
 }
 
 return{fj:fj,fs:fs,fp:fp,fc:fc,cc:cc,gc:gc,filterPeriod:filterPeriod,miniSpark:miniSpark,makeChart:makeChart,buildSummary:buildSummary,buildCharts:buildCharts,buildTable:buildTable,buildComparisonChart:buildComparisonChart,applyOverrides:applyOverrides,loadOverrides:loadOverrides,loadData:loadData};
+})();
+
+/* ══════════════════════════════════════════
+   TRADINGVIEW STİLİ TAM EKRAN İŞLEVİ (HD)
+   ══════════════════════════════════════════ */
+document.addEventListener("click", function(e) {
+    // Tıklanan şey grafik (canvas) ise
+    if (e.target.tagName.toLowerCase() === 'canvas') {
+        var canvas = e.target;
+        // Grafiği değil, onu saran "kart" div'ini tam ekran yapıyoruz (Başlıklar da gelsin diye)
+        var chartContainer = canvas.parentElement; 
+        
+        chartContainer.classList.toggle('tv-fullscreen-mode');
+        
+        // Arka planın kaymasını engelle
+        if (chartContainer.classList.contains('tv-fullscreen-mode')) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'auto';
+        }
+        
+        // SİHİRLİ KISIM: Chart.js'in grafiği bulanıklaştırmadan HD kalitede baştan çizmesini zorla
+        setTimeout(function() {
+            window.dispatchEvent(new Event('resize'));
+        }, 50);
+    }
+});
+
+/* ══════════════════════════════════════════
+   GLOBAL ZAMAN FİLTRESİ (TÜM GRAFİKLERİ AYNI ANDA GÜNCELLER)
+   ══════════════════════════════════════════ */
+document.addEventListener("click", function(e) {
+    if (e.target.classList.contains('tf-btn')) {
+        var btn = e.target;
+        var container = btn.parentElement;
+        var tf = btn.getAttribute('data-tf');
+        
+        // Sadece tıklanan butonu aktif (mavi) yap
+        container.querySelectorAll('.tf-btn').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+
+        // Sayfadaki TÜM Chart.js grafiklerini bul ve döngüye sok
+        for (var id in Chart.instances) {
+            var chartInstance = Chart.instances[id];
+            
+            if (chartInstance) {
+                // Eğer grafiğin orijinal (5 yıllık) verisini henüz yedeklemediysek, ilk tıklamada yedekle
+                if (!chartInstance.originalLabels) {
+                    chartInstance.originalLabels = [...chartInstance.data.labels];
+                    chartInstance.originalData = [...chartInstance.data.datasets[0].data];
+                }
+
+                var cutoffDate = new Date();
+
+                // Tarih sınırını belirle
+                if(tf === '1A') cutoffDate.setMonth(cutoffDate.getMonth() - 1);
+                else if(tf === '3A') cutoffDate.setMonth(cutoffDate.getMonth() - 3);
+                else if(tf === '6A') cutoffDate.setMonth(cutoffDate.getMonth() - 6);
+                else if(tf === '1Y') cutoffDate.setFullYear(cutoffDate.getFullYear() - 1);
+                else if(tf === '2Y') cutoffDate.setFullYear(cutoffDate.getFullYear() - 2);
+                else if(tf === '3Y') cutoffDate.setFullYear(cutoffDate.getFullYear() - 3);
+                else if(tf === '5Y') cutoffDate.setFullYear(cutoffDate.getFullYear() - 5);
+                else if(tf === 'YTD') {
+                    cutoffDate = new Date(cutoffDate.getFullYear(), 0, 1);
+                }
+
+                var filteredLabels = [];
+                var filteredData = [];
+
+                // Verileri filtrele
+                for (var i = 0; i < chartInstance.originalLabels.length; i++) {
+                    var itemDate = new Date(chartInstance.originalLabels[i]);
+                    if (tf === 'Tümü' || itemDate >= cutoffDate) {
+                        filteredLabels.push(chartInstance.originalLabels[i]);
+                        filteredData.push(chartInstance.originalData[i]);
+                    }
+                }
+
+                // Grafiğe yeni veriyi ver ve çiz
+                chartInstance.data.labels = filteredLabels;
+                chartInstance.data.datasets[0].data = filteredData;
+                chartInstance.update();
+
+                // 🌟 SİHİRLİ ANİMASYON TETİKLEYİCİSİ 🌟
+                // Animasyonu önce silip, tarayıcıyı zorla yenileyip (reflow), tekrar ekliyoruz
+                chartInstance.canvas.style.animation = 'none';
+                chartInstance.canvas.offsetHeight; /* Tarayıcıyı kandırıp animasyonu sıfırlıyoruz */
+                chartInstance.canvas.style.animation = 'fadeInUp 0.5s ease-out forwards';
+            }
+        }
+    }
+});
+
+/* ══════════════════════════════════════════
+   AKILLI TAM EKRAN (DİNAMİK SAYFALAR İÇİN KESİN ÇÖZÜM)
+   ══════════════════════════════════════════ */
+
+// 1. Dinamik grafikleri sürekli tarayıp butonları "Ana Karta" yerleştir
+setInterval(function() {
+    for (var id in Chart.instances) {
+        var chart = Chart.instances[id];
+        var canvas = chart.canvas;
+        
+        // SİHİR BURADA: Sadece grafiği değil, onu saran "en dış kartı" buluyoruz
+        var container = canvas.closest('.charts > div') || canvas.parentElement;
+        
+        // Eğer bu karta daha önce buton eklemediysek ekle
+        if (!container.classList.contains('chart-box-relative')) {
+            container.classList.add('chart-box-relative');
+            
+            var btn = document.createElement('button');
+            btn.className = 'chart-expand-btn';
+            btn.innerHTML = '⛶'; 
+            btn.title = 'Tam Ekran';
+            
+            // Kartın CSS position değeri static ise butonu tutabilmesi için relative yapıyoruz
+            if (window.getComputedStyle(container).position === 'static') {
+                container.style.position = 'relative';
+            }
+            
+            container.appendChild(btn);
+        }
+    }
+}, 1000); // Her saniye yeni grafik var mı diye kontrol eder, sistemi hiç yormaz.
+
+// 2. Büyütme/Kapatma butonuna tıklanma olayını dinle
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('chart-expand-btn')) {
+        var btn = e.target;
+        var container = btn.parentElement;
+        var canvas = container.querySelector('canvas');
+        var chartInstance = Chart.getChart(canvas);
+        
+        container.classList.toggle('tv-fullscreen-mode');
+        
+        if (container.classList.contains('tv-fullscreen-mode')) {
+            // TAM EKRANA GEÇİŞ
+            document.body.style.overflow = 'hidden';
+            btn.innerHTML = '✖';
+            btn.title = 'Kapat';
+            
+            if (chartInstance) {
+                chartInstance.options.maintainAspectRatio = false; // Oran inadını kır
+                chartInstance.update('none'); // Animasyonsuz anında güncelle
+            }
+        } else {
+            // NORMAL EKRANA DÖNÜŞ
+            document.body.style.overflow = '';
+            btn.innerHTML = '⛶';
+            btn.title = 'Tam Ekran';
+            
+            if (chartInstance) {
+                chartInstance.options.maintainAspectRatio = true; // Oran korumasını geri aç
+                chartInstance.update('none');
+            }
+        }
+        
+        // Yeni ekran boyutuna göre grafiği HD kalitede zorla çizdir
+        setTimeout(function() {
+            if (chartInstance) chartInstance.resize();
+            window.dispatchEvent(new Event('resize'));
+        }, 50);
+    }
+});
+
+/* ══════════════════════════════════════════
+   AKILLI OTOMATİK YENİLEME (MOBİL İÇİN)
+   ══════════════════════════════════════════ */
+(function() {
+    var lastSeen = Date.now();
+    
+    // Kullanıcı sekmeye her geri döndüğünde çalışır
+    document.addEventListener('visibilitychange', function() {
+        if (document.visibilityState === 'visible') {
+            var now = Date.now();
+            // Eğer kullanıcı sayfadan çıkalı 2 dakikadan (120.000 milisaniye) fazla olmuşsa
+            if (now - lastSeen > 120000) {
+                // true parametresi ile tarayıcı önbelleğini ezip zorla yeniler
+                window.location.reload(true); 
+            }
+            lastSeen = now;
+        }
+    });
 })();

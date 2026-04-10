@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="tr" data-theme="light">
 <head>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tedarik Zinciri Haritası — Risk Monitörü</title>
@@ -33,6 +36,27 @@
 .route-table tr:hover td{background:#f8fafc}
 .risk-high{color:#ff4757;font-weight:700}.risk-med{color:#f59e0b;font-weight:700}.risk-low{color:#00d68f;font-weight:700}
 @media(max-width:768px){#supplyMap{height:350px}.prod-grid{grid-template-columns:1fr}}
+
+/* ══════════════════════════════════════════
+   HARİTA ANİMASYONLARI (TEDARİK ZİNCİRİ)
+   ══════════════════════════════════════════ */
+/* 1. Ticaret Rotası Akış Efekti */
+.animated-route {
+    stroke-dasharray: 10, 10 !important; /* Rota animasyonu için özel dash */
+    animation: flowDash 1.5s linear infinite;
+}
+@keyframes flowDash {
+    to { stroke-dashoffset: -20; }
+}
+
+/* 2. Yüksek Risk Nabız (Pulse) Efekti */
+.pulse-high {
+    animation: pulseRisk 1.5s infinite;
+}
+@keyframes pulseRisk {
+    0% { stroke-width: 2; stroke-opacity: 1; }
+    100% { stroke-width: 20; stroke-opacity: 0; }
+}
 </style>
 </head>
 <body>
@@ -89,7 +113,15 @@ var chokes=[
 ];
 var rColors={high:'#ff4757',med:'#fbbf24',low:'#00d68f'};
 chokes.forEach(function(c){
-    L.circleMarker([c.lat,c.lon],{radius:12,color:rColors[c.risk],fillColor:rColors[c.risk],fillOpacity:.5,weight:3}).addTo(map).bindPopup('<b>'+c.n+'</b><br><small>'+c.info+'</small>');
+    L.circleMarker([c.lat,c.lon],{
+        radius:12,
+        color:rColors[c.risk],
+        fillColor:rColors[c.risk],
+        fillOpacity:.5,
+        weight:3,
+        // Yüksek riskliyse pulse (nabız) efekti ekle
+        className: c.risk === 'high' ? 'pulse-high' : ''
+    }).addTo(map).bindPopup('<b>'+c.n+'</b><br><small>'+c.info+'</small>');
 });
 
 // Ticaret rotaları (polyline)
@@ -101,7 +133,13 @@ var routes=[
     {pts:[[30,120],[35,130],[40,140],[35,145]],color:'#22d3ee',name:'LNG→Japonya'},
 ];
 routes.forEach(function(r){
-    L.polyline(r.pts,{color:r.color,weight:2.5,opacity:.5,dashArray:r.color==='#f97316'?'8,6':null}).addTo(map).bindPopup('<b>'+r.name+'</b>');
+    L.polyline(r.pts,{
+        color: r.color,
+        weight: 3, // Çizgiyi biraz kalınlaştırdık ki animasyon net görünsün
+        opacity: 0.8,
+        // Akış animasyonu sınıfını ekliyoruz
+        className: 'animated-route'
+    }).addTo(map).bindPopup('<b>'+r.name+'</b>');
 });
 
 // Üretici ülke noktaları

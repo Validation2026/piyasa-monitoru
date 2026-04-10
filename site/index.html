@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="tr" data-theme="light">
 <head>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Risk Monitörü — Canlı Piyasa Verileri</title>
@@ -38,6 +41,47 @@
 
         @media(max-width:768px){.hero h1{font-size:1.3rem}.kpi-row{grid-template-columns:repeat(2,1fr)}.stats-bar{gap:16px}}
         @media(max-width:480px){.kpi-row{grid-template-columns:1fr}.mc{min-width:115px;padding:7px 10px}}
+
+        /* ══════════════════════════════════════════
+           PREMIUM VİTRİN ANİMASYONLARI
+           ══════════════════════════════════════════ */
+        
+        /* 1. Şelale (Cascade) Giriş Efektleri */
+        @keyframes slideUpFade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .kpi { opacity: 0; animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .kpi:nth-child(1) { animation-delay: 0.1s; }
+        .kpi:nth-child(2) { animation-delay: 0.2s; }
+        .kpi:nth-child(3) { animation-delay: 0.3s; }
+        .kpi:nth-child(4) { animation-delay: 0.4s; }
+
+        .cat { opacity: 0; animation: slideUpFade 0.5s ease-out forwards; }
+        .cat:nth-child(1) { animation-delay: 0.05s; } .cat:nth-child(2) { animation-delay: 0.10s; }
+        .cat:nth-child(3) { animation-delay: 0.15s; } .cat:nth-child(4) { animation-delay: 0.20s; }
+        .cat:nth-child(5) { animation-delay: 0.25s; } .cat:nth-child(6) { animation-delay: 0.30s; }
+        .cat:nth-child(7) { animation-delay: 0.35s; } .cat:nth-child(8) { animation-delay: 0.40s; }
+        .cat:nth-child(9) { animation-delay: 0.45s; } .cat:nth-child(10) { animation-delay: 0.50s; }
+        .cat:nth-child(11) { animation-delay: 0.55s; } .cat:nth-child(12) { animation-delay: 0.60s; }
+        .cat:nth-child(13) { animation-delay: 0.65s; } .cat:nth-child(14) { animation-delay: 0.70s; }
+
+        /* Dinamik Yüklenen Şelale Sınıfları */
+        .mc, .mover-item, .prow { opacity: 0; animation: slideUpFade 0.4s ease-out forwards; }
+
+        /* 2. Yumuşak Nefes Alma (Pulse) İkonları */
+        @keyframes pulseSoft { 
+            0% { transform: scale(1); } 
+            50% { transform: scale(1.15); filter: drop-shadow(0 0 5px rgba(255,255,255,0.4)); } 
+            100% { transform: scale(1); } 
+        }
+        .icon-pulse { display: inline-block; animation: pulseSoft 2s infinite ease-in-out; }
+
+        /* 3. AI Rozeti Sinyal Efekti */
+        @keyframes breathBadge { 
+            0% { box-shadow: 0 0 0 0 rgba(167,139,250,0.4); } 
+            70% { box-shadow: 0 0 0 6px rgba(167,139,250,0); } 
+            100% { box-shadow: 0 0 0 0 rgba(167,139,250,0); } 
+        }
+        .ai-breath { animation: breathBadge 2s infinite; }
     </style>
 </head>
 <body>
@@ -53,56 +97,63 @@
 <p style="color:#64748b;font-size:.78rem;margin:4px 0 0">Emtia, döviz, kripto, tahvil ve borsa endeksleri — anlık veriler</p>
 </div>
 
-<!-- Stats -->
 <div class="stats-bar">
-    <div class="stat"><div class="stat-v" id="stTotal">—</div><div class="stat-l">Varlık</div></div>
-    <div class="stat"><div class="stat-v">9</div><div class="stat-l">Kategori</div></div>
-    <div class="stat"><div class="stat-v">17</div><div class="stat-l">Endeks</div></div>
-    <div class="stat"><div class="stat-v">10</div><div class="stat-l">Kripto</div></div>
-    <div class="stat"><div class="stat-v">18</div><div class="stat-l">Döviz Çifti</div></div>
+    <div class="stat"><div class="stat-v" id="stTotal">0</div><div class="stat-l">Varlık</div></div>
+    <div class="stat"><div class="stat-v" id="stCat">0</div><div class="stat-l">Kategori</div></div>
+    <div class="stat"><div class="stat-v" id="stIdx">0</div><div class="stat-l">Endeks</div></div>
+    <div class="stat"><div class="stat-v" id="stCry">0</div><div class="stat-l">Kripto</div></div>
+    <div class="stat"><div class="stat-v" id="stFx">0</div><div class="stat-l">Döviz Çifti</div></div>
     <div class="stat"><div class="stat-v" id="stUpdate">—</div><div class="stat-l">Son Güncelleme</div></div>
 </div>
 
-<!-- İran Risk Banner -->
-<a href="iran-risk.html" style="display:block;background:linear-gradient(135deg,#1a0000,#330000);border:2px solid #660000;border-radius:12px;padding:14px 20px;margin-bottom:14px;text-decoration:none;transition:.2s" onmouseover="this.style.borderColor='#ff4757'" onmouseout="this.style.borderColor='#660000'">
+<a href="iran-risk.html" style="display:block;background:linear-gradient(135deg,#332b00,#4d4000);border:2px solid #b39500;border-radius:12px;padding:14px 20px;margin-bottom:14px;text-decoration:none;transition:.2s" onmouseover="this.style.borderColor='#ffd700'" onmouseout="this.style.borderColor='#b39500'">
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
         <div style="display:flex;align-items:center;gap:10px">
-            <span style="font-size:1.3rem">🔴</span>
+            <span style="font-size:1.3rem" class="icon-pulse">⏸️</span>
             <div>
-                <div style="font-size:.82rem;font-weight:800;color:#ff4757">İRAN-İSRAİL SAVAŞI</div>
-                <div style="font-size:.68rem;color:#ff6b6b" id="iranBannerDay">Savaşın başlangıcından bu yana...</div>
+                <div style="font-size:.82rem;font-weight:800;color:#ffd700">İRAN-İSRAİL (GEÇİCİ ATEŞKES)</div>
+                <div style="font-size:.68rem;color:#e6e6e6">Diplomatik çabalar sonuç verdi, riskler yakından izleniyor.</div>
             </div>
         </div>
-        <div style="font-size:.65rem;color:#993333;font-weight:600">DETAYLAR →</div>
+        <div style="font-size:.65rem;color:#b39500;font-weight:600">DETAYLAR →</div>
     </div>
 </a>
 
-<!-- AI Günlük Özet -->
+
+<a href="https://tufeai.netlify.app/" target="_blank" rel="noopener" style="display:block;background:linear-gradient(135deg,#0a1f3d,#0f2d5c);border:2px solid #1e3a8a;border-radius:12px;padding:14px 20px;margin-bottom:14px;text-decoration:none;transition:.2s" onmouseover="this.style.borderColor='#3b82f6'" onmouseout="this.style.borderColor='#1e3a8a'">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+        <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-size:1.3rem" class="icon-pulse">🧮</span>
+            <div>
+                <div style="font-size:.82rem;font-weight:800;color:#60a5fa">TÜFE-AI</div>
+                <div style="font-size:.68rem;color:#93c5fd">Aylık Enflasyon Takip Sistemi</div>
+            </div>
+        </div>
+        <div style="font-size:.65rem;color:#3b82f6;font-weight:600">AÇ →</div>
+    </div>
+</a>
+
 <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:20px;position:relative;overflow:hidden">
     <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#a78bfa,#3b82f6,#22d3ee)"></div>
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="font-size:.85rem;font-weight:700">🤖 Günlük Piyasa Özeti</span><span style="font-size:.58rem;font-family:'JetBrains Mono',monospace;font-weight:700;background:rgba(167,139,250,.15);color:#a78bfa;padding:2px 8px;border-radius:4px">AI</span></div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="font-size:.85rem;font-weight:700">🤖 Günlük Piyasa Özeti</span><span class="ai-breath" style="font-size:.58rem;font-family:'JetBrains Mono',monospace;font-weight:700;background:rgba(167,139,250,.15);color:#a78bfa;padding:2px 8px;border-radius:4px">AI</span></div>
     <div id="indexAiAnalysis" style="font-size:.82rem;color:var(--t2);line-height:1.7;white-space:pre-wrap"><span style="color:var(--t3);font-style:italic">Günlük piyasa özeti yükleniyor...</span></div>
 </div>
 
-<!-- Mini strip -->
 <div class="mini-strip" id="miniStrip"></div>
 
-<!-- KPI -->
 <div class="kpi-row">
-    <div class="kpi fade-in"><div class="kpi-top"><span class="kpi-label">USD/TRY</span><span class="kpi-badge" id="b-usdtry">—</span></div><div class="kpi-val" id="v-usdtry">—</div><div class="kpi-sub">Merkez Bankası Kuru</div><div class="kpi-spark"><canvas id="s-usdtry"></canvas></div></div>
-    <div class="kpi fade-in"><div class="kpi-top"><span class="kpi-label">ALTIN</span><span class="kpi-badge" id="b-gold">—</span></div><div class="kpi-val" id="v-gold" style="color:var(--gold)">—</div><div class="kpi-sub">Spot — USD/oz</div><div class="kpi-spark"><canvas id="s-gold"></canvas></div></div>
-    <div class="kpi fade-in"><div class="kpi-top"><span class="kpi-label">BITCOIN</span><span class="kpi-badge" id="b-btc">—</span></div><div class="kpi-val" id="v-btc" style="color:var(--purple)">—</div><div class="kpi-sub">BTC/USD</div><div class="kpi-spark"><canvas id="s-btc"></canvas></div></div>
-    <div class="kpi fade-in"><div class="kpi-top"><span class="kpi-label">BIST 100</span><span class="kpi-badge" id="b-bist">—</span></div><div class="kpi-val" id="v-bist" style="color:var(--blue)">—</div><div class="kpi-sub">Borsa İstanbul</div><div class="kpi-spark"><canvas id="s-bist"></canvas></div></div>
+    <div class="kpi"><div class="kpi-top"><span class="kpi-label">USD/TRY</span><span class="kpi-badge" id="b-usdtry">—</span></div><div class="kpi-val" id="v-usdtry">—</div><div class="kpi-sub">Merkez Bankası Kuru</div><div class="kpi-spark"><canvas id="s-usdtry"></canvas></div></div>
+    <div class="kpi"><div class="kpi-top"><span class="kpi-label">ALTIN</span><span class="kpi-badge" id="b-gold">—</span></div><div class="kpi-val" id="v-gold" style="color:var(--gold)">—</div><div class="kpi-sub">Spot — USD/oz</div><div class="kpi-spark"><canvas id="s-gold"></canvas></div></div>
+    <div class="kpi"><div class="kpi-top"><span class="kpi-label">BITCOIN</span><span class="kpi-badge" id="b-btc">—</span></div><div class="kpi-val" id="v-btc" style="color:var(--purple)">—</div><div class="kpi-sub">BTC/USD</div><div class="kpi-spark"><canvas id="s-btc"></canvas></div></div>
+    <div class="kpi"><div class="kpi-top"><span class="kpi-label">BIST 100</span><span class="kpi-badge" id="b-bist">—</span></div><div class="kpi-val" id="v-bist" style="color:var(--blue)">—</div><div class="kpi-sub">Borsa İstanbul</div><div class="kpi-spark"><canvas id="s-bist"></canvas></div></div>
 </div>
 
-<!-- Movers -->
 <div class="sec-title">📈 En Çok Değişenler</div>
 <div class="movers-row">
     <div class="movers-card"><div class="movers-header"><span class="dot g"></span> Yükselenler</div><div id="moversUp"></div></div>
     <div class="movers-card"><div class="movers-header"><span class="dot r"></span> Düşenler</div><div id="moversDown"></div></div>
 </div>
 
-<!-- Categories -->
 <div class="sec-title">📦 Kategoriler</div>
 <div class="cat-grid">
     <a class="cat" href="emtia-enerji.html"><div class="cat-icon">⛽</div><div class="cat-name">Enerji</div><div class="cat-desc">Brent, WTI, Doğalgaz, Benzin</div><div class="cat-tag">6 seri</div></a>
@@ -121,7 +172,6 @@
     <a class="cat" href="ulke-risk.html"><div class="cat-icon">🌐</div><div class="cat-name">Ülke Risk Profilleri</div><div class="cat-desc">CDS, kredi notları, 10 ülke</div><div class="cat-tag">Doğrulanmış</div></a>
 </div>
 
-<!-- Price Tables -->
 <div class="sec-title">💹 Tüm Fiyatlar</div>
 <div class="tables-row">
     <div class="ptable"><div class="ptable-header">⛽ Emtia & Madenler & Tarım</div><div id="tblComm"></div></div>
@@ -132,9 +182,6 @@
     <div class="ptable"><div class="ptable-header">₿ Kripto Paralar</div><div id="tblCrypto"></div></div>
 </div>
 
-<!-- Activity -->
-
-
 <div class="footer">Risk Monitörü © 2026</div>
 </div>
 
@@ -142,6 +189,30 @@
 (function(){
 'use strict';
 var D='data/';
+
+// SAYAÇ ANİMASYONU (Sıfırdan istenen sayıya saydırır)
+function animateCounter(id, endVal, suffix = '') {
+    let obj = document.getElementById(id);
+    if (!obj) return;
+    let startTimestamp = null;
+    const duration = 1500; // 1.5 Saniye
+    const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+        obj.textContent = Math.floor(easeOut * endVal) + suffix;
+        if (progress < 1) window.requestAnimationFrame(step);
+        else obj.textContent = endVal + suffix;
+    };
+    window.requestAnimationFrame(step);
+}
+
+// Sayfa yüklendiğinde statik sayıları saydır
+animateCounter('stCat', 9);
+animateCounter('stIdx', 17);
+animateCounter('stCry', 10);
+animateCounter('stFx', 18);
+
 function fj(f){return fetch(D+f+'?t='+Date.now()).then(function(r){return r.json()}).catch(function(){return null})}
 function fp(v,d){if(v==null)return'—';d=d!=null?d:2;return Number(v).toLocaleString('tr-TR',{minimumFractionDigits:d,maximumFractionDigits:d})}
 function fs(d,id){if(!d||!d.series)return null;for(var i=0;i<d.series.length;i++)if(d.series[i].id===id)return d.series[i];return null}
@@ -153,11 +224,33 @@ function setKPI(key,series,color){if(!series)return;var v=document.getElementByI
 
 function findS(all,id){for(var i=0;i<all.length;i++)if(all[i].id===id)return all[i];return null}
 
-function buildMini(all){var el=document.getElementById('miniStrip');if(!el)return;var keys=['EURUSD=X','GBPUSD=X','USDJPY=X','DX-Y.NYB','^TNX','BTC-USD','ETH-USD','^GSPC','^IXIC','^GDAXI','^N225','BZ=F','GC=F'];var items=[];keys.forEach(function(k){var s=findS(all,k);if(s)items.push(s)});el.innerHTML=items.map(function(s){var p=s.change_1d_pct;var cls=p!=null?cc(p):'';var sign=p!=null?(p>=0?'+':''):'';return'<div class="mc"><div class="mc-n">'+s.name+'</div><div class="mc-r"><span class="mc-v">'+fp(s.current)+'</span><span class="mc-c '+cls+'">'+sign+(p!=null?p.toFixed(2)+'%':'')+'</span></div></div>'}).join('')}
+function buildMini(all){var el=document.getElementById('miniStrip');if(!el)return;var keys=['EURUSD=X','GBPUSD=X','USDJPY=X','DX-Y.NYB','^TNX','BTC-USD','ETH-USD','^GSPC','^IXIC','^GDAXI','^N225','BZ=F','GC=F'];var items=[];keys.forEach(function(k){var s=findS(all,k);if(s)items.push(s)});
+    el.innerHTML=items.map(function(s, index){
+        var p=s.change_1d_pct;var cls=p!=null?cc(p):'';var sign=p!=null?(p>=0?'+':''):'';
+        // Animasyon gecikmesi eklendi
+        return'<div class="mc" style="animation-delay:'+(index*0.05)+'s"><div class="mc-n">'+s.name+'</div><div class="mc-r"><span class="mc-v">'+fp(s.current)+'</span><span class="mc-c '+cls+'">'+sign+(p!=null?p.toFixed(2)+'%':'')+'</span></div></div>'
+    }).join('');
+}
 
-function buildMovers(all){var sorted=all.filter(function(s){return s&&s.change_1d_pct!=null}).sort(function(a,b){return b.change_1d_pct-a.change_1d_pct});function render(id,items){var el=document.getElementById(id);if(!el)return;el.innerHTML=items.map(function(s){var p=s.change_1d_pct;return'<div class="mover-item"><div class="mover-name">'+s.name+'</div><div class="mover-val">'+fp(s.current)+'</div><div class="mover-chg '+cc(p)+'">'+(p>=0?'+':'')+p.toFixed(2)+'%</div></div>'}).join('')}render('moversUp',sorted.slice(0,7));render('moversDown',sorted.slice(-7).reverse())}
+function buildMovers(all){var sorted=all.filter(function(s){return s&&s.change_1d_pct!=null}).sort(function(a,b){return b.change_1d_pct-a.change_1d_pct});
+    function render(id,items){var el=document.getElementById(id);if(!el)return;
+        el.innerHTML=items.map(function(s, index){
+            var p=s.change_1d_pct;
+            // Animasyon gecikmesi eklendi
+            return'<div class="mover-item" style="animation-delay:'+(index*0.05)+'s"><div class="mover-name">'+s.name+'</div><div class="mover-val">'+fp(s.current)+'</div><div class="mover-chg '+cc(p)+'">'+(p>=0?'+':'')+p.toFixed(2)+'%</div></div>'
+        }).join('');
+    }
+    render('moversUp',sorted.slice(0,7));
+    render('moversDown',sorted.slice(-7).reverse());
+}
 
-function buildTable(id,items){var el=document.getElementById(id);if(!el)return;el.innerHTML=items.map(function(s){if(!s)return'';var p=s.change_1d_pct;var cls=p!=null?cc(p):'';var sign=p!=null?(p>=0?'+':''):'';var chg=p!=null?sign+p.toFixed(2)+'%':'—';return'<div class="prow"><div class="prow-n">'+s.name+'</div><div class="prow-v">'+fp(s.current)+'</div><div class="prow-c '+cls+'">'+chg+'</div></div>'}).join('')}
+function buildTable(id,items){var el=document.getElementById(id);if(!el)return;
+    el.innerHTML=items.map(function(s, index){
+        if(!s)return'';var p=s.change_1d_pct;var cls=p!=null?cc(p):'';var sign=p!=null?(p>=0?'+':''):'';var chg=p!=null?sign+p.toFixed(2)+'%':'—';
+        // Animasyon gecikmesi eklendi
+        return'<div class="prow" style="animation-delay:'+(index*0.03)+'s"><div class="prow-n">'+s.name+'</div><div class="prow-v">'+fp(s.current)+'</div><div class="prow-c '+cls+'">'+chg+'</div></div>'
+    }).join('');
+}
 
 // Tek hafif dosya ile tüm veriyi yükle (8MB yerine ~114KB)
 fj('summary.json').then(function(data){
@@ -184,12 +277,12 @@ fj('summary.json').then(function(data){
     buildTable('tblIdx',filterByIds(idxIds));
     buildTable('tblCrypto',filterByIds(cryptoIds));
 
-    var st=document.getElementById('stTotal');if(st)st.textContent=all.length+'+';
+    // Toplam Varlık Sayısını Animasyonla Saydır
+    animateCounter('stTotal', all.length, '+');
+
     var su=document.getElementById('stUpdate');if(su&&data.meta){var d=new Date(data.meta.updated_at);su.textContent=String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+d.getFullYear()}
 });
-// Iran day counter
-var warDays=Math.floor((new Date()-new Date('2026-02-28T00:00:00+03:00'))/864e5);
-var ib=document.getElementById('iranBannerDay');if(ib)ib.textContent=warDays+'. gün — Canlı risk takibi ve harita';
+
 // AI
 fetch('/api/ai-analysis?cat=genel').then(function(r){return r.json()}).then(function(d){var el=document.getElementById('indexAiAnalysis');if(el&&d.analysis)el.textContent=d.analysis}).catch(function(){});
 })();
