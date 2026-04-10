@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Sanayi & Hammadde",
-    "updated_at": "2026-04-10T15:01:19Z",
+    "updated_at": "2026-04-10T15:50:28Z",
     "symbol_count": 10,
     "errors": [
       "NI=F",
@@ -16,13 +16,13 @@
       "id": "HG=F",
       "name": "HG (Bakır)",
       "unit": "USD/lb",
-      "current": 5.922,
-      "change_1d_pct": 3.03,
-      "change_1w_pct": 6.45,
-      "change_1m_pct": 0.3,
-      "change_3m_pct": -0.04,
-      "change_ytd_pct": 5.0,
-      "change_1y_pct": 46.95,
+      "current": 5.877,
+      "change_1d_pct": 2.24,
+      "change_1w_pct": 5.64,
+      "change_1m_pct": -0.46,
+      "change_3m_pct": -0.8,
+      "change_ytd_pct": 4.2,
+      "change_1y_pct": 45.83,
       "high_52w": 6.1755,
       "low_52w": 3.2105,
       "data": [
@@ -5060,7 +5060,7 @@
         },
         {
           "date": "2026-04-10",
-          "value": 5.922
+          "value": 5.877
         }
       ]
     },
@@ -5068,13 +5068,13 @@
       "id": "ALI=F",
       "name": "ALI (Alüminyum)",
       "unit": "USD/ton",
-      "current": 3407.25,
-      "change_1d_pct": 0.99,
-      "change_1w_pct": -0.11,
-      "change_1m_pct": 2.57,
-      "change_3m_pct": 13.2,
-      "change_ytd_pct": 15.97,
-      "change_1y_pct": 50.1,
+      "current": 3418.5,
+      "change_1d_pct": 1.33,
+      "change_1w_pct": 0.22,
+      "change_1m_pct": 2.9,
+      "change_3m_pct": 13.57,
+      "change_ytd_pct": 16.35,
+      "change_1y_pct": 50.59,
       "high_52w": 3873.0,
       "low_52w": 2073.25,
       "data": [
@@ -10104,7 +10104,7 @@
         },
         {
           "date": "2026-04-10",
-          "value": 3407.25
+          "value": 3418.5
         }
       ]
     },
@@ -10112,13 +10112,13 @@
       "id": "ZN=F",
       "name": "ZN (Çinko)",
       "unit": "USD/ton",
-      "current": 111.1562,
-      "change_1d_pct": -0.07,
-      "change_1w_pct": 0.13,
-      "change_1m_pct": -1.26,
-      "change_3m_pct": -1.13,
-      "change_ytd_pct": -0.93,
-      "change_1y_pct": -15.55,
+      "current": 111.1719,
+      "change_1d_pct": -0.06,
+      "change_1w_pct": 0.14,
+      "change_1m_pct": -1.25,
+      "change_3m_pct": -1.11,
+      "change_ytd_pct": -0.92,
+      "change_1y_pct": -15.54,
       "high_52w": 135.0,
       "low_52w": 105.4219,
       "data": [
@@ -15156,7 +15156,7 @@
         },
         {
           "date": "2026-04-10",
-          "value": 111.1562
+          "value": 111.1719
         }
       ]
     },
@@ -17292,13 +17292,13 @@
       "id": "URA",
       "name": "URA (Uranyum ETF)",
       "unit": "USD",
-      "current": 51.58,
-      "change_1d_pct": 1.28,
-      "change_1w_pct": 5.48,
-      "change_1m_pct": -1.4,
-      "change_3m_pct": 6.07,
-      "change_ytd_pct": 11.98,
-      "change_1y_pct": 166.15,
+      "current": 51.43,
+      "change_1d_pct": 0.98,
+      "change_1w_pct": 5.17,
+      "change_1m_pct": -1.68,
+      "change_3m_pct": 5.76,
+      "change_ytd_pct": 11.66,
+      "change_1y_pct": 165.38,
       "high_52w": 61.81,
       "low_52w": 17.54,
       "data": [
@@ -22324,7 +22324,7 @@
         },
         {
           "date": "2026-04-10",
-          "value": 51.58
+          "value": 51.43
         }
       ]
     },
@@ -22332,13 +22332,13 @@
       "id": "LIT",
       "name": "LIT (Lityum ETF)",
       "unit": "USD",
-      "current": 78.12,
-      "change_1d_pct": 1.8,
-      "change_1w_pct": 5.33,
-      "change_1m_pct": 8.47,
-      "change_3m_pct": 15.89,
-      "change_ytd_pct": 17.88,
-      "change_1y_pct": 34.6,
+      "current": 78.06,
+      "change_1d_pct": 1.72,
+      "change_1w_pct": 5.24,
+      "change_1m_pct": 8.39,
+      "change_3m_pct": 15.8,
+      "change_ytd_pct": 17.79,
+      "change_1y_pct": 34.49,
       "high_52w": 96.31,
       "low_52w": 31.82,
       "data": [
@@ -27364,7 +27364,7 @@
         },
         {
           "date": "2026-04-10",
-          "value": 78.12
+          "value": 78.06
         }
       ]
     },
@@ -27372,13 +27372,13 @@
       "id": "COPX",
       "name": "COPX (Bakır Madenci)",
       "unit": "USD",
-      "current": 83.28,
-      "change_1d_pct": 2.11,
-      "change_1w_pct": 8.35,
-      "change_1m_pct": 0.26,
-      "change_3m_pct": 8.65,
-      "change_ytd_pct": 13.99,
-      "change_1y_pct": 130.82,
+      "current": 83.143,
+      "change_1d_pct": 1.94,
+      "change_1w_pct": 8.17,
+      "change_1m_pct": 0.1,
+      "change_3m_pct": 8.47,
+      "change_ytd_pct": 13.8,
+      "change_1y_pct": 130.44,
       "high_52w": 95.7,
       "low_52w": 26.52,
       "data": [
@@ -32404,7 +32404,7 @@
         },
         {
           "date": "2026-04-10",
-          "value": 83.28
+          "value": 83.143
         }
       ]
     },
@@ -32412,13 +32412,13 @@
       "id": "SLX",
       "name": "SLX (Çelik ETF)",
       "unit": "USD",
-      "current": 98.49,
-      "change_1d_pct": 0.4,
-      "change_1w_pct": 6.49,
-      "change_1m_pct": 6.29,
-      "change_3m_pct": 12.6,
-      "change_ytd_pct": 13.98,
-      "change_1y_pct": 77.72,
+      "current": 97.89,
+      "change_1d_pct": -0.21,
+      "change_1w_pct": 5.84,
+      "change_1m_pct": 5.64,
+      "change_3m_pct": 11.91,
+      "change_ytd_pct": 13.29,
+      "change_1y_pct": 76.63,
       "high_52w": 102.46,
       "low_52w": 46.58,
       "data": [
@@ -37444,7 +37444,7 @@
         },
         {
           "date": "2026-04-10",
-          "value": 98.49
+          "value": 97.89
         }
       ]
     },
@@ -37452,13 +37452,13 @@
       "id": "BDRY",
       "name": "BDRY (Kuru Yük Navlun)",
       "unit": "USD",
-      "current": 10.7002,
-      "change_1d_pct": 3.89,
-      "change_1w_pct": 2.39,
-      "change_1m_pct": 4.6,
-      "change_3m_pct": 22.71,
-      "change_ytd_pct": 26.48,
-      "change_1y_pct": -40.82,
+      "current": 10.65,
+      "change_1d_pct": 3.4,
+      "change_1w_pct": 1.91,
+      "change_1m_pct": 4.11,
+      "change_3m_pct": 22.13,
+      "change_ytd_pct": 25.89,
+      "change_1y_pct": -41.1,
       "high_52w": 41.51,
       "low_52w": 4.5,
       "data": [
@@ -42484,7 +42484,7 @@
         },
         {
           "date": "2026-04-10",
-          "value": 10.7002
+          "value": 10.65
         }
       ]
     },
@@ -42492,13 +42492,13 @@
       "id": "REMX",
       "name": "REMX (Nadir Toprak)",
       "unit": "USD",
-      "current": 95.56,
-      "change_1d_pct": 2.53,
-      "change_1w_pct": 7.49,
-      "change_1m_pct": -0.96,
-      "change_3m_pct": 19.88,
-      "change_ytd_pct": 24.46,
-      "change_1y_pct": 26.57,
+      "current": 94.965,
+      "change_1d_pct": 1.89,
+      "change_1w_pct": 6.82,
+      "change_1m_pct": -1.58,
+      "change_3m_pct": 19.14,
+      "change_ytd_pct": 23.68,
+      "change_1y_pct": 25.78,
       "high_52w": 127.41,
       "low_52w": 32.65,
       "data": [
@@ -47524,7 +47524,7 @@
         },
         {
           "date": "2026-04-10",
-          "value": 95.56
+          "value": 94.965
         }
       ]
     }
