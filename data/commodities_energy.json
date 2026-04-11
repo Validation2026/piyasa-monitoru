@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Enerji",
-    "updated_at": "2026-04-11T00:00:55Z",
+    "updated_at": "2026-04-11T03:00:55Z",
     "symbol_count": 8,
     "errors": []
   },
@@ -15163,13 +15163,13 @@
       "id": "TTF=F",
       "name": "TTF (Avrupa Gaz)",
       "unit": "EUR/MWh",
-      "current": 46.175,
-      "change_1d_pct": 1.93,
-      "change_1w_pct": -2.81,
-      "change_1m_pct": -18.21,
-      "change_3m_pct": 59.2,
-      "change_ytd_pct": 59.2,
-      "change_1y_pct": 134.99,
+      "current": 43.638,
+      "change_1d_pct": -5.49,
+      "change_1w_pct": -12.8,
+      "change_1m_pct": -7.92,
+      "change_3m_pct": 59.27,
+      "change_ytd_pct": 50.46,
+      "change_1y_pct": 122.08,
       "high_52w": 339.196,
       "low_52w": 19.51,
       "data": [
@@ -20200,6 +20200,10 @@
         {
           "date": "2026-04-09",
           "value": 46.175
+        },
+        {
+          "date": "2026-04-10",
+          "value": 43.638
         }
       ]
     },
