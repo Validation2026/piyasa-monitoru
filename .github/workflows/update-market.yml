@@ -5,7 +5,7 @@ on:
     branches: [main]
   schedule:
     # Her 10 dakikada bir tetiklenir; saat/gun filtresi script icinde TR saatine gore
-    - cron: '0 */3 * * *'
+    - cron: '0 */5 * * *'
   workflow_dispatch:
 
 concurrency:
