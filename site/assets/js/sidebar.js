@@ -45,16 +45,16 @@ var mobileLinks = links.map(function(l){
 
 var HTML = '' +
 '<div class="sb-overlay" id="sbOverlay"></div>' +
-'<aside class="sidebar" id="sidebar">' +
+'<aside class="sidebar" id="sidebar" role="navigation" aria-label="Ana menü">' +
 '<a class="sb-brand" href="index.html"><span style="font-size:1.1rem">📊</span><span class="sb-brand-text">Risk Monitörü</span></a>' +
 sidebarLinks +
 '</aside>' +
 '<div class="topbar" id="topbar">' +
-'<button class="topbar-hamburger" id="hamburger">☰</button>' +
+'<button class="topbar-hamburger" id="hamburger" aria-label="Menüyü aç">☰</button>' +
 '<a href="index.html" style="text-decoration:none;font-size:.85rem;font-weight:800;color:var(--blue)">📊 RM</a>' +
 '<span class="topbar-clock" id="clock"></span>' +
 '</div>' +
-'<div class="mobile-nav" id="mobileNav">' + mobileLinks + '</div>';
+'<nav class="mobile-nav" id="mobileNav" aria-label="Sayfa gezinme">' + mobileLinks + '</nav>';
 
 document.body.insertAdjacentHTML('afterbegin', HTML);
 

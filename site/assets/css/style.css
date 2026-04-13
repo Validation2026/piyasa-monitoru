@@ -115,6 +115,7 @@ body{font-family:var(--fm);background:var(--bg);color:var(--t1);line-height:1.6;
     min-height:100vh;transition:margin-left .3s;
 }
 .page{max-width:1400px;margin:0 auto;padding:20px 24px}
+.page-spacer{height:50px}
 
 /* Overlay for mobile */
 .sb-overlay{
@@ -146,6 +147,7 @@ body{font-family:var(--fm);background:var(--bg);color:var(--t1);line-height:1.6;
     .topbar{display:none}
     .main{margin-left:0;padding-top:56px}
     .mobile-nav{display:block;top:0}
+    .page-spacer{height:8px !important}
 }
 
 /* ══════════════════════════════
@@ -288,6 +290,16 @@ body{font-family:var(--fm);background:var(--bg);color:var(--t1);line-height:1.6;
 .act-time{color:var(--t3);font-size:.7rem;margin-top:2px}
 
 /* ══════════════════════════════
+   AI ANALYSIS BOX
+   ══════════════════════════════ */
+.ai-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;margin-bottom:22px;border-top:3px solid var(--purple)}
+.ai-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.ai-header span{font-size:.82rem;font-weight:700}
+.ai-badge{font-size:.58rem;font-family:var(--mono);font-weight:700;background:rgba(167,139,250,.15);color:var(--purple);padding:2px 8px;border-radius:4px}
+.ai-body{font-size:.82rem;color:var(--t2);line-height:1.7;white-space:pre-wrap}
+.ai-loading{color:var(--t3);font-style:italic}
+
+/* ══════════════════════════════
    FOOTER
    ══════════════════════════════ */
 .footer{text-align:center;padding:28px 0;border-top:1px solid var(--border);color:var(--t3);font-size:.78rem}
@@ -322,40 +334,6 @@ body{font-family:var(--fm);background:var(--bg);color:var(--t1);line-height:1.6;
    ══════════════════════════════ */
 .fade-in{opacity:0;transform:translateY(10px);animation:fadeUp .4s ease forwards}
 @keyframes fadeUp{to{opacity:1;transform:none}}
-
-/* ══════════════════════════════
-   GRAFİK TAM EKRAN (ZOOM) MODU
-   ══════════════════════════════ */
-/* ══════════════════════════════════════════
-   TRADINGVIEW STİLİ TAM EKRAN GRAFİK (HD)
-   ══════════════════════════════════════════ */
-canvas {
-    cursor: zoom-in;
-}
-
-.tv-fullscreen-mode {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    z-index: 999999 !important;
-    background: var(--card) !important; /* Sitenin arka plan rengiyle aynı olur */
-    padding: 30px 50px !important; /* Kenarlardan şık boşluklar */
-    box-sizing: border-box !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important;
-    border-radius: 0 !important;
-}
-
-/* Tam ekrandayken grafiğin boyutlarını optimize et */
-.tv-fullscreen-mode canvas {
-    cursor: zoom-out !important;
-    height: 85vh !important; 
-    width: 100% !important;
-    margin-top: 10px !important;
-}
 
 /* ══════════════════════════════════════════
    EVRENSEL ZAMAN FİLTRESİ BUTONLARI
@@ -463,6 +441,10 @@ tbody tr:hover {
    AKILLI TAM EKRAN (BUTONLU) MODU
    ══════════════════════════════════════════ */
 
+canvas {
+    cursor: zoom-in;
+}
+
 /* Grafiğin arka plan kutusunu referans alması için */
 .chart-box-relative {
     position: relative !important;
@@ -522,6 +504,7 @@ tbody tr:hover {
 
 /* Tam ekrandayken grafiğin boyutları HD kalitede yayılır */
 .tv-fullscreen-mode canvas {
+    cursor: zoom-out !important;
     height: 85vh !important;
     width: 100% !important;
     margin-top: 15px !important;

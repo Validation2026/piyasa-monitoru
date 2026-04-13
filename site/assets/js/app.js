@@ -260,8 +260,9 @@ setInterval(function() {
             
             var btn = document.createElement('button');
             btn.className = 'chart-expand-btn';
-            btn.innerHTML = '⛶'; 
+            btn.innerHTML = '⛶';
             btn.title = 'Tam Ekran';
+            btn.setAttribute('aria-label', 'Grafiği tam ekran yap');
             
             // Kartın CSS position değeri static ise butonu tutabilmesi için relative yapıyoruz
             if (window.getComputedStyle(container).position === 'static') {
@@ -310,6 +311,31 @@ document.addEventListener('click', function(e) {
             if (chartInstance) chartInstance.resize();
             window.dispatchEvent(new Event('resize'));
         }, 50);
+    }
+});
+
+/* ══════════════════════════════════════════
+   ESC TUŞU İLE TAM EKRANDAN ÇIKIŞ
+   ══════════════════════════════════════════ */
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        var fs = document.querySelector('.tv-fullscreen-mode');
+        if (fs) {
+            fs.classList.remove('tv-fullscreen-mode');
+            document.body.style.overflow = '';
+            var btn = fs.querySelector('.chart-expand-btn');
+            if (btn) {
+                btn.innerHTML = '⛶';
+                btn.title = 'Tam Ekran';
+            }
+            var canvas = fs.querySelector('canvas');
+            var chartInstance = canvas ? Chart.getChart(canvas) : null;
+            if (chartInstance) {
+                chartInstance.options.maintainAspectRatio = true;
+                chartInstance.update('none');
+            }
+            setTimeout(function() { window.dispatchEvent(new Event('resize')); }, 50);
+        }
     }
 });
 
