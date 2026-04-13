@@ -147,7 +147,6 @@ body{font-family:var(--fm);background:var(--bg);color:var(--t1);line-height:1.6;
     .topbar{display:none}
     .main{margin-left:0;padding-top:56px}
     .mobile-nav{display:block;top:0}
-    .page-spacer{height:8px !important}
 }
 
 /* ══════════════════════════════
