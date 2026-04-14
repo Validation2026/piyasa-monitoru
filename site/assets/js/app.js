@@ -245,34 +245,35 @@ document.addEventListener("click", function(e) {
    AKILLI TAM EKRAN (DİNAMİK SAYFALAR İÇİN KESİN ÇÖZÜM)
    ══════════════════════════════════════════ */
 
-// 1. Dinamik grafikleri sürekli tarayıp butonları "Ana Karta" yerleştir
-setInterval(function() {
-    for (var id in Chart.instances) {
-        var chart = Chart.instances[id];
-        var canvas = chart.canvas;
-        
-        // SİHİR BURADA: Sadece grafiği değil, onu saran "en dış kartı" buluyoruz
-        var container = canvas.closest('.charts > div') || canvas.parentElement;
-        
-        // Eğer bu karta daha önce buton eklemediysek ekle
-        if (!container.classList.contains('chart-box-relative')) {
-            container.classList.add('chart-box-relative');
-            
-            var btn = document.createElement('button');
-            btn.className = 'chart-expand-btn';
-            btn.innerHTML = '⛶';
-            btn.title = 'Tam Ekran';
-            btn.setAttribute('aria-label', 'Grafiği tam ekran yap');
-            
-            // Kartın CSS position değeri static ise butonu tutabilmesi için relative yapıyoruz
-            if (window.getComputedStyle(container).position === 'static') {
-                container.style.position = 'relative';
-            }
-            
-            container.appendChild(btn);
-        }
+// 1. Yeni canvas eklendiğinde otomatik buton yerleştir (MutationObserver)
+function addExpandBtn(canvas) {
+    var container = canvas.closest('.charts > div') || canvas.parentElement;
+    if (!container || container.classList.contains('chart-box-relative')) return;
+    container.classList.add('chart-box-relative');
+    var btn = document.createElement('button');
+    btn.className = 'chart-expand-btn';
+    btn.innerHTML = '⛶';
+    btn.title = 'Tam Ekran';
+    btn.setAttribute('aria-label', 'Grafiği tam ekran yap');
+    if (window.getComputedStyle(container).position === 'static') {
+        container.style.position = 'relative';
     }
-}, 1000); // Her saniye yeni grafik var mı diye kontrol eder, sistemi hiç yormaz.
+    container.appendChild(btn);
+}
+// Sayfa yüklendiğinde mevcut canvas'ları tara
+document.querySelectorAll('.charts canvas, .chrt canvas, .kpi-spark canvas').forEach(addExpandBtn);
+// Sonradan eklenen grafikleri MutationObserver ile yakala
+var _chartObserver = new MutationObserver(function(mutations) {
+    mutations.forEach(function(m) {
+        m.addedNodes.forEach(function(node) {
+            if (node.nodeType !== 1) return;
+            if (node.tagName === 'CANVAS') addExpandBtn(node);
+            var canvases = node.querySelectorAll ? node.querySelectorAll('canvas') : [];
+            canvases.forEach(addExpandBtn);
+        });
+    });
+});
+_chartObserver.observe(document.body, { childList: true, subtree: true });
 
 // 2. Büyütme/Kapatma butonuna tıklanma olayını dinle
 document.addEventListener('click', function(e) {

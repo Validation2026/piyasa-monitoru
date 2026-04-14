@@ -12,12 +12,14 @@
     <meta property="og:description" content="Emtia, döviz, kripto, tahvil ve borsa endeksleri — 80+ varlık, anlık veriler">
     <meta property="og:type" content="website">
     <meta property="og:locale" content="tr_TR">
+    <meta name="theme-color" content="#3b82f6">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Risk">
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%233b82f6'/><text x='50' y='70' font-size='60' text-anchor='middle' fill='white'>📊</text></svg>">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
@@ -288,7 +290,7 @@ fj('summary.json').then(function(data){
 });
 
 // AI
-fetch('/api/ai-analysis?cat=genel').then(function(r){return r.json()}).then(function(d){var el=document.getElementById('indexAiAnalysis');if(el&&d.analysis)el.textContent=d.analysis}).catch(function(){});
+fetch('/api/ai-analysis?cat=genel').then(function(r){return r.json()}).then(function(d){var el=document.getElementById('indexAiAnalysis');if(el&&d.analysis)el.textContent=d.analysis}).catch(function(){var el=document.getElementById('indexAiAnalysis');if(el)el.innerHTML='<span style="color:var(--t3);font-style:italic">Piyasa özeti şu an yüklenemiyor.</span>'});
 })();
 if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').then(function(reg){reg.update()});}
 </script>

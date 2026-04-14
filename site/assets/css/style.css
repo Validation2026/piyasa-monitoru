@@ -334,6 +334,14 @@ body{font-family:var(--fm);background:var(--bg);color:var(--t1);line-height:1.6;
 .fade-in{opacity:0;transform:translateY(10px);animation:fadeUp .4s ease forwards}
 @keyframes fadeUp{to{opacity:1;transform:none}}
 
+/* ══════════════════════════════
+   FOCUS-VISIBLE (Klavye Erişimi)
+   ══════════════════════════════ */
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:var(--rs)}
+.sb-link:focus-visible,.mb-link:focus-visible,.sb-direct:focus-visible{background:var(--card2)}
+.cat:focus-visible{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,.2)}
+.tf-btn:focus-visible,.pbtn:focus-visible{outline-offset:1px}
+
 /* ══════════════════════════════════════════
    EVRENSEL ZAMAN FİLTRESİ BUTONLARI
    ══════════════════════════════════════════ */
