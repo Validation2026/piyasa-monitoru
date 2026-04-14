@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Sanayi & Hammadde",
-    "updated_at": "2026-04-14T02:01:12Z",
+    "updated_at": "2026-04-14T05:46:02Z",
     "symbol_count": 10,
     "errors": [
       "NI=F",
@@ -16,20 +16,16 @@
       "id": "HG=F",
       "name": "HG (Bakır)",
       "unit": "USD/lb",
-      "current": 6.0235,
-      "change_1d_pct": 0.79,
-      "change_1w_pct": 8.64,
-      "change_1m_pct": 3.42,
-      "change_3m_pct": 3.69,
-      "change_ytd_pct": 6.8,
-      "change_1y_pct": 48.99,
+      "current": 6.0035,
+      "change_1d_pct": 0.46,
+      "change_1w_pct": 8.28,
+      "change_1m_pct": 3.07,
+      "change_3m_pct": 3.35,
+      "change_ytd_pct": 6.45,
+      "change_1y_pct": 45.01,
       "high_52w": 6.1755,
       "low_52w": 3.2105,
       "data": [
-        {
-          "date": "2021-04-13",
-          "value": 4.043
-        },
         {
           "date": "2021-04-14",
           "value": 4.14
@@ -5064,7 +5060,7 @@
         },
         {
           "date": "2026-04-14",
-          "value": 6.0235
+          "value": 6.0035
         }
       ]
     },
@@ -5072,20 +5068,16 @@
       "id": "ALI=F",
       "name": "ALI (Alüminyum)",
       "unit": "USD/ton",
-      "current": 3580.0,
-      "change_1d_pct": -0.06,
-      "change_1w_pct": 5.39,
-      "change_1m_pct": 3.35,
-      "change_3m_pct": 19.58,
-      "change_ytd_pct": 21.85,
-      "change_1y_pct": 55.35,
+      "current": 3560.25,
+      "change_1d_pct": -0.61,
+      "change_1w_pct": 4.81,
+      "change_1m_pct": 2.78,
+      "change_3m_pct": 18.92,
+      "change_ytd_pct": 21.18,
+      "change_1y_pct": 52.38,
       "high_52w": 3873.0,
       "low_52w": 2073.25,
       "data": [
-        {
-          "date": "2021-04-13",
-          "value": 2304.5
-        },
         {
           "date": "2021-04-14",
           "value": 2336.5
@@ -10112,7 +10104,7 @@
         },
         {
           "date": "2026-04-14",
-          "value": 3580.0
+          "value": 3560.25
         }
       ]
     },
@@ -10120,20 +10112,16 @@
       "id": "ZN=F",
       "name": "ZN (Çinko)",
       "unit": "USD/ton",
-      "current": 111.3281,
-      "change_1d_pct": 0.08,
-      "change_1w_pct": 0.42,
-      "change_1m_pct": -0.21,
-      "change_3m_pct": -1.11,
-      "change_ytd_pct": -0.78,
-      "change_1y_pct": -15.71,
+      "current": 111.3438,
+      "change_1d_pct": 0.1,
+      "change_1w_pct": 0.44,
+      "change_1m_pct": -0.2,
+      "change_3m_pct": -1.1,
+      "change_ytd_pct": -0.77,
+      "change_1y_pct": -15.6,
       "high_52w": 135.0,
       "low_52w": 105.4219,
       "data": [
-        {
-          "date": "2021-04-13",
-          "value": 132.0781
-        },
         {
           "date": "2021-04-14",
           "value": 131.9219
@@ -15168,7 +15156,7 @@
         },
         {
           "date": "2026-04-14",
-          "value": 111.3281
+          "value": 111.3438
         }
       ]
     },
@@ -15182,14 +15170,10 @@
       "change_1m_pct": -16.38,
       "change_3m_pct": -24.25,
       "change_ytd_pct": null,
-      "change_1y_pct": -70.86,
+      "change_1y_pct": -71.63,
       "high_52w": 1686.0,
       "low_52w": 339.0,
       "data": [
-        {
-          "date": "2021-04-13",
-          "value": 1180.7
-        },
         {
           "date": "2021-04-14",
           "value": 1212.7
