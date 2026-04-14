@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Endeksler",
-    "updated_at": "2026-04-14T05:46:24Z",
+    "updated_at": "2026-04-14T06:23:19Z",
     "symbol_count": 18,
     "errors": []
   },
@@ -50511,13 +50511,13 @@
       "id": "^N225",
       "name": "Nikkei 225",
       "unit": "JPY",
-      "current": 57860.5391,
-      "change_1d_pct": 2.4,
-      "change_1w_pct": 8.29,
-      "change_1m_pct": 6.26,
-      "change_3m_pct": 10.17,
-      "change_ytd_pct": 11.63,
-      "change_1y_pct": 95.34,
+      "current": 57808.5195,
+      "change_1d_pct": 2.31,
+      "change_1w_pct": 8.2,
+      "change_1m_pct": 6.16,
+      "change_3m_pct": 10.07,
+      "change_ytd_pct": 11.53,
+      "change_1y_pct": 95.16,
       "high_52w": 58850.2695,
       "low_52w": 24717.5293,
       "data": [
@@ -55407,7 +55407,7 @@
         },
         {
           "date": "2026-04-14",
-          "value": 57860.5391
+          "value": 57808.5195
         }
       ]
     },
@@ -55415,13 +55415,13 @@
       "id": "^HSI",
       "name": "Hang Seng",
       "unit": "HKD",
-      "current": 25694.0,
-      "change_1d_pct": 0.13,
-      "change_1w_pct": 2.3,
-      "change_1m_pct": -1.02,
-      "change_3m_pct": -2.45,
-      "change_ytd_pct": -2.45,
-      "change_1y_pct": -11.1,
+      "current": 25761.3594,
+      "change_1d_pct": 0.39,
+      "change_1w_pct": 2.57,
+      "change_1m_pct": -0.76,
+      "change_3m_pct": -2.19,
+      "change_ytd_pct": -2.19,
+      "change_1y_pct": -10.86,
       "high_52w": 29468.0,
       "low_52w": 14687.0195,
       "data": [
@@ -60335,7 +60335,7 @@
         },
         {
           "date": "2026-04-14",
-          "value": 25694.0
+          "value": 25761.3594
         }
       ]
     },
@@ -60343,13 +60343,13 @@
       "id": "000001.SS",
       "name": "Shanghai Comp.",
       "unit": "CNY",
-      "current": 4000.4841,
-      "change_1d_pct": 0.3,
-      "change_1w_pct": 2.84,
-      "change_1m_pct": -3.11,
-      "change_3m_pct": 0.89,
-      "change_ytd_pct": -0.57,
-      "change_1y_pct": 17.09,
+      "current": 4003.7859,
+      "change_1d_pct": 0.38,
+      "change_1w_pct": 2.92,
+      "change_1m_pct": -3.03,
+      "change_3m_pct": 0.98,
+      "change_ytd_pct": -0.49,
+      "change_1y_pct": 17.18,
       "high_52w": 4182.5908,
       "low_52w": 2702.1851,
       "data": [
@@ -65195,7 +65195,7 @@
         },
         {
           "date": "2026-04-14",
-          "value": 4000.4841
+          "value": 4003.7859
         }
       ]
     },
@@ -70147,13 +70147,13 @@
       "id": "^KS11",
       "name": "KOSPI",
       "unit": "KRW",
-      "current": 5994.7998,
-      "change_1d_pct": 3.21,
-      "change_1w_pct": 9.1,
-      "change_1m_pct": 9.25,
-      "change_3m_pct": 32.47,
-      "change_ytd_pct": 39.1,
-      "change_1y_pct": 88.37,
+      "current": 5978.4502,
+      "change_1d_pct": 2.92,
+      "change_1w_pct": 8.8,
+      "change_1m_pct": 8.95,
+      "change_3m_pct": 32.11,
+      "change_ytd_pct": 38.72,
+      "change_1y_pct": 87.86,
       "high_52w": 6307.27,
       "low_52w": 2155.49,
       "data": [
@@ -75047,7 +75047,7 @@
         },
         {
           "date": "2026-04-14",
-          "value": 5994.7998
+          "value": 5978.4502
         }
       ]
     },
@@ -75055,14 +75055,14 @@
       "id": "^TWII",
       "name": "TAIEX",
       "unit": "TWD",
-      "current": 36263.5586,
-      "change_1d_pct": 2.27,
-      "change_1w_pct": 9.13,
-      "change_1m_pct": 6.3,
-      "change_3m_pct": 26.99,
-      "change_ytd_pct": 23.56,
-      "change_1y_pct": 115.01,
-      "high_52w": 36263.5586,
+      "current": 36296.1211,
+      "change_1d_pct": 2.37,
+      "change_1w_pct": 9.23,
+      "change_1m_pct": 6.4,
+      "change_3m_pct": 27.1,
+      "change_ytd_pct": 23.67,
+      "change_1y_pct": 115.2,
+      "high_52w": 36296.1211,
       "low_52w": 12666.1201,
       "data": [
         {
@@ -79923,7 +79923,7 @@
         },
         {
           "date": "2026-04-14",
-          "value": 36263.5586
+          "value": 36296.1211
         }
       ]
     },
