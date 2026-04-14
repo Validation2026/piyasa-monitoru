@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Kripto Paralar",
-    "updated_at": "2026-04-14T06:29:36Z",
+    "updated_at": "2026-04-14T07:01:39Z",
     "symbol_count": 10,
     "errors": []
   },
@@ -11,13 +11,13 @@
       "id": "BTC-USD",
       "name": "BTC (Bitcoin)",
       "unit": "USD",
-      "current": 74456.9297,
-      "change_1d_pct": 5.23,
-      "change_1w_pct": 4.69,
-      "change_1m_pct": 9.75,
-      "change_3m_pct": 5.53,
-      "change_ytd_pct": -16.09,
-      "change_1y_pct": 17.98,
+      "current": 74565.7734,
+      "change_1d_pct": 0.11,
+      "change_1w_pct": 3.9,
+      "change_1m_pct": 5.15,
+      "change_3m_pct": 7.63,
+      "change_ytd_pct": -15.97,
+      "change_1y_pct": 18.15,
       "high_52w": 124752.5312,
       "low_52w": 15787.2842,
       "data": [
@@ -7322,8 +7322,12 @@
           "value": 70753.4062
         },
         {
+          "date": "2026-04-13",
+          "value": 74484.6406
+        },
+        {
           "date": "2026-04-14",
-          "value": 74456.9297
+          "value": 74565.7734
         }
       ]
     },
@@ -7331,13 +7335,13 @@
       "id": "ETH-USD",
       "name": "ETH (Ethereum)",
       "unit": "USD",
-      "current": 2368.3101,
-      "change_1d_pct": 8.03,
-      "change_1w_pct": 8.13,
-      "change_1m_pct": 15.36,
-      "change_3m_pct": 14.78,
-      "change_ytd_pct": -21.07,
-      "change_1y_pct": -2.74,
+      "current": 2373.8,
+      "change_1d_pct": 0.13,
+      "change_1w_pct": 8.44,
+      "change_1m_pct": 10.3,
+      "change_3m_pct": 13.55,
+      "change_ytd_pct": -20.88,
+      "change_1y_pct": -2.52,
       "high_52w": 4831.3486,
       "low_52w": 993.6368,
       "data": [
@@ -14642,8 +14646,12 @@
           "value": 2192.2012
         },
         {
+          "date": "2026-04-13",
+          "value": 2370.7148
+        },
+        {
           "date": "2026-04-14",
-          "value": 2368.3101
+          "value": 2373.8
         }
       ]
     },
@@ -14651,13 +14659,13 @@
       "id": "BNB-USD",
       "name": "BNB",
       "unit": "USD",
-      "current": 614.2574,
-      "change_1d_pct": 3.72,
-      "change_1w_pct": 2.18,
-      "change_1m_pct": -1.97,
-      "change_3m_pct": -6.57,
-      "change_ytd_pct": -28.83,
-      "change_1y_pct": 11.77,
+      "current": 615.1866,
+      "change_1d_pct": 0.02,
+      "change_1w_pct": 2.05,
+      "change_1m_pct": -3.66,
+      "change_3m_pct": -4.97,
+      "change_ytd_pct": -28.72,
+      "change_1y_pct": 11.94,
       "high_52w": 1310.2144,
       "low_52w": 197.043,
       "data": [
@@ -21962,8 +21970,12 @@
           "value": 592.2141
         },
         {
+          "date": "2026-04-13",
+          "value": 615.0513
+        },
+        {
           "date": "2026-04-14",
-          "value": 614.2574
+          "value": 615.1866
         }
       ]
     },
@@ -21971,13 +21983,13 @@
       "id": "SOL-USD",
       "name": "SOL (Solana)",
       "unit": "USD",
-      "current": 85.852,
-      "change_1d_pct": 5.29,
-      "change_1w_pct": 3.96,
-      "change_1m_pct": -0.32,
-      "change_3m_pct": -1.84,
-      "change_ytd_pct": -32.27,
-      "change_1y_pct": 224.27,
+      "current": 86.0699,
+      "change_1d_pct": -0.68,
+      "change_1w_pct": 3.33,
+      "change_1m_pct": -5.86,
+      "change_3m_pct": -1.79,
+      "change_ytd_pct": -32.1,
+      "change_1y_pct": 225.1,
       "high_52w": 261.8698,
       "low_52w": 9.6518,
       "data": [
@@ -29282,8 +29294,12 @@
           "value": 81.5352
         },
         {
+          "date": "2026-04-13",
+          "value": 86.6566
+        },
+        {
           "date": "2026-04-14",
-          "value": 85.852
+          "value": 86.0699
         }
       ]
     },
@@ -29291,13 +29307,13 @@
       "id": "XRP-USD",
       "name": "XRP",
       "unit": "USD",
-      "current": 1.3688,
-      "change_1d_pct": 3.31,
-      "change_1w_pct": 1.97,
-      "change_1m_pct": -1.16,
-      "change_3m_pct": -6.98,
-      "change_ytd_pct": -27.11,
-      "change_1y_pct": -25.58,
+      "current": 1.3715,
+      "change_1d_pct": -0.38,
+      "change_1w_pct": 2.04,
+      "change_1m_pct": -4.22,
+      "change_3m_pct": -3.7,
+      "change_ytd_pct": -26.97,
+      "change_1y_pct": -25.43,
       "high_52w": 3.5558,
       "low_52w": 0.3081,
       "data": [
@@ -36602,8 +36618,12 @@
           "value": 1.325
         },
         {
+          "date": "2026-04-13",
+          "value": 1.3767
+        },
+        {
           "date": "2026-04-14",
-          "value": 1.3688
+          "value": 1.3715
         }
       ]
     },
@@ -36611,13 +36631,13 @@
       "id": "ADA-USD",
       "name": "ADA (Cardano)",
       "unit": "USD",
-      "current": 0.2431,
-      "change_1d_pct": 2.88,
-      "change_1w_pct": -3.03,
-      "change_1m_pct": -2.99,
-      "change_3m_pct": -11.98,
-      "change_ytd_pct": -31.75,
-      "change_1y_pct": -83.3,
+      "current": 0.2436,
+      "change_1d_pct": -2.01,
+      "change_1w_pct": -4.02,
+      "change_1m_pct": -6.88,
+      "change_3m_pct": -10.57,
+      "change_ytd_pct": -31.61,
+      "change_1y_pct": -83.26,
       "high_52w": 2.9682,
       "low_52w": 0.2363,
       "data": [
@@ -43922,8 +43942,12 @@
           "value": 0.2363
         },
         {
+          "date": "2026-04-13",
+          "value": 0.2486
+        },
+        {
           "date": "2026-04-14",
-          "value": 0.2431
+          "value": 0.2436
         }
       ]
     },
@@ -43932,10 +43956,10 @@
       "name": "DOGE (Dogecoin)",
       "unit": "USD",
       "current": 0.0933,
-      "change_1d_pct": 2.75,
-      "change_1w_pct": 0.97,
-      "change_1m_pct": 3.55,
-      "change_3m_pct": -5.28,
+      "change_1d_pct": -0.85,
+      "change_1w_pct": 0.86,
+      "change_1m_pct": -0.96,
+      "change_3m_pct": -5.09,
       "change_ytd_pct": -26.36,
       "change_1y_pct": -23.21,
       "high_52w": 0.6848,
@@ -51242,6 +51266,10 @@
           "value": 0.0908
         },
         {
+          "date": "2026-04-13",
+          "value": 0.0941
+        },
+        {
           "date": "2026-04-14",
           "value": 0.0933
         }
@@ -51251,13 +51279,13 @@
       "id": "AVAX-USD",
       "name": "AVAX (Avalanche)",
       "unit": "USD",
-      "current": 9.4138,
-      "change_1d_pct": 4.21,
-      "change_1w_pct": 3.95,
-      "change_1m_pct": 4.38,
-      "change_3m_pct": 1.5,
-      "change_ytd_pct": -30.52,
-      "change_1y_pct": -75.52,
+      "current": 9.4333,
+      "change_1d_pct": -2.44,
+      "change_1w_pct": 0.88,
+      "change_1m_pct": -1.21,
+      "change_3m_pct": 2.23,
+      "change_ytd_pct": -30.38,
+      "change_1y_pct": -75.47,
       "high_52w": 134.531,
       "low_52w": 8.2951,
       "data": [
@@ -58562,8 +58590,12 @@
           "value": 9.0334
         },
         {
+          "date": "2026-04-13",
+          "value": 9.6689
+        },
+        {
           "date": "2026-04-14",
-          "value": 9.4138
+          "value": 9.4333
         }
       ]
     },
@@ -58571,15 +58603,15 @@
       "id": "DOT-USD",
       "name": "DOT (Polkadot)",
       "unit": "USD",
-      "current": 1.1909,
-      "change_1d_pct": -2.65,
-      "change_1w_pct": -6.15,
-      "change_1m_pct": -15.63,
-      "change_3m_pct": -12.87,
-      "change_ytd_pct": -40.34,
-      "change_1y_pct": -97.21,
+      "current": 1.1941,
+      "change_1d_pct": -2.96,
+      "change_1w_pct": -8.12,
+      "change_1m_pct": -15.9,
+      "change_3m_pct": -12.99,
+      "change_ytd_pct": -40.18,
+      "change_1y_pct": -97.2,
       "high_52w": 53.8817,
-      "low_52w": 1.1909,
+      "low_52w": 1.1941,
       "data": [
         {
           "date": "2021-04-14",
@@ -65882,8 +65914,12 @@
           "value": 1.2233
         },
         {
+          "date": "2026-04-13",
+          "value": 1.2305
+        },
+        {
           "date": "2026-04-14",
-          "value": 1.1909
+          "value": 1.1941
         }
       ]
     },
@@ -65891,13 +65927,13 @@
       "id": "LINK-USD",
       "name": "LINK (Chainlink)",
       "unit": "USD",
-      "current": 9.1953,
-      "change_1d_pct": 5.24,
-      "change_1w_pct": 3.78,
-      "change_1m_pct": 5.87,
-      "change_3m_pct": 3.56,
-      "change_ytd_pct": -26.94,
-      "change_1y_pct": -77.8,
+      "current": 9.2059,
+      "change_1d_pct": -1.68,
+      "change_1w_pct": 2.94,
+      "change_1m_pct": 1.13,
+      "change_3m_pct": 3.28,
+      "change_ytd_pct": -26.86,
+      "change_1y_pct": -77.78,
       "high_52w": 52.1987,
       "low_52w": 5.1192,
       "data": [
@@ -73202,8 +73238,12 @@
           "value": 8.7372
         },
         {
+          "date": "2026-04-13",
+          "value": 9.3629
+        },
+        {
           "date": "2026-04-14",
-          "value": 9.1953
+          "value": 9.2059
         }
       ]
     }
