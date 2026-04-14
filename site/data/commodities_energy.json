@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Enerji",
-    "updated_at": "2026-04-14T06:22:49Z",
+    "updated_at": "2026-04-14T06:29:01Z",
     "symbol_count": 8,
     "errors": []
   },
@@ -11,13 +11,13 @@
       "id": "BZ=F",
       "name": "BZ (Brent)",
       "unit": "USD/bbl",
-      "current": 98.33,
-      "change_1d_pct": -1.04,
-      "change_1w_pct": -10.01,
-      "change_1m_pct": -2.12,
-      "change_3m_pct": 63.99,
-      "change_ytd_pct": 61.86,
-      "change_1y_pct": 47.69,
+      "current": 98.41,
+      "change_1d_pct": -0.96,
+      "change_1w_pct": -9.94,
+      "change_1m_pct": -2.04,
+      "change_3m_pct": 64.13,
+      "change_ytd_pct": 61.99,
+      "change_1y_pct": 47.81,
       "high_52w": 127.98,
       "low_52w": 58.92,
       "data": [
@@ -5055,7 +5055,7 @@
         },
         {
           "date": "2026-04-14",
-          "value": 98.33
+          "value": 98.41
         }
       ]
     },
@@ -5063,13 +5063,13 @@
       "id": "CL=F",
       "name": "CL (WTI)",
       "unit": "USD/bbl",
-      "current": 97.24,
-      "change_1d_pct": -1.86,
-      "change_1w_pct": -13.91,
-      "change_1m_pct": 1.58,
-      "change_3m_pct": 73.67,
-      "change_ytd_pct": 69.64,
-      "change_1y_pct": 53.98,
+      "current": 97.23,
+      "change_1d_pct": -1.87,
+      "change_1w_pct": -13.92,
+      "change_1m_pct": 1.57,
+      "change_3m_pct": 73.66,
+      "change_ytd_pct": 69.63,
+      "change_1y_pct": 53.97,
       "high_52w": 123.7,
       "low_52w": 55.27,
       "data": [
@@ -10103,7 +10103,7 @@
         },
         {
           "date": "2026-04-14",
-          "value": 97.24
+          "value": 97.23
         }
       ]
     },
@@ -20207,13 +20207,13 @@
       "id": "HO=F",
       "name": "HO (Isıtma Yağı)",
       "unit": "USD/gal",
-      "current": 3.627,
-      "change_1d_pct": -5.4,
-      "change_1w_pct": -18.99,
-      "change_1m_pct": -6.97,
-      "change_3m_pct": 76.35,
-      "change_ytd_pct": 71.48,
-      "change_1y_pct": 91.9,
+      "current": 3.6258,
+      "change_1d_pct": -5.43,
+      "change_1w_pct": -19.02,
+      "change_1m_pct": -7.0,
+      "change_3m_pct": 76.29,
+      "change_ytd_pct": 71.42,
+      "change_1y_pct": 91.84,
       "high_52w": 5.1354,
       "low_52w": 1.8537,
       "data": [
@@ -25251,7 +25251,7 @@
         },
         {
           "date": "2026-04-14",
-          "value": 3.627
+          "value": 3.6258
         }
       ]
     },
@@ -25259,13 +25259,13 @@
       "id": "RB=F",
       "name": "RB (Benzin)",
       "unit": "USD/gal",
-      "current": 3.0228,
-      "change_1d_pct": -2.99,
-      "change_1w_pct": -8.54,
-      "change_1m_pct": 1.96,
-      "change_3m_pct": 78.39,
-      "change_ytd_pct": 78.0,
-      "change_1y_pct": 48.5,
+      "current": 3.0224,
+      "change_1d_pct": -3.0,
+      "change_1w_pct": -8.56,
+      "change_1m_pct": 1.95,
+      "change_3m_pct": 78.37,
+      "change_ytd_pct": 77.98,
+      "change_1y_pct": 48.48,
       "high_52w": 4.2762,
       "low_52w": 1.6809,
       "data": [
@@ -30303,7 +30303,7 @@
         },
         {
           "date": "2026-04-14",
-          "value": 3.0228
+          "value": 3.0224
         }
       ]
     },
