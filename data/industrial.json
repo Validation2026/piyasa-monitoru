@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Sanayi & Hammadde",
-    "updated_at": "2026-04-14T21:01:09Z",
+    "updated_at": "2026-04-15T02:00:59Z",
     "symbol_count": 10,
     "errors": [
       "NI=F",
@@ -16,13 +16,13 @@
       "id": "HG=F",
       "name": "HG (Bakır)",
       "unit": "USD/lb",
-      "current": 6.083,
-      "change_1d_pct": 1.79,
-      "change_1w_pct": 9.71,
-      "change_1m_pct": 4.44,
-      "change_3m_pct": 4.72,
-      "change_ytd_pct": 7.85,
-      "change_1y_pct": 46.93,
+      "current": 6.1295,
+      "change_1d_pct": 2.57,
+      "change_1w_pct": 10.55,
+      "change_1m_pct": 5.24,
+      "change_3m_pct": 5.52,
+      "change_ytd_pct": 8.68,
+      "change_1y_pct": 48.06,
       "high_52w": 6.1755,
       "low_52w": 3.2105,
       "data": [
@@ -5059,8 +5059,8 @@
           "value": 5.976
         },
         {
-          "date": "2026-04-14",
-          "value": 6.083
+          "date": "2026-04-15",
+          "value": 6.1295
         }
       ]
     },
@@ -5068,13 +5068,13 @@
       "id": "ALI=F",
       "name": "ALI (Alüminyum)",
       "unit": "USD/ton",
-      "current": 3561.0,
-      "change_1d_pct": -0.59,
-      "change_1w_pct": 4.84,
-      "change_1m_pct": 2.8,
-      "change_3m_pct": 18.95,
-      "change_ytd_pct": 21.2,
-      "change_1y_pct": 52.41,
+      "current": 3540.0,
+      "change_1d_pct": -1.17,
+      "change_1w_pct": 4.22,
+      "change_1m_pct": 2.19,
+      "change_3m_pct": 18.25,
+      "change_ytd_pct": 20.49,
+      "change_1y_pct": 51.51,
       "high_52w": 3873.0,
       "low_52w": 2073.25,
       "data": [
@@ -10103,8 +10103,8 @@
           "value": 3582.0
         },
         {
-          "date": "2026-04-14",
-          "value": 3561.0
+          "date": "2026-04-15",
+          "value": 3540.0
         }
       ]
     },
@@ -15155,7 +15155,7 @@
           "value": 111.2344
         },
         {
-          "date": "2026-04-14",
+          "date": "2026-04-15",
           "value": 111.5781
         }
       ]

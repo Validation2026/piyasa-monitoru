@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Endeksler",
-    "updated_at": "2026-04-14T21:01:31Z",
+    "updated_at": "2026-04-15T02:01:14Z",
     "symbol_count": 18,
     "errors": []
   },
@@ -11,13 +11,13 @@
       "id": "XU100.IS",
       "name": "BIST 100",
       "unit": "TRY",
-      "current": 14058.5,
-      "change_1d_pct": -0.11,
-      "change_1w_pct": 7.22,
-      "change_1m_pct": 6.5,
-      "change_3m_pct": 16.3,
-      "change_ytd_pct": 22.26,
-      "change_1y_pct": 897.62,
+      "current": 14202.2002,
+      "change_1d_pct": 1.02,
+      "change_1w_pct": 9.91,
+      "change_1m_pct": 6.9,
+      "change_3m_pct": 16.4,
+      "change_ytd_pct": 23.51,
+      "change_1y_pct": 907.82,
       "high_52w": 14339.2998,
       "low_52w": 1330.5,
       "data": [
@@ -5008,6 +5008,10 @@
         {
           "date": "2026-04-13",
           "value": 14058.5
+        },
+        {
+          "date": "2026-04-14",
+          "value": 14202.2002
         }
       ]
     },
@@ -5015,14 +5019,14 @@
       "id": "XU030.IS",
       "name": "BIST 30",
       "unit": "TRY",
-      "current": 16176.7002,
-      "change_1d_pct": -0.08,
-      "change_1w_pct": 8.05,
-      "change_1m_pct": 7.68,
-      "change_3m_pct": 23.28,
-      "change_ytd_pct": 29.27,
-      "change_1y_pct": 1010.88,
-      "high_52w": 16188.9004,
+      "current": 16324.7998,
+      "change_1d_pct": 0.92,
+      "change_1w_pct": 10.6,
+      "change_1m_pct": 8.21,
+      "change_3m_pct": 23.22,
+      "change_ytd_pct": 30.45,
+      "change_1y_pct": 1021.05,
+      "high_52w": 16324.7998,
       "low_52w": 1397.1,
       "data": [
         {
@@ -9980,6 +9984,10 @@
         {
           "date": "2026-04-13",
           "value": 16176.7002
+        },
+        {
+          "date": "2026-04-14",
+          "value": 16324.7998
         }
       ]
     },
@@ -35179,9 +35187,9 @@
       "id": "^FTSE",
       "name": "FTSE 100",
       "unit": "GBP",
-      "current": 10609.0596,
+      "current": 10609.0996,
       "change_1d_pct": 0.25,
-      "change_1w_pct": 2.51,
+      "change_1w_pct": 2.52,
       "change_1m_pct": 2.47,
       "change_3m_pct": 5.62,
       "change_ytd_pct": 6.61,
@@ -40235,7 +40243,7 @@
         },
         {
           "date": "2026-04-14",
-          "value": 10609.0596
+          "value": 10609.0996
         }
       ]
     },
@@ -50503,20 +50511,16 @@
       "id": "^N225",
       "name": "Nikkei 225",
       "unit": "JPY",
-      "current": 56502.7695,
-      "change_1d_pct": -0.74,
-      "change_1w_pct": 5.78,
-      "change_1m_pct": 2.68,
-      "change_3m_pct": 9.01,
-      "change_ytd_pct": 9.01,
-      "change_1y_pct": 90.75,
+      "current": 58272.2891,
+      "change_1d_pct": 0.68,
+      "change_1w_pct": 3.49,
+      "change_1m_pct": 8.27,
+      "change_3m_pct": 12.14,
+      "change_ytd_pct": 12.42,
+      "change_1y_pct": 96.58,
       "high_52w": 58850.2695,
       "low_52w": 24717.5293,
       "data": [
-        {
-          "date": "2021-04-14",
-          "value": 29620.9902
-        },
         {
           "date": "2021-04-15",
           "value": 29642.6895
@@ -55396,6 +55400,14 @@
         {
           "date": "2026-04-13",
           "value": 56502.7695
+        },
+        {
+          "date": "2026-04-14",
+          "value": 57877.3906
+        },
+        {
+          "date": "2026-04-15",
+          "value": 58272.2891
         }
       ]
     },
@@ -55403,20 +55415,16 @@
       "id": "^HSI",
       "name": "Hang Seng",
       "unit": "HKD",
-      "current": 25660.8496,
-      "change_1d_pct": -0.9,
-      "change_1w_pct": 1.45,
-      "change_1m_pct": 0.99,
-      "change_3m_pct": 0.12,
-      "change_ytd_pct": -2.57,
-      "change_1y_pct": -11.21,
+      "current": 26110.6602,
+      "change_1d_pct": 0.92,
+      "change_1w_pct": 0.84,
+      "change_1m_pct": 0.82,
+      "change_3m_pct": -0.9,
+      "change_ytd_pct": -0.86,
+      "change_1y_pct": -9.32,
       "high_52w": 29468.0,
       "low_52w": 14687.0195,
       "data": [
-        {
-          "date": "2021-04-14",
-          "value": 28900.8301
-        },
         {
           "date": "2021-04-15",
           "value": 28793.1406
@@ -60320,6 +60328,14 @@
         {
           "date": "2026-04-13",
           "value": 25660.8496
+        },
+        {
+          "date": "2026-04-14",
+          "value": 25872.3203
+        },
+        {
+          "date": "2026-04-15",
+          "value": 26110.6602
         }
       ]
     },
@@ -60327,20 +60343,16 @@
       "id": "000001.SS",
       "name": "Shanghai Comp.",
       "unit": "CNY",
-      "current": 3988.5581,
-      "change_1d_pct": 0.06,
-      "change_1w_pct": 2.8,
-      "change_1m_pct": -3.5,
-      "change_3m_pct": 0.59,
-      "change_ytd_pct": -0.87,
-      "change_1y_pct": 16.74,
+      "current": 4043.0657,
+      "change_1d_pct": 0.41,
+      "change_1w_pct": 1.2,
+      "change_1m_pct": -1.28,
+      "change_3m_pct": 1.87,
+      "change_ytd_pct": 0.49,
+      "change_1y_pct": 18.95,
       "high_52w": 4182.5908,
       "low_52w": 2702.1851,
       "data": [
-        {
-          "date": "2021-04-14",
-          "value": 3416.72
-        },
         {
           "date": "2021-04-15",
           "value": 3398.99
@@ -65176,6 +65188,14 @@
         {
           "date": "2026-04-13",
           "value": 3988.5581
+        },
+        {
+          "date": "2026-04-14",
+          "value": 4026.625
+        },
+        {
+          "date": "2026-04-15",
+          "value": 4043.0657
         }
       ]
     },
@@ -70127,20 +70147,16 @@
       "id": "^KS11",
       "name": "KOSPI",
       "unit": "KRW",
-      "current": 5808.6201,
-      "change_1d_pct": -0.86,
-      "change_1w_pct": 6.57,
-      "change_1m_pct": 4.04,
-      "change_3m_pct": 30.31,
-      "change_ytd_pct": 34.78,
-      "change_1y_pct": 82.52,
+      "current": 6148.77,
+      "change_1d_pct": 3.03,
+      "change_1w_pct": 4.71,
+      "change_1m_pct": 10.79,
+      "change_3m_pct": 35.11,
+      "change_ytd_pct": 42.68,
+      "change_1y_pct": 92.49,
       "high_52w": 6307.27,
       "low_52w": 2155.49,
       "data": [
-        {
-          "date": "2021-04-14",
-          "value": 3182.3799
-        },
         {
           "date": "2021-04-15",
           "value": 3194.3301
@@ -75024,6 +75040,14 @@
         {
           "date": "2026-04-13",
           "value": 5808.6201
+        },
+        {
+          "date": "2026-04-14",
+          "value": 5967.75
+        },
+        {
+          "date": "2026-04-15",
+          "value": 6148.77
         }
       ]
     },
@@ -75031,20 +75055,16 @@
       "id": "^TWII",
       "name": "TAIEX",
       "unit": "TWD",
-      "current": 35457.2891,
-      "change_1d_pct": 0.11,
-      "change_1w_pct": 8.86,
-      "change_1m_pct": 8.19,
-      "change_3m_pct": 24.97,
-      "change_ytd_pct": 20.81,
-      "change_1y_pct": 110.23,
-      "high_52w": 35457.2891,
+      "current": 36926.6016,
+      "change_1d_pct": 1.74,
+      "change_1w_pct": 6.23,
+      "change_1m_pct": 9.96,
+      "change_3m_pct": 28.17,
+      "change_ytd_pct": 25.82,
+      "change_1y_pct": 116.24,
+      "high_52w": 36926.6016,
       "low_52w": 12666.1201,
       "data": [
-        {
-          "date": "2021-04-14",
-          "value": 16865.9707
-        },
         {
           "date": "2021-04-15",
           "value": 17076.7305
@@ -79896,6 +79916,14 @@
         {
           "date": "2026-04-13",
           "value": 35457.2891
+        },
+        {
+          "date": "2026-04-14",
+          "value": 36296.1211
+        },
+        {
+          "date": "2026-04-15",
+          "value": 36926.6016
         }
       ]
     },
