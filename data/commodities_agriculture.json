@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Tarım",
-    "updated_at": "2026-04-15T02:00:53Z",
+    "updated_at": "2026-04-15T06:56:13Z",
     "symbol_count": 11,
     "errors": []
   },
@@ -11,20 +11,16 @@
       "id": "ZW=F",
       "name": "ZW (Buğday)",
       "unit": "USc/bu",
-      "current": 603.0,
-      "change_1d_pct": 3.56,
-      "change_1w_pct": 0.84,
-      "change_1m_pct": 1.82,
-      "change_3m_pct": 16.41,
-      "change_ytd_pct": 19.05,
-      "change_1y_pct": -6.94,
+      "current": 602.5,
+      "change_1d_pct": 1.77,
+      "change_1w_pct": 3.83,
+      "change_1m_pct": -2.59,
+      "change_3m_pct": 16.31,
+      "change_ytd_pct": 18.95,
+      "change_1y_pct": -7.84,
       "high_52w": 1425.25,
       "low_52w": 495.0,
       "data": [
-        {
-          "date": "2021-04-14",
-          "value": 648.0
-        },
         {
           "date": "2021-04-15",
           "value": 653.75
@@ -5046,8 +5042,12 @@
           "value": 582.25
         },
         {
+          "date": "2026-04-14",
+          "value": 592.0
+        },
+        {
           "date": "2026-04-15",
-          "value": 603.0
+          "value": 602.5
         }
       ]
     },
@@ -5055,20 +5055,16 @@
       "id": "ZC=F",
       "name": "ZC (Mısır)",
       "unit": "USc/bu",
-      "current": 445.25,
-      "change_1d_pct": 1.14,
-      "change_1w_pct": -0.84,
-      "change_1m_pct": -0.67,
-      "change_3m_pct": -0.34,
-      "change_ytd_pct": 1.77,
-      "change_1y_pct": -25.04,
+      "current": 446.25,
+      "change_1d_pct": 0.73,
+      "change_1w_pct": -0.22,
+      "change_1m_pct": -1.38,
+      "change_3m_pct": 0.06,
+      "change_ytd_pct": 2.0,
+      "change_1y_pct": -24.36,
       "high_52w": 818.25,
       "low_52w": 362.0,
       "data": [
-        {
-          "date": "2021-04-14",
-          "value": 594.0
-        },
         {
           "date": "2021-04-15",
           "value": 590.0
@@ -10090,8 +10086,12 @@
           "value": 440.25
         },
         {
+          "date": "2026-04-14",
+          "value": 443.0
+        },
+        {
           "date": "2026-04-15",
-          "value": 445.25
+          "value": 446.25
         }
       ]
     },
@@ -10099,20 +10099,16 @@
       "id": "ZS=F",
       "name": "ZS (Soya)",
       "unit": "USc/bu",
-      "current": 1160.5,
-      "change_1d_pct": -0.15,
-      "change_1w_pct": 0.19,
-      "change_1m_pct": -4.33,
-      "change_3m_pct": 10.24,
-      "change_ytd_pct": 12.72,
-      "change_1y_pct": -17.7,
+      "current": 1163.0,
+      "change_1d_pct": 0.43,
+      "change_1w_pct": 0.09,
+      "change_1m_pct": -3.96,
+      "change_3m_pct": 11.08,
+      "change_ytd_pct": 12.97,
+      "change_1y_pct": -18.0,
       "high_52w": 1769.0,
       "low_52w": 938.75,
       "data": [
-        {
-          "date": "2021-04-14",
-          "value": 1410.0
-        },
         {
           "date": "2021-04-15",
           "value": 1418.25
@@ -15134,8 +15130,12 @@
           "value": 1162.25
         },
         {
+          "date": "2026-04-14",
+          "value": 1158.0
+        },
+        {
           "date": "2026-04-15",
-          "value": 1160.5
+          "value": 1163.0
         }
       ]
     },
@@ -15143,20 +15143,16 @@
       "id": "ZM=F",
       "name": "ZM (Soya Küspesi)",
       "unit": "USD/ton",
-      "current": 327.7,
-      "change_1d_pct": -1.27,
-      "change_1w_pct": 5.1,
-      "change_1m_pct": 2.44,
-      "change_3m_pct": 8.69,
-      "change_ytd_pct": 12.61,
-      "change_1y_pct": -17.7,
+      "current": 327.5,
+      "change_1d_pct": -0.67,
+      "change_1w_pct": 4.27,
+      "change_1m_pct": 2.38,
+      "change_3m_pct": 9.02,
+      "change_ytd_pct": 12.54,
+      "change_1y_pct": -18.51,
       "high_52w": 521.9,
       "low_52w": 260.7,
       "data": [
-        {
-          "date": "2021-04-14",
-          "value": 398.2
-        },
         {
           "date": "2021-04-15",
           "value": 401.9
@@ -20178,8 +20174,12 @@
           "value": 331.9
         },
         {
+          "date": "2026-04-14",
+          "value": 329.7
+        },
+        {
           "date": "2026-04-15",
-          "value": 327.7
+          "value": 327.5
         }
       ]
     },
@@ -20187,20 +20187,16 @@
       "id": "ZL=F",
       "name": "ZL (Soya Yağı)",
       "unit": "USc/lb",
-      "current": 66.23,
-      "change_1d_pct": -0.41,
-      "change_1w_pct": -5.01,
-      "change_1m_pct": -1.65,
-      "change_3m_pct": 35.66,
-      "change_ytd_pct": 35.52,
-      "change_1y_pct": 22.11,
+      "current": 66.54,
+      "change_1d_pct": 0.15,
+      "change_1w_pct": -1.31,
+      "change_1m_pct": -1.19,
+      "change_3m_pct": 35.71,
+      "change_ytd_pct": 36.16,
+      "change_1y_pct": 21.22,
       "high_52w": 90.6,
       "low_52w": 39.4,
       "data": [
-        {
-          "date": "2021-04-14",
-          "value": 54.24
-        },
         {
           "date": "2021-04-15",
           "value": 54.89
@@ -25222,8 +25218,12 @@
           "value": 66.5
         },
         {
+          "date": "2026-04-14",
+          "value": 66.44
+        },
+        {
           "date": "2026-04-15",
-          "value": 66.23
+          "value": 66.54
         }
       ]
     },
@@ -25231,20 +25231,16 @@
       "id": "CT=F",
       "name": "CT (Pamuk)",
       "unit": "USc/lb",
-      "current": 76.52,
-      "change_1d_pct": 2.67,
-      "change_1w_pct": 7.31,
-      "change_1m_pct": 17.47,
-      "change_3m_pct": 18.0,
-      "change_ytd_pct": 19.54,
-      "change_1y_pct": -9.12,
+      "current": 74.34,
+      "change_1d_pct": -0.25,
+      "change_1w_pct": 4.25,
+      "change_1m_pct": 14.12,
+      "change_3m_pct": 14.63,
+      "change_ytd_pct": 16.14,
+      "change_1y_pct": -12.56,
       "high_52w": 158.02,
       "low_52w": 61.06,
       "data": [
-        {
-          "date": "2021-04-14",
-          "value": 84.2
-        },
         {
           "date": "2021-04-15",
           "value": 85.02
@@ -30275,7 +30271,7 @@
         },
         {
           "date": "2026-04-14",
-          "value": 76.52
+          "value": 74.34
         }
       ]
     },
@@ -30283,20 +30279,16 @@
       "id": "KC=F",
       "name": "KC (Kahve)",
       "unit": "USc/lb",
-      "current": 298.9,
-      "change_1d_pct": -0.65,
-      "change_1w_pct": 4.47,
-      "change_1m_pct": 0.81,
-      "change_3m_pct": -20.39,
-      "change_ytd_pct": -16.34,
-      "change_1y_pct": 126.27,
+      "current": 302.65,
+      "change_1d_pct": 0.6,
+      "change_1w_pct": 5.78,
+      "change_1m_pct": 2.07,
+      "change_3m_pct": -19.39,
+      "change_ytd_pct": -15.3,
+      "change_1y_pct": 128.07,
       "high_52w": 438.9,
       "low_52w": 129.15,
       "data": [
-        {
-          "date": "2021-04-14",
-          "value": 132.1
-        },
         {
           "date": "2021-04-15",
           "value": 132.7
@@ -35327,7 +35319,7 @@
         },
         {
           "date": "2026-04-14",
-          "value": 298.9
+          "value": 302.65
         }
       ]
     },
@@ -35335,20 +35327,16 @@
       "id": "SB=F",
       "name": "SB (Şeker)",
       "unit": "USc/lb",
-      "current": 14.15,
-      "change_1d_pct": 3.44,
-      "change_1w_pct": -2.95,
-      "change_1m_pct": -1.6,
-      "change_3m_pct": -5.54,
-      "change_ytd_pct": -3.08,
-      "change_1y_pct": -10.78,
+      "current": 13.88,
+      "change_1d_pct": 1.46,
+      "change_1w_pct": -4.8,
+      "change_1m_pct": -3.48,
+      "change_3m_pct": -7.34,
+      "change_ytd_pct": -4.93,
+      "change_1y_pct": -15.26,
       "high_52w": 27.95,
       "low_52w": 13.68,
       "data": [
-        {
-          "date": "2021-04-14",
-          "value": 15.86
-        },
         {
           "date": "2021-04-15",
           "value": 16.38
@@ -40379,7 +40367,7 @@
         },
         {
           "date": "2026-04-14",
-          "value": 14.15
+          "value": 13.88
         }
       ]
     },
@@ -40387,20 +40375,16 @@
       "id": "CC=F",
       "name": "CC (Kakao)",
       "unit": "USD/ton",
-      "current": 3630.0,
-      "change_1d_pct": 10.74,
-      "change_1w_pct": 19.88,
-      "change_1m_pct": 12.63,
-      "change_3m_pct": -38.63,
-      "change_ytd_pct": -38.17,
-      "change_1y_pct": 49.94,
+      "current": 3557.0,
+      "change_1d_pct": 8.51,
+      "change_1w_pct": 17.47,
+      "change_1m_pct": 10.36,
+      "change_3m_pct": -39.86,
+      "change_ytd_pct": -39.41,
+      "change_1y_pct": 47.41,
       "high_52w": 12565.0,
       "low_52w": 2198.0,
       "data": [
-        {
-          "date": "2021-04-14",
-          "value": 2421.0
-        },
         {
           "date": "2021-04-15",
           "value": 2413.0
@@ -45427,7 +45411,7 @@
         },
         {
           "date": "2026-04-14",
-          "value": 3630.0
+          "value": 3557.0
         }
       ]
     },
@@ -45435,20 +45419,16 @@
       "id": "OJ=F",
       "name": "OJ (Portakal Suyu)",
       "unit": "USc/lb",
-      "current": 192.9,
-      "change_1d_pct": -1.33,
-      "change_1w_pct": -3.36,
-      "change_1m_pct": -2.48,
-      "change_3m_pct": -19.49,
-      "change_ytd_pct": -4.32,
-      "change_1y_pct": 73.78,
+      "current": 192.5,
+      "change_1d_pct": -1.53,
+      "change_1w_pct": -3.56,
+      "change_1m_pct": -2.68,
+      "change_3m_pct": -19.66,
+      "change_ytd_pct": -4.51,
+      "change_1y_pct": 69.01,
       "high_52w": 555.5,
       "low_52w": 105.35,
       "data": [
-        {
-          "date": "2021-04-14",
-          "value": 111.0
-        },
         {
           "date": "2021-04-15",
           "value": 113.9
@@ -50479,7 +50459,7 @@
         },
         {
           "date": "2026-04-14",
-          "value": 192.9
+          "value": 192.5
         }
       ]
     },
@@ -50493,14 +50473,10 @@
       "change_1m_pct": -16.38,
       "change_3m_pct": -24.25,
       "change_ytd_pct": null,
-      "change_1y_pct": -71.63,
+      "change_1y_pct": -72.71,
       "high_52w": 1686.0,
       "low_52w": 339.0,
       "data": [
-        {
-          "date": "2021-04-14",
-          "value": 1212.7
-        },
         {
           "date": "2021-04-15",
           "value": 1260.7
