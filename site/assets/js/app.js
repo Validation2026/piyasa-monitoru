@@ -67,7 +67,8 @@ function buildSummary(containerId,seriesList){
         if(s.change_ytd_pct!=null)chgs+=fc(s.change_ytd_pct)+'<span class="chg-label">YTD</span> ';
         var range=s.low_52w!=null?'52H: '+fp(s.low_52w)+' — '+fp(s.high_52w):'';
         var sid='mini-spark-'+i;
-        h+='<div class="scard fade-in" style="animation-delay:'+(.05*i)+'s"><div class="scard-name">'+s.name+'</div><div class="scard-price">'+fp(s.current)+' <span class="scard-unit">'+(s.unit||'')+'</span></div><div class="scard-chgs">'+chgs+'</div>'+(range?'<div class="scard-range">'+range+'</div>':'')+'<div class="scard-spark"><canvas id="'+sid+'"></canvas></div></div>';
+        var ariaLabel = s.name+': '+fp(s.current)+' '+(s.unit||'')+(s.change_1d_pct!=null?', günlük değişim '+s.change_1d_pct.toFixed(2)+'%':'');
+        h+='<div class="scard fade-in" style="animation-delay:'+(.05*i)+'s" role="group" aria-label="'+ariaLabel.replace(/"/g,'')+'"><div class="scard-name">'+s.name+'</div><div class="scard-price">'+fp(s.current)+' <span class="scard-unit">'+(s.unit||'')+'</span></div><div class="scard-chgs">'+chgs+'</div>'+(range?'<div class="scard-range">'+range+'</div>':'')+'<div class="scard-spark"><canvas id="'+sid+'" aria-hidden="true"></canvas></div></div>';
     });
     el.innerHTML=h;
     setTimeout(function(){seriesList.forEach(function(s,i){if(s&&s.data)miniSpark('mini-spark-'+i,s.data,gc(i))})},50);
@@ -77,8 +78,10 @@ function buildCharts(containerId,seriesList,period){
     var el=document.getElementById(containerId);if(!el)return;el.innerHTML='';var charts=[];
     seriesList.forEach(function(s,i){if(!s)return;
         var cid='chart-'+i;var card=document.createElement('div');card.className='chrt fade-in';card.style.animationDelay=(.05*i)+'s';
+        card.setAttribute('role','figure');
+        card.setAttribute('aria-label',s.name+' grafiği');
         var pBadge=s.change_1d_pct!=null?fc(s.change_1d_pct):'';
-        card.innerHTML='<div class="chrt-title">'+s.name+'</div><div class="chrt-sub"><span class="live">'+fp(s.current)+' '+(s.unit||'')+'</span>'+pBadge+'</div><canvas id="'+cid+'"></canvas>';
+        card.innerHTML='<div class="chrt-title">'+s.name+'</div><div class="chrt-sub"><span class="live">'+fp(s.current)+' '+(s.unit||'')+'</span>'+pBadge+'</div><canvas id="'+cid+'" aria-hidden="true"></canvas>';
         el.appendChild(card);var ch=makeChart(cid,s,{color:gc(i),period:period});if(ch)charts.push(ch);
     });return charts;
 }
@@ -143,12 +146,92 @@ function loadData(file, pageId) {
     return Promise.all([fj(file), loadOverrides(pageId)]).then(function(r){
         var data = r[0], ov = r[1];
         if (data && data.series && ov) applyOverrides(data.series, ov);
+        // Veri eski mi? (60 dk üstü)
+        if (data && data.meta && data.meta.updated_at) {
+            try { showStaleBanner(data.meta.updated_at, 60); } catch(e){}
+        }
         return data;
     });
 }
 
-return{fj:fj,fs:fs,fp:fp,fc:fc,cc:cc,gc:gc,filterPeriod:filterPeriod,miniSpark:miniSpark,makeChart:makeChart,buildSummary:buildSummary,buildCharts:buildCharts,buildTable:buildTable,buildComparisonChart:buildComparisonChart,applyOverrides:applyOverrides,loadOverrides:loadOverrides,loadData:loadData};
+/* ══════════════════════════════════════════
+   STALE DATA BANNER (Veri eskilik uyarısı)
+   ══════════════════════════════════════════ */
+function showStaleBanner(updatedAt, thresholdMinutes){
+    if(!updatedAt) return;
+    var t = new Date(updatedAt).getTime();
+    if(!t || isNaN(t)) return;
+    var diffMin = (Date.now() - t) / 60000;
+    var limit = thresholdMinutes || 60;
+    if(diffMin < limit) return;
+    // Banner zaten varsa iki kez ekleme
+    if(document.getElementById('staleBanner')) return;
+    var hoursAgo = Math.floor(diffMin/60);
+    var ago = hoursAgo >= 1 ? (hoursAgo+' saat') : (Math.floor(diffMin)+' dakika');
+    var el = document.createElement('div');
+    el.id = 'staleBanner';
+    el.className = 'stale-banner';
+    el.setAttribute('role','status');
+    el.setAttribute('aria-live','polite');
+    el.innerHTML = '<span class="stale-icon" aria-hidden="true">⚠️</span>'+
+        '<span><b>Veri güncel olmayabilir.</b> Son güncelleme '+ago+' önce.</span>';
+    var head = document.querySelector('.page-head');
+    if(head && head.parentNode) head.parentNode.insertBefore(el, head.nextSibling);
+}
+
+/* ══════════════════════════════════════════
+   COUNT-UP (Sayıya yumuşak geçiş)
+   ══════════════════════════════════════════ */
+function countUp(el, from, to, opts){
+    if(!el) return;
+    opts = opts || {};
+    var dur = opts.duration || 900;
+    var dec = opts.decimals != null ? opts.decimals : 2;
+    var start = performance.now();
+    function step(t){
+        var p = Math.min(1, (t-start)/dur);
+        var eased = 1 - Math.pow(1-p, 3); // easeOutCubic
+        var val = from + (to-from) * eased;
+        el.textContent = Number(val).toLocaleString('tr-TR',{minimumFractionDigits:dec,maximumFractionDigits:dec});
+        if(p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+}
+
+/* ══════════════════════════════════════════
+   SCROLL REVEAL (IntersectionObserver)
+   ══════════════════════════════════════════ */
+function initScrollReveal(){
+    if(!('IntersectionObserver' in window)) return;
+    var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+            if(e.isIntersecting){
+                e.target.classList.add('is-visible');
+                io.unobserve(e.target);
+            }
+        });
+    }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+    document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+}
+
+/* ══════════════════════════════════════════
+   FLASH UPDATE (fiyat değişince yeşil/kırmızı parlama)
+   ══════════════════════════════════════════ */
+function flashUpdate(el, direction){
+    if(!el) return;
+    var cls = direction === 'up' ? 'flash-up' : direction === 'down' ? 'flash-down' : 'flash-update';
+    el.classList.remove('flash-up','flash-down','flash-update');
+    // reflow
+    void el.offsetWidth;
+    el.classList.add(cls);
+}
+
+return{fj:fj,fs:fs,fp:fp,fc:fc,cc:cc,gc:gc,filterPeriod:filterPeriod,miniSpark:miniSpark,makeChart:makeChart,buildSummary:buildSummary,buildCharts:buildCharts,buildTable:buildTable,buildComparisonChart:buildComparisonChart,applyOverrides:applyOverrides,loadOverrides:loadOverrides,loadData:loadData,showStaleBanner:showStaleBanner,countUp:countUp,initScrollReveal:initScrollReveal,flashUpdate:flashUpdate};
 })();
+
+// Scroll reveal'ı DOM hazır olunca başlat
+if(document.readyState !== 'loading') PM.initScrollReveal();
+else document.addEventListener('DOMContentLoaded', PM.initScrollReveal);
 
 /* ══════════════════════════════════════════
    TRADINGVIEW STİLİ TAM EKRAN İŞLEVİ (HD)
@@ -254,7 +337,9 @@ function addExpandBtn(canvas) {
     btn.className = 'chart-expand-btn';
     btn.innerHTML = '⛶';
     btn.title = 'Tam Ekran';
+    btn.type = 'button';
     btn.setAttribute('aria-label', 'Grafiği tam ekran yap');
+    btn.setAttribute('aria-pressed', 'false');
     if (window.getComputedStyle(container).position === 'static') {
         container.style.position = 'relative';
     }
@@ -290,7 +375,9 @@ document.addEventListener('click', function(e) {
             document.body.style.overflow = 'hidden';
             btn.innerHTML = '✖';
             btn.title = 'Kapat';
-            
+            btn.setAttribute('aria-label','Tam ekrandan çık');
+            btn.setAttribute('aria-pressed','true');
+
             if (chartInstance) {
                 chartInstance.options.maintainAspectRatio = false; // Oran inadını kır
                 chartInstance.update('none'); // Animasyonsuz anında güncelle
@@ -300,6 +387,8 @@ document.addEventListener('click', function(e) {
             document.body.style.overflow = '';
             btn.innerHTML = '⛶';
             btn.title = 'Tam Ekran';
+            btn.setAttribute('aria-label','Grafiği tam ekran yap');
+            btn.setAttribute('aria-pressed','false');
             
             if (chartInstance) {
                 chartInstance.options.maintainAspectRatio = true; // Oran korumasını geri aç
