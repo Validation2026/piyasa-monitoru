@@ -27,7 +27,8 @@ jobs:
       - name: Run TCMB EVDS collector
         env:
           TCMB_API_KEY: ${{ secrets.TCMB_API_KEY }}
-        run: python collectors/tcmb_evds.py
+          TCMB_EVDS_KEY: ${{ secrets.TCMB_EVDS_KEY }}
+        run: python collectors/tcmb_makro.py
 
       - name: Copy data to site
         run: |

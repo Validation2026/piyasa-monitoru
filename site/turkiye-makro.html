@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="light">
+<head>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#3b82f6">
+    <title>Türkiye Makro — Risk Monitörü</title>
+    <meta name="description" content="TCMB, TÜİK, BDDK ve Hazine verileriyle Türkiye makro ekonomik gösterge paneli">
+    <meta property="og:title" content="Türkiye Makro — Risk Monitörü">
+    <meta property="og:description" content="TCMB, TÜİK, BDDK ve Hazine verileriyle Türkiye makro ekonomik gösterge paneli">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="tr_TR">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇹🇷</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23e30a17'/><text x='50' y='70' font-size='60' text-anchor='middle' fill='white'>🇹🇷</text></svg>">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+    <style>
+        .country-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+        .country-tab{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:.75rem;font-weight:700;cursor:pointer;transition:.2s;color:var(--t2)}
+        .country-tab:hover{border-color:var(--blue)}
+        .country-tab.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+        .tr-legend{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 14px;font-size:.72rem;color:var(--t2)}
+        .tr-legend .lg{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:var(--card);border:1px solid var(--border);border-radius:6px}
+    </style>
+</head>
+<body>
+<script src="assets/js/sidebar.js"></script>
+<div class="page">
+<div class="page-spacer"></div>
+    <div class="page-head">
+        <h1>🇹🇷 Türkiye Makro Ekonomi</h1>
+        <div class="sub">TCMB · TÜİK · BDDK · Hazine — tek panelde makro göstergeler</div>
+        <div class="update-info" id="updateInfo"></div>
+    </div>
+    <div class="ai-box"><div class="ai-header"><span>🤖 AI Makro Analizi</span><span class="ai-badge">AI</span></div><div class="ai-body" id="aiAnalysis"><span class="ai-loading">Analiz yükleniyor...</span></div></div>
+
+    <div class="country-tabs" id="catTabs" role="tablist" aria-label="Kategori filtresi">
+        <button class="country-tab on" data-cat="all" role="tab" aria-selected="true">🇹🇷 Tümü</button>
+        <button class="country-tab" data-cat="tcmb" role="tab" aria-selected="false">🏦 TCMB</button>
+        <button class="country-tab" data-cat="tuik" role="tab" aria-selected="false">📊 TÜİK</button>
+        <button class="country-tab" data-cat="bddk" role="tab" aria-selected="false">🏛️ BDDK</button>
+        <button class="country-tab" data-cat="hazine" role="tab" aria-selected="false">💰 Hazine</button>
+    </div>
+
+    <div class="tr-legend" aria-hidden="true">
+        <span class="lg">🏦 TCMB: Para politikası, kurlar, rezervler</span>
+        <span class="lg">📊 TÜİK: Enflasyon, istihdam, üretim</span>
+        <span class="lg">🏛️ BDDK: Bankacılık sektörü</span>
+        <span class="lg">💰 Hazine: Bütçe ve borç</span>
+    </div>
+
+    <div class="summary-row" id="summaryCards"></div>
+    <div class="periods" id="periodSelector">
+        <button class="pbtn" data-period="1m">1A</button>
+        <button class="pbtn" data-period="3m">3A</button>
+        <button class="pbtn" data-period="6m">6A</button>
+        <button class="pbtn" data-period="1y">1Y</button>
+        <button class="pbtn" data-period="2y">2Y</button>
+        <button class="pbtn on" data-period="all">Tümü</button>
+    </div>
+    <div class="charts" id="chartsGrid"></div>
+    <div class="dtable" id="dataTable"></div>
+    <div class="footer">Risk Monitörü © 2026 · Kaynak: TCMB EVDS · Güncellenme: otomatik collector</div>
+</div>
+<script src="assets/js/app.js"></script>
+<script>
+(function(){
+    var period='all', cat='all', allSeries=[], chartInstances=[], activeSeries=[];
+
+    function applyFilter(){
+        if(cat === 'all') return allSeries.slice();
+        return allSeries.filter(function(s){ return (s.category||'').toLowerCase() === cat; });
+    }
+
+    function rebuildAll(){
+        activeSeries = applyFilter();
+        if (chartInstances && chartInstances.length) {
+            chartInstances.forEach(function(c){ if(c && c.destroy) c.destroy(); });
+        }
+        chartInstances = [];
+        var grid = document.getElementById('chartsGrid');
+        if (grid) grid.innerHTML = '';
+        var sc = document.getElementById('summaryCards');
+        if (sc) sc.innerHTML = '';
+        var dt = document.getElementById('dataTable');
+        if (dt) dt.innerHTML = '';
+        if(!activeSeries.length){
+            if(sc) sc.innerHTML='<div class="scard"><div class="scard-name">Bu kategoride veri yok.</div></div>';
+            return;
+        }
+        PM.buildSummary('summaryCards', activeSeries);
+        chartInstances = PM.buildCharts('chartsGrid', activeSeries, period);
+        PM.buildTable('dataTable', activeSeries);
+    }
+
+    PM.loadData('turkiye_makro.json','turkiye-makro').then(function(data){
+        if(!data||!data.series||!data.series.length){
+            document.getElementById('summaryCards').innerHTML='<div class="scard"><div class="scard-name">Veri bulunamadı. Collector henüz çalışmamış olabilir.</div></div>';
+            return;
+        }
+        allSeries = data.series;
+        var ui = document.getElementById('updateInfo');
+        if(ui && data.meta){
+            var src = data.meta.source ? (' · ' + data.meta.source) : '';
+            ui.textContent = 'Son güncelleme: '+new Date(data.meta.updated_at).toLocaleString('tr-TR')+' · '+data.meta.symbol_count+' seri'+src;
+        }
+        rebuildAll();
+    });
+
+    // Kategori sekmeleri
+    document.getElementById('catTabs').addEventListener('click', function(e){
+        var btn = e.target.closest('.country-tab');
+        if(!btn) return;
+        document.querySelectorAll('#catTabs .country-tab').forEach(function(b){
+            b.classList.remove('on');
+            b.setAttribute('aria-selected','false');
+        });
+        btn.classList.add('on');
+        btn.setAttribute('aria-selected','true');
+        cat = btn.getAttribute('data-cat');
+        rebuildAll();
+    });
+
+    // Period buttons
+    document.getElementById('periodSelector').addEventListener('click', function(e){
+        if(!e.target.classList.contains('pbtn')) return;
+        document.querySelectorAll('#periodSelector .pbtn').forEach(function(b){ b.classList.remove('on'); });
+        e.target.classList.add('on');
+        period = e.target.getAttribute('data-period');
+        if (chartInstances && chartInstances.length) {
+            chartInstances.forEach(function(c){ if(c && c.destroy) c.destroy(); });
+        }
+        chartInstances = [];
+        var grid = document.getElementById('chartsGrid');
+        if (grid) grid.innerHTML = '';
+        chartInstances = PM.buildCharts('chartsGrid', activeSeries, period);
+    });
+
+    fetch('/api/ai-analysis?cat=turkiye-makro').then(function(r){return r.json()}).then(function(d){
+        var el=document.getElementById('aiAnalysis');
+        if(el && d && d.analysis) el.textContent = d.analysis;
+        else if(el) el.innerHTML='<span class="ai-loading">Analiz henüz hazır değil.</span>';
+    }).catch(function(){
+        var el=document.getElementById('aiAnalysis');
+        if(el) el.innerHTML='<span class="ai-loading">Analiz yüklenemiyor.</span>';
+    });
+})();
+</script>
+</body>
+</html>
