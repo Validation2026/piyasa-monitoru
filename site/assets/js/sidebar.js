@@ -44,15 +44,16 @@ var mobileLinks = links.map(function(l){
 }).join('');
 
 var HTML = '' +
+'<a href="#mainContent" class="sr-only" style="position:absolute;left:0;top:0;padding:8px;background:var(--blue);color:#fff;z-index:9999">İçeriğe atla</a>' +
 '<div class="sb-overlay" id="sbOverlay"></div>' +
 '<aside class="sidebar" id="sidebar" role="navigation" aria-label="Ana menü">' +
-'<a class="sb-brand" href="index.html"><span style="font-size:1.1rem">📊</span><span class="sb-brand-text">Risk Monitörü</span></a>' +
+'<a class="sb-brand" href="index.html" aria-label="Ana sayfaya dön"><span style="font-size:1.1rem" aria-hidden="true">📊</span><span class="sb-brand-text">Risk Monitörü</span></a>' +
 sidebarLinks +
 '</aside>' +
-'<div class="topbar" id="topbar">' +
-'<button class="topbar-hamburger" id="hamburger" aria-label="Menüyü aç">☰</button>' +
-'<a href="index.html" style="text-decoration:none;font-size:.85rem;font-weight:800;color:var(--blue)">📊 RM</a>' +
-'<span class="topbar-clock" id="clock"></span>' +
+'<div class="topbar" id="topbar" role="banner">' +
+'<button class="topbar-hamburger" id="hamburger" aria-label="Menüyü aç" aria-expanded="false" aria-controls="sidebar">☰</button>' +
+'<a href="index.html" style="text-decoration:none;font-size:.85rem;font-weight:800;color:var(--blue)" aria-label="Ana sayfa"><span aria-hidden="true">📊 RM</span></a>' +
+'<span class="topbar-clock" id="clock" aria-live="off"></span>' +
 '</div>' +
 '<nav class="mobile-nav" id="mobileNav" aria-label="Sayfa gezinme">' + mobileLinks + '</nav>';
 
@@ -62,6 +63,8 @@ var pg = document.querySelector('.page');
 if (pg && !pg.parentElement.classList.contains('main')) {
     var wrap = document.createElement('div');
     wrap.className = 'main';
+    wrap.setAttribute('role','main');
+    wrap.id = 'mainContent';
     pg.parentNode.insertBefore(wrap, pg);
     wrap.appendChild(pg);
 }
@@ -79,11 +82,21 @@ setTimeout(function(){
 
 var sb = document.getElementById('sidebar');
 var ov = document.getElementById('sbOverlay');
-document.getElementById('hamburger').addEventListener('click',function(){
-    sb.classList.toggle('open'); ov.classList.toggle('open');
+var hb = document.getElementById('hamburger');
+hb.addEventListener('click',function(){
+    var isOpen = sb.classList.toggle('open'); ov.classList.toggle('open');
+    hb.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
 });
 ov.addEventListener('click',function(){
     sb.classList.remove('open'); ov.classList.remove('open');
+    hb.setAttribute('aria-expanded','false');
+});
+// ESC ile sidebar kapansın
+document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && sb.classList.contains('open')){
+        sb.classList.remove('open'); ov.classList.remove('open');
+        hb.setAttribute('aria-expanded','false');
+    }
 });
 
 // Clock - sadece masaüstü

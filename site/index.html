@@ -145,7 +145,13 @@
     <div id="indexAiAnalysis" style="font-size:.82rem;color:var(--t2);line-height:1.7;white-space:pre-wrap"><span style="color:var(--t3);font-style:italic">Günlük piyasa özeti yükleniyor...</span></div>
 </div>
 
-<div class="mini-strip" id="miniStrip"></div>
+<div class="mini-strip" id="miniStrip" aria-live="polite" aria-label="Hızlı piyasa özeti">
+    <div class="mc"><div class="mc-n skeleton">────────</div><div class="mc-r"><span class="mc-v skeleton">──────</span></div></div>
+    <div class="mc"><div class="mc-n skeleton">────────</div><div class="mc-r"><span class="mc-v skeleton">──────</span></div></div>
+    <div class="mc"><div class="mc-n skeleton">────────</div><div class="mc-r"><span class="mc-v skeleton">──────</span></div></div>
+    <div class="mc"><div class="mc-n skeleton">────────</div><div class="mc-r"><span class="mc-v skeleton">──────</span></div></div>
+    <div class="mc"><div class="mc-n skeleton">────────</div><div class="mc-r"><span class="mc-v skeleton">──────</span></div></div>
+</div>
 
 <div class="kpi-row">
     <div class="kpi"><div class="kpi-top"><span class="kpi-label">USD/TRY</span><span class="kpi-badge" id="b-usdtry">—</span></div><div class="kpi-val" id="v-usdtry">—</div><div class="kpi-sub">Merkez Bankası Kuru</div><div class="kpi-spark"><canvas id="s-usdtry"></canvas></div></div>

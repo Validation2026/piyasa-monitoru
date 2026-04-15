@@ -649,3 +649,317 @@ canvas {
         padding: 6px !important;
     }
 }
+
+/* ══════════════════════════════════════════════════════════
+   SKELETON LOADING (İskelet Yükleme Efekti)
+   ══════════════════════════════════════════════════════════ */
+.skeleton {
+    position: relative;
+    overflow: hidden;
+    background: var(--bg2);
+    border-radius: 6px;
+    color: transparent !important;
+    user-select: none;
+    pointer-events: none;
+}
+.skeleton::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255,255,255,0.55) 50%,
+        transparent 100%
+    );
+    animation: skeletonShimmer 1.4s infinite;
+}
+@keyframes skeletonShimmer {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+.skeleton-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 14px 16px;
+    min-height: 120px;
+}
+.skeleton-line {
+    height: 12px;
+    background: var(--bg2);
+    border-radius: 4px;
+    margin-bottom: 8px;
+    position: relative;
+    overflow: hidden;
+}
+.skeleton-line::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.5), transparent);
+    animation: skeletonShimmer 1.4s infinite;
+}
+.skeleton-line.w-30 { width: 30%; }
+.skeleton-line.w-50 { width: 50%; }
+.skeleton-line.w-70 { width: 70%; }
+.skeleton-line.h-lg { height: 22px; }
+
+/* ══════════════════════════════════════════════════════════
+   STALE DATA BANNER (Veri eski uyarısı)
+   ══════════════════════════════════════════════════════════ */
+.stale-banner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, rgba(245,158,11,.12), rgba(245,158,11,.04));
+    border: 1px solid rgba(245,158,11,.35);
+    border-left: 4px solid var(--gold);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    font-size: .78rem;
+    color: var(--t2);
+    animation: fadeInDown .5s ease-out;
+}
+.stale-banner .stale-icon {
+    font-size: 1.1rem;
+    animation: pulseIconSoft 1.8s ease-in-out infinite;
+}
+@keyframes pulseIconSoft {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50%      { transform: scale(1.15); opacity: .8; }
+}
+.stale-banner b { color: var(--gold); }
+
+/* ══════════════════════════════════════════════════════════
+   GELİŞMİŞ ANİMASYONLAR VE ŞOVLAR
+   ══════════════════════════════════════════════════════════ */
+
+/* 1. Stagger cascade for summary cards (auto delays for up to 30 kart) */
+.summary-row .scard { opacity: 0; animation: slideUpFade .55s cubic-bezier(.16,1,.3,1) forwards; }
+.summary-row .scard:nth-child(1)  { animation-delay: .02s; }
+.summary-row .scard:nth-child(2)  { animation-delay: .05s; }
+.summary-row .scard:nth-child(3)  { animation-delay: .08s; }
+.summary-row .scard:nth-child(4)  { animation-delay: .11s; }
+.summary-row .scard:nth-child(5)  { animation-delay: .14s; }
+.summary-row .scard:nth-child(6)  { animation-delay: .17s; }
+.summary-row .scard:nth-child(7)  { animation-delay: .20s; }
+.summary-row .scard:nth-child(8)  { animation-delay: .23s; }
+.summary-row .scard:nth-child(9)  { animation-delay: .26s; }
+.summary-row .scard:nth-child(10) { animation-delay: .29s; }
+.summary-row .scard:nth-child(n+11) { animation-delay: .32s; }
+
+@keyframes slideUpFade {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* 2. Gradient flowing border on KPI hover */
+.kpi { position: relative; isolation: isolate; }
+.kpi::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: var(--r);
+    padding: 1px;
+    background: linear-gradient(135deg, var(--blue), var(--cyan), var(--purple), var(--blue));
+    background-size: 300% 300%;
+    -webkit-mask: linear-gradient(#000,#000) content-box, linear-gradient(#000,#000);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    opacity: 0;
+    transition: opacity .3s;
+    pointer-events: none;
+    z-index: -1;
+}
+.kpi:hover::after { opacity: 1; animation: gradientFlow 3s ease infinite; }
+@keyframes gradientFlow {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* 3. Shiny sweep on .scard first hover */
+.scard { position: relative; overflow: hidden; }
+.scard::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -120%;
+    width: 60%; height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(59,130,246,.08), transparent);
+    transition: left .8s ease;
+    pointer-events: none;
+}
+.scard:hover::before { left: 130%; }
+
+/* 4. Number tick animation (flash on update) */
+@keyframes numberFlash {
+    0%   { background-color: rgba(59,130,246,.18); }
+    100% { background-color: transparent; }
+}
+.flash-update { animation: numberFlash .9s ease; border-radius: 4px; }
+
+/* 5. Green/red directional flash */
+@keyframes flashUp   { 0% { background: rgba(0,214,143,.2); } 100% { background: transparent; } }
+@keyframes flashDown { 0% { background: rgba(255,71,87,.2); } 100% { background: transparent; } }
+.flash-up   { animation: flashUp .9s ease; border-radius: 4px; }
+.flash-down { animation: flashDown .9s ease; border-radius: 4px; }
+
+/* 6. Section title underline expand on scroll-in */
+.sec-title::after {
+    transition: transform .6s ease;
+    transform-origin: left;
+    transform: scaleX(.3);
+}
+.sec-title:hover::after { transform: scaleX(1); }
+
+/* 7. Button ripple on click */
+.pbtn, .tf-btn {
+    position: relative;
+    overflow: hidden;
+}
+.pbtn::after, .tf-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 0; height: 0;
+    background: rgba(59,130,246,.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width .45s ease, height .45s ease, opacity .45s ease;
+    opacity: 0;
+    pointer-events: none;
+}
+.pbtn:active::after, .tf-btn:active::after {
+    width: 220%; height: 220%;
+    opacity: 1;
+    transition: 0s;
+}
+
+/* 8. Glowing active state for period/timeframe buttons */
+.pbtn.on, .tf-btn.active {
+    box-shadow: 0 0 0 0 rgba(59,130,246,.4);
+    animation: pulseActive 2s ease-in-out infinite;
+}
+@keyframes pulseActive {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(59,130,246,.35); }
+    50%      { box-shadow: 0 0 0 5px rgba(59,130,246,0); }
+}
+
+/* 9. Sidebar link slide-in underline */
+.sb-direct { position: relative; }
+.sb-direct::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: linear-gradient(180deg, var(--blue), var(--cyan));
+    transform: scaleY(0);
+    transition: transform .25s ease;
+    transform-origin: top;
+}
+.sb-direct:hover::before, .sb-direct.active::before { transform: scaleY(1); }
+
+/* 10. Chart card entrance with scale */
+.chrt { transform-origin: center bottom; }
+.chrt:hover { box-shadow: 0 10px 30px rgba(59,130,246,.08); }
+
+/* 11. Scroll-reveal (via IntersectionObserver JS, class: .reveal) */
+.reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity .7s ease, transform .7s ease;
+}
+.reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 12. Subtle background grid pulse on page container (dekoratif) */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+        radial-gradient(circle at 15% 20%, rgba(59,130,246,.05), transparent 40%),
+        radial-gradient(circle at 85% 80%, rgba(167,139,250,.045), transparent 40%);
+    pointer-events: none;
+    z-index: 0;
+    animation: ambientShift 18s ease-in-out infinite;
+}
+.main, .sidebar, .topbar { position: relative; z-index: 1; }
+@keyframes ambientShift {
+    0%, 100% { opacity: .8; }
+    50%      { opacity: 1; }
+}
+
+/* 13. Live dot (small blinking indicator) */
+.live-dot {
+    display: inline-block;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+    margin-right: 5px;
+    box-shadow: 0 0 0 0 rgba(0,214,143,.6);
+    animation: livePulse 1.5s ease-out infinite;
+    vertical-align: middle;
+}
+@keyframes livePulse {
+    0%   { box-shadow: 0 0 0 0 rgba(0,214,143,.6); }
+    70%  { box-shadow: 0 0 0 8px rgba(0,214,143,0); }
+    100% { box-shadow: 0 0 0 0 rgba(0,214,143,0); }
+}
+
+/* 14. Gradient text utility */
+.grad-text {
+    background: linear-gradient(135deg, var(--blue), var(--cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* 15. Cat card tilt on hover (3D-ish) */
+.cat {
+    transform-style: preserve-3d;
+    perspective: 800px;
+}
+.cat:hover {
+    transform: translateY(-3px) rotateX(1.5deg);
+}
+
+/* 16. Reduce motion respect */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+    }
+    body::before { animation: none; }
+    .live-dot { animation: none; }
+}
+
+/* ══════════════════════════════════════════════════════════
+   ERİŞİLEBİLİRLİK: Daha belirgin focus için kontrast iyileştirme
+   ══════════════════════════════════════════════════════════ */
+.pbtn:focus-visible,
+.tf-btn:focus-visible,
+.sb-direct:focus-visible,
+.mb-link:focus-visible,
+.cat:focus-visible,
+button:focus-visible,
+a:focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 2px;
+}
+
+/* Screen reader only */
+.sr-only {
+    position: absolute !important;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0,0,0,0);
+    white-space: nowrap; border: 0;
+}
+
