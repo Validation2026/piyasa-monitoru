@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Tahvil Faizleri",
-    "updated_at": "2026-04-15T13:28:19Z",
+    "updated_at": "2026-04-15T17:02:32Z",
     "symbol_count": 4,
     "errors": []
   },
@@ -4715,13 +4715,13 @@
       "id": "^FVX",
       "name": "ABD 5 Yıllık",
       "unit": "%",
-      "current": 3.889,
-      "change_1d_pct": 0.46,
-      "change_1w_pct": -0.79,
-      "change_1m_pct": 0.39,
-      "change_3m_pct": 4.1,
-      "change_ytd_pct": 4.01,
-      "change_1y_pct": 391.04,
+      "current": 3.901,
+      "change_1d_pct": 0.77,
+      "change_1w_pct": -0.48,
+      "change_1m_pct": 0.7,
+      "change_3m_pct": 4.42,
+      "change_ytd_pct": 4.33,
+      "change_1y_pct": 392.55,
       "high_52w": 4.961,
       "low_52w": 0.651,
       "data": [
@@ -9747,7 +9747,7 @@
         },
         {
           "date": "2026-04-15",
-          "value": 3.889
+          "value": 3.901
         }
       ]
     },
@@ -9755,13 +9755,13 @@
       "id": "^TNX",
       "name": "ABD 10 Yıllık",
       "unit": "%",
-      "current": 4.272,
-      "change_1d_pct": 0.38,
-      "change_1w_pct": -0.44,
-      "change_1m_pct": -0.3,
-      "change_3m_pct": 2.13,
-      "change_ytd_pct": 2.03,
-      "change_1y_pct": 179.22,
+      "current": 4.285,
+      "change_1d_pct": 0.68,
+      "change_1w_pct": -0.14,
+      "change_1m_pct": 0.0,
+      "change_3m_pct": 2.44,
+      "change_ytd_pct": 2.34,
+      "change_1y_pct": 180.07,
       "high_52w": 4.988,
       "low_52w": 1.174,
       "data": [
@@ -14787,7 +14787,7 @@
         },
         {
           "date": "2026-04-15",
-          "value": 4.272
+          "value": 4.285
         }
       ]
     },
@@ -14795,13 +14795,13 @@
       "id": "^TYX",
       "name": "ABD 30 Yıllık",
       "unit": "%",
-      "current": 4.884,
-      "change_1d_pct": 0.33,
-      "change_1w_pct": -0.06,
-      "change_1m_pct": -0.49,
-      "change_3m_pct": 0.54,
-      "change_ytd_pct": 0.41,
-      "change_1y_pct": 121.0,
+      "current": 4.893,
+      "change_1d_pct": 0.51,
+      "change_1w_pct": 0.12,
+      "change_1m_pct": -0.31,
+      "change_3m_pct": 0.72,
+      "change_ytd_pct": 0.6,
+      "change_1y_pct": 121.4,
       "high_52w": 5.103,
       "low_52w": 1.678,
       "data": [
@@ -19827,7 +19827,7 @@
         },
         {
           "date": "2026-04-15",
-          "value": 4.884
+          "value": 4.893
         }
       ]
     }
