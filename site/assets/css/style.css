@@ -876,22 +876,12 @@ canvas {
     transform: translateY(0);
 }
 
-/* 12. Subtle background grid pulse on page container (dekoratif) */
-body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background:
+/* 12. Subtle static background gradient (dekoratif, sabit, layout'u etkilemez) */
+body {
+    background-image:
         radial-gradient(circle at 15% 20%, rgba(59,130,246,.05), transparent 40%),
         radial-gradient(circle at 85% 80%, rgba(167,139,250,.045), transparent 40%);
-    pointer-events: none;
-    z-index: 0;
-    animation: ambientShift 18s ease-in-out infinite;
-}
-.main, .sidebar, .topbar { position: relative; z-index: 1; }
-@keyframes ambientShift {
-    0%, 100% { opacity: .8; }
-    50%      { opacity: 1; }
+    background-attachment: fixed;
 }
 
 /* 13. Live dot (small blinking indicator) */
