@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Endeksler",
-    "updated_at": "2026-04-15T12:27:07Z",
+    "updated_at": "2026-04-15T13:11:40Z",
     "symbol_count": 18,
     "errors": []
   },
@@ -11,13 +11,13 @@
       "id": "XU100.IS",
       "name": "BIST 100",
       "unit": "TRY",
-      "current": 14282.7305,
-      "change_1d_pct": 0.57,
-      "change_1w_pct": 5.51,
-      "change_1m_pct": 9.09,
-      "change_3m_pct": 16.55,
-      "change_ytd_pct": 24.21,
-      "change_1y_pct": 914.54,
+      "current": 14278.54,
+      "change_1d_pct": 0.54,
+      "change_1w_pct": 5.48,
+      "change_1m_pct": 9.06,
+      "change_3m_pct": 16.51,
+      "change_ytd_pct": 24.18,
+      "change_1y_pct": 914.24,
       "high_52w": 14339.2998,
       "low_52w": 1330.5,
       "data": [
@@ -5011,7 +5011,7 @@
         },
         {
           "date": "2026-04-15",
-          "value": 14282.7305
+          "value": 14278.54
         }
       ]
     },
@@ -5019,14 +5019,14 @@
       "id": "XU030.IS",
       "name": "BIST 30",
       "unit": "TRY",
-      "current": 16415.7109,
-      "change_1d_pct": 0.56,
-      "change_1w_pct": 5.77,
-      "change_1m_pct": 10.4,
-      "change_3m_pct": 22.7,
-      "change_ytd_pct": 31.18,
-      "change_1y_pct": 1019.99,
-      "high_52w": 16415.7109,
+      "current": 16408.3008,
+      "change_1d_pct": 0.51,
+      "change_1w_pct": 5.72,
+      "change_1m_pct": 10.35,
+      "change_3m_pct": 22.64,
+      "change_ytd_pct": 31.12,
+      "change_1y_pct": 1019.49,
+      "high_52w": 16408.3008,
       "low_52w": 1397.1,
       "data": [
         {
@@ -9987,7 +9987,7 @@
         },
         {
           "date": "2026-04-15",
-          "value": 16415.7109
+          "value": 16408.3008
         }
       ]
     },
@@ -30139,13 +30139,13 @@
       "id": "^STOXX50E",
       "name": "Euro Stoxx 50",
       "unit": "EUR",
-      "current": 5949.04,
-      "change_1d_pct": -0.59,
-      "change_1w_pct": 0.6,
-      "change_1m_pct": 3.48,
-      "change_3m_pct": -0.81,
-      "change_ytd_pct": 0.43,
-      "change_1y_pct": 48.97,
+      "current": 5955.8101,
+      "change_1d_pct": -0.48,
+      "change_1w_pct": 0.72,
+      "change_1m_pct": 3.6,
+      "change_3m_pct": -0.69,
+      "change_ytd_pct": 0.54,
+      "change_1y_pct": 49.14,
       "high_52w": 6173.3198,
       "low_52w": 3279.04,
       "data": [
@@ -35179,7 +35179,7 @@
         },
         {
           "date": "2026-04-15",
-          "value": 5949.04
+          "value": 5955.8101
         }
       ]
     },
@@ -35187,13 +35187,13 @@
       "id": "^FTSE",
       "name": "FTSE 100",
       "unit": "GBP",
-      "current": 10623.4004,
-      "change_1d_pct": 0.13,
-      "change_1w_pct": 0.14,
-      "change_1m_pct": 3.09,
-      "change_3m_pct": 4.93,
-      "change_ytd_pct": 6.76,
-      "change_1y_pct": 52.12,
+      "current": 10613.2002,
+      "change_1d_pct": 0.04,
+      "change_1w_pct": 0.04,
+      "change_1m_pct": 2.99,
+      "change_3m_pct": 4.83,
+      "change_ytd_pct": 6.65,
+      "change_1y_pct": 51.98,
       "high_52w": 10910.5996,
       "low_52w": 6826.2002,
       "data": [
@@ -40243,7 +40243,7 @@
         },
         {
           "date": "2026-04-15",
-          "value": 10623.4004
+          "value": 10613.2002
         }
       ]
     },
@@ -40251,13 +40251,13 @@
       "id": "^GDAXI",
       "name": "DAX 40",
       "unit": "EUR",
-      "current": 24065.8691,
-      "change_1d_pct": 0.09,
-      "change_1w_pct": -0.06,
-      "change_1m_pct": 2.02,
-      "change_3m_pct": -4.73,
-      "change_ytd_pct": -1.93,
-      "change_1y_pct": 57.75,
+      "current": 24059.2402,
+      "change_1d_pct": 0.06,
+      "change_1w_pct": -0.09,
+      "change_1m_pct": 1.99,
+      "change_3m_pct": -4.76,
+      "change_ytd_pct": -1.96,
+      "change_1y_pct": 57.71,
       "high_52w": 25420.6602,
       "low_52w": 11975.5498,
       "data": [
@@ -45359,7 +45359,7 @@
         },
         {
           "date": "2026-04-15",
-          "value": 24065.8691
+          "value": 24059.2402
         }
       ]
     },
@@ -45367,13 +45367,13 @@
       "id": "^FCHI",
       "name": "CAC 40",
       "unit": "EUR",
-      "current": 8285.3701,
-      "change_1d_pct": -0.51,
-      "change_1w_pct": 0.26,
-      "change_1m_pct": 3.77,
-      "change_3m_pct": -0.92,
-      "change_ytd_pct": 1.1,
-      "change_1y_pct": 32.9,
+      "current": 8279.0498,
+      "change_1d_pct": -0.59,
+      "change_1w_pct": 0.18,
+      "change_1m_pct": 3.69,
+      "change_3m_pct": -0.99,
+      "change_ytd_pct": 1.02,
+      "change_1y_pct": 32.8,
       "high_52w": 8620.9297,
       "low_52w": 5676.8701,
       "data": [
@@ -50503,7 +50503,7 @@
         },
         {
           "date": "2026-04-15",
-          "value": 8285.3701
+          "value": 8279.0498
         }
       ]
     },
@@ -84827,13 +84827,13 @@
       "id": "^VIX",
       "name": "VIX (Korku Endeksi)",
       "unit": "Puan",
-      "current": 18.22,
-      "change_1d_pct": -0.76,
-      "change_1w_pct": -13.4,
-      "change_1m_pct": -32.99,
-      "change_3m_pct": 17.93,
-      "change_ytd_pct": 25.57,
-      "change_1y_pct": 9.96,
+      "current": 17.85,
+      "change_1d_pct": -2.78,
+      "change_1w_pct": -15.16,
+      "change_1m_pct": -34.35,
+      "change_3m_pct": 15.53,
+      "change_ytd_pct": 23.02,
+      "change_1y_pct": 7.72,
       "high_52w": 52.33,
       "low_52w": 11.86,
       "data": [
@@ -89859,7 +89859,7 @@
         },
         {
           "date": "2026-04-15",
-          "value": 18.22
+          "value": 17.85
         }
       ]
     }
