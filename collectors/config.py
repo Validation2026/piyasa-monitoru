@@ -188,7 +188,6 @@ CRYPTO = {
         "LTC-USD":  {"name": "LTC (Litecoin)", "unit": "USD"},
         "UNI7083-USD": {"name": "UNI (Uniswap)", "unit": "USD"}, # YF'de UNI kodu genelde UNI7083-USD'dir
         "ATOM-USD": {"name": "ATOM (Cosmos)", "unit": "USD"},
-        "SHIB-USD": {"name": "SHIB (Shiba Inu)", "unit": "USD"},
     }
 }
 
