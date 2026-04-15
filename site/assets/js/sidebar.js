@@ -21,6 +21,7 @@ var links = [
     ['ekonomik-takvim','📅','Takvim'],
     ['merkez-bankalari','🏛️','Merkez Bank.'],
     ['ulke-risk','🌐','Ülke Risk'],
+    ['turkiye-makro','🇹🇷','Türkiye Makro'],
     {ext:'https://tufeai.netlify.app/',icon:'🧮',label:'TÜFE-AI'}
 ];
 
