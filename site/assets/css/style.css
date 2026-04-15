@@ -12,6 +12,10 @@
     --fm:'Outfit',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;
     --r:12px;--rs:6px;
     --sidebar-w:240px;
+    --anim-fast:.18s;
+    --anim-normal:.28s;
+    --anim-slow:.45s;
+    --anim-ease:cubic-bezier(.22,1,.36,1);
 }
 [data-theme=light]{
     --bg:#f0f4f8;--bg2:#e8edf2;--card:#fff;--card2:#f8fafc;
@@ -264,6 +268,44 @@ body{font-family:var(--fm);background:var(--bg);color:var(--t1);line-height:1.6;
 .chrt-sub{font-size:.73rem;color:var(--t3);margin-bottom:14px;display:flex;align-items:center;gap:8px}
 .chrt-sub .live{font-family:var(--mono);font-weight:600}
 .chrt canvas{width:100%!important;height:260px!important}
+
+/* ══════════════════════════════
+   ESTETİK ANİMASYON POLISH (NON-BREAKING)
+   ══════════════════════════════ */
+.scard,.kpi,.cat,.chrt,.mover-item,.prow{
+    will-change:transform,box-shadow;
+    transform:translateZ(0);
+    transition:
+        transform var(--anim-normal) var(--anim-ease),
+        box-shadow var(--anim-normal) var(--anim-ease),
+        border-color var(--anim-fast) ease,
+        background-color var(--anim-fast) ease;
+}
+
+.scard,.chrt,.cat,.kpi{
+    position:relative;
+}
+
+.scard::after,.chrt::after,.cat::after,.kpi::after{
+    content:'';
+    position:absolute;
+    top:0;
+    left:-160%;
+    width:120%;
+    height:100%;
+    pointer-events:none;
+    background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.14) 50%,transparent 65%);
+    transition:left var(--anim-slow) var(--anim-ease);
+}
+
+.scard:hover::after,.chrt:hover::after,.cat:hover::after,.kpi:hover::after{
+    left:140%;
+}
+
+.chrt:hover canvas,.scard:hover canvas{
+    filter:saturate(1.06) contrast(1.02);
+    transition:filter var(--anim-fast) ease;
+}
 
 /* ══════════════════════════════
    DATA TABLE (detail pages)
@@ -535,6 +577,21 @@ canvas {
     background: #e63946; /* Üstüne gelince koyu kırmızı */
     transform: rotate(90deg); /* Havalı bir dönme efekti */
 }
+
+/* Hareket hassasiyeti olan kullanıcılar için animasyonları azalt */
+@media (prefers-reduced-motion: reduce) {
+    *,*::before,*::after{
+        animation-duration:0.01ms !important;
+        animation-iteration-count:1 !important;
+        transition-duration:0.01ms !important;
+        scroll-behavior:auto !important;
+    }
+
+    .ticker-track{
+        animation:none !important;
+    }
+}
+
 
 /* ══════════════════════════════════════════
    MOBİL OPTİMİZASYON (YENİ SİSTEMLER İÇİN)
