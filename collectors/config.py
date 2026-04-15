@@ -49,6 +49,21 @@ COMMODITIES_METALS = {
         "GDX":   {"name": "GDX (Altın Madencileri ETF)",   "unit": "USD"},
         "GDXJ":  {"name": "GDXJ (Küçük Altın Madencileri)", "unit": "USD"},
         "SIL":   {"name": "SIL (Gümüş Madencileri ETF)",   "unit": "USD"},
+        # Fiziksel Maden Fonları (Kağıt üzerinde değil, kasasında gerçek maden tutan popüler fonlar)
+        "PHYS":  {"name": "PHYS (Sprott Fiziksel Altın)", "unit": "USD"},
+        "PSLV":  {"name": "PSLV (Sprott Fiziksel Gümüş)", "unit": "USD"},
+        "SPPP":  {"name": "SPPP (Sprott Fiziksel Platin & Paladyum)", "unit": "USD"},
+        "SIVR":  {"name": "SIVR (Fiziksel Gümüş ETF)", "unit": "USD"},
+
+        # Madencilik Alt Kırılımları ve Spesifik ETF'ler
+        "SILJ":  {"name": "SILJ (Küçük Gümüş Madencileri ETF)", "unit": "USD"},
+        "RING":  {"name": "RING (Küresel Altın Madencileri)", "unit": "USD"},
+        "PICK":  {"name": "PICK (Küresel Maden & Metal Üreticileri)", "unit": "USD"},
+        "URNM":  {"name": "URNM (Uranyum Madencileri ETF)", "unit": "USD"}, # Nükleer trendi için çok popüler
+
+        # Endüstriyel / Baz Metal ETF'leri (Vadeli kontratlar yerine fiyatı fon üzerinden takip etmek için)
+        "CPER":  {"name": "CPER (Bakır ETF)", "unit": "USD"},
+        "DBB":   {"name": "DBB (Baz Metaller Fonu - Al, Zn, Cu)", "unit": "USD"},
     }
 }
 
@@ -107,6 +122,14 @@ CURRENCIES = {
         "USDNOK=X": {"name": "USD/NOK", "unit": "NOK"},
         # Endeks
         "DX-Y.NYB": {"name": "Dolar Endeksi (DXY)", "unit": ""},
+        # Avrupa ve Diğer Çaprazlar
+        "EURGBP=X": {"name": "EUR/GBP", "unit": "GBP"},
+        "EURCHF=X": {"name": "EUR/CHF", "unit": "CHF"},
+        "GBPEUR=X": {"name": "GBP/EUR", "unit": "EUR"},
+        # Gelişen Avrupa / Diğer
+        "USDPLN=X": {"name": "USD/PLN (Polonya Zlotisi)", "unit": "PLN"},
+        "USDHUF=X": {"name": "USD/HUF (Macar Forinti)", "unit": "HUF"},
+        "USDAED=X": {"name": "USD/AED (BAE Dirhemi)", "unit": "AED"},
     }
 }
 
@@ -160,6 +183,12 @@ CRYPTO = {
         "AVAX-USD": {"name": "AVAX (Avalanche)", "unit": "USD"},
         "DOT-USD":  {"name": "DOT (Polkadot)",  "unit": "USD"},
         "LINK-USD": {"name": "LINK (Chainlink)", "unit": "USD"},
+        "TRX-USD":  {"name": "TRX (Tron)", "unit": "USD"},
+        "BCH-USD":  {"name": "BCH (Bitcoin Cash)", "unit": "USD"},
+        "LTC-USD":  {"name": "LTC (Litecoin)", "unit": "USD"},
+        "UNI7083-USD": {"name": "UNI (Uniswap)", "unit": "USD"}, # YF'de UNI kodu genelde UNI7083-USD'dir
+        "ATOM-USD": {"name": "ATOM (Cosmos)", "unit": "USD"},
+        "SHIB-USD": {"name": "SHIB (Shiba Inu)", "unit": "USD"},
     }
 }
 
@@ -181,6 +210,21 @@ INDUSTRIAL = {
         "SLX":    {"name": "SLX (Çelik ETF)",      "unit": "USD"},
         "BDRY":   {"name": "BDRY (Kuru Yük Navlun)","unit": "USD"},
         "REMX":   {"name": "REMX (Nadir Toprak)",  "unit": "USD"},
+        # Temel Materyaller ve Geniş Sanayi Fonları
+        "XLB":    {"name": "XLB (Temel Materyaller ETF)", "unit": "USD"}, # Kimya, ambalaj, inşaat malzemeleri
+        "XLI":    {"name": "XLI (Sanayi Sektörü ETF)", "unit": "USD"},    # Ağır sanayi, makine ve havacılık
+        "GUNR":   {"name": "GUNR (Küresel Doğal Kaynaklar)", "unit": "USD"},
+        
+        # Geleceğin Hammaddeleri ve Batarya Teknolojileri (LIT'i tamamlayıcı)
+        "BATT":   {"name": "BATT (Batarya Teknolojileri ETF)", "unit": "USD"},
+        
+        # Altyapı, İnşaat ve Diğer Kaynaklar
+        "PAVE":   {"name": "PAVE (Altyapı ve İnşaat ETF)", "unit": "USD"},
+        "WOOD":   {"name": "WOOD (Küresel Kereste ve Ormancılık)", "unit": "USD"}, # LBS=F (Kereste) fon karşılığı
+        "FIW":    {"name": "FIW (Su Kaynakları ETF)", "unit": "USD"}, # Sanayinin en büyük sarf kalemi
+        
+        # Taşımacılık ve Lojistik (BDRY'yi tamamlayıcı)
+        "IYT":    {"name": "IYT (Taşımacılık Sektörü ETF)", "unit": "USD"},
     }
 }
 
