@@ -12,6 +12,44 @@ DATA_DIR = ROOT_DIR / "data"
 DATA_DIR.mkdir(exist_ok=True)
 TV_LOGO_BASE = "https://s3-symbol-logo.tradingview.com"
 
+# Yahoo Finance → TradingView sembol eşlemesi (logo URL doğruluğu için)
+# Sadece Yahoo Finance sembolü TradingView sembolünden farklı olanlar.
+YAHOO_TO_TV = {
+    # ── Enerji ──
+    "BZ=F": "BRENT",
+    "CL=F": "WTI",
+    # ── Kıymetli Madenler ──
+    "GC=F": "XAUUSD",
+    "SI=F": "XAGUSD",
+    "PL=F": "XPTUSD",
+    "PA=F": "XPDUSD",
+    # ── Sanayi ──
+    "ZN=F": "ZNC",
+    # ── Döviz ──
+    "DX-Y.NYB": "DXY",
+    # ── Tahvil Faizleri ──
+    "^IRX": "US03MY",
+    "2YY=F": "US02Y",
+    "^FVX": "US05Y",
+    "^TNX": "US10Y",
+    "^TYX": "US30Y",
+    # ── Endeksler ──
+    "^GSPC": "SPX",
+    "^IXIC": "NDX",
+    "^STOXX50E": "SX5E",
+    "^FTSE": "UKX",
+    "^GDAXI": "DAX",
+    "^FCHI": "PX1",
+    "^N225": "NI225",
+    "^BSESN": "SENSEX",
+    "^KS11": "KOSPI",
+    "^TWII": "TAIEX",
+    "^MERV": "IMV",
+    "^AXJO": "XJO",
+    "^IBEX": "IBC",
+    "000001.SS": "SHCOMP",
+}
+
 FOREX_COUNTRY_MAP = {
     "USD": "US", "EUR": "EU", "GBP": "GB", "TRY": "TR", "JPY": "JP", "CHF": "CH",
     "AUD": "AU", "CAD": "CA", "NZD": "NZ", "CNY": "CN", "BRL": "BR", "MXN": "MX",
@@ -24,7 +62,28 @@ def _tv_symbol_candidates(symbol: str) -> list[str]:
     """TradingView için olası logo URL'lerini üret."""
     if not symbol:
         return []
-    clean = symbol.strip().upper()
+    clean = symbol.strip()
+
+    # Explicit Yahoo → TradingView mapping
+    tv_sym = YAHOO_TO_TV.get(clean)
+    if tv_sym:
+        # Exchange prefix varsa (ör. BIST:GARAN)
+        if ":" in tv_sym:
+            exchange, ticker = tv_sym.split(":", 1)
+            return [
+                f"{TV_LOGO_BASE}/{exchange}-{ticker}.svg",
+                f"{TV_LOGO_BASE}/{exchange}-{ticker}--big.svg",
+                f"{TV_LOGO_BASE}/{ticker.lower()}.svg",
+                f"{TV_LOGO_BASE}/{ticker.lower()}--big.svg",
+            ]
+        lower = tv_sym.lower()
+        return [
+            f"{TV_LOGO_BASE}/{lower}.svg",
+            f"{TV_LOGO_BASE}/{lower}--big.svg",
+        ]
+
+    # Mapping'te yoksa mevcut mantık
+    clean = clean.upper()
     base = clean
     if clean.endswith("=X"):
         base = clean[:-2]

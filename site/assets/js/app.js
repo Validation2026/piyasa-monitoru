@@ -49,11 +49,27 @@ function logoUrl(series){
     return url;
 }
 
+var YAHOO_TO_TV={
+    'BZ=F':'brent','CL=F':'wti',
+    'GC=F':'xauusd','SI=F':'xagusd','PL=F':'xptusd','PA=F':'xpdusd',
+    'ZN=F':'znc','DX-Y.NYB':'dxy',
+    '^IRX':'us03my','2YY=F':'us02y','^FVX':'us05y','^TNX':'us10y','^TYX':'us30y',
+    '^GSPC':'spx','^IXIC':'ndx','^STOXX50E':'sx5e','^FTSE':'ukx',
+    '^GDAXI':'dax','^FCHI':'px1','^N225':'ni225','^BSESN':'sensex',
+    '^KS11':'kospi','^TWII':'taiex','^MERV':'imv','^AXJO':'xjo','^IBEX':'ibc',
+    '000001.SS':'shcomp'
+};
 function tradingViewCandidates(series){
     if(!series||!series.id)return [];
     var id=(series.id||'').trim();
     if(!id)return [];
     var out=[];
+    var tv=YAHOO_TO_TV[id];
+    if(tv){
+        out.push(TV_LOGO_BASE+tv+'.svg');
+        out.push(TV_LOGO_BASE+tv+'--big.svg');
+        return out;
+    }
     var base=id.toUpperCase();
     var suffixMap={'.IS':'BIST','.KS':'KRX','.L':'LSE','.PA':'EURONEXT','.DE':'XETR','.MI':'MIL','.TO':'TSX'};
     var ex=null;
