@@ -14,6 +14,7 @@ var links = [
     ['kurlar','💱','Döviz'],
     ['tahviller','📜','Tahvil'],
     ['endeksler','📈','Endeksler'],
+    ['hisseler','💹','Hisseler'],
     ['kripto','₿','Kripto'],
     ['karsilastirma','📊','Karşılaştır'],
     ['iran-risk','🔴','İran Risk'],
@@ -21,7 +22,6 @@ var links = [
     ['ekonomik-takvim','📅','Takvim'],
     ['merkez-bankalari','🏛️','Merkez Bank.'],
     ['ulke-risk','🌐','Ülke Risk'],
-    ['hisseler','💹','Hisseler'],
     {ext:'https://tufeai.netlify.app/',icon:'🧮',label:'TÜFE-AI'}
 ];
 
