@@ -273,6 +273,7 @@ STOCKS = {
         "AGHOL.IS":  {"name": "AG Anadolu Grubu",  "unit": "TRY"},
         "TKFEN.IS":  {"name": "Tekfen Holding",    "unit": "TRY"},
         "TAVHL.IS":  {"name": "TAV Havalimanları",  "unit": "TRY"},
+        "GSRAY.IS":  {"name": "Galatasaray",  "unit": "TRY"},
         # ═══════════════════════════════════════
         # BIST — Sanayi & Üretim
         # ═══════════════════════════════════════
