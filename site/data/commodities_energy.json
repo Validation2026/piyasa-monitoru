@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Enerji",
-    "updated_at": "2026-04-16T08:22:45Z",
+    "updated_at": "2026-04-16T08:45:06Z",
     "symbol_count": 15,
     "errors": []
   },
@@ -11,13 +11,19 @@
       "id": "BZ=F",
       "name": "BZ (Brent)",
       "unit": "USD/bbl",
-      "current": 96.48,
-      "change_1d_pct": 1.63,
-      "change_1w_pct": 0.58,
-      "change_1m_pct": -3.72,
-      "change_3m_pct": 52.32,
-      "change_ytd_pct": 58.81,
-      "change_1y_pct": 44.5,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/bz.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/bz.svg",
+        "https://s3-symbol-logo.tradingview.com/bz--big.svg"
+      ],
+      "current": 96.8,
+      "change_1d_pct": 1.97,
+      "change_1w_pct": 0.92,
+      "change_1m_pct": -3.4,
+      "change_3m_pct": 52.83,
+      "change_ytd_pct": 59.34,
+      "change_1y_pct": 44.98,
       "high_52w": 127.98,
       "low_52w": 58.92,
       "data": [
@@ -5055,7 +5061,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 96.48
+          "value": 96.8
         }
       ]
     },
@@ -5063,13 +5069,19 @@
       "id": "CL=F",
       "name": "CL (WTI)",
       "unit": "USD/bbl",
-      "current": 89.33,
-      "change_1d_pct": -2.15,
-      "change_1w_pct": -8.73,
-      "change_1m_pct": -4.46,
-      "change_3m_pct": 51.1,
-      "change_ytd_pct": 55.84,
-      "change_1y_pct": 41.5,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/cl.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/cl.svg",
+        "https://s3-symbol-logo.tradingview.com/cl--big.svg"
+      ],
+      "current": 89.8,
+      "change_1d_pct": -1.63,
+      "change_1w_pct": -8.25,
+      "change_1m_pct": -3.96,
+      "change_3m_pct": 51.89,
+      "change_ytd_pct": 56.66,
+      "change_1y_pct": 42.25,
       "high_52w": 123.7,
       "low_52w": 55.27,
       "data": [
@@ -10103,7 +10115,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 89.33
+          "value": 89.8
         }
       ]
     },
@@ -10111,13 +10123,19 @@
       "id": "NG=F",
       "name": "NG (Doğalgaz)",
       "unit": "USD/MMBtu",
-      "current": 2.626,
-      "change_1d_pct": 0.61,
-      "change_1w_pct": -1.65,
-      "change_1m_pct": -13.13,
-      "change_3m_pct": -17.13,
-      "change_ytd_pct": -27.42,
-      "change_1y_pct": -2.01,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/ng.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/ng.svg",
+        "https://s3-symbol-logo.tradingview.com/ng--big.svg"
+      ],
+      "current": 2.628,
+      "change_1d_pct": 0.69,
+      "change_1w_pct": -1.57,
+      "change_1m_pct": -13.07,
+      "change_3m_pct": -17.07,
+      "change_ytd_pct": -27.36,
+      "change_1y_pct": -1.94,
       "high_52w": 9.68,
       "low_52w": 1.575,
       "data": [
@@ -15155,7 +15173,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 2.626
+          "value": 2.628
         }
       ]
     },
@@ -15163,6 +15181,12 @@
       "id": "TTF=F",
       "name": "TTF (Avrupa Gaz)",
       "unit": "EUR/MWh",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/ttf.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/ttf.svg",
+        "https://s3-symbol-logo.tradingview.com/ttf--big.svg"
+      ],
       "current": 42.195,
       "change_1d_pct": 1.92,
       "change_1w_pct": -8.62,
@@ -20211,13 +20235,19 @@
       "id": "HO=F",
       "name": "HO (Isıtma Yağı)",
       "unit": "USD/gal",
-      "current": 3.6192,
-      "change_1d_pct": -3.57,
-      "change_1w_pct": -8.07,
-      "change_1m_pct": -5.69,
-      "change_3m_pct": 69.52,
-      "change_ytd_pct": 71.11,
-      "change_1y_pct": 90.92,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/ho.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/ho.svg",
+        "https://s3-symbol-logo.tradingview.com/ho--big.svg"
+      ],
+      "current": 3.6414,
+      "change_1d_pct": -2.98,
+      "change_1w_pct": -7.51,
+      "change_1m_pct": -5.11,
+      "change_3m_pct": 70.56,
+      "change_ytd_pct": 72.16,
+      "change_1y_pct": 92.09,
       "high_52w": 5.1354,
       "low_52w": 1.8537,
       "data": [
@@ -25255,7 +25285,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 3.6192
+          "value": 3.6414
         }
       ]
     },
@@ -25263,13 +25293,19 @@
       "id": "RB=F",
       "name": "RB (Benzin)",
       "unit": "USD/gal",
-      "current": 3.0239,
-      "change_1d_pct": -1.48,
-      "change_1w_pct": 0.77,
-      "change_1m_pct": 0.79,
-      "change_3m_pct": 69.82,
-      "change_ytd_pct": 78.07,
-      "change_1y_pct": 48.24,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/rb.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/rb.svg",
+        "https://s3-symbol-logo.tradingview.com/rb--big.svg"
+      ],
+      "current": 3.0331,
+      "change_1d_pct": -1.18,
+      "change_1w_pct": 1.08,
+      "change_1m_pct": 1.09,
+      "change_3m_pct": 70.34,
+      "change_ytd_pct": 78.61,
+      "change_1y_pct": 48.69,
       "high_52w": 4.2762,
       "low_52w": 1.6809,
       "data": [
@@ -30307,7 +30343,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 3.0239
+          "value": 3.0331
         }
       ]
     },
@@ -30315,6 +30351,12 @@
       "id": "URA",
       "name": "URA (Uranyum ETF)",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/ura.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/ura.svg",
+        "https://s3-symbol-logo.tradingview.com/ura--big.svg"
+      ],
       "current": 54.84,
       "change_1d_pct": 3.79,
       "change_1w_pct": 6.69,
@@ -35351,6 +35393,12 @@
       "id": "KRBN",
       "name": "KRBN (Karbon Kredisi ETF)",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/krbn.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/krbn.svg",
+        "https://s3-symbol-logo.tradingview.com/krbn--big.svg"
+      ],
       "current": 30.831,
       "change_1d_pct": -0.04,
       "change_1w_pct": 3.81,
@@ -40387,6 +40435,12 @@
       "id": "USO",
       "name": "USO (Ham Petrol ETF)",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/uso.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/uso.svg",
+        "https://s3-symbol-logo.tradingview.com/uso--big.svg"
+      ],
       "current": 122.59,
       "change_1d_pct": -1.02,
       "change_1w_pct": -1.6,
@@ -45423,6 +45477,12 @@
       "id": "UNG",
       "name": "UNG (Doğalgaz ETF)",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/ung.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/ung.svg",
+        "https://s3-symbol-logo.tradingview.com/ung--big.svg"
+      ],
       "current": 10.58,
       "change_1d_pct": 0.19,
       "change_1w_pct": -4.51,
@@ -50459,6 +50519,12 @@
       "id": "XLE",
       "name": "XLE (Enerji Sektörü ETF)",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/xle.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/xle.svg",
+        "https://s3-symbol-logo.tradingview.com/xle--big.svg"
+      ],
       "current": 55.76,
       "change_1d_pct": -0.34,
       "change_1w_pct": -3.94,
@@ -55495,6 +55561,12 @@
       "id": "XOP",
       "name": "XOP (Petrol & Gaz Arama)",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/xop.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/xop.svg",
+        "https://s3-symbol-logo.tradingview.com/xop--big.svg"
+      ],
       "current": 164.26,
       "change_1d_pct": 0.51,
       "change_1w_pct": -4.33,
@@ -60531,6 +60603,12 @@
       "id": "ICLN",
       "name": "ICLN (Temiz Enerji ETF)",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/icln.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/icln.svg",
+        "https://s3-symbol-logo.tradingview.com/icln--big.svg"
+      ],
       "current": 19.53,
       "change_1d_pct": -1.01,
       "change_1w_pct": 5.45,
@@ -65567,6 +65645,12 @@
       "id": "TAN",
       "name": "TAN (Güneş Enerjisi ETF)",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/tan.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/tan.svg",
+        "https://s3-symbol-logo.tradingview.com/tan--big.svg"
+      ],
       "current": 55.32,
       "change_1d_pct": 0.16,
       "change_1w_pct": -0.29,
@@ -70603,6 +70687,12 @@
       "id": "NLR",
       "name": "NLR (Nükleer Enerji ETF)",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/nlr.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/nlr.svg",
+        "https://s3-symbol-logo.tradingview.com/nlr--big.svg"
+      ],
       "current": 144.94,
       "change_1d_pct": 2.53,
       "change_1w_pct": 5.44,

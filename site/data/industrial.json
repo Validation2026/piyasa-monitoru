@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Sanayi & Hammadde",
-    "updated_at": "2026-04-16T08:23:21Z",
+    "updated_at": "2026-04-16T08:45:40Z",
     "symbol_count": 18,
     "errors": [
       "NI=F",
@@ -16,13 +16,19 @@
       "id": "HG=F",
       "name": "HG (Bakır)",
       "unit": "USD/lb",
-      "current": 6.1005,
-      "change_1d_pct": 0.47,
-      "change_1w_pct": 6.13,
-      "change_1m_pct": 5.35,
-      "change_3m_pct": 4.18,
-      "change_ytd_pct": 8.16,
-      "change_1y_pct": 45.94,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/hg.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/hg.svg",
+        "https://s3-symbol-logo.tradingview.com/hg--big.svg"
+      ],
+      "current": 6.0985,
+      "change_1d_pct": 0.44,
+      "change_1w_pct": 6.1,
+      "change_1m_pct": 5.32,
+      "change_3m_pct": 4.15,
+      "change_ytd_pct": 8.13,
+      "change_1y_pct": 45.9,
       "high_52w": 6.1755,
       "low_52w": 3.2105,
       "data": [
@@ -5060,7 +5066,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 6.1005
+          "value": 6.0985
         }
       ]
     },
@@ -5068,6 +5074,12 @@
       "id": "ALI=F",
       "name": "ALI (Alüminyum)",
       "unit": "USD/ton",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/ali.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/ali.svg",
+        "https://s3-symbol-logo.tradingview.com/ali--big.svg"
+      ],
       "current": 3618.75,
       "change_1d_pct": 0.14,
       "change_1w_pct": 7.26,
@@ -10112,13 +10124,19 @@
       "id": "ZN=F",
       "name": "ZN (Çinko)",
       "unit": "USD/ton",
-      "current": 111.4219,
-      "change_1d_pct": 0.06,
-      "change_1w_pct": 0.17,
-      "change_1m_pct": -0.54,
-      "change_3m_pct": -0.71,
-      "change_ytd_pct": -0.7,
-      "change_1y_pct": -15.83,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/zn.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/zn.svg",
+        "https://s3-symbol-logo.tradingview.com/zn--big.svg"
+      ],
+      "current": 111.4062,
+      "change_1d_pct": 0.04,
+      "change_1w_pct": 0.15,
+      "change_1m_pct": -0.56,
+      "change_3m_pct": -0.72,
+      "change_ytd_pct": -0.71,
+      "change_1y_pct": -15.84,
       "high_52w": 135.0,
       "low_52w": 105.4219,
       "data": [
@@ -15156,7 +15174,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 111.4219
+          "value": 111.4062
         }
       ]
     },
@@ -15164,6 +15182,12 @@
       "id": "LBS=F",
       "name": "LBS (Kereste)",
       "unit": "USD/mbf",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/lbs.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/lbs.svg",
+        "https://s3-symbol-logo.tradingview.com/lbs--big.svg"
+      ],
       "current": 344.0,
       "change_1d_pct": 1.47,
       "change_1w_pct": -3.91,
@@ -17276,6 +17300,12 @@
       "id": "URA",
       "name": "URA (Uranyum ETF)",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/ura.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/ura.svg",
+        "https://s3-symbol-logo.tradingview.com/ura--big.svg"
+      ],
       "current": 54.84,
       "change_1d_pct": 3.79,
       "change_1w_pct": 6.69,
@@ -22312,6 +22342,12 @@
       "id": "LIT",
       "name": "LIT (Lityum ETF)",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/lit.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/lit.svg",
+        "https://s3-symbol-logo.tradingview.com/lit--big.svg"
+      ],
       "current": 79.64,
       "change_1d_pct": -1.13,
       "change_1w_pct": 3.82,
@@ -27348,6 +27384,12 @@
       "id": "COPX",
       "name": "COPX (Bakır Madenci)",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/copx.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/copx.svg",
+        "https://s3-symbol-logo.tradingview.com/copx--big.svg"
+      ],
       "current": 86.08,
       "change_1d_pct": -0.4,
       "change_1w_pct": 4.94,
@@ -32384,6 +32426,12 @@
       "id": "SLX",
       "name": "SLX (Çelik ETF)",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/slx.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/slx.svg",
+        "https://s3-symbol-logo.tradingview.com/slx--big.svg"
+      ],
       "current": 99.77,
       "change_1d_pct": -0.33,
       "change_1w_pct": 1.92,
@@ -37420,6 +37468,12 @@
       "id": "BDRY",
       "name": "BDRY (Kuru Yük Navlun)",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/bdry.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/bdry.svg",
+        "https://s3-symbol-logo.tradingview.com/bdry--big.svg"
+      ],
       "current": 11.4,
       "change_1d_pct": -0.18,
       "change_1w_pct": 7.55,
@@ -42456,6 +42510,12 @@
       "id": "REMX",
       "name": "REMX (Nadir Toprak)",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/remx.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/remx.svg",
+        "https://s3-symbol-logo.tradingview.com/remx--big.svg"
+      ],
       "current": 97.44,
       "change_1d_pct": -1.38,
       "change_1w_pct": 4.1,
@@ -47492,6 +47552,12 @@
       "id": "XLB",
       "name": "XLB (Temel Materyaller ETF)",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/xlb.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/xlb.svg",
+        "https://s3-symbol-logo.tradingview.com/xlb--big.svg"
+      ],
       "current": 51.38,
       "change_1d_pct": -1.21,
       "change_1w_pct": -0.71,
@@ -52528,6 +52594,12 @@
       "id": "XLI",
       "name": "XLI (Sanayi Sektörü ETF)",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/xli.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/xli.svg",
+        "https://s3-symbol-logo.tradingview.com/xli--big.svg"
+      ],
       "current": 171.18,
       "change_1d_pct": -1.25,
       "change_1w_pct": 0.43,
@@ -57564,6 +57636,12 @@
       "id": "GUNR",
       "name": "GUNR (Küresel Doğal Kaynaklar)",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/gunr.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/gunr.svg",
+        "https://s3-symbol-logo.tradingview.com/gunr--big.svg"
+      ],
       "current": 55.1,
       "change_1d_pct": -0.95,
       "change_1w_pct": -1.13,
@@ -62600,6 +62678,12 @@
       "id": "BATT",
       "name": "BATT (Batarya Teknolojileri ETF)",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/batt.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/batt.svg",
+        "https://s3-symbol-logo.tradingview.com/batt--big.svg"
+      ],
       "current": 16.5,
       "change_1d_pct": -0.78,
       "change_1w_pct": 5.43,
@@ -67636,6 +67720,12 @@
       "id": "PAVE",
       "name": "PAVE (Altyapı ve İnşaat ETF)",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/pave.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/pave.svg",
+        "https://s3-symbol-logo.tradingview.com/pave--big.svg"
+      ],
       "current": 54.06,
       "change_1d_pct": -1.71,
       "change_1w_pct": 0.32,
@@ -72672,6 +72762,12 @@
       "id": "WOOD",
       "name": "WOOD (Küresel Kereste ve Ormancılık)",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/wood.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/wood.svg",
+        "https://s3-symbol-logo.tradingview.com/wood--big.svg"
+      ],
       "current": 71.71,
       "change_1d_pct": -0.94,
       "change_1w_pct": -0.18,
@@ -77708,6 +77804,12 @@
       "id": "FIW",
       "name": "FIW (Su Kaynakları ETF)",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/fiw.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/fiw.svg",
+        "https://s3-symbol-logo.tradingview.com/fiw--big.svg"
+      ],
       "current": 107.38,
       "change_1d_pct": -1.4,
       "change_1w_pct": 0.37,
@@ -82744,6 +82846,12 @@
       "id": "IYT",
       "name": "IYT (Taşımacılık Sektörü ETF)",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/iyt.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/iyt.svg",
+        "https://s3-symbol-logo.tradingview.com/iyt--big.svg"
+      ],
       "current": 79.0,
       "change_1d_pct": 0.06,
       "change_1w_pct": 1.57,

@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Tahvil Faizleri",
-    "updated_at": "2026-04-16T08:23:46Z",
+    "updated_at": "2026-04-16T08:46:09Z",
     "symbol_count": 13,
     "errors": []
   },
@@ -11,6 +11,12 @@
       "id": "^IRX",
       "name": "ABD 3 Aylık",
       "unit": "%",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/irx.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/irx.svg",
+        "https://s3-symbol-logo.tradingview.com/irx--big.svg"
+      ],
       "current": 3.612,
       "change_1d_pct": 0.0,
       "change_1w_pct": 0.33,
@@ -5051,6 +5057,12 @@
       "id": "2YY=F",
       "name": "ABD 2 Yıllık",
       "unit": "%",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/2yy.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/2yy.svg",
+        "https://s3-symbol-logo.tradingview.com/2yy--big.svg"
+      ],
       "current": 3.806,
       "change_1d_pct": 0.0,
       "change_1w_pct": 0.0,
@@ -9759,6 +9771,12 @@
       "id": "^FVX",
       "name": "ABD 5 Yıllık",
       "unit": "%",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/fvx.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/fvx.svg",
+        "https://s3-symbol-logo.tradingview.com/fvx--big.svg"
+      ],
       "current": 3.896,
       "change_1d_pct": 0.65,
       "change_1w_pct": -0.61,
@@ -14799,6 +14817,12 @@
       "id": "^TNX",
       "name": "ABD 10 Yıllık",
       "unit": "%",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/tnx.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/tnx.svg",
+        "https://s3-symbol-logo.tradingview.com/tnx--big.svg"
+      ],
       "current": 4.282,
       "change_1d_pct": 0.61,
       "change_1w_pct": -0.21,
@@ -19839,6 +19863,12 @@
       "id": "^TYX",
       "name": "ABD 30 Yıllık",
       "unit": "%",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/tyx.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/tyx.svg",
+        "https://s3-symbol-logo.tradingview.com/tyx--big.svg"
+      ],
       "current": 4.891,
       "change_1d_pct": 0.47,
       "change_1w_pct": 0.08,
@@ -24879,6 +24909,12 @@
       "id": "TLT",
       "name": "TLT (20+ Yıl Tahvil ETF)",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/tlt.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/tlt.svg",
+        "https://s3-symbol-logo.tradingview.com/tlt--big.svg"
+      ],
       "current": 86.83,
       "change_1d_pct": -0.44,
       "change_1w_pct": -0.1,
@@ -29915,6 +29951,12 @@
       "id": "IEF",
       "name": "IEF (7-10 Yıl Tahvil ETF)",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/ief.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/ief.svg",
+        "https://s3-symbol-logo.tradingview.com/ief--big.svg"
+      ],
       "current": 95.58,
       "change_1d_pct": -0.22,
       "change_1w_pct": 0.13,
@@ -34951,6 +34993,12 @@
       "id": "SHY",
       "name": "SHY (1-3 Yıl Tahvil ETF)",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/shy.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/shy.svg",
+        "https://s3-symbol-logo.tradingview.com/shy--big.svg"
+      ],
       "current": 82.51,
       "change_1d_pct": -0.02,
       "change_1w_pct": 0.11,
@@ -39987,6 +40035,12 @@
       "id": "TBT",
       "name": "TBT (Kısa Tahvil 2x Ters)",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/tbt.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/tbt.svg",
+        "https://s3-symbol-logo.tradingview.com/tbt--big.svg"
+      ],
       "current": 34.81,
       "change_1d_pct": 0.9,
       "change_1w_pct": 0.35,
@@ -45023,6 +45077,12 @@
       "id": "HYG",
       "name": "HYG (Yüksek Getirili Tahvil)",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/hyg.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/hyg.svg",
+        "https://s3-symbol-logo.tradingview.com/hyg--big.svg"
+      ],
       "current": 80.46,
       "change_1d_pct": -0.05,
       "change_1w_pct": 0.34,
@@ -50059,6 +50119,12 @@
       "id": "LQD",
       "name": "LQD (Yatırım Düzeyi Tahvil)",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/lqd.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/lqd.svg",
+        "https://s3-symbol-logo.tradingview.com/lqd--big.svg"
+      ],
       "current": 109.94,
       "change_1d_pct": -0.04,
       "change_1w_pct": 0.41,
@@ -55095,6 +55161,12 @@
       "id": "EMB",
       "name": "EMB (Gelişen Piyasa Tahvil)",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/emb.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/emb.svg",
+        "https://s3-symbol-logo.tradingview.com/emb--big.svg"
+      ],
       "current": 96.25,
       "change_1d_pct": -0.22,
       "change_1w_pct": 1.2,
@@ -60131,6 +60203,12 @@
       "id": "BNDX",
       "name": "BNDX (Uluslararası Tahvil)",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/bndx.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/bndx.svg",
+        "https://s3-symbol-logo.tradingview.com/bndx--big.svg"
+      ],
       "current": 48.12,
       "change_1d_pct": -0.21,
       "change_1w_pct": -0.33,

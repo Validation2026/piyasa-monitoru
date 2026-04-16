@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Hisse Senetleri",
-    "updated_at": "2026-04-16T08:25:01Z",
+    "updated_at": "2026-04-16T08:47:39Z",
     "symbol_count": 101,
     "errors": [
       "QNBFB.IS",
@@ -15,13 +15,21 @@
       "id": "GARAN.IS",
       "name": "Garanti BBVA",
       "unit": "TRY",
-      "current": 139.2,
-      "change_1d_pct": 0.29,
-      "change_1w_pct": 1.83,
-      "change_1m_pct": 3.8,
-      "change_3m_pct": -5.75,
-      "change_ytd_pct": -7.01,
-      "change_1y_pct": 1812.09,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-GARAN.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-GARAN.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-GARAN--big.svg",
+        "https://s3-symbol-logo.tradingview.com/garan.svg",
+        "https://s3-symbol-logo.tradingview.com/garan--big.svg"
+      ],
+      "current": 138.4,
+      "change_1d_pct": -0.29,
+      "change_1w_pct": 1.24,
+      "change_1m_pct": 3.21,
+      "change_3m_pct": -6.3,
+      "change_ytd_pct": -7.55,
+      "change_1y_pct": 1801.1,
       "high_52w": 165.0,
       "low_52w": 6.96,
       "data": [
@@ -5023,7 +5031,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 139.2
+          "value": 138.4
         }
       ]
     },
@@ -5031,13 +5039,21 @@
       "id": "AKBNK.IS",
       "name": "Akbank",
       "unit": "TRY",
-      "current": 79.6,
-      "change_1d_pct": 0.89,
-      "change_1w_pct": 5.71,
-      "change_1m_pct": 9.49,
-      "change_3m_pct": 6.85,
-      "change_ytd_pct": 8.3,
-      "change_1y_pct": 1501.61,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-AKBNK.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-AKBNK.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-AKBNK--big.svg",
+        "https://s3-symbol-logo.tradingview.com/akbnk.svg",
+        "https://s3-symbol-logo.tradingview.com/akbnk--big.svg"
+      ],
+      "current": 79.2,
+      "change_1d_pct": 0.38,
+      "change_1w_pct": 5.18,
+      "change_1m_pct": 8.94,
+      "change_3m_pct": 6.31,
+      "change_ytd_pct": 7.76,
+      "change_1y_pct": 1493.56,
       "high_52w": 92.95,
       "low_52w": 4.8,
       "data": [
@@ -10039,7 +10055,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 79.6
+          "value": 79.2
         }
       ]
     },
@@ -10047,13 +10063,21 @@
       "id": "YKBNK.IS",
       "name": "Yapı Kredi",
       "unit": "TRY",
-      "current": 37.72,
-      "change_1d_pct": 0.37,
-      "change_1w_pct": 0.21,
-      "change_1m_pct": 7.83,
-      "change_3m_pct": 0.48,
-      "change_ytd_pct": -1.05,
-      "change_1y_pct": 1646.3,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-YKBNK.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-YKBNK.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-YKBNK--big.svg",
+        "https://s3-symbol-logo.tradingview.com/ykbnk.svg",
+        "https://s3-symbol-logo.tradingview.com/ykbnk--big.svg"
+      ],
+      "current": 37.64,
+      "change_1d_pct": 0.16,
+      "change_1w_pct": 0.0,
+      "change_1m_pct": 7.6,
+      "change_3m_pct": 0.27,
+      "change_ytd_pct": -1.26,
+      "change_1y_pct": 1642.59,
       "high_52w": 44.02,
       "low_52w": 2.07,
       "data": [
@@ -15055,7 +15079,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 37.72
+          "value": 37.64
         }
       ]
     },
@@ -15063,13 +15087,21 @@
       "id": "ISCTR.IS",
       "name": "İş Bankası C",
       "unit": "TRY",
-      "current": 14.64,
-      "change_1d_pct": 0.62,
-      "change_1w_pct": 1.88,
-      "change_1m_pct": 3.76,
-      "change_3m_pct": 0.34,
-      "change_ytd_pct": 1.81,
-      "change_1y_pct": 1556.48,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-ISCTR.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-ISCTR.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-ISCTR--big.svg",
+        "https://s3-symbol-logo.tradingview.com/isctr.svg",
+        "https://s3-symbol-logo.tradingview.com/isctr--big.svg"
+      ],
+      "current": 14.6,
+      "change_1d_pct": 0.34,
+      "change_1w_pct": 1.6,
+      "change_1m_pct": 3.47,
+      "change_3m_pct": 0.07,
+      "change_ytd_pct": 1.53,
+      "change_1y_pct": 1551.96,
       "high_52w": 18.15,
       "low_52w": 0.8586,
       "data": [
@@ -20071,7 +20103,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 14.64
+          "value": 14.6
         }
       ]
     },
@@ -20079,13 +20111,21 @@
       "id": "VAKBN.IS",
       "name": "VakıfBank",
       "unit": "TRY",
-      "current": 34.26,
-      "change_1d_pct": 0.41,
-      "change_1w_pct": 1.6,
-      "change_1m_pct": 7.53,
-      "change_3m_pct": 7.33,
-      "change_ytd_pct": 8.14,
-      "change_1y_pct": 884.48,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-VAKBN.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-VAKBN.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-VAKBN--big.svg",
+        "https://s3-symbol-logo.tradingview.com/vakbn.svg",
+        "https://s3-symbol-logo.tradingview.com/vakbn--big.svg"
+      ],
+      "current": 34.08,
+      "change_1d_pct": -0.12,
+      "change_1w_pct": 1.07,
+      "change_1m_pct": 6.97,
+      "change_3m_pct": 6.77,
+      "change_ytd_pct": 7.58,
+      "change_1y_pct": 879.31,
       "high_52w": 42.22,
       "low_52w": 3.22,
       "data": [
@@ -25087,7 +25127,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 34.26
+          "value": 34.08
         }
       ]
     },
@@ -25095,13 +25135,21 @@
       "id": "HALKB.IS",
       "name": "Halkbank",
       "unit": "TRY",
-      "current": 40.2,
-      "change_1d_pct": 0.35,
-      "change_1w_pct": 3.93,
-      "change_1m_pct": 1.26,
-      "change_3m_pct": -2.52,
-      "change_ytd_pct": 4.31,
-      "change_1y_pct": 807.45,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-HALKB.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-HALKB.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-HALKB--big.svg",
+        "https://s3-symbol-logo.tradingview.com/halkb.svg",
+        "https://s3-symbol-logo.tradingview.com/halkb--big.svg"
+      ],
+      "current": 40.08,
+      "change_1d_pct": 0.05,
+      "change_1w_pct": 3.62,
+      "change_1m_pct": 0.96,
+      "change_3m_pct": -2.81,
+      "change_ytd_pct": 4.0,
+      "change_1y_pct": 804.74,
       "high_52w": 50.35,
       "low_52w": 4.18,
       "data": [
@@ -30103,7 +30151,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 40.2
+          "value": 40.08
         }
       ]
     },
@@ -30111,13 +30159,21 @@
       "id": "TSKB.IS",
       "name": "TSKB",
       "unit": "TRY",
-      "current": 12.3,
-      "change_1d_pct": 0.24,
-      "change_1w_pct": 2.5,
-      "change_1m_pct": -0.24,
-      "change_3m_pct": -7.87,
-      "change_ytd_pct": -4.21,
-      "change_1y_pct": 846.15,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-TSKB.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-TSKB.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-TSKB--big.svg",
+        "https://s3-symbol-logo.tradingview.com/tskb.svg",
+        "https://s3-symbol-logo.tradingview.com/tskb--big.svg"
+      ],
+      "current": 12.29,
+      "change_1d_pct": 0.16,
+      "change_1w_pct": 2.42,
+      "change_1m_pct": -0.32,
+      "change_3m_pct": -7.94,
+      "change_ytd_pct": -4.28,
+      "change_1y_pct": 845.38,
       "high_52w": 14.53,
       "low_52w": 1.18,
       "data": [
@@ -35119,7 +35175,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 12.3
+          "value": 12.29
         }
       ]
     },
@@ -35127,13 +35183,21 @@
       "id": "ALBRK.IS",
       "name": "Albaraka Türk",
       "unit": "TRY",
-      "current": 9.09,
-      "change_1d_pct": -0.22,
-      "change_1w_pct": 4.0,
-      "change_1m_pct": 11.12,
-      "change_3m_pct": 11.26,
-      "change_ytd_pct": 12.22,
-      "change_1y_pct": 597.94,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-ALBRK.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-ALBRK.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-ALBRK--big.svg",
+        "https://s3-symbol-logo.tradingview.com/albrk.svg",
+        "https://s3-symbol-logo.tradingview.com/albrk--big.svg"
+      ],
+      "current": 9.12,
+      "change_1d_pct": 0.11,
+      "change_1w_pct": 4.35,
+      "change_1m_pct": 11.49,
+      "change_3m_pct": 11.63,
+      "change_ytd_pct": 12.59,
+      "change_1y_pct": 600.25,
       "high_52w": 10.28,
       "low_52w": 1.1594,
       "data": [
@@ -40135,7 +40199,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 9.09
+          "value": 9.12
         }
       ]
     },
@@ -40143,14 +40207,22 @@
       "id": "SKBNK.IS",
       "name": "Şekerbank",
       "unit": "TRY",
-      "current": 12.95,
-      "change_1d_pct": 0.15,
-      "change_1w_pct": 8.73,
-      "change_1m_pct": 18.81,
-      "change_3m_pct": 66.88,
-      "change_ytd_pct": 66.45,
-      "change_1y_pct": 1046.02,
-      "high_52w": 12.95,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-SKBNK.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-SKBNK.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-SKBNK--big.svg",
+        "https://s3-symbol-logo.tradingview.com/skbnk.svg",
+        "https://s3-symbol-logo.tradingview.com/skbnk--big.svg"
+      ],
+      "current": 12.94,
+      "change_1d_pct": 0.08,
+      "change_1w_pct": 8.65,
+      "change_1m_pct": 18.72,
+      "change_3m_pct": 66.75,
+      "change_ytd_pct": 66.32,
+      "change_1y_pct": 1045.13,
+      "high_52w": 12.94,
       "low_52w": 0.92,
       "data": [
         {
@@ -45151,7 +45223,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 12.95
+          "value": 12.94
         }
       ]
     },
@@ -45159,13 +45231,21 @@
       "id": "KCHOL.IS",
       "name": "Koç Holding",
       "unit": "TRY",
-      "current": 207.8,
-      "change_1d_pct": 0.0,
-      "change_1w_pct": 4.11,
-      "change_1m_pct": 7.56,
-      "change_3m_pct": 10.59,
-      "change_ytd_pct": 18.88,
-      "change_1y_pct": 1043.01,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-KCHOL.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-KCHOL.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-KCHOL--big.svg",
+        "https://s3-symbol-logo.tradingview.com/kchol.svg",
+        "https://s3-symbol-logo.tradingview.com/kchol--big.svg"
+      ],
+      "current": 207.2,
+      "change_1d_pct": -0.29,
+      "change_1w_pct": 3.81,
+      "change_1m_pct": 7.25,
+      "change_3m_pct": 10.27,
+      "change_ytd_pct": 18.54,
+      "change_1y_pct": 1039.71,
       "high_52w": 263.75,
       "low_52w": 17.09,
       "data": [
@@ -50167,7 +50247,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 207.8
+          "value": 207.2
         }
       ]
     },
@@ -50175,13 +50255,21 @@
       "id": "SAHOL.IS",
       "name": "Sabancı Holding",
       "unit": "TRY",
-      "current": 100.5,
-      "change_1d_pct": -0.1,
-      "change_1w_pct": 3.02,
-      "change_1m_pct": 6.86,
-      "change_3m_pct": 7.49,
-      "change_ytd_pct": 14.33,
-      "change_1y_pct": 1125.61,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-SAHOL.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-SAHOL.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-SAHOL--big.svg",
+        "https://s3-symbol-logo.tradingview.com/sahol.svg",
+        "https://s3-symbol-logo.tradingview.com/sahol--big.svg"
+      ],
+      "current": 100.3,
+      "change_1d_pct": -0.3,
+      "change_1w_pct": 2.82,
+      "change_1m_pct": 6.65,
+      "change_3m_pct": 7.27,
+      "change_ytd_pct": 14.11,
+      "change_1y_pct": 1123.17,
       "high_52w": 112.6,
       "low_52w": 7.79,
       "data": [
@@ -55183,7 +55271,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 100.5
+          "value": 100.3
         }
       ]
     },
@@ -55191,13 +55279,21 @@
       "id": "DOHOL.IS",
       "name": "Doğan Holding",
       "unit": "TRY",
-      "current": 21.88,
-      "change_1d_pct": 0.83,
-      "change_1w_pct": 5.29,
-      "change_1m_pct": 4.19,
-      "change_3m_pct": 17.07,
-      "change_ytd_pct": 25.24,
-      "change_1y_pct": 590.22,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-DOHOL.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-DOHOL.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-DOHOL--big.svg",
+        "https://s3-symbol-logo.tradingview.com/dohol.svg",
+        "https://s3-symbol-logo.tradingview.com/dohol--big.svg"
+      ],
+      "current": 21.82,
+      "change_1d_pct": 0.55,
+      "change_1w_pct": 5.0,
+      "change_1m_pct": 3.9,
+      "change_3m_pct": 16.75,
+      "change_ytd_pct": 24.9,
+      "change_1y_pct": 588.33,
       "high_52w": 22.24,
       "low_52w": 2.47,
       "data": [
@@ -60199,7 +60295,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 21.88
+          "value": 21.82
         }
       ]
     },
@@ -60207,13 +60303,21 @@
       "id": "AGHOL.IS",
       "name": "AG Anadolu Grubu",
       "unit": "TRY",
-      "current": 31.22,
-      "change_1d_pct": 0.39,
-      "change_1w_pct": 7.43,
-      "change_1m_pct": 9.16,
-      "change_3m_pct": -0.83,
-      "change_ytd_pct": 6.41,
-      "change_1y_pct": 1349.4,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-AGHOL.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-AGHOL.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-AGHOL--big.svg",
+        "https://s3-symbol-logo.tradingview.com/aghol.svg",
+        "https://s3-symbol-logo.tradingview.com/aghol--big.svg"
+      ],
+      "current": 31.26,
+      "change_1d_pct": 0.51,
+      "change_1w_pct": 7.57,
+      "change_1m_pct": 9.3,
+      "change_3m_pct": -0.7,
+      "change_ytd_pct": 6.54,
+      "change_1y_pct": 1351.25,
       "high_52w": 46.65,
       "low_52w": 1.978,
       "data": [
@@ -65219,7 +65323,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 31.22
+          "value": 31.26
         }
       ]
     },
@@ -65227,13 +65331,21 @@
       "id": "TKFEN.IS",
       "name": "Tekfen Holding",
       "unit": "TRY",
-      "current": 119.7,
-      "change_1d_pct": -1.16,
-      "change_1w_pct": 10.53,
-      "change_1m_pct": 42.93,
-      "change_3m_pct": 68.83,
-      "change_ytd_pct": 64.31,
-      "change_1y_pct": 656.64,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-TKFEN.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-TKFEN.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-TKFEN--big.svg",
+        "https://s3-symbol-logo.tradingview.com/tkfen.svg",
+        "https://s3-symbol-logo.tradingview.com/tkfen--big.svg"
+      ],
+      "current": 120.1,
+      "change_1d_pct": -0.83,
+      "change_1w_pct": 10.9,
+      "change_1m_pct": 43.4,
+      "change_3m_pct": 69.39,
+      "change_ytd_pct": 64.86,
+      "change_1y_pct": 659.17,
       "high_52w": 150.0,
       "low_52w": 13.54,
       "data": [
@@ -70239,7 +70351,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 119.7
+          "value": 120.1
         }
       ]
     },
@@ -70247,13 +70359,21 @@
       "id": "TAVHL.IS",
       "name": "TAV Havalimanları",
       "unit": "TRY",
-      "current": 326.5,
-      "change_1d_pct": 1.56,
-      "change_1w_pct": -4.32,
-      "change_1m_pct": 12.59,
-      "change_3m_pct": 1.16,
-      "change_ytd_pct": 5.07,
-      "change_1y_pct": 1532.5,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-TAVHL.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-TAVHL.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-TAVHL--big.svg",
+        "https://s3-symbol-logo.tradingview.com/tavhl.svg",
+        "https://s3-symbol-logo.tradingview.com/tavhl--big.svg"
+      ],
+      "current": 324.5,
+      "change_1d_pct": 0.93,
+      "change_1w_pct": -4.91,
+      "change_1m_pct": 11.9,
+      "change_3m_pct": 0.54,
+      "change_ytd_pct": 4.42,
+      "change_1y_pct": 1522.5,
       "high_52w": 366.75,
       "low_52w": 18.02,
       "data": [
@@ -75255,7 +75375,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 326.5
+          "value": 324.5
         }
       ]
     },
@@ -75263,13 +75383,21 @@
       "id": "GSRAY.IS",
       "name": "Galatasaray",
       "unit": "TRY",
-      "current": 1.12,
-      "change_1d_pct": -0.88,
-      "change_1w_pct": 0.0,
-      "change_1m_pct": -1.75,
-      "change_3m_pct": -3.45,
-      "change_ytd_pct": -4.27,
-      "change_1y_pct": -37.0,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-GSRAY.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-GSRAY.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-GSRAY--big.svg",
+        "https://s3-symbol-logo.tradingview.com/gsray.svg",
+        "https://s3-symbol-logo.tradingview.com/gsray--big.svg"
+      ],
+      "current": 1.13,
+      "change_1d_pct": 0.0,
+      "change_1w_pct": 0.89,
+      "change_1m_pct": -0.88,
+      "change_3m_pct": -2.59,
+      "change_ytd_pct": -3.42,
+      "change_1y_pct": -36.44,
       "high_52w": 10.13,
       "low_52w": 1.02,
       "data": [
@@ -80271,7 +80399,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 1.12
+          "value": 1.13
         }
       ]
     },
@@ -80279,13 +80407,21 @@
       "id": "EREGL.IS",
       "name": "Ereğli Demir Çelik",
       "unit": "TRY",
-      "current": 31.7,
-      "change_1d_pct": 0.19,
-      "change_1w_pct": 5.32,
-      "change_1m_pct": 12.57,
-      "change_3m_pct": 26.09,
-      "change_ytd_pct": 30.88,
-      "change_1y_pct": 245.69,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-EREGL.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-EREGL.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-EREGL--big.svg",
+        "https://s3-symbol-logo.tradingview.com/eregl.svg",
+        "https://s3-symbol-logo.tradingview.com/eregl--big.svg"
+      ],
+      "current": 31.64,
+      "change_1d_pct": 0.0,
+      "change_1w_pct": 5.12,
+      "change_1m_pct": 12.36,
+      "change_3m_pct": 25.86,
+      "change_ytd_pct": 30.64,
+      "change_1y_pct": 245.04,
       "high_52w": 32.66,
       "low_52w": 8.03,
       "data": [
@@ -85291,7 +85427,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 31.7
+          "value": 31.64
         }
       ]
     },
@@ -85299,13 +85435,21 @@
       "id": "TUPRS.IS",
       "name": "Tüpraş",
       "unit": "TRY",
-      "current": 263.75,
-      "change_1d_pct": 0.96,
-      "change_1w_pct": 3.43,
-      "change_1m_pct": 3.43,
-      "change_3m_pct": 26.56,
-      "change_ytd_pct": 41.04,
-      "change_1y_pct": 1968.63,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-TUPRS.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-TUPRS.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-TUPRS--big.svg",
+        "https://s3-symbol-logo.tradingview.com/tuprs.svg",
+        "https://s3-symbol-logo.tradingview.com/tuprs--big.svg"
+      ],
+      "current": 264.5,
+      "change_1d_pct": 1.24,
+      "change_1w_pct": 3.73,
+      "change_1m_pct": 3.73,
+      "change_3m_pct": 26.92,
+      "change_ytd_pct": 41.44,
+      "change_1y_pct": 1974.51,
       "high_52w": 267.5,
       "low_52w": 12.1429,
       "data": [
@@ -90307,7 +90451,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 263.75
+          "value": 264.5
         }
       ]
     },
@@ -90315,13 +90459,21 @@
       "id": "ASELS.IS",
       "name": "ASELSAN",
       "unit": "TRY",
-      "current": 415.25,
-      "change_1d_pct": -0.36,
-      "change_1w_pct": 10.22,
-      "change_1m_pct": 29.56,
-      "change_3m_pct": 43.31,
-      "change_ytd_pct": 80.39,
-      "change_1y_pct": 5360.22,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-ASELS.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-ASELS.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-ASELS--big.svg",
+        "https://s3-symbol-logo.tradingview.com/asels.svg",
+        "https://s3-symbol-logo.tradingview.com/asels--big.svg"
+      ],
+      "current": 415.5,
+      "change_1d_pct": -0.3,
+      "change_1w_pct": 10.29,
+      "change_1m_pct": 29.64,
+      "change_3m_pct": 43.4,
+      "change_ytd_pct": 80.5,
+      "change_1y_pct": 5363.51,
       "high_52w": 416.75,
       "low_52w": 7.11,
       "data": [
@@ -95323,7 +95475,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 415.25
+          "value": 415.5
         }
       ]
     },
@@ -95331,13 +95483,21 @@
       "id": "FROTO.IS",
       "name": "Ford Otosan",
       "unit": "TRY",
-      "current": 108.2,
-      "change_1d_pct": 1.31,
-      "change_1w_pct": 5.87,
-      "change_1m_pct": 2.46,
-      "change_3m_pct": 7.23,
-      "change_ytd_pct": 13.18,
-      "change_1y_pct": 484.23,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-FROTO.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-FROTO.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-FROTO--big.svg",
+        "https://s3-symbol-logo.tradingview.com/froto.svg",
+        "https://s3-symbol-logo.tradingview.com/froto--big.svg"
+      ],
+      "current": 107.9,
+      "change_1d_pct": 1.03,
+      "change_1w_pct": 5.58,
+      "change_1m_pct": 2.18,
+      "change_3m_pct": 6.94,
+      "change_ytd_pct": 12.87,
+      "change_1y_pct": 482.61,
       "high_52w": 134.3,
       "low_52w": 15.2,
       "data": [
@@ -100343,7 +100503,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 108.2
+          "value": 107.9
         }
       ]
     },
@@ -100351,13 +100511,21 @@
       "id": "TOASO.IS",
       "name": "Tofaş Oto.",
       "unit": "TRY",
-      "current": 298.0,
-      "change_1d_pct": -0.33,
-      "change_1w_pct": 7.39,
-      "change_1m_pct": -2.21,
-      "change_3m_pct": 5.21,
-      "change_ytd_pct": 15.17,
-      "change_1y_pct": 866.28,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-TOASO.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-TOASO.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-TOASO--big.svg",
+        "https://s3-symbol-logo.tradingview.com/toaso.svg",
+        "https://s3-symbol-logo.tradingview.com/toaso--big.svg"
+      ],
+      "current": 296.75,
+      "change_1d_pct": -0.75,
+      "change_1w_pct": 6.94,
+      "change_1m_pct": -2.63,
+      "change_3m_pct": 4.77,
+      "change_ytd_pct": 14.69,
+      "change_1y_pct": 862.22,
       "high_52w": 350.5,
       "low_52w": 27.68,
       "data": [
@@ -105359,7 +105527,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 298.0
+          "value": 296.75
         }
       ]
     },
@@ -105367,13 +105535,21 @@
       "id": "SISE.IS",
       "name": "Şişecam",
       "unit": "TRY",
-      "current": 48.7,
-      "change_1d_pct": 1.0,
-      "change_1w_pct": 4.91,
-      "change_1m_pct": 14.64,
-      "change_3m_pct": 24.3,
-      "change_ytd_pct": 24.43,
-      "change_1y_pct": 562.59,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-SISE.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-SISE.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-SISE--big.svg",
+        "https://s3-symbol-logo.tradingview.com/sise.svg",
+        "https://s3-symbol-logo.tradingview.com/sise--big.svg"
+      ],
+      "current": 48.38,
+      "change_1d_pct": 0.33,
+      "change_1w_pct": 4.22,
+      "change_1m_pct": 13.89,
+      "change_3m_pct": 23.48,
+      "change_ytd_pct": 23.61,
+      "change_1y_pct": 558.23,
       "high_52w": 56.6,
       "low_52w": 7.13,
       "data": [
@@ -110375,7 +110551,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 48.7
+          "value": 48.38
         }
       ]
     },
@@ -110383,6 +110559,14 @@
       "id": "ARCLK.IS",
       "name": "Arçelik",
       "unit": "TRY",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-ARCLK.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-ARCLK.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-ARCLK--big.svg",
+        "https://s3-symbol-logo.tradingview.com/arclk.svg",
+        "https://s3-symbol-logo.tradingview.com/arclk--big.svg"
+      ],
       "current": 118.1,
       "change_1d_pct": -0.42,
       "change_1w_pct": 4.14,
@@ -115399,13 +115583,21 @@
       "id": "VESTL.IS",
       "name": "Vestel",
       "unit": "TRY",
-      "current": 28.86,
-      "change_1d_pct": 0.7,
-      "change_1w_pct": 4.87,
-      "change_1m_pct": 1.62,
-      "change_3m_pct": 0.42,
-      "change_ytd_pct": -1.9,
-      "change_1y_pct": -11.74,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-VESTL.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-VESTL.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-VESTL--big.svg",
+        "https://s3-symbol-logo.tradingview.com/vestl.svg",
+        "https://s3-symbol-logo.tradingview.com/vestl--big.svg"
+      ],
+      "current": 28.9,
+      "change_1d_pct": 0.84,
+      "change_1w_pct": 5.01,
+      "change_1m_pct": 1.76,
+      "change_3m_pct": 0.56,
+      "change_ytd_pct": -1.77,
+      "change_1y_pct": -11.62,
       "high_52w": 103.0,
       "low_52w": 20.8,
       "data": [
@@ -120407,7 +120599,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 28.86
+          "value": 28.9
         }
       ]
     },
@@ -120415,13 +120607,21 @@
       "id": "OTKAR.IS",
       "name": "Otokar",
       "unit": "TRY",
-      "current": 400.75,
-      "change_1d_pct": 0.82,
-      "change_1w_pct": 2.82,
-      "change_1m_pct": 8.75,
-      "change_3m_pct": -23.67,
-      "change_ytd_pct": -16.68,
-      "change_1y_pct": 476.95,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-OTKAR.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-OTKAR.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-OTKAR--big.svg",
+        "https://s3-symbol-logo.tradingview.com/otkar.svg",
+        "https://s3-symbol-logo.tradingview.com/otkar--big.svg"
+      ],
+      "current": 400.5,
+      "change_1d_pct": 0.75,
+      "change_1w_pct": 2.76,
+      "change_1m_pct": 8.68,
+      "change_3m_pct": -23.71,
+      "change_ytd_pct": -16.74,
+      "change_1y_pct": 476.59,
       "high_52w": 659.0,
       "low_52w": 52.7,
       "data": [
@@ -125415,7 +125615,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 400.75
+          "value": 400.5
         }
       ]
     },
@@ -125423,13 +125623,21 @@
       "id": "KRDMD.IS",
       "name": "Kardemir D",
       "unit": "TRY",
-      "current": 36.38,
-      "change_1d_pct": -0.22,
-      "change_1w_pct": -0.82,
-      "change_1m_pct": 21.19,
-      "change_3m_pct": 32.29,
-      "change_ytd_pct": 39.49,
-      "change_1y_pct": 388.98,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-KRDMD.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-KRDMD.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-KRDMD--big.svg",
+        "https://s3-symbol-logo.tradingview.com/krdmd.svg",
+        "https://s3-symbol-logo.tradingview.com/krdmd--big.svg"
+      ],
+      "current": 36.24,
+      "change_1d_pct": -0.6,
+      "change_1w_pct": -1.2,
+      "change_1m_pct": 20.72,
+      "change_3m_pct": 31.78,
+      "change_ytd_pct": 38.96,
+      "change_1y_pct": 387.1,
       "high_52w": 36.68,
       "low_52w": 6.11,
       "data": [
@@ -130431,7 +130639,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 36.38
+          "value": 36.24
         }
       ]
     },
@@ -130439,13 +130647,21 @@
       "id": "TTRAK.IS",
       "name": "Türk Traktör",
       "unit": "TRY",
-      "current": 490.0,
-      "change_1d_pct": -0.05,
-      "change_1w_pct": 5.72,
-      "change_1m_pct": 6.75,
-      "change_3m_pct": -12.42,
-      "change_ytd_pct": -6.67,
-      "change_1y_pct": 327.92,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-TTRAK.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-TTRAK.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-TTRAK--big.svg",
+        "https://s3-symbol-logo.tradingview.com/ttrak.svg",
+        "https://s3-symbol-logo.tradingview.com/ttrak--big.svg"
+      ],
+      "current": 488.5,
+      "change_1d_pct": -0.36,
+      "change_1w_pct": 5.39,
+      "change_1m_pct": 6.43,
+      "change_3m_pct": -12.69,
+      "change_ytd_pct": -6.95,
+      "change_1y_pct": 326.61,
       "high_52w": 1063.0,
       "low_52w": 79.84,
       "data": [
@@ -135447,7 +135663,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 490.0
+          "value": 488.5
         }
       ]
     },
@@ -135455,6 +135671,14 @@
       "id": "BRISA.IS",
       "name": "Brisa",
       "unit": "TRY",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-BRISA.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-BRISA.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-BRISA--big.svg",
+        "https://s3-symbol-logo.tradingview.com/brisa.svg",
+        "https://s3-symbol-logo.tradingview.com/brisa--big.svg"
+      ],
       "current": 87.15,
       "change_1d_pct": 0.58,
       "change_1w_pct": 3.87,
@@ -140471,13 +140695,21 @@
       "id": "PETKM.IS",
       "name": "Petkim",
       "unit": "TRY",
-      "current": 22.22,
-      "change_1d_pct": 1.0,
-      "change_1w_pct": 3.83,
-      "change_1m_pct": 12.22,
-      "change_3m_pct": 31.4,
-      "change_ytd_pct": 34.02,
-      "change_1y_pct": 251.03,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-PETKM.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-PETKM.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-PETKM--big.svg",
+        "https://s3-symbol-logo.tradingview.com/petkm.svg",
+        "https://s3-symbol-logo.tradingview.com/petkm--big.svg"
+      ],
+      "current": 22.12,
+      "change_1d_pct": 0.55,
+      "change_1w_pct": 3.36,
+      "change_1m_pct": 11.72,
+      "change_3m_pct": 30.81,
+      "change_ytd_pct": 33.41,
+      "change_1y_pct": 249.45,
       "high_52w": 25.98,
       "low_52w": 5.23,
       "data": [
@@ -145479,7 +145711,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 22.22
+          "value": 22.12
         }
       ]
     },
@@ -145487,14 +145719,22 @@
       "id": "ENKAI.IS",
       "name": "Enka İnşaat",
       "unit": "TRY",
-      "current": 104.7,
-      "change_1d_pct": 0.48,
-      "change_1w_pct": 10.5,
-      "change_1m_pct": 11.09,
-      "change_3m_pct": 29.34,
-      "change_ytd_pct": 30.71,
-      "change_1y_pct": 1284.92,
-      "high_52w": 104.7,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-ENKAI.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-ENKAI.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-ENKAI--big.svg",
+        "https://s3-symbol-logo.tradingview.com/enkai.svg",
+        "https://s3-symbol-logo.tradingview.com/enkai--big.svg"
+      ],
+      "current": 104.9,
+      "change_1d_pct": 0.67,
+      "change_1w_pct": 10.71,
+      "change_1m_pct": 11.3,
+      "change_3m_pct": 29.59,
+      "change_ytd_pct": 30.96,
+      "change_1y_pct": 1287.57,
+      "high_52w": 104.9,
       "low_52w": 6.972,
       "data": [
         {
@@ -150495,7 +150735,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 104.7
+          "value": 104.9
         }
       ]
     },
@@ -150503,13 +150743,21 @@
       "id": "CIMSA.IS",
       "name": "Çimsa",
       "unit": "TRY",
-      "current": 53.4,
-      "change_1d_pct": 0.66,
-      "change_1w_pct": 2.69,
-      "change_1m_pct": 7.49,
-      "change_3m_pct": 15.33,
-      "change_ytd_pct": 17.26,
-      "change_1y_pct": 1702.29,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-CIMSA.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-CIMSA.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-CIMSA--big.svg",
+        "https://s3-symbol-logo.tradingview.com/cimsa.svg",
+        "https://s3-symbol-logo.tradingview.com/cimsa--big.svg"
+      ],
+      "current": 53.25,
+      "change_1d_pct": 0.38,
+      "change_1w_pct": 2.4,
+      "change_1m_pct": 7.19,
+      "change_3m_pct": 15.01,
+      "change_ytd_pct": 16.93,
+      "change_1y_pct": 1697.23,
       "high_52w": 56.5,
       "low_52w": 2.7429,
       "data": [
@@ -155511,7 +155759,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 53.4
+          "value": 53.25
         }
       ]
     },
@@ -155519,13 +155767,21 @@
       "id": "OYAKC.IS",
       "name": "Oyak Çimento",
       "unit": "TRY",
-      "current": 25.96,
-      "change_1d_pct": 1.8,
-      "change_1w_pct": 3.26,
-      "change_1m_pct": 11.8,
-      "change_3m_pct": 5.19,
-      "change_ytd_pct": 10.28,
-      "change_1y_pct": 1296.45,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-OYAKC.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-OYAKC.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-OYAKC--big.svg",
+        "https://s3-symbol-logo.tradingview.com/oyakc.svg",
+        "https://s3-symbol-logo.tradingview.com/oyakc--big.svg"
+      ],
+      "current": 25.88,
+      "change_1d_pct": 1.49,
+      "change_1w_pct": 2.94,
+      "change_1m_pct": 11.46,
+      "change_3m_pct": 4.86,
+      "change_ytd_pct": 9.94,
+      "change_1y_pct": 1292.15,
       "high_52w": 32.18,
       "low_52w": 1.6359,
       "data": [
@@ -160531,7 +160787,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 25.96
+          "value": 25.88
         }
       ]
     },
@@ -160539,13 +160795,21 @@
       "id": "SASA.IS",
       "name": "SASA Polyester",
       "unit": "TRY",
-      "current": 3.1,
-      "change_1d_pct": 3.68,
-      "change_1w_pct": 26.53,
-      "change_1m_pct": 25.0,
-      "change_3m_pct": 30.8,
-      "change_ytd_pct": 7.27,
-      "change_1y_pct": 246.87,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-SASA.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-SASA.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-SASA--big.svg",
+        "https://s3-symbol-logo.tradingview.com/sasa.svg",
+        "https://s3-symbol-logo.tradingview.com/sasa--big.svg"
+      ],
+      "current": 3.11,
+      "change_1d_pct": 4.01,
+      "change_1w_pct": 26.94,
+      "change_1m_pct": 25.4,
+      "change_3m_pct": 31.22,
+      "change_ytd_pct": 7.61,
+      "change_1y_pct": 247.99,
       "high_52w": 9.9982,
       "low_52w": 0.6982,
       "data": [
@@ -165551,7 +165815,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 3.1
+          "value": 3.11
         }
       ]
     },
@@ -165559,13 +165823,21 @@
       "id": "EGEEN.IS",
       "name": "Ege Endüstri",
       "unit": "TRY",
-      "current": 6522.5,
-      "change_1d_pct": 0.5,
-      "change_1w_pct": 17.63,
-      "change_1m_pct": 13.43,
-      "change_3m_pct": -16.43,
-      "change_ytd_pct": -19.25,
-      "change_1y_pct": 359.43,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-EGEEN.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-EGEEN.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-EGEEN--big.svg",
+        "https://s3-symbol-logo.tradingview.com/egeen.svg",
+        "https://s3-symbol-logo.tradingview.com/egeen--big.svg"
+      ],
+      "current": 6472.5,
+      "change_1d_pct": -0.27,
+      "change_1w_pct": 16.73,
+      "change_1m_pct": 12.57,
+      "change_3m_pct": -17.07,
+      "change_ytd_pct": -19.87,
+      "change_1y_pct": 355.91,
       "high_52w": 17500.0,
       "low_52w": 1105.9,
       "data": [
@@ -170567,7 +170839,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 6522.5
+          "value": 6472.5
         }
       ]
     },
@@ -170575,13 +170847,21 @@
       "id": "CEMTS.IS",
       "name": "Çemtaş Çelik",
       "unit": "TRY",
-      "current": 11.21,
-      "change_1d_pct": 0.54,
-      "change_1w_pct": 5.85,
-      "change_1m_pct": 7.68,
-      "change_3m_pct": -0.27,
-      "change_ytd_pct": -1.58,
-      "change_1y_pct": 224.61,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-CEMTS.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-CEMTS.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-CEMTS--big.svg",
+        "https://s3-symbol-logo.tradingview.com/cemts.svg",
+        "https://s3-symbol-logo.tradingview.com/cemts--big.svg"
+      ],
+      "current": 11.15,
+      "change_1d_pct": 0.0,
+      "change_1w_pct": 5.29,
+      "change_1m_pct": 7.11,
+      "change_3m_pct": -0.8,
+      "change_ytd_pct": -2.11,
+      "change_1y_pct": 222.87,
       "high_52w": 17.3,
       "low_52w": 2.4295,
       "data": [
@@ -175583,7 +175863,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 11.21
+          "value": 11.15
         }
       ]
     },
@@ -175591,13 +175871,21 @@
       "id": "KLMSN.IS",
       "name": "Klimasan",
       "unit": "TRY",
-      "current": 35.48,
-      "change_1d_pct": -1.66,
-      "change_1w_pct": 9.91,
-      "change_1m_pct": 21.59,
-      "change_3m_pct": 23.8,
-      "change_ytd_pct": 11.92,
-      "change_1y_pct": 185.9,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-KLMSN.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-KLMSN.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-KLMSN--big.svg",
+        "https://s3-symbol-logo.tradingview.com/klmsn.svg",
+        "https://s3-symbol-logo.tradingview.com/klmsn--big.svg"
+      ],
+      "current": 35.42,
+      "change_1d_pct": -1.83,
+      "change_1w_pct": 9.73,
+      "change_1m_pct": 21.38,
+      "change_3m_pct": 23.59,
+      "change_ytd_pct": 11.74,
+      "change_1y_pct": 185.41,
       "high_52w": 50.25,
       "low_52w": 9.44,
       "data": [
@@ -180599,7 +180887,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 35.48
+          "value": 35.42
         }
       ]
     },
@@ -180607,13 +180895,21 @@
       "id": "THYAO.IS",
       "name": "THY",
       "unit": "TRY",
-      "current": 321.5,
-      "change_1d_pct": 0.7,
-      "change_1w_pct": 0.63,
-      "change_1m_pct": 10.86,
-      "change_3m_pct": 12.02,
-      "change_ytd_pct": 17.23,
-      "change_1y_pct": 2659.66,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-THYAO.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-THYAO.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-THYAO--big.svg",
+        "https://s3-symbol-logo.tradingview.com/thyao.svg",
+        "https://s3-symbol-logo.tradingview.com/thyao--big.svg"
+      ],
+      "current": 321.75,
+      "change_1d_pct": 0.78,
+      "change_1w_pct": 0.7,
+      "change_1m_pct": 10.95,
+      "change_3m_pct": 12.11,
+      "change_ytd_pct": 17.32,
+      "change_1y_pct": 2661.8,
       "high_52w": 347.75,
       "low_52w": 10.9,
       "data": [
@@ -185615,7 +185911,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 321.5
+          "value": 321.75
         }
       ]
     },
@@ -185623,13 +185919,21 @@
       "id": "PGSUS.IS",
       "name": "Pegasus",
       "unit": "TRY",
-      "current": 189.9,
-      "change_1d_pct": 0.85,
-      "change_1w_pct": 2.48,
-      "change_1m_pct": 7.35,
-      "change_3m_pct": -5.66,
-      "change_ytd_pct": -2.62,
-      "change_1y_pct": 1283.24,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-PGSUS.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-PGSUS.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-PGSUS--big.svg",
+        "https://s3-symbol-logo.tradingview.com/pgsus.svg",
+        "https://s3-symbol-logo.tradingview.com/pgsus--big.svg"
+      ],
+      "current": 189.4,
+      "change_1d_pct": 0.58,
+      "change_1w_pct": 2.21,
+      "change_1m_pct": 7.07,
+      "change_3m_pct": -5.91,
+      "change_ytd_pct": -2.87,
+      "change_1y_pct": 1279.6,
       "high_52w": 282.75,
       "low_52w": 12.4396,
       "data": [
@@ -190635,7 +190939,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 189.9
+          "value": 189.4
         }
       ]
     },
@@ -190643,13 +190947,21 @@
       "id": "DOAS.IS",
       "name": "Doğuş Otomotiv",
       "unit": "TRY",
-      "current": 191.1,
-      "change_1d_pct": 0.26,
-      "change_1w_pct": -5.82,
-      "change_1m_pct": -2.45,
-      "change_3m_pct": -11.81,
-      "change_ytd_pct": -0.98,
-      "change_1y_pct": 557.6,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-DOAS.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-DOAS.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-DOAS--big.svg",
+        "https://s3-symbol-logo.tradingview.com/doas.svg",
+        "https://s3-symbol-logo.tradingview.com/doas--big.svg"
+      ],
+      "current": 190.6,
+      "change_1d_pct": 0.0,
+      "change_1w_pct": -6.06,
+      "change_1m_pct": -2.71,
+      "change_3m_pct": -12.04,
+      "change_ytd_pct": -1.24,
+      "change_1y_pct": 555.88,
       "high_52w": 399.75,
       "low_52w": 22.3,
       "data": [
@@ -195651,7 +195963,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 191.1
+          "value": 190.6
         }
       ]
     },
@@ -195659,14 +195971,22 @@
       "id": "BIMAS.IS",
       "name": "BİM Mağazaları",
       "unit": "TRY",
-      "current": 758.0,
-      "change_1d_pct": 0.66,
-      "change_1w_pct": 2.57,
-      "change_1m_pct": 10.98,
-      "change_3m_pct": 17.88,
-      "change_ytd_pct": 39.59,
-      "change_1y_pct": 1003.35,
-      "high_52w": 758.0,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-BIMAS.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-BIMAS.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-BIMAS--big.svg",
+        "https://s3-symbol-logo.tradingview.com/bimas.svg",
+        "https://s3-symbol-logo.tradingview.com/bimas--big.svg"
+      ],
+      "current": 755.0,
+      "change_1d_pct": 0.27,
+      "change_1w_pct": 2.17,
+      "change_1m_pct": 10.54,
+      "change_3m_pct": 17.42,
+      "change_ytd_pct": 39.04,
+      "change_1y_pct": 998.98,
+      "high_52w": 755.0,
       "low_52w": 60.45,
       "data": [
         {
@@ -200667,7 +200987,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 758.0
+          "value": 755.0
         }
       ]
     },
@@ -200675,13 +200995,21 @@
       "id": "MGROS.IS",
       "name": "Migros",
       "unit": "TRY",
-      "current": 655.0,
-      "change_1d_pct": -0.23,
-      "change_1w_pct": 2.26,
-      "change_1m_pct": 10.74,
-      "change_3m_pct": 7.82,
-      "change_ytd_pct": 23.47,
-      "change_1y_pct": 1631.89,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-MGROS.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-MGROS.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-MGROS--big.svg",
+        "https://s3-symbol-logo.tradingview.com/mgros.svg",
+        "https://s3-symbol-logo.tradingview.com/mgros--big.svg"
+      ],
+      "current": 652.0,
+      "change_1d_pct": -0.69,
+      "change_1w_pct": 1.8,
+      "change_1m_pct": 10.23,
+      "change_3m_pct": 7.33,
+      "change_ytd_pct": 22.9,
+      "change_1y_pct": 1623.96,
       "high_52w": 695.0,
       "low_52w": 31.22,
       "data": [
@@ -205683,7 +206011,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 655.0
+          "value": 652.0
         }
       ]
     },
@@ -205691,13 +206019,21 @@
       "id": "SOKM.IS",
       "name": "Şok Market",
       "unit": "TRY",
-      "current": 52.05,
-      "change_1d_pct": 0.97,
-      "change_1w_pct": -5.28,
-      "change_1m_pct": -2.44,
-      "change_3m_pct": -5.79,
-      "change_ytd_pct": 4.43,
-      "change_1y_pct": 293.13,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-SOKM.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-SOKM.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-SOKM--big.svg",
+        "https://s3-symbol-logo.tradingview.com/sokm.svg",
+        "https://s3-symbol-logo.tradingview.com/sokm--big.svg"
+      ],
+      "current": 51.9,
+      "change_1d_pct": 0.68,
+      "change_1w_pct": -5.55,
+      "change_1m_pct": -2.72,
+      "change_3m_pct": -6.06,
+      "change_ytd_pct": 4.13,
+      "change_1y_pct": 291.99,
       "high_52w": 73.15,
       "low_52w": 10.58,
       "data": [
@@ -210699,7 +211035,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 52.05
+          "value": 51.9
         }
       ]
     },
@@ -210707,13 +211043,21 @@
       "id": "ULKER.IS",
       "name": "Ülker",
       "unit": "TRY",
-      "current": 120.4,
-      "change_1d_pct": -0.33,
-      "change_1w_pct": 2.12,
-      "change_1m_pct": 10.26,
-      "change_3m_pct": -1.47,
-      "change_ytd_pct": 7.5,
-      "change_1y_pct": 447.27,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-ULKER.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-ULKER.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-ULKER--big.svg",
+        "https://s3-symbol-logo.tradingview.com/ulker.svg",
+        "https://s3-symbol-logo.tradingview.com/ulker--big.svg"
+      ],
+      "current": 120.3,
+      "change_1d_pct": -0.41,
+      "change_1w_pct": 2.04,
+      "change_1m_pct": 10.16,
+      "change_3m_pct": -1.55,
+      "change_ytd_pct": 7.41,
+      "change_1y_pct": 446.82,
       "high_52w": 187.3,
       "low_52w": 14.06,
       "data": [
@@ -215715,7 +216059,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 120.4
+          "value": 120.3
         }
       ]
     },
@@ -215723,13 +216067,21 @@
       "id": "AEFES.IS",
       "name": "Anadolu Efes",
       "unit": "TRY",
-      "current": 18.9,
-      "change_1d_pct": 0.43,
-      "change_1w_pct": 6.18,
-      "change_1m_pct": 9.95,
-      "change_3m_pct": 14.48,
-      "change_ytd_pct": 18.42,
-      "change_1y_pct": 752.89,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-AEFES.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-AEFES.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-AEFES--big.svg",
+        "https://s3-symbol-logo.tradingview.com/aefes.svg",
+        "https://s3-symbol-logo.tradingview.com/aefes--big.svg"
+      ],
+      "current": 18.81,
+      "change_1d_pct": -0.05,
+      "change_1w_pct": 5.67,
+      "change_1m_pct": 9.42,
+      "change_3m_pct": 13.93,
+      "change_ytd_pct": 17.86,
+      "change_1y_pct": 748.83,
       "high_52w": 30.175,
       "low_52w": 2.008,
       "data": [
@@ -220735,7 +221087,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 18.9
+          "value": 18.81
         }
       ]
     },
@@ -220743,6 +221095,14 @@
       "id": "CCOLA.IS",
       "name": "Coca-Cola İçecek",
       "unit": "TRY",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-CCOLA.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-CCOLA.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-CCOLA--big.svg",
+        "https://s3-symbol-logo.tradingview.com/ccola.svg",
+        "https://s3-symbol-logo.tradingview.com/ccola--big.svg"
+      ],
       "current": 78.4,
       "change_1d_pct": 2.75,
       "change_1w_pct": 10.5,
@@ -225763,13 +226123,21 @@
       "id": "TCELL.IS",
       "name": "Turkcell",
       "unit": "TRY",
-      "current": 117.9,
-      "change_1d_pct": 0.68,
-      "change_1w_pct": 3.06,
-      "change_1m_pct": 8.07,
-      "change_3m_pct": 15.93,
-      "change_ytd_pct": 22.81,
-      "change_1y_pct": 681.83,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-TCELL.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-TCELL.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-TCELL--big.svg",
+        "https://s3-symbol-logo.tradingview.com/tcell.svg",
+        "https://s3-symbol-logo.tradingview.com/tcell--big.svg"
+      ],
+      "current": 117.8,
+      "change_1d_pct": 0.6,
+      "change_1w_pct": 2.97,
+      "change_1m_pct": 7.97,
+      "change_3m_pct": 15.83,
+      "change_ytd_pct": 22.71,
+      "change_1y_pct": 681.17,
       "high_52w": 127.5,
       "low_52w": 14.67,
       "data": [
@@ -230771,7 +231139,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 117.9
+          "value": 117.8
         }
       ]
     },
@@ -230779,13 +231147,21 @@
       "id": "TTKOM.IS",
       "name": "Türk Telekom",
       "unit": "TRY",
-      "current": 64.1,
-      "change_1d_pct": 1.83,
-      "change_1w_pct": 3.64,
-      "change_1m_pct": 6.83,
-      "change_3m_pct": 7.91,
-      "change_ytd_pct": 10.33,
-      "change_1y_pct": 869.74,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-TTKOM.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-TTKOM.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-TTKOM--big.svg",
+        "https://s3-symbol-logo.tradingview.com/ttkom.svg",
+        "https://s3-symbol-logo.tradingview.com/ttkom--big.svg"
+      ],
+      "current": 64.05,
+      "change_1d_pct": 1.75,
+      "change_1w_pct": 3.56,
+      "change_1m_pct": 6.75,
+      "change_3m_pct": 7.83,
+      "change_ytd_pct": 10.24,
+      "change_1y_pct": 868.99,
       "high_52w": 72.9,
       "low_52w": 6.15,
       "data": [
@@ -235787,7 +236163,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 64.1
+          "value": 64.05
         }
       ]
     },
@@ -235795,6 +236171,14 @@
       "id": "LOGO.IS",
       "name": "Logo Yazılım",
       "unit": "TRY",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-LOGO.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-LOGO.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-LOGO--big.svg",
+        "https://s3-symbol-logo.tradingview.com/logo.svg",
+        "https://s3-symbol-logo.tradingview.com/logo--big.svg"
+      ],
       "current": 139.4,
       "change_1d_pct": 1.01,
       "change_1w_pct": 3.18,
@@ -240811,13 +241195,21 @@
       "id": "AKSEN.IS",
       "name": "Aksa Enerji",
       "unit": "TRY",
-      "current": 82.4,
-      "change_1d_pct": 0.3,
-      "change_1w_pct": 1.54,
-      "change_1m_pct": 8.14,
-      "change_3m_pct": 20.47,
-      "change_ytd_pct": 19.59,
-      "change_1y_pct": 1222.63,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-AKSEN.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-AKSEN.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-AKSEN--big.svg",
+        "https://s3-symbol-logo.tradingview.com/aksen.svg",
+        "https://s3-symbol-logo.tradingview.com/aksen--big.svg"
+      ],
+      "current": 81.6,
+      "change_1d_pct": -0.67,
+      "change_1w_pct": 0.55,
+      "change_1m_pct": 7.09,
+      "change_3m_pct": 19.3,
+      "change_ytd_pct": 18.43,
+      "change_1y_pct": 1209.79,
       "high_52w": 83.7,
       "low_52w": 5.555,
       "data": [
@@ -245819,7 +246211,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 82.4
+          "value": 81.6
         }
       ]
     },
@@ -245827,13 +246219,21 @@
       "id": "AKSA.IS",
       "name": "Aksa Akrilik",
       "unit": "TRY",
-      "current": 10.74,
-      "change_1d_pct": 1.03,
-      "change_1w_pct": 5.71,
-      "change_1m_pct": -1.74,
-      "change_3m_pct": 7.08,
-      "change_ytd_pct": 6.23,
-      "change_1y_pct": 752.92,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-AKSA.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-AKSA.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-AKSA--big.svg",
+        "https://s3-symbol-logo.tradingview.com/aksa.svg",
+        "https://s3-symbol-logo.tradingview.com/aksa--big.svg"
+      ],
+      "current": 10.73,
+      "change_1d_pct": 0.94,
+      "change_1w_pct": 5.61,
+      "change_1m_pct": -1.83,
+      "change_3m_pct": 6.98,
+      "change_ytd_pct": 6.13,
+      "change_1y_pct": 752.13,
       "high_52w": 13.35,
       "low_52w": 1.1967,
       "data": [
@@ -250839,7 +251239,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 10.74
+          "value": 10.73
         }
       ]
     },
@@ -250847,13 +251247,21 @@
       "id": "GUBRF.IS",
       "name": "Gübre Fabrikaları",
       "unit": "TRY",
-      "current": 525.0,
-      "change_1d_pct": -0.85,
-      "change_1w_pct": 6.65,
-      "change_1m_pct": 2.64,
-      "change_3m_pct": 42.86,
-      "change_ytd_pct": 49.25,
-      "change_1y_pct": 670.36,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-GUBRF.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-GUBRF.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-GUBRF--big.svg",
+        "https://s3-symbol-logo.tradingview.com/gubrf.svg",
+        "https://s3-symbol-logo.tradingview.com/gubrf--big.svg"
+      ],
+      "current": 523.5,
+      "change_1d_pct": -1.13,
+      "change_1w_pct": 6.35,
+      "change_1m_pct": 2.35,
+      "change_3m_pct": 42.45,
+      "change_ytd_pct": 48.83,
+      "change_1y_pct": 668.16,
       "high_52w": 556.5,
       "low_52w": 47.0,
       "data": [
@@ -255855,7 +256263,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 525.0
+          "value": 523.5
         }
       ]
     },
@@ -255863,13 +256271,21 @@
       "id": "HEKTS.IS",
       "name": "Hektaş",
       "unit": "TRY",
-      "current": 3.38,
-      "change_1d_pct": 1.2,
-      "change_1w_pct": 14.97,
-      "change_1m_pct": 15.36,
-      "change_3m_pct": 14.97,
-      "change_ytd_pct": 7.64,
-      "change_1y_pct": 111.47,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-HEKTS.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-HEKTS.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-HEKTS--big.svg",
+        "https://s3-symbol-logo.tradingview.com/hekts.svg",
+        "https://s3-symbol-logo.tradingview.com/hekts--big.svg"
+      ],
+      "current": 3.39,
+      "change_1d_pct": 1.5,
+      "change_1w_pct": 15.31,
+      "change_1m_pct": 15.7,
+      "change_3m_pct": 15.31,
+      "change_ytd_pct": 7.96,
+      "change_1y_pct": 112.1,
       "high_52w": 51.25,
       "low_52w": 1.4926,
       "data": [
@@ -260871,7 +261287,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 3.38
+          "value": 3.39
         }
       ]
     },
@@ -260879,13 +261295,21 @@
       "id": "EKGYO.IS",
       "name": "Emlak Konut GYO",
       "unit": "TRY",
-      "current": 21.54,
-      "change_1d_pct": 1.6,
-      "change_1w_pct": 4.66,
-      "change_1m_pct": 6.85,
-      "change_3m_pct": 0.0,
-      "change_ytd_pct": 1.6,
-      "change_1y_pct": 1039.68,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-EKGYO.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-EKGYO.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-EKGYO--big.svg",
+        "https://s3-symbol-logo.tradingview.com/ekgyo.svg",
+        "https://s3-symbol-logo.tradingview.com/ekgyo--big.svg"
+      ],
+      "current": 21.4,
+      "change_1d_pct": 0.94,
+      "change_1w_pct": 3.98,
+      "change_1m_pct": 6.15,
+      "change_3m_pct": -0.65,
+      "change_ytd_pct": 0.94,
+      "change_1y_pct": 1032.28,
       "high_52w": 26.22,
       "low_52w": 1.76,
       "data": [
@@ -265887,7 +266311,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 21.54
+          "value": 21.4
         }
       ]
     },
@@ -265895,13 +266319,21 @@
       "id": "ISGYO.IS",
       "name": "İş GYO",
       "unit": "TRY",
-      "current": 20.7,
-      "change_1d_pct": 0.58,
-      "change_1w_pct": 2.99,
-      "change_1m_pct": -0.38,
-      "change_3m_pct": -8.49,
-      "change_ytd_pct": -3.63,
-      "change_1y_pct": 972.54,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-ISGYO.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-ISGYO.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-ISGYO--big.svg",
+        "https://s3-symbol-logo.tradingview.com/isgyo.svg",
+        "https://s3-symbol-logo.tradingview.com/isgyo--big.svg"
+      ],
+      "current": 20.72,
+      "change_1d_pct": 0.68,
+      "change_1w_pct": 3.08,
+      "change_1m_pct": -0.29,
+      "change_3m_pct": -8.4,
+      "change_ytd_pct": -3.54,
+      "change_1y_pct": 973.58,
       "high_52w": 24.48,
       "low_52w": 1.8,
       "data": [
@@ -270903,7 +271335,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 20.7
+          "value": 20.72
         }
       ]
     },
@@ -270911,14 +271343,22 @@
       "id": "TURSG.IS",
       "name": "Türkiye Sigorta",
       "unit": "TRY",
-      "current": 14.3,
-      "change_1d_pct": 3.85,
-      "change_1w_pct": 6.72,
-      "change_1m_pct": 9.75,
-      "change_3m_pct": 21.39,
-      "change_ytd_pct": 24.35,
-      "change_1y_pct": 2048.44,
-      "high_52w": 14.3,
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-TURSG.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-TURSG.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-TURSG--big.svg",
+        "https://s3-symbol-logo.tradingview.com/tursg.svg",
+        "https://s3-symbol-logo.tradingview.com/tursg--big.svg"
+      ],
+      "current": 14.14,
+      "change_1d_pct": 2.69,
+      "change_1w_pct": 5.52,
+      "change_1m_pct": 8.52,
+      "change_3m_pct": 20.03,
+      "change_ytd_pct": 22.96,
+      "change_1y_pct": 2024.4,
+      "high_52w": 14.14,
       "low_52w": 0.496,
       "data": [
         {
@@ -275923,7 +276363,7 @@
         },
         {
           "date": "2026-04-16",
-          "value": 14.3
+          "value": 14.14
         }
       ]
     },
@@ -275931,6 +276371,14 @@
       "id": "KONTR.IS",
       "name": "Kontrolmatik",
       "unit": "TRY",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/BIST-KONTR.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/BIST-KONTR.svg",
+        "https://s3-symbol-logo.tradingview.com/BIST-KONTR--big.svg",
+        "https://s3-symbol-logo.tradingview.com/kontr.svg",
+        "https://s3-symbol-logo.tradingview.com/kontr--big.svg"
+      ],
       "current": 11.93,
       "change_1d_pct": 9.95,
       "change_1w_pct": 35.57,
@@ -280951,6 +281399,12 @@
       "id": "AAPL",
       "name": "Apple",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/aapl.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/aapl.svg",
+        "https://s3-symbol-logo.tradingview.com/aapl--big.svg"
+      ],
       "current": 266.43,
       "change_1d_pct": 2.94,
       "change_1w_pct": 2.91,
@@ -285987,6 +286441,12 @@
       "id": "MSFT",
       "name": "Microsoft",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/msft.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/msft.svg",
+        "https://s3-symbol-logo.tradingview.com/msft--big.svg"
+      ],
       "current": 411.22,
       "change_1d_pct": 4.61,
       "change_1w_pct": 9.85,
@@ -291023,6 +291483,12 @@
       "id": "GOOGL",
       "name": "Alphabet (Google)",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/googl.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/googl.svg",
+        "https://s3-symbol-logo.tradingview.com/googl--big.svg"
+      ],
       "current": 337.12,
       "change_1d_pct": 1.26,
       "change_1w_pct": 6.24,
@@ -296059,6 +296525,12 @@
       "id": "AMZN",
       "name": "Amazon",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/amzn.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/amzn.svg",
+        "https://s3-symbol-logo.tradingview.com/amzn--big.svg"
+      ],
       "current": 248.5,
       "change_1d_pct": -0.21,
       "change_1w_pct": 12.32,
@@ -301095,6 +301567,12 @@
       "id": "NVDA",
       "name": "NVIDIA",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/nvda.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/nvda.svg",
+        "https://s3-symbol-logo.tradingview.com/nvda--big.svg"
+      ],
       "current": 198.87,
       "change_1d_pct": 1.2,
       "change_1w_pct": 9.22,
@@ -306131,6 +306609,12 @@
       "id": "META",
       "name": "Meta (Facebook)",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/meta.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/meta.svg",
+        "https://s3-symbol-logo.tradingview.com/meta--big.svg"
+      ],
       "current": 671.58,
       "change_1d_pct": 1.37,
       "change_1w_pct": 9.66,
@@ -311167,6 +311651,12 @@
       "id": "TSLA",
       "name": "Tesla",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/tsla.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/tsla.svg",
+        "https://s3-symbol-logo.tradingview.com/tsla--big.svg"
+      ],
       "current": 391.95,
       "change_1d_pct": 7.62,
       "change_1w_pct": 14.19,
@@ -316203,6 +316693,12 @@
       "id": "AVGO",
       "name": "Broadcom",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/avgo.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/avgo.svg",
+        "https://s3-symbol-logo.tradingview.com/avgo--big.svg"
+      ],
       "current": 396.72,
       "change_1d_pct": 4.19,
       "change_1w_pct": 13.14,
@@ -321239,6 +321735,12 @@
       "id": "AMD",
       "name": "AMD",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/amd.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/amd.svg",
+        "https://s3-symbol-logo.tradingview.com/amd--big.svg"
+      ],
       "current": 258.12,
       "change_1d_pct": 1.2,
       "change_1w_pct": 11.35,
@@ -326275,6 +326777,12 @@
       "id": "INTC",
       "name": "Intel",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/intc.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/intc.svg",
+        "https://s3-symbol-logo.tradingview.com/intc--big.svg"
+      ],
       "current": 64.94,
       "change_1d_pct": 1.77,
       "change_1w_pct": 10.16,
@@ -331311,6 +331819,12 @@
       "id": "CRM",
       "name": "Salesforce",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/crm.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/crm.svg",
+        "https://s3-symbol-logo.tradingview.com/crm--big.svg"
+      ],
       "current": 177.6,
       "change_1d_pct": 3.67,
       "change_1w_pct": 0.7,
@@ -336347,6 +336861,12 @@
       "id": "ORCL",
       "name": "Oracle",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/orcl.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/orcl.svg",
+        "https://s3-symbol-logo.tradingview.com/orcl--big.svg"
+      ],
       "current": 169.81,
       "change_1d_pct": 4.18,
       "change_1w_pct": 18.2,
@@ -341383,6 +341903,12 @@
       "id": "ADBE",
       "name": "Adobe",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/adbe.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/adbe.svg",
+        "https://s3-symbol-logo.tradingview.com/adbe--big.svg"
+      ],
       "current": 244.66,
       "change_1d_pct": 3.79,
       "change_1w_pct": 2.24,
@@ -346419,6 +346945,12 @@
       "id": "NFLX",
       "name": "Netflix",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/nflx.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/nflx.svg",
+        "https://s3-symbol-logo.tradingview.com/nflx--big.svg"
+      ],
       "current": 107.71,
       "change_1d_pct": 1.35,
       "change_1w_pct": 8.37,
@@ -351455,6 +351987,12 @@
       "id": "JPM",
       "name": "JPMorgan Chase",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/jpm.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/jpm.svg",
+        "https://s3-symbol-logo.tradingview.com/jpm--big.svg"
+      ],
       "current": 305.93,
       "change_1d_pct": -1.67,
       "change_1w_pct": -0.66,
@@ -356491,6 +357029,12 @@
       "id": "V",
       "name": "Visa",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/v.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/v.svg",
+        "https://s3-symbol-logo.tradingview.com/v--big.svg"
+      ],
       "current": 315.91,
       "change_1d_pct": 1.46,
       "change_1w_pct": 2.25,
@@ -361527,6 +362071,12 @@
       "id": "MA",
       "name": "Mastercard",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/ma.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/ma.svg",
+        "https://s3-symbol-logo.tradingview.com/ma--big.svg"
+      ],
       "current": 519.96,
       "change_1d_pct": 1.33,
       "change_1w_pct": 2.53,
@@ -366563,6 +367113,12 @@
       "id": "JNJ",
       "name": "Johnson & Johnson",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/jnj.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/jnj.svg",
+        "https://s3-symbol-logo.tradingview.com/jnj--big.svg"
+      ],
       "current": 238.67,
       "change_1d_pct": -0.6,
       "change_1w_pct": -1.09,
@@ -371599,6 +372155,12 @@
       "id": "UNH",
       "name": "UnitedHealth",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/unh.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/unh.svg",
+        "https://s3-symbol-logo.tradingview.com/unh--big.svg"
+      ],
       "current": 314.05,
       "change_1d_pct": -0.04,
       "change_1w_pct": 2.64,
@@ -376635,6 +377197,12 @@
       "id": "LLY",
       "name": "Eli Lilly",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/lly.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/lly.svg",
+        "https://s3-symbol-logo.tradingview.com/lly--big.svg"
+      ],
       "current": 905.03,
       "change_1d_pct": -1.89,
       "change_1w_pct": -5.06,
@@ -381671,6 +382239,12 @@
       "id": "PG",
       "name": "Procter & Gamble",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/pg.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/pg.svg",
+        "https://s3-symbol-logo.tradingview.com/pg--big.svg"
+      ],
       "current": 143.38,
       "change_1d_pct": -0.69,
       "change_1w_pct": -1.05,
@@ -386707,6 +387281,12 @@
       "id": "KO",
       "name": "Coca-Cola",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/ko.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/ko.svg",
+        "https://s3-symbol-logo.tradingview.com/ko--big.svg"
+      ],
       "current": 75.31,
       "change_1d_pct": -0.78,
       "change_1w_pct": -2.56,
@@ -391743,6 +392323,12 @@
       "id": "PEP",
       "name": "PepsiCo",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/pep.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/pep.svg",
+        "https://s3-symbol-logo.tradingview.com/pep--big.svg"
+      ],
       "current": 154.85,
       "change_1d_pct": -0.56,
       "change_1w_pct": 0.03,
@@ -396779,6 +397365,12 @@
       "id": "WMT",
       "name": "Walmart",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/wmt.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/wmt.svg",
+        "https://s3-symbol-logo.tradingview.com/wmt--big.svg"
+      ],
       "current": 124.76,
       "change_1d_pct": -0.23,
       "change_1w_pct": -1.96,
@@ -401815,6 +402407,12 @@
       "id": "COST",
       "name": "Costco",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/cost.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/cost.svg",
+        "https://s3-symbol-logo.tradingview.com/cost--big.svg"
+      ],
       "current": 984.75,
       "change_1d_pct": 1.02,
       "change_1w_pct": -4.42,
@@ -406851,6 +407449,12 @@
       "id": "HD",
       "name": "Home Depot",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/hd.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/hd.svg",
+        "https://s3-symbol-logo.tradingview.com/hd--big.svg"
+      ],
       "current": 338.91,
       "change_1d_pct": -1.11,
       "change_1w_pct": 0.82,
@@ -411887,6 +412491,12 @@
       "id": "DIS",
       "name": "Disney",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/dis.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/dis.svg",
+        "https://s3-symbol-logo.tradingview.com/dis--big.svg"
+      ],
       "current": 103.04,
       "change_1d_pct": 0.44,
       "change_1w_pct": 3.89,
@@ -416923,6 +417533,12 @@
       "id": "XOM",
       "name": "ExxonMobil",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/xom.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/xom.svg",
+        "https://s3-symbol-logo.tradingview.com/xom--big.svg"
+      ],
       "current": 149.01,
       "change_1d_pct": -0.15,
       "change_1w_pct": -4.62,
@@ -421959,6 +422575,12 @@
       "id": "CVX",
       "name": "Chevron",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/cvx.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/cvx.svg",
+        "https://s3-symbol-logo.tradingview.com/cvx--big.svg"
+      ],
       "current": 184.91,
       "change_1d_pct": -1.13,
       "change_1w_pct": -4.14,
@@ -426995,6 +427617,12 @@
       "id": "BA",
       "name": "Boeing",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/ba.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/ba.svg",
+        "https://s3-symbol-logo.tradingview.com/ba--big.svg"
+      ],
       "current": 223.93,
       "change_1d_pct": 0.07,
       "change_1w_pct": 2.81,
@@ -432031,6 +432659,12 @@
       "id": "CAT",
       "name": "Caterpillar",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/cat.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/cat.svg",
+        "https://s3-symbol-logo.tradingview.com/cat--big.svg"
+      ],
       "current": 770.17,
       "change_1d_pct": -3.03,
       "change_1w_pct": -0.18,
@@ -437067,6 +437701,12 @@
       "id": "ASML",
       "name": "ASML Holding",
       "unit": "EUR",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/asml.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/asml.svg",
+        "https://s3-symbol-logo.tradingview.com/asml--big.svg"
+      ],
       "current": 1481.77,
       "change_1d_pct": -2.41,
       "change_1w_pct": 4.27,
@@ -442103,6 +442743,12 @@
       "id": "NVO",
       "name": "Novo Nordisk",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/nvo.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/nvo.svg",
+        "https://s3-symbol-logo.tradingview.com/nvo--big.svg"
+      ],
       "current": 40.81,
       "change_1d_pct": 3.79,
       "change_1w_pct": 8.51,
@@ -447139,6 +447785,12 @@
       "id": "SAP",
       "name": "SAP SE",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/sap.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/sap.svg",
+        "https://s3-symbol-logo.tradingview.com/sap--big.svg"
+      ],
       "current": 172.9,
       "change_1d_pct": 3.03,
       "change_1w_pct": 2.2,
@@ -452175,6 +452827,12 @@
       "id": "SHEL",
       "name": "Shell",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/shel.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/shel.svg",
+        "https://s3-symbol-logo.tradingview.com/shel--big.svg"
+      ],
       "current": 89.84,
       "change_1d_pct": -1.66,
       "change_1w_pct": -2.36,
@@ -457211,6 +457869,12 @@
       "id": "AZN",
       "name": "AstraZeneca",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/azn.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/azn.svg",
+        "https://s3-symbol-logo.tradingview.com/azn--big.svg"
+      ],
       "current": 201.21,
       "change_1d_pct": -1.55,
       "change_1w_pct": -1.5,
@@ -462247,6 +462911,12 @@
       "id": "UL",
       "name": "Unilever",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/ul.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/ul.svg",
+        "https://s3-symbol-logo.tradingview.com/ul--big.svg"
+      ],
       "current": 58.09,
       "change_1d_pct": 0.48,
       "change_1w_pct": -0.27,
@@ -467283,6 +467953,12 @@
       "id": "TTE",
       "name": "TotalEnergies",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/tte.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/tte.svg",
+        "https://s3-symbol-logo.tradingview.com/tte--big.svg"
+      ],
       "current": 87.06,
       "change_1d_pct": -4.32,
       "change_1w_pct": -2.67,
@@ -472319,6 +472995,12 @@
       "id": "TSM",
       "name": "TSMC",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/tsm.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/tsm.svg",
+        "https://s3-symbol-logo.tradingview.com/tsm--big.svg"
+      ],
       "current": 375.1,
       "change_1d_pct": -1.26,
       "change_1w_pct": 2.51,
@@ -477355,6 +478037,14 @@
       "id": "005930.KS",
       "name": "Samsung",
       "unit": "KRW",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/KRX-005930.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/KRX-005930.svg",
+        "https://s3-symbol-logo.tradingview.com/KRX-005930--big.svg",
+        "https://s3-symbol-logo.tradingview.com/005930.svg",
+        "https://s3-symbol-logo.tradingview.com/005930--big.svg"
+      ],
       "current": 217500.0,
       "change_1d_pct": 3.08,
       "change_1w_pct": 6.62,
@@ -482259,6 +482949,12 @@
       "id": "BABA",
       "name": "Alibaba",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/baba.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/baba.svg",
+        "https://s3-symbol-logo.tradingview.com/baba--big.svg"
+      ],
       "current": 133.28,
       "change_1d_pct": 1.47,
       "change_1w_pct": 6.35,
@@ -487295,6 +487991,12 @@
       "id": "PDD",
       "name": "PDD (Pinduoduo)",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/pdd.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/pdd.svg",
+        "https://s3-symbol-logo.tradingview.com/pdd--big.svg"
+      ],
       "current": 101.97,
       "change_1d_pct": -0.13,
       "change_1w_pct": -1.72,
@@ -492331,6 +493033,12 @@
       "id": "TM",
       "name": "Toyota Motor",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/tm.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/tm.svg",
+        "https://s3-symbol-logo.tradingview.com/tm--big.svg"
+      ],
       "current": 213.18,
       "change_1d_pct": 0.77,
       "change_1w_pct": -0.85,
@@ -497367,6 +498075,12 @@
       "id": "SONY",
       "name": "Sony Group",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/sony.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/sony.svg",
+        "https://s3-symbol-logo.tradingview.com/sony--big.svg"
+      ],
       "current": 21.24,
       "change_1d_pct": 1.38,
       "change_1w_pct": -0.65,
@@ -502403,6 +503117,12 @@
       "id": "BHP",
       "name": "BHP Group",
       "unit": "USD",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/bhp.svg",
+      "logo_pair": [],
+      "logo_candidates": [
+        "https://s3-symbol-logo.tradingview.com/bhp.svg",
+        "https://s3-symbol-logo.tradingview.com/bhp--big.svg"
+      ],
       "current": 79.47,
       "change_1d_pct": 0.38,
       "change_1w_pct": 3.26,
