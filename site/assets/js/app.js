@@ -110,18 +110,26 @@ function logoImg(series,size){
     size=size||22;
     var safeName=((series&&series.name)||'Varlık').replace(/"/g,'');
     var fallback=logoUrl(series);
-    var pair = series && Array.isArray(series.logo_pair) ? series.logo_pair.filter(Boolean) : [];
+
+    // Yerel bayrak çifti (forex) — varsa öncelikli
+    var localPair = series && Array.isArray(series.logo_pair_local) ? series.logo_pair_local.filter(Boolean) : [];
+    var pair = localPair.length>=2 ? localPair
+        : (series && Array.isArray(series.logo_pair) ? series.logo_pair.filter(Boolean) : []);
     if(pair.length>=2){
         return '<span class="asset-logo-pair" aria-label="'+safeName+' parite logosu">'+
-            '<img class="asset-logo mini" src="'+pair[0]+'" alt="" width="'+size+'" height="'+size+'" loading="lazy" decoding="async" data-logo-candidates="'+pair[0]+'" data-logo-index="0" data-logo-fallback="'+fallback+'" onerror="window.PMLogoNext(this)">'+
-            '<img class="asset-logo mini overlap" src="'+pair[1]+'" alt="" width="'+size+'" height="'+size+'" loading="lazy" decoding="async" data-logo-candidates="'+pair[1]+'" data-logo-index="0" data-logo-fallback="'+fallback+'" onerror="window.PMLogoNext(this)">'+
+            '<img class="asset-logo mini" src="'+pair[0]+'" alt="" width="'+size+'" height="'+size+'" loading="lazy" decoding="async" data-logo-candidates="'+pair.join('|')+'" data-logo-index="0" data-logo-fallback="'+fallback+'" onerror="window.PMLogoNext(this)">'+
+            '<img class="asset-logo mini overlap" src="'+pair[1]+'" alt="" width="'+size+'" height="'+size+'" loading="lazy" decoding="async" data-logo-candidates="'+pair.join('|')+'" data-logo-index="0" data-logo-fallback="'+fallback+'" onerror="window.PMLogoNext(this)">'+
             '</span>';
     }
 
-    var candidates = (series && Array.isArray(series.logo_candidates) && series.logo_candidates.length)
+    // Yerel logo varsa en başa ekle
+    var candidates = [];
+    if(series && series.logo_local) candidates.push(series.logo_local);
+    var cdnCandidates = (series && Array.isArray(series.logo_candidates) && series.logo_candidates.length)
         ? series.logo_candidates.slice()
         : tradingViewCandidates(series);
-    if(series && series.logo_url) candidates.unshift(series.logo_url);
+    if(series && series.logo_url) cdnCandidates.unshift(series.logo_url);
+    candidates = candidates.concat(cdnCandidates);
     candidates = candidates.filter(function(u,idx){ return u && candidates.indexOf(u)===idx; });
     var src=candidates.length?candidates[0]:fallback;
     return '<img class="asset-logo" src="'+src+'" alt="'+safeName+' logosu" width="'+size+'" height="'+size+'" loading="lazy" decoding="async" data-logo-candidates="'+candidates.join('|')+'" data-logo-index="0" data-logo-fallback="'+fallback+'" onerror="window.PMLogoNext(this)">';

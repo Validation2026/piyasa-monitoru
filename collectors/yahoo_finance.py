@@ -7,6 +7,7 @@ Kullanım:
 """
 
 import json
+import re
 import sys
 import time
 from datetime import datetime, timezone, timedelta
@@ -22,7 +23,38 @@ except ImportError:
     HAS_YF = False
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from config import ALL_YF_GROUPS, DATA_DIR, tradingview_logo_meta
+from config import ALL_YF_GROUPS, DATA_DIR, FOREX_COUNTRY_MAP, tradingview_logo_meta
+
+ROOT_DIR = Path(__file__).resolve().parent.parent
+LOGO_DIR = ROOT_DIR / "site" / "assets" / "logos"
+
+
+def _safe_id(symbol):
+    return re.sub(r"[^a-z0-9]+", "-", symbol.lower()).strip("-")
+
+
+def _local_logo_meta(symbol):
+    """Yerel logo dosyası varsa path döner."""
+    meta = {}
+    sid = _safe_id(symbol)
+    local_file = LOGO_DIR / f"{sid}.png"
+    if local_file.exists():
+        meta["logo_local"] = f"assets/logos/{sid}.png"
+    # Forex bayrak çifti
+    if symbol.endswith("=X"):
+        head = symbol.split("=")[0].upper()
+        if len(head) >= 6:
+            left, right = head[:3], head[3:6]
+            c1 = FOREX_COUNTRY_MAP.get(left, "").lower()
+            c2 = FOREX_COUNTRY_MAP.get(right, "").lower()
+            pair = []
+            if c1 and (LOGO_DIR / f"flag-{c1}.png").exists():
+                pair.append(f"assets/logos/flag-{c1}.png")
+            if c2 and (LOGO_DIR / f"flag-{c2}.png").exists():
+                pair.append(f"assets/logos/flag-{c2}.png")
+            if len(pair) == 2:
+                meta["logo_pair_local"] = pair
+    return meta
 
 # ═══════════════════════════════════════════════════════════
 #  YÖNTEM 1 (Birincil): Doğrudan Yahoo Chart API — query2
@@ -182,8 +214,9 @@ def fetch_group(group: dict) -> dict:
         changes = calculate_changes(points)
         values = [p["value"] for p in points]
         logo_meta = tradingview_logo_meta(symbol, meta)
-        
-        series_list.append({
+        local_meta = _local_logo_meta(symbol)
+
+        entry = {
             "id": symbol,
             "name": meta["name"],
             "unit": meta["unit"],
@@ -200,7 +233,14 @@ def fetch_group(group: dict) -> dict:
             "high_52w": round(max(values), 4),
             "low_52w": round(min(values), 4),
             "data": points
-        })
+        }
+        # Yerel logo varsa ekle
+        if local_meta.get("logo_local"):
+            entry["logo_local"] = local_meta["logo_local"]
+        if local_meta.get("logo_pair_local"):
+            entry["logo_pair_local"] = local_meta["logo_pair_local"]
+
+        series_list.append(entry)
 
         print(f"   ✅ {meta['name']}: {current} {meta['unit']} ({source})")
         time.sleep(0.3)
@@ -267,7 +307,7 @@ def generate_summary(all_results: list) -> dict:
         for s in result["series"]:
             # Sadece son 30 veri noktası (sparkline için)
             spark_data = s.get("data", [])[-30:] if s.get("data") else []
-            summary["series"].append({
+            entry = {
                 "id": s["id"],
                 "name": s["name"],
                 "unit": s.get("unit", ""),
@@ -283,7 +323,12 @@ def generate_summary(all_results: list) -> dict:
                 "high_52w": s.get("high_52w"),
                 "low_52w": s.get("low_52w"),
                 "spark": spark_data
-            })
+            }
+            if s.get("logo_local"):
+                entry["logo_local"] = s["logo_local"]
+            if s.get("logo_pair_local"):
+                entry["logo_pair_local"] = s["logo_pair_local"]
+            summary["series"].append(entry)
             summary["meta"]["total_series"] += 1
 
     return summary
