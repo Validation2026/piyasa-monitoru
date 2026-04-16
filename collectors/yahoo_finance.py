@@ -22,8 +22,7 @@ except ImportError:
     HAS_YF = False
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from config import ALL_YF_GROUPS, DATA_DIR
-
+from config import ALL_YF_GROUPS, DATA_DIR, tradingview_logo_meta
 
 # ═══════════════════════════════════════════════════════════
 #  YÖNTEM 1 (Birincil): Doğrudan Yahoo Chart API — query2
@@ -182,11 +181,15 @@ def fetch_group(group: dict) -> dict:
         current = points[-1]["value"]
         changes = calculate_changes(points)
         values = [p["value"] for p in points]
-
+        logo_meta = tradingview_logo_meta(symbol, meta)
+        
         series_list.append({
             "id": symbol,
             "name": meta["name"],
             "unit": meta["unit"],
+            "logo_url": logo_meta.get("logo_url"),
+            "logo_pair": logo_meta.get("logo_pair", []),
+            "logo_candidates": logo_meta.get("logo_candidates", []),
             "current": current,
             "change_1d_pct": changes.get("1d"),
             "change_1w_pct": changes.get("1w"),
@@ -268,6 +271,9 @@ def generate_summary(all_results: list) -> dict:
                 "id": s["id"],
                 "name": s["name"],
                 "unit": s.get("unit", ""),
+                "logo_url": s.get("logo_url"),
+                "logo_pair": s.get("logo_pair", []),
+                "logo_candidates": s.get("logo_candidates", []),
                 "current": s.get("current"),
                 "change_1d_pct": s.get("change_1d_pct"),
                 "change_1w_pct": s.get("change_1w_pct"),
