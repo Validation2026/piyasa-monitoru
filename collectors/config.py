@@ -4,12 +4,103 @@ EVDS kaldırıldı. Tüm veriler Yahoo Finance'den.
 """
 
 import os
+import re
 from pathlib import Path
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT_DIR / "data"
 DATA_DIR.mkdir(exist_ok=True)
+TV_LOGO_BASE = "https://s3-symbol-logo.tradingview.com"
 
+FOREX_COUNTRY_MAP = {
+    "USD": "US", "EUR": "EU", "GBP": "GB", "TRY": "TR", "JPY": "JP", "CHF": "CH",
+    "AUD": "AU", "CAD": "CA", "NZD": "NZ", "CNY": "CN", "BRL": "BR", "MXN": "MX",
+    "INR": "IN", "ZAR": "ZA", "SEK": "SE", "NOK": "NO", "SGD": "SG", "THB": "TH",
+    "KRW": "KR", "PLN": "PL", "HUF": "HU", "AED": "AE", "RUB": "RU", "SAR": "SA",
+}
+
+
+def _tv_symbol_candidates(symbol: str) -> list[str]:
+    """TradingView için olası logo URL'lerini üret."""
+    if not symbol:
+        return []
+    clean = symbol.strip().upper()
+    base = clean
+    if clean.endswith("=X"):
+        base = clean[:-2]
+    elif clean.endswith("=F"):
+        base = clean[:-2]
+    exchange = None
+    suffix_exchange = {
+        ".IS": "BIST",
+        ".KS": "KRX",
+        ".SS": "SSE",
+        ".L": "LSE",
+        ".PA": "EURONEXT",
+        ".DE": "XETR",
+        ".MI": "MIL",
+        ".TO": "TSX",
+    }
+    for suffix, ex in suffix_exchange.items():
+        if clean.endswith(suffix):
+            exchange = ex
+            base = clean[: -len(suffix)]
+            break
+
+    normalized = re.sub(r"[^A-Z0-9]", "", base)
+    lower = normalized.lower()
+
+    urls = []
+    if exchange:
+        urls.append(f"{TV_LOGO_BASE}/{exchange}-{normalized}.svg")
+        urls.append(f"{TV_LOGO_BASE}/{exchange}-{normalized}--big.svg")
+    urls.append(f"{TV_LOGO_BASE}/{lower}.svg")
+    urls.append(f"{TV_LOGO_BASE}/{lower}--big.svg")
+    return list(dict.fromkeys(urls))
+
+
+def _tv_forex_pair(symbol: str) -> list[str]:
+    """USDTRY=X gibi pariteler için ülke bayrağı ikonları."""
+    head = symbol.split("=")[0].upper()
+    if len(head) < 6:
+        return []
+    left, right = head[:3], head[3:6]
+    c1 = FOREX_COUNTRY_MAP.get(left)
+    c2 = FOREX_COUNTRY_MAP.get(right)
+    if not c1 or not c2:
+        return []
+    return [
+        f"{TV_LOGO_BASE}/country/{c1}--big.svg",
+        f"{TV_LOGO_BASE}/country/{c2}--big.svg",
+    ]
+
+
+def tradingview_logo_meta(symbol: str, meta: dict) -> dict:
+    """
+    Sembol için logo metadata üretir.
+    İstenirse config'ten `logo_url`, `logo_pair`, `logo_candidates` override edilebilir.
+    """
+    if meta.get("logo_url") or meta.get("logo_pair") or meta.get("logo_candidates"):
+        return {
+            "logo_url": meta.get("logo_url"),
+            "logo_pair": meta.get("logo_pair"),
+            "logo_candidates": meta.get("logo_candidates", []),
+        }
+
+    logo_pair = _tv_forex_pair(symbol) if symbol.endswith("=X") else []
+    logo_candidates = _tv_symbol_candidates(symbol)
+
+    if symbol.endswith("-USD"):
+        coin = re.sub(r"\d", "", symbol.split("-")[0].upper())
+        logo_candidates = [f"{TV_LOGO_BASE}/{coin.lower()}.svg"] + logo_candidates
+        logo_candidates = list(dict.fromkeys(logo_candidates))
+
+    return {
+        "logo_url": logo_candidates[0] if logo_candidates else None,
+        "logo_pair": logo_pair,
+        "logo_candidates": logo_candidates,
+    }
+    
 COMMODITIES_ENERGY = {
     "file": "commodities_energy.json",
     "category": "Enerji",
