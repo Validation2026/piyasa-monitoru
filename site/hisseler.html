@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="light">
+<head>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#3b82f6">
+    <title>Hisse Senetleri — Risk Monitörü</title>
+    <meta name="description" content="BIST hisseleri, ABD mega-cap ve küresel hisse senetleri — anlık fiyatlar, performans grafiği ve ısı haritası">
+    <meta property="og:title" content="Hisse Senetleri — Risk Monitörü">
+    <meta property="og:description" content="BIST hisseleri, ABD mega-cap ve küresel hisse senetleri — anlık fiyatlar, performans grafiği ve ısı haritası">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="tr_TR">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💹</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%233b82f6'/><text x='50' y='70' font-size='60' text-anchor='middle' fill='white'>💹</text></svg>">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+    <style>
+        .country-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+        .country-tab{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:.75rem;font-weight:700;cursor:pointer;transition:.2s;color:var(--t2)}
+        .country-tab:hover{border-color:var(--blue)}
+        .country-tab.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+        .view-toggle{display:flex;gap:6px;margin-bottom:14px}
+        .view-btn{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:5px 12px;font-size:.72rem;font-weight:600;cursor:pointer;transition:.2s;color:var(--t2)}
+        .view-btn:hover{border-color:var(--blue)}
+        .view-btn.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+        .view-section{display:none}
+        .view-section.active{display:block}
+    </style>
+</head>
+<body>
+<script src="assets/js/sidebar.js"></script>
+<div class="page">
+<div class="page-spacer"></div>
+    <div class="page-head">
+        <h1>💹 Hisse Senetleri</h1>
+        <div class="sub">BIST · ABD Mega-Cap · Küresel — 31 hisse senedi</div>
+        <div class="update-info" id="updateInfo"></div>
+    </div>
+    <div class="ai-box"><div class="ai-header"><span>🤖 AI Hisse Analizi</span><span class="ai-badge">AI</span></div><div class="ai-body" id="aiAnalysis"><span class="ai-loading">Analiz yükleniyor...</span></div></div>
+
+    <div class="country-tabs" id="catTabs" role="tablist" aria-label="Piyasa filtresi">
+        <button class="country-tab on" data-cat="all" role="tab" aria-selected="true">💹 Tümü</button>
+        <button class="country-tab" data-cat="bist" role="tab" aria-selected="false">🇹🇷 BIST</button>
+        <button class="country-tab" data-cat="us" role="tab" aria-selected="false">🇺🇸 ABD</button>
+        <button class="country-tab" data-cat="global" role="tab" aria-selected="false">🌍 Küresel</button>
+    </div>
+
+    <div class="view-toggle" id="viewToggle">
+        <button class="view-btn on" data-view="cards">📋 Kartlar</button>
+        <button class="view-btn" data-view="bar">📊 Performans</button>
+        <button class="view-btn" data-view="heatmap">🔥 Isı Haritası</button>
+    </div>
+
+    <div class="view-section active" id="viewCards">
+        <div class="summary-row" id="summaryCards"></div>
+        <div class="chart-timeframes global-timeframes">
+            <button class="tf-btn" data-tf="1A">1A</button>
+            <button class="tf-btn" data-tf="3A">3A</button>
+            <button class="tf-btn" data-tf="6A">6A</button>
+            <button class="tf-btn" data-tf="YTD">YTD</button>
+            <button class="tf-btn" data-tf="1Y">1Y</button>
+            <button class="tf-btn" data-tf="2Y">2Y</button>
+            <button class="tf-btn" data-tf="3Y">3Y</button>
+            <button class="tf-btn" data-tf="5Y">5Y</button>
+            <button class="tf-btn active" data-tf="Tümü">Tümü</button>
+        </div>
+        <div class="charts" id="chartsGrid"></div>
+        <div class="dtable" id="dataTable"></div>
+    </div>
+
+    <div class="view-section" id="viewBar">
+        <div class="bar-chart-card">
+            <div class="chart-title">Günlük Performans Sıralaması</div>
+            <div class="chart-subtitle">Tüm hisseler — günlük % değişim</div>
+            <canvas id="barChartDaily"></canvas>
+        </div>
+        <div class="bar-chart-card">
+            <div class="chart-title">Aylık Performans Sıralaması</div>
+            <div class="chart-subtitle">Tüm hisseler — 1 aylık % değişim</div>
+            <canvas id="barChartMonthly"></canvas>
+        </div>
+    </div>
+
+    <div class="view-section" id="viewHeatmap">
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;overflow-x:auto;margin-bottom:16px">
+            <div id="heatmapContainer"></div>
+        </div>
+    </div>
+
+    <div class="footer">Risk Monitörü © 2026</div>
+</div>
+<script src="assets/js/app.js"></script>
+<script>
+(function(){
+    var cat='all', currentView='cards', allSeries=[], chartInstances=[], barCharts=[];
+
+    // BIST ticker'ları .IS ile biter; ABD = belirli semboller; geri kalan = küresel
+    var US_TICKERS = ['AAPL','MSFT','GOOGL','AMZN','NVDA','META','TSLA'];
+    var GLOBAL_TICKERS = ['ASML','TSM','NVO','005930.KS'];
+    function classifySeries(s){
+        if(!s) return 'global';
+        if(s.id && s.id.indexOf('.IS') !== -1) return 'bist';
+        if(US_TICKERS.indexOf(s.id) !== -1) return 'us';
+        if(GLOBAL_TICKERS.indexOf(s.id) !== -1) return 'global';
+        return 'global';
+    }
+
+    function applyFilter(){
+        if(cat === 'all') return allSeries.slice();
+        return allSeries.filter(function(s){ return classifySeries(s) === cat; });
+    }
+
+    function rebuildCards(){
+        var active = applyFilter();
+        if(chartInstances.length){ chartInstances.forEach(function(c){ if(c&&c.destroy) c.destroy(); }); }
+        chartInstances = [];
+        var grid = document.getElementById('chartsGrid'); if(grid) grid.innerHTML='';
+        var sc = document.getElementById('summaryCards'); if(sc) sc.innerHTML='';
+        var dt = document.getElementById('dataTable'); if(dt) dt.innerHTML='';
+        if(!active.length){ if(sc) sc.innerHTML='<div class="scard"><div class="scard-name">Bu kategoride veri yok.</div></div>'; return; }
+        PM.buildSummary('summaryCards', active);
+        chartInstances = PM.buildCharts('chartsGrid', active, 'all');
+        PM.buildTable('dataTable', active);
+    }
+
+    function rebuildBar(){
+        if(barCharts.length){ barCharts.forEach(function(c){ if(c&&c.destroy) c.destroy(); }); }
+        barCharts = [];
+        var active = applyFilter();
+        var c1 = PM.buildBarChart('barChartDaily', active, 'change_1d_pct');
+        var c2 = PM.buildBarChart('barChartMonthly', active, 'change_1m_pct');
+        if(c1) barCharts.push(c1);
+        if(c2) barCharts.push(c2);
+    }
+
+    function rebuildHeatmap(){
+        PM.buildHeatmap('heatmapContainer', applyFilter());
+    }
+
+    function rebuildCurrent(){
+        if(currentView === 'cards') rebuildCards();
+        else if(currentView === 'bar') rebuildBar();
+        else if(currentView === 'heatmap') rebuildHeatmap();
+    }
+
+    PM.loadData('stocks.json','hisseler').then(function(data){
+        if(!data||!data.series||!data.series.length){
+            document.getElementById('summaryCards').innerHTML='<div class="scard"><div class="scard-name">Veri bulunamadı. Collector henüz çalışmamış olabilir.</div></div>';
+            return;
+        }
+        allSeries = data.series;
+        var ui = document.getElementById('updateInfo');
+        if(ui && data.meta){
+            ui.textContent = 'Son güncelleme: '+new Date(data.meta.updated_at).toLocaleString('tr-TR')+' · '+data.meta.symbol_count+' hisse';
+        }
+        rebuildCards();
+    });
+
+    // Kategori sekmeleri
+    document.getElementById('catTabs').addEventListener('click', function(e){
+        var btn = e.target.closest('.country-tab'); if(!btn) return;
+        document.querySelectorAll('#catTabs .country-tab').forEach(function(b){ b.classList.remove('on'); b.setAttribute('aria-selected','false'); });
+        btn.classList.add('on'); btn.setAttribute('aria-selected','true');
+        cat = btn.getAttribute('data-cat');
+        rebuildCurrent();
+    });
+
+    // Görünüm değiştirme
+    document.getElementById('viewToggle').addEventListener('click', function(e){
+        var btn = e.target.closest('.view-btn'); if(!btn) return;
+        document.querySelectorAll('.view-btn').forEach(function(b){ b.classList.remove('on'); });
+        btn.classList.add('on');
+        currentView = btn.getAttribute('data-view');
+        document.querySelectorAll('.view-section').forEach(function(s){ s.classList.remove('active'); });
+        if(currentView === 'cards') document.getElementById('viewCards').classList.add('active');
+        else if(currentView === 'bar') document.getElementById('viewBar').classList.add('active');
+        else if(currentView === 'heatmap') document.getElementById('viewHeatmap').classList.add('active');
+        rebuildCurrent();
+    });
+
+    fetch('/api/ai-analysis?cat=hisseler').then(function(r){return r.json()}).then(function(d){
+        var el=document.getElementById('aiAnalysis');
+        if(el && d && d.analysis) el.textContent=d.analysis;
+    }).catch(function(){
+        var el=document.getElementById('aiAnalysis');
+        if(el) el.innerHTML='<span class="ai-loading">Analiz yüklenemiyor.</span>';
+    });
+})();
+</script>
+</body>
+</html>

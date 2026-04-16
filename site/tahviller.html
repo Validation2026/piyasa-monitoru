@@ -53,6 +53,11 @@
     </div>
     <div class="charts" id="chartsGrid"></div>
     <div class="dtable" id="dataTable"></div>
+
+<div class="sec-title">🔥 Performans Isı Haritası</div>
+<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;overflow-x:auto;margin-bottom:16px">
+    <div id="heatmapContainer"></div>
+</div>
     <div class="footer">Risk Monitörü © 2026</div>
 </div>
 <script src="assets/js/app.js"></script>
@@ -82,6 +87,7 @@
         var ui=document.getElementById('updateInfo');
         if(ui&&data.meta) ui.textContent='Son guncelleme: '+new Date(data.meta.updated_at).toLocaleString('tr-TR')+' \u00b7 '+data.meta.symbol_count+' seri';
         rebuildAll();
+        PM.buildHeatmap('heatmapContainer',allSeries);
     });
 
     // Period buttons - rebuild charts with new period

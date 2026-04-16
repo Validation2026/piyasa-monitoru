@@ -79,6 +79,14 @@ Kuru yük navlun endeksi küresel ticaret hacminin öncü göstergesi olarak izl
 
 ⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
 
+'hisseler': `BIST hisselerinde yabancı yatırımcı akışları ve şirket kârlılık beklentileri fiyatlamaların merkezinde yer alıyor. Bankacılık sektörü yüksek faiz ortamında net faiz marjı avantajını koruyor.
+
+ABD mega-cap teknoloji hisselerinde yapay zekâ yatırımları ve bulut bilişim büyümesi değerlemeleri destekliyor. NVIDIA, Microsoft ve Alphabet yapay zekâ altyapısında öne çıkarken, Tesla elektrikli araç rekabetinde baskı altında.
+
+Küresel hisse piyasalarında ticaret gerginlikleri ve merkez bankası politikaları belirleyici olmaya devam ediyor. Gelişen piyasa hisselerinde dolar endeksindeki hareketler ve emtia fiyatları önemli değişkenler arasında.
+
+⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
+
 'genel': `Küresel piyasalarda İran-İsrail gerginliği başta olmak üzere jeopolitik riskler fiyatlamaların temel belirleyicisi olmaya devam ediyor. Enerji fiyatlarındaki risk primi emtia genelinde yayılım etkisi gösteriyor.
 
 Merkez bankaları enflasyon ile büyüme arasındaki hassas dengeyi gözetirken, faiz beklentileri döviz ve tahvil piyasalarını doğrudan şekillendiriyor. Risk iştahı jeopolitik gelişmelere karşı yüksek duyarlılık sergiliyor.

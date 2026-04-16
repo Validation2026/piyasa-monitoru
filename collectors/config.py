@@ -20,8 +20,8 @@ COMMODITIES_ENERGY = {
         "TTF=F": {"name": "TTF (Avrupa Gaz)", "unit": "EUR/MWh"},
         "HO=F":  {"name": "HO (Isıtma Yağı)",          "unit": "USD/gal"},
         "RB=F":  {"name": "RB (Benzin)",         "unit": "USD/gal"},
-        "URA":   {"name": "URA (Uranyum ETF)",         "unit": "USD"}, # Nükleer enerji trendi
-        "KRBN":  {"name": "KRBN (Karbon Kredisi ETF)", "unit": "USD"}, # Küresel karbon fiyatlaması
+        "URA":   {"name": "URA (Uranyum ETF)",         "unit": "USD"},
+        "KRBN":  {"name": "KRBN (Karbon Kredisi ETF)", "unit": "USD"},
         "USO":   {"name": "USO (Ham Petrol ETF)",      "unit": "USD"},
         "UNG":   {"name": "UNG (Doğalgaz ETF)",        "unit": "USD"},
         "XLE":   {"name": "XLE (Enerji Sektörü ETF)",  "unit": "USD"},
@@ -111,6 +111,9 @@ CURRENCIES = {
         "USDZAR=X": {"name": "USD/ZAR", "unit": "ZAR"},
         "USDSEK=X": {"name": "USD/SEK", "unit": "SEK"},
         "USDNOK=X": {"name": "USD/NOK", "unit": "NOK"},
+        "USDSGD=X": {"name": "USD/SGD", "unit": "SGD"},
+        "USDTHB=X": {"name": "USD/THB", "unit": "THB"},
+        "USDKRW=X": {"name": "USD/KRW", "unit": "KRW"},
         # Endeks
         "DX-Y.NYB": {"name": "Dolar Endeksi (DXY)", "unit": ""},
     }
@@ -120,10 +123,21 @@ BONDS = {
     "file": "bonds.json",
     "category": "Tahvil Faizleri",
     "symbols": {
+        # ABD Hazine getirileri
+        "^IRX":     {"name": "ABD 3 Aylık",       "unit": "%"},
         "2YY=F":    {"name": "ABD 2 Yıllık",       "unit": "%"},
         "^FVX":     {"name": "ABD 5 Yıllık",       "unit": "%"},
         "^TNX":     {"name": "ABD 10 Yıllık",      "unit": "%"},
         "^TYX":     {"name": "ABD 30 Yıllık",      "unit": "%"},
+        # Tahvil ETF'leri
+        "TLT":      {"name": "TLT (20+ Yıl Tahvil ETF)", "unit": "USD"},
+        "IEF":      {"name": "IEF (7-10 Yıl Tahvil ETF)", "unit": "USD"},
+        "SHY":      {"name": "SHY (1-3 Yıl Tahvil ETF)", "unit": "USD"},
+        "TBT":      {"name": "TBT (Kısa Tahvil 2x Ters)", "unit": "USD"},
+        "HYG":      {"name": "HYG (Yüksek Getirili Tahvil)", "unit": "USD"},
+        "LQD":      {"name": "LQD (Yatırım Düzeyi Tahvil)", "unit": "USD"},
+        "EMB":      {"name": "EMB (Gelişen Piyasa Tahvil)", "unit": "USD"},
+        "BNDX":     {"name": "BNDX (Uluslararası Tahvil)", "unit": "USD"},
     }
 }
 
@@ -148,7 +162,9 @@ INDICES = {
         "^KS11":     {"name": "KOSPI",          "unit": "KRW"},
         "^TWII":     {"name": "TAIEX",          "unit": "TWD"},
         "^MERV":     {"name": "MERVAL",         "unit": "ARS"},
-        "^VIX":     {"name": "VIX (Korku Endeksi)",     "unit": "Puan"}, # S&P 500 oynaklığı
+        "^AXJO":     {"name": "ASX 200",        "unit": "AUD"},
+        "^IBEX":     {"name": "IBEX 35",        "unit": "EUR"},
+        "^VIX":     {"name": "VIX (Korku Endeksi)",     "unit": "Puan"},
     }
 }
 
@@ -156,16 +172,22 @@ CRYPTO = {
     "file": "crypto.json",
     "category": "Kripto Paralar",
     "symbols": {
-        "BTC-USD":  {"name": "BTC (Bitcoin)",   "unit": "USD"},
-        "ETH-USD":  {"name": "ETH (Ethereum)",  "unit": "USD"},
-        "BNB-USD":  {"name": "BNB",       "unit": "USD"},
-        "SOL-USD":  {"name": "SOL (Solana)",    "unit": "USD"},
-        "XRP-USD":  {"name": "XRP",       "unit": "USD"},
-        "ADA-USD":  {"name": "ADA (Cardano)",   "unit": "USD"},
+        "BTC-USD":  {"name": "BTC (Bitcoin)",    "unit": "USD"},
+        "ETH-USD":  {"name": "ETH (Ethereum)",   "unit": "USD"},
+        "BNB-USD":  {"name": "BNB",              "unit": "USD"},
+        "SOL-USD":  {"name": "SOL (Solana)",     "unit": "USD"},
+        "XRP-USD":  {"name": "XRP",              "unit": "USD"},
+        "ADA-USD":  {"name": "ADA (Cardano)",    "unit": "USD"},
         "DOGE-USD": {"name": "DOGE (Dogecoin)",  "unit": "USD"},
         "AVAX-USD": {"name": "AVAX (Avalanche)", "unit": "USD"},
-        "DOT-USD":  {"name": "DOT (Polkadot)",  "unit": "USD"},
+        "DOT-USD":  {"name": "DOT (Polkadot)",   "unit": "USD"},
         "LINK-USD": {"name": "LINK (Chainlink)", "unit": "USD"},
+        "MATIC-USD":{"name": "MATIC (Polygon)",  "unit": "USD"},
+        "UNI-USD":  {"name": "UNI (Uniswap)",    "unit": "USD"},
+        "ATOM-USD": {"name": "ATOM (Cosmos)",    "unit": "USD"},
+        "NEAR-USD": {"name": "NEAR Protocol",   "unit": "USD"},
+        "APT-USD":  {"name": "APT (Aptos)",      "unit": "USD"},
+        "SUI20947-USD": {"name": "SUI",          "unit": "USD"},
     }
 }
 
@@ -190,6 +212,47 @@ INDUSTRIAL = {
     }
 }
 
+STOCKS = {
+    "file": "stocks.json",
+    "category": "Hisse Senetleri",
+    "symbols": {
+        # ── BIST (Borsa İstanbul) ──
+        "THYAO.IS":  {"name": "THY",             "unit": "TRY"},
+        "GARAN.IS":  {"name": "Garanti BBVA",    "unit": "TRY"},
+        "AKBNK.IS":  {"name": "Akbank",          "unit": "TRY"},
+        "YKBNK.IS":  {"name": "Yapı Kredi",      "unit": "TRY"},
+        "ISCTR.IS":  {"name": "İş Bankası C",    "unit": "TRY"},
+        "EREGL.IS":  {"name": "Ereğli Demir Çelik","unit": "TRY"},
+        "BIMAS.IS":  {"name": "BİM Mağazaları",  "unit": "TRY"},
+        "KCHOL.IS":  {"name": "Koç Holding",     "unit": "TRY"},
+        "SAHOL.IS":  {"name": "Sabancı Holding",  "unit": "TRY"},
+        "TUPRS.IS":  {"name": "Tüpraş",          "unit": "TRY"},
+        "ASELS.IS":  {"name": "ASELSAN",          "unit": "TRY"},
+        "FROTO.IS":  {"name": "Ford Otosan",      "unit": "TRY"},
+        "TOASO.IS":  {"name": "Tofaş Oto.",       "unit": "TRY"},
+        "SISE.IS":   {"name": "Şişecam",          "unit": "TRY"},
+        "TAVHL.IS":  {"name": "TAV Havalimanları", "unit": "TRY"},
+        "PGSUS.IS":  {"name": "Pegasus",          "unit": "TRY"},
+        "KOZAL.IS":  {"name": "Koza Altın",       "unit": "TRY"},
+        "EKGYO.IS":  {"name": "Emlak Konut GYO",  "unit": "TRY"},
+        "TCELL.IS":  {"name": "Turkcell",         "unit": "TRY"},
+        "TTKOM.IS":  {"name": "Türk Telekom",     "unit": "TRY"},
+        # ── ABD Mega-Cap ──
+        "AAPL":      {"name": "Apple",            "unit": "USD"},
+        "MSFT":      {"name": "Microsoft",        "unit": "USD"},
+        "GOOGL":     {"name": "Alphabet (Google)","unit": "USD"},
+        "AMZN":      {"name": "Amazon",           "unit": "USD"},
+        "NVDA":      {"name": "NVIDIA",           "unit": "USD"},
+        "META":      {"name": "Meta (Facebook)",  "unit": "USD"},
+        "TSLA":      {"name": "Tesla",            "unit": "USD"},
+        # ── Küresel ──
+        "ASML":      {"name": "ASML Holding",     "unit": "EUR"},
+        "TSM":       {"name": "TSMC",             "unit": "USD"},
+        "NVO":       {"name": "Novo Nordisk",     "unit": "USD"},
+        "005930.KS": {"name": "Samsung",          "unit": "KRW"},
+    }
+}
+
 ALL_YF_GROUPS = [
     COMMODITIES_ENERGY,
     COMMODITIES_METALS,
@@ -199,4 +262,5 @@ ALL_YF_GROUPS = [
     BONDS,
     INDICES,
     CRYPTO,
+    STOCKS,
 ]

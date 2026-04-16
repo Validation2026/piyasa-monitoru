@@ -81,6 +81,7 @@
     <button class="cat-tab" data-cat="indices">📈 Endeksler</button>
     <button class="cat-tab" data-cat="crypto">₿ Kripto</button>
     <button class="cat-tab" data-cat="bonds">📜 Tahvil</button>
+    <button class="cat-tab" data-cat="stocks">💹 Hisseler</button>
 </div>
 
 <div class="sec-title">Karşılaştırmak istediğiniz varlıkları seçin (en fazla 6)</div>
@@ -133,7 +134,7 @@ var compChart = null;
 var currentCat = 'popular';
 
 function loadAllData() {
-    var allFiles = ['commodities_energy.json','commodities_metals.json','commodities_agriculture.json','industrial.json','currencies.json','indices.json','crypto.json','bonds.json'];
+    var allFiles = ['commodities_energy.json','commodities_metals.json','commodities_agriculture.json','industrial.json','currencies.json','indices.json','crypto.json','bonds.json','stocks.json'];
     return Promise.all(allFiles.map(function(f) {
         return PM.fj(f).then(function(d) {
             if (d && d.series) {
@@ -350,7 +351,8 @@ var allFiles = [
     {f:'currencies.json',cats:['currencies']},
     {f:'indices.json',cats:['indices']},
     {f:'crypto.json',cats:['crypto']},
-    {f:'bonds.json',cats:['bonds']}
+    {f:'bonds.json',cats:['bonds']},
+    {f:'stocks.json',cats:['stocks']}
 ];
 
 Promise.all(allFiles.map(function(item) {
