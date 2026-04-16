@@ -114,10 +114,52 @@ body{font-family:var(--fm);background:var(--bg);color:var(--t1);line-height:1.6;
 /* ══════════════════════════════
    MAIN CONTENT
    ══════════════════════════════ */
-.main{
-    margin-left:var(--sidebar-w);padding-top:48px;
-    min-height:100vh;transition:margin-left .3s;
+/* ══════════════════════════════
+   MAIN CONTENT (GÜNCELLENDİ)
+   ══════════════════════════════ */
+.main {
+    margin-left: var(--sidebar-w);
+    /* KRİTİK EKLENTİ: Sadece margin vermek yetmez, genişliği sidebar kadar kısmalıyız */
+    width: calc(100% - var(--sidebar-w)); 
+    padding-top: 48px;
+    min-height: 100vh;
+    transition: margin-left .3s, width .3s;
+    box-sizing: border-box;
+    /* Sayfa içi devasa bir grafik gelse bile kapsayıcıyı patlatıp sola kaymasını engeller */
+    overflow-x: hidden; 
 }
+
+.page {
+    /* KRİTİK EKLENTİ: Auto-margin'in sola taşma yapmasını engeller */
+    width: 100%; 
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px 24px;
+    box-sizing: border-box;
+}
+
+.page-spacer {
+    height: 50px;
+}
+
+/* ══════════════════════════════
+   MOBILE RESPONSIVE (GÜNCELLENDİ)
+   ══════════════════════════════ */
+@media(max-width:900px){
+    .sidebar { transform: translateX(-100%) }
+    .sidebar.open { transform: translateX(0) }
+    .sb-overlay.open { display: block; opacity: 1 }
+    .topbar { display: none }
+    
+    .main { 
+        margin-left: 0; 
+        width: 100%; /* Mobilde genişliği tekrar %100'e çekiyoruz */
+        padding-top: 56px; 
+    }
+    
+    .mobile-nav { display: block; top: 0 }
+}
+
 .page{max-width:1400px;margin:0 auto;padding:20px 24px}
 .page-spacer{height:50px}
 
