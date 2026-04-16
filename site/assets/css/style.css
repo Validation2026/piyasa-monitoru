@@ -320,9 +320,8 @@ body{font-family:var(--fm);background:var(--bg);color:var(--t1);line-height:1.6;
 .dtable .r{text-align:right}
 .dtable .u{color:var(--green)}.dtable .d{color:var(--red)}
 .dtable .dim{color:var(--t3);font-size:.72rem}
-.asset-logo{border-radius:7px;box-shadow:0 2px 8px rgba(2,6,23,.18);flex:0 0 auto}
+.asset-logo{border-radius:7px;box-shadow:0 2px 8px rgba(2,6,23,.18);flex:0 0 auto;object-fit:cover;background:#fff}
 .asset-name-cell{display:flex;align-items:center;gap:8px;font-weight:600}
-
 /* ══════════════════════════════
    ACTIVITY
    ══════════════════════════════ */
