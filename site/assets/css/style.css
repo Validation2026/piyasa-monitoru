@@ -99,12 +99,24 @@ body{font-family:var(--fm);background:var(--bg);color:var(--t1);line-height:1.6;
 /* ══════════════════════════════
    TOP BAR (replaces old nav)
    ══════════════════════════════ */
-.topbar{
-    position:fixed;top:0;left:var(--sidebar-w);right:0;height:48px;
-    background:var(--card);border-bottom:1px solid var(--border);
-    display:flex;align-items:center;padding:0 20px;gap:12px;
-    z-index:100;backdrop-filter:blur(16px);
-    transition:left .3s;
+.topbar {
+    position: fixed;
+    top: 0;
+    /* Sidebar'ın bittiği yerden başla */
+    left: var(--sidebar-w); 
+    /* Ekran genişliğinden sidebar'ı çıkar */
+    width: calc(100% - var(--sidebar-w)); 
+    height: 48px;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    gap: 12px;
+    z-index: 100;
+    backdrop-filter: blur(16px);
+    transition: left .3s, width .3s;
+    box-sizing: border-box;
 }
 .topbar-hamburger{display:none;background:none;border:none;color:var(--t1);font-size:1.3rem;cursor:pointer;padding:4px}
 .topbar-breadcrumb{font-size:.78rem;color:var(--t3);flex:1}
@@ -118,20 +130,19 @@ body{font-family:var(--fm);background:var(--bg);color:var(--t1);line-height:1.6;
    MAIN CONTENT (GÜNCELLENDİ)
    ══════════════════════════════ */
 .main {
-    margin-left: var(--sidebar-w);
-    /* KRİTİK EKLENTİ: Sadece margin vermek yetmez, genişliği sidebar kadar kısmalıyız */
+    /* Margin yerine mutlak başlangıç noktası kullanıyoruz */
+    position: relative; 
+    left: var(--sidebar-w); 
     width: calc(100% - var(--sidebar-w)); 
-    padding-top: 48px;
     min-height: 100vh;
-    transition: margin-left .3s, width .3s;
+    padding-top: 48px;
+    transition: left .3s, width .3s;
     box-sizing: border-box;
-    /* Sayfa içi devasa bir grafik gelse bile kapsayıcıyı patlatıp sola kaymasını engeller */
-    overflow-x: hidden; 
+    overflow-x: hidden; /* Taşmaları bıçak gibi keser */
 }
 
 .page {
-    /* KRİTİK EKLENTİ: Auto-margin'in sola taşma yapmasını engeller */
-    width: 100%; 
+    width: 100%;
     max-width: 1400px;
     margin: 0 auto;
     padding: 20px 24px;
@@ -149,17 +160,17 @@ body{font-family:var(--fm);background:var(--bg);color:var(--t1);line-height:1.6;
     .sidebar { transform: translateX(-100%) }
     .sidebar.open { transform: translateX(0) }
     .sb-overlay.open { display: block; opacity: 1 }
+    
     .topbar { display: none }
     
     .main { 
-        margin-left: 0; 
-        width: 100%; /* Mobilde genişliği tekrar %100'e çekiyoruz */
+        left: 0; /* Mobilde sidebar gidince sola yapıştır */
+        width: 100%; /* Tam ekran yap */
         padding-top: 56px; 
     }
     
     .mobile-nav { display: block; top: 0 }
 }
-
 .page{max-width:1400px;margin:0 auto;padding:20px 24px}
 .page-spacer{height:50px}
 
