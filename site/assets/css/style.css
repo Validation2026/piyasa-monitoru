@@ -182,7 +182,7 @@ body{font-family:var(--fm);background:var(--bg);color:var(--t1);line-height:1.6;
 .summary-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:24px}
 .scard{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;transition:.25s;cursor:default;overflow:hidden}
 .scard:hover{border-color:var(--blue);transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.12)}
-.scard-name{font-size:.75rem;color:var(--t3);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.scard-name{font-size:.75rem;color:var(--t3);font-weight:600;text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;gap:8px}
 .scard-price{font-size:1.4rem;font-weight:700;font-family:var(--mono);margin:4px 0;letter-spacing:-.5px}
 .scard-unit{font-size:.7rem;color:var(--t3);font-weight:400}
 .scard-chgs{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
@@ -264,7 +264,7 @@ body{font-family:var(--fm);background:var(--bg);color:var(--t1);line-height:1.6;
 .charts{display:grid;grid-template-columns:repeat(auto-fill,minmax(480px,1fr));gap:16px;margin-bottom:28px}
 .chrt{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;transition:.25s}
 .chrt:hover{border-color:var(--blue)}
-.chrt-title{font-size:.88rem;font-weight:700;margin-bottom:2px}
+.chrt-title{font-size:.88rem;font-weight:700;margin-bottom:2px;display:flex;align-items:center;gap:8px}
 .chrt-sub{font-size:.73rem;color:var(--t3);margin-bottom:14px;display:flex;align-items:center;gap:8px}
 .chrt-sub .live{font-family:var(--mono);font-weight:600}
 .chrt canvas{width:100%!important;height:260px!important}
@@ -320,6 +320,8 @@ body{font-family:var(--fm);background:var(--bg);color:var(--t1);line-height:1.6;
 .dtable .r{text-align:right}
 .dtable .u{color:var(--green)}.dtable .d{color:var(--red)}
 .dtable .dim{color:var(--t3);font-size:.72rem}
+.asset-logo{border-radius:7px;box-shadow:0 2px 8px rgba(2,6,23,.18);flex:0 0 auto}
+.asset-name-cell{display:flex;align-items:center;gap:8px;font-weight:600}
 
 /* ══════════════════════════════
    ACTIVITY
