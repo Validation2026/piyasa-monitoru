@@ -321,6 +321,9 @@ body{font-family:var(--fm);background:var(--bg);color:var(--t1);line-height:1.6;
 .dtable .u{color:var(--green)}.dtable .d{color:var(--red)}
 .dtable .dim{color:var(--t3);font-size:.72rem}
 .asset-logo{border-radius:7px;box-shadow:0 2px 8px rgba(2,6,23,.18);flex:0 0 auto;object-fit:cover;background:#fff}
+.asset-logo-pair{display:inline-flex;align-items:center;position:relative;width:30px;height:20px;flex:0 0 auto}
+.asset-logo-pair .asset-logo.mini{width:18px;height:18px;border-radius:999px;object-fit:cover;border:1px solid rgba(15,23,42,.08)}
+.asset-logo-pair .asset-logo.overlap{margin-left:-6px}
 .asset-name-cell{display:flex;align-items:center;gap:8px;font-weight:600}
 /* ══════════════════════════════
    ACTIVITY
