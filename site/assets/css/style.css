@@ -1027,3 +1027,103 @@ a:focus-visible {
 .stock-badge.us { background: #dbeafe; color: #1e40af; }
 .stock-badge.global { background: #e0e7ff; color: #4338ca; }
 
+/* ══════════════════════════════════════════════════════════
+   SITE-WIDE PERFORMANCE + MOBILE UX TUNING (SAFE OVERRIDES)
+   ══════════════════════════════════════════════════════════ */
+
+/* Emoji/flag rendering fallback (özellikle desktop Linux/Windows ortamları) */
+.country-tab,
+.rk-f,
+.pc-flag,
+.flag,
+[class*="flag"] {
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Twemoji Mozilla", var(--fm);
+    font-variant-emoji: emoji;
+}
+
+/* Daha hafif hover: tablo satırında layout-shift ve repaint azalt */
+tbody tr,
+.dtable tr,
+.heatmap-tbl tbody tr {
+    transform: none !important;
+    transition: background-color .14s ease, color .14s ease !important;
+}
+
+tbody tr:hover,
+.dtable tr:hover td,
+.heatmap-tbl tbody tr:hover {
+    transform: none !important;
+}
+
+/* Aşırı will-change kullanımını kapat: mobil/masaüstü jank azaltır */
+.scard,
+.kpi,
+.cat,
+.chrt,
+.mover-item,
+.prow {
+    will-change: auto !important;
+}
+
+/* Sürekli pulse efektleri CPU tüketimini artırmasın */
+.ai-badge,
+.pbtn.on,
+.tf-btn.active,
+.live-dot {
+    animation-duration: 3s;
+}
+
+/* Desktop'ta fixed gradient scroll kasmasını azalt */
+body {
+    background-attachment: scroll;
+}
+
+/* Butonlar mobilde ve desktop'ta daha tutarlı/pointer-friendly */
+.pbtn,
+.tf-btn,
+.view-btn,
+.country-tab,
+.sb-theme-btn,
+.chart-expand-btn {
+    min-height: 36px;
+    border-radius: 10px;
+}
+
+@media (max-width: 900px) {
+    .pbtn,
+    .tf-btn,
+    .view-btn,
+    .country-tab,
+    .sb-theme-btn,
+    .chart-expand-btn {
+        min-height: 40px;
+        padding-top: 8px !important;
+        padding-bottom: 8px !important;
+    }
+
+    .chart-timeframes,
+    .periods,
+    .view-toggle,
+    .country-tabs {
+        gap: 8px !important;
+    }
+}
+
+/* Düşük güçlü cihazlarda ek görsel efektleri sadeleştir */
+@media (max-width: 1200px), (prefers-reduced-motion: reduce) {
+    .scard::after,
+    .chrt::after,
+    .cat::after,
+    .kpi::after,
+    .scard::before {
+        display: none !important;
+    }
+
+    .scard:hover,
+    .kpi:hover,
+    .cat:hover,
+    .chrt:hover {
+        transform: none !important;
+        box-shadow: none !important;
+    }
+}
