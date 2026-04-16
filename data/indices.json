@@ -10011,11 +10011,11 @@
       "id": "^GSPC",
       "name": "S&P 500",
       "unit": "USD",
-      "logo_url": "https://s3-symbol-logo.tradingview.com/gspc.svg",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/spx.svg",
       "logo_pair": [],
       "logo_candidates": [
-        "https://s3-symbol-logo.tradingview.com/gspc.svg",
-        "https://s3-symbol-logo.tradingview.com/gspc--big.svg"
+        "https://s3-symbol-logo.tradingview.com/spx.svg",
+        "https://s3-symbol-logo.tradingview.com/spx--big.svg"
       ],
       "current": 7022.9502,
       "change_1d_pct": 0.8,
@@ -20095,11 +20095,11 @@
       "id": "^IXIC",
       "name": "NASDAQ",
       "unit": "USD",
-      "logo_url": "https://s3-symbol-logo.tradingview.com/ixic.svg",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/ndx.svg",
       "logo_pair": [],
       "logo_candidates": [
-        "https://s3-symbol-logo.tradingview.com/ixic.svg",
-        "https://s3-symbol-logo.tradingview.com/ixic--big.svg"
+        "https://s3-symbol-logo.tradingview.com/ndx.svg",
+        "https://s3-symbol-logo.tradingview.com/ndx--big.svg"
       ],
       "current": 24016.0195,
       "change_1d_pct": 1.59,
@@ -30179,11 +30179,11 @@
       "id": "^STOXX50E",
       "name": "Euro Stoxx 50",
       "unit": "EUR",
-      "logo_url": "https://s3-symbol-logo.tradingview.com/stoxx50e.svg",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/sx5e.svg",
       "logo_pair": [],
       "logo_candidates": [
-        "https://s3-symbol-logo.tradingview.com/stoxx50e.svg",
-        "https://s3-symbol-logo.tradingview.com/stoxx50e--big.svg"
+        "https://s3-symbol-logo.tradingview.com/sx5e.svg",
+        "https://s3-symbol-logo.tradingview.com/sx5e--big.svg"
       ],
       "current": 5953.6299,
       "change_1d_pct": 0.22,
@@ -35233,11 +35233,11 @@
       "id": "^FTSE",
       "name": "FTSE 100",
       "unit": "GBP",
-      "logo_url": "https://s3-symbol-logo.tradingview.com/ftse.svg",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/ukx.svg",
       "logo_pair": [],
       "logo_candidates": [
-        "https://s3-symbol-logo.tradingview.com/ftse.svg",
-        "https://s3-symbol-logo.tradingview.com/ftse--big.svg"
+        "https://s3-symbol-logo.tradingview.com/ukx.svg",
+        "https://s3-symbol-logo.tradingview.com/ukx--big.svg"
       ],
       "current": 10579.29,
       "change_1d_pct": 0.19,
@@ -40303,11 +40303,11 @@
       "id": "^GDAXI",
       "name": "DAX 40",
       "unit": "EUR",
-      "logo_url": "https://s3-symbol-logo.tradingview.com/gdaxi.svg",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/dax.svg",
       "logo_pair": [],
       "logo_candidates": [
-        "https://s3-symbol-logo.tradingview.com/gdaxi.svg",
-        "https://s3-symbol-logo.tradingview.com/gdaxi--big.svg"
+        "https://s3-symbol-logo.tradingview.com/dax.svg",
+        "https://s3-symbol-logo.tradingview.com/dax--big.svg"
       ],
       "current": 24081.6797,
       "change_1d_pct": 0.06,
@@ -45425,11 +45425,11 @@
       "id": "^FCHI",
       "name": "CAC 40",
       "unit": "EUR",
-      "logo_url": "https://s3-symbol-logo.tradingview.com/fchi.svg",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/px1.svg",
       "logo_pair": [],
       "logo_candidates": [
-        "https://s3-symbol-logo.tradingview.com/fchi.svg",
-        "https://s3-symbol-logo.tradingview.com/fchi--big.svg"
+        "https://s3-symbol-logo.tradingview.com/px1.svg",
+        "https://s3-symbol-logo.tradingview.com/px1--big.svg"
       ],
       "current": 8299.6699,
       "change_1d_pct": 0.3,
@@ -50575,11 +50575,11 @@
       "id": "^N225",
       "name": "Nikkei 225",
       "unit": "JPY",
-      "logo_url": "https://s3-symbol-logo.tradingview.com/n225.svg",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/ni225.svg",
       "logo_pair": [],
       "logo_candidates": [
-        "https://s3-symbol-logo.tradingview.com/n225.svg",
-        "https://s3-symbol-logo.tradingview.com/n225--big.svg"
+        "https://s3-symbol-logo.tradingview.com/ni225.svg",
+        "https://s3-symbol-logo.tradingview.com/ni225--big.svg"
       ],
       "current": 59518.3398,
       "change_1d_pct": 2.38,
@@ -60419,13 +60419,11 @@
       "id": "000001.SS",
       "name": "Shanghai Comp.",
       "unit": "CNY",
-      "logo_url": "https://s3-symbol-logo.tradingview.com/SSE-000001.svg",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/shcomp.svg",
       "logo_pair": [],
       "logo_candidates": [
-        "https://s3-symbol-logo.tradingview.com/SSE-000001.svg",
-        "https://s3-symbol-logo.tradingview.com/SSE-000001--big.svg",
-        "https://s3-symbol-logo.tradingview.com/000001.svg",
-        "https://s3-symbol-logo.tradingview.com/000001--big.svg"
+        "https://s3-symbol-logo.tradingview.com/shcomp.svg",
+        "https://s3-symbol-logo.tradingview.com/shcomp--big.svg"
       ],
       "current": 4055.5469,
       "change_1d_pct": 0.7,
@@ -65287,11 +65285,11 @@
       "id": "^BSESN",
       "name": "BSE Sensex",
       "unit": "INR",
-      "logo_url": "https://s3-symbol-logo.tradingview.com/bsesn.svg",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/sensex.svg",
       "logo_pair": [],
       "logo_candidates": [
-        "https://s3-symbol-logo.tradingview.com/bsesn.svg",
-        "https://s3-symbol-logo.tradingview.com/bsesn--big.svg"
+        "https://s3-symbol-logo.tradingview.com/sensex.svg",
+        "https://s3-symbol-logo.tradingview.com/sensex--big.svg"
       ],
       "current": 77938.8516,
       "change_1d_pct": -0.22,
@@ -70237,11 +70235,11 @@
       "id": "^KS11",
       "name": "KOSPI",
       "unit": "KRW",
-      "logo_url": "https://s3-symbol-logo.tradingview.com/ks11.svg",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/kospi.svg",
       "logo_pair": [],
       "logo_candidates": [
-        "https://s3-symbol-logo.tradingview.com/ks11.svg",
-        "https://s3-symbol-logo.tradingview.com/ks11--big.svg"
+        "https://s3-symbol-logo.tradingview.com/kospi.svg",
+        "https://s3-symbol-logo.tradingview.com/kospi--big.svg"
       ],
       "current": 6226.0498,
       "change_1d_pct": 2.21,
@@ -75151,11 +75149,11 @@
       "id": "^TWII",
       "name": "TAIEX",
       "unit": "TWD",
-      "logo_url": "https://s3-symbol-logo.tradingview.com/twii.svg",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/taiex.svg",
       "logo_pair": [],
       "logo_candidates": [
-        "https://s3-symbol-logo.tradingview.com/twii.svg",
-        "https://s3-symbol-logo.tradingview.com/twii--big.svg"
+        "https://s3-symbol-logo.tradingview.com/taiex.svg",
+        "https://s3-symbol-logo.tradingview.com/taiex--big.svg"
       ],
       "current": 37132.0195,
       "change_1d_pct": 1.12,
@@ -80033,11 +80031,11 @@
       "id": "^MERV",
       "name": "MERVAL",
       "unit": "ARS",
-      "logo_url": "https://s3-symbol-logo.tradingview.com/merv.svg",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/imv.svg",
       "logo_pair": [],
       "logo_candidates": [
-        "https://s3-symbol-logo.tradingview.com/merv.svg",
-        "https://s3-symbol-logo.tradingview.com/merv--big.svg"
+        "https://s3-symbol-logo.tradingview.com/imv.svg",
+        "https://s3-symbol-logo.tradingview.com/imv--big.svg"
       ],
       "current": 2917889.0,
       "change_1d_pct": -1.11,
@@ -84935,11 +84933,11 @@
       "id": "^AXJO",
       "name": "ASX 200",
       "unit": "AUD",
-      "logo_url": "https://s3-symbol-logo.tradingview.com/axjo.svg",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/xjo.svg",
       "logo_pair": [],
       "logo_candidates": [
-        "https://s3-symbol-logo.tradingview.com/axjo.svg",
-        "https://s3-symbol-logo.tradingview.com/axjo--big.svg"
+        "https://s3-symbol-logo.tradingview.com/xjo.svg",
+        "https://s3-symbol-logo.tradingview.com/xjo--big.svg"
       ],
       "current": 8955.0,
       "change_1d_pct": -0.26,
@@ -90017,11 +90015,11 @@
       "id": "^IBEX",
       "name": "IBEX 35",
       "unit": "EUR",
-      "logo_url": "https://s3-symbol-logo.tradingview.com/ibex.svg",
+      "logo_url": "https://s3-symbol-logo.tradingview.com/ibc.svg",
       "logo_pair": [],
       "logo_candidates": [
-        "https://s3-symbol-logo.tradingview.com/ibex.svg",
-        "https://s3-symbol-logo.tradingview.com/ibex--big.svg"
+        "https://s3-symbol-logo.tradingview.com/ibc.svg",
+        "https://s3-symbol-logo.tradingview.com/ibc--big.svg"
       ],
       "current": 18192.6992,
       "change_1d_pct": 0.04,
