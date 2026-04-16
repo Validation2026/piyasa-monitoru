@@ -406,7 +406,7 @@ function buildHeatmap(containerId, seriesList){
         { key: 'change_1m_pct', label: '1A' },
         { key: 'change_3m_pct', label: '3A' },
         { key: 'change_ytd_pct', label: 'YTD' },
-        { key: 'change_1y_pct', label: '1Y' }
+        { key: 'change_1y_pct', label: '5Y' }
     ];
     function heatColor(v){
         if(v == null) return 'background:transparent;color:var(--t3)';
