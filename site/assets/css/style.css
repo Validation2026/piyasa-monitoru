@@ -1003,6 +1003,20 @@ a:focus-visible {
 }
 
 /* ═══════════════════════════════════════
+   VIEW TOGGLE — Kartlar / Performans / Isı Haritası
+   ═══════════════════════════════════════ */
+.view-toggle { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+.view-btn {
+    background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+    padding: 5px 12px; font-size: .72rem; font-weight: 600;
+    cursor: pointer; transition: .2s; color: var(--t2); font-family: var(--fm);
+}
+.view-btn:hover { border-color: var(--blue); }
+.view-btn.on { background: var(--blue); color: #fff; border-color: var(--blue); }
+.view-section { display: none; }
+.view-section.active { display: block; }
+
+/* ═══════════════════════════════════════
    STOCK PAGE — Sektör badge'leri
    ═══════════════════════════════════════ */
 .stock-badge {
