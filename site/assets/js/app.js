@@ -93,12 +93,25 @@ function pmLogoNext(img){
 function logoImg(series,size){
     size=size||22;
     var safeName=((series&&series.name)||'Varlık').replace(/"/g,'');
-    var candidates=tradingViewCandidates(series);
     var fallback=logoUrl(series);
+    var pair = series && Array.isArray(series.logo_pair) ? series.logo_pair.filter(Boolean) : [];
+    if(pair.length>=2){
+        return '<span class="asset-logo-pair" aria-label="'+safeName+' parite logosu">'+
+            '<img class="asset-logo mini" src="'+pair[0]+'" alt="" width="'+size+'" height="'+size+'" loading="lazy" decoding="async" data-logo-candidates="'+pair[0]+'" data-logo-index="0" data-logo-fallback="'+fallback+'" onerror="window.PMLogoNext(this)">'+
+            '<img class="asset-logo mini overlap" src="'+pair[1]+'" alt="" width="'+size+'" height="'+size+'" loading="lazy" decoding="async" data-logo-candidates="'+pair[1]+'" data-logo-index="0" data-logo-fallback="'+fallback+'" onerror="window.PMLogoNext(this)">'+
+            '</span>';
+    }
+
+    var candidates = (series && Array.isArray(series.logo_candidates) && series.logo_candidates.length)
+        ? series.logo_candidates.slice()
+        : tradingViewCandidates(series);
+    if(series && series.logo_url) candidates.unshift(series.logo_url);
+    candidates = candidates.filter(function(u,idx){ return u && candidates.indexOf(u)===idx; });
     var src=candidates.length?candidates[0]:fallback;
     return '<img class="asset-logo" src="'+src+'" alt="'+safeName+' logosu" width="'+size+'" height="'+size+'" loading="lazy" decoding="async" data-logo-candidates="'+candidates.join('|')+'" data-logo-index="0" data-logo-fallback="'+fallback+'" onerror="window.PMLogoNext(this)">';
 }
 window.PMLogoNext=pmLogoNext;
+
                    
 function filterPeriod(data, period) {
     if (!data || !data.length) return [];
@@ -154,8 +167,8 @@ function buildSummary(containerId,seriesList){
         var range=s.low_52w!=null?'52H: '+fp(s.low_52w)+' — '+fp(s.high_52w):'';
         var sid='mini-spark-'+i;
         var ariaLabel = s.name+': '+fp(s.current)+' '+(s.unit||'')+(s.change_1d_pct!=null?', günlük değişim '+s.change_1d_pct.toFixed(2)+'%':'');
-        h+='<div class="scard fade-in" style="animation-delay:'+(.05*i)+'s" role="group" aria-label="'+ariaLabel.replace(/"/g,'')+'"><div class="scard-name">'+logoImg(s,18)+'<span>'+s.name+'</span></div><div class="scard-price">'+fp(s.current)+' <span class="scard-unit">'+(s.unit||'')+'</span></div><div class="scard-chgs">'+chgs+'</div>'+(range?'<div class="scard-range">'+range+'</div>':'')+'<div class="scard-spark"><canvas id="'+sid+'" aria-hidden="true"></canvas></div></div>';    
-        });
+        h+='<div class="scard fade-in" style="animation-delay:'+(.05*i)+'s" role="group" aria-label="'+ariaLabel.replace(/"/g,'')+'"><div class="scard-name">'+logoImg(s,18)+'<span>'+s.name+'</span></div><div class="scard-price">'+fp(s.current)+' <span class="scard-unit">'+(s.unit||'')+'</span></div><div class="scard-chgs">'+chgs+'</div>'+(range?'<div class="scard-range">'+range+'</div>':'')+'<div class="scard-spark"><canvas id="'+sid+'" aria-hidden="true"></canvas></div></div>';
+    });
     el.innerHTML=h;
     setTimeout(function(){seriesList.forEach(function(s,i){if(s&&s.data)miniSpark('mini-spark-'+i,s.data,gc(i))})},50);
 }
@@ -167,7 +180,7 @@ function buildCharts(containerId,seriesList,period){
         card.setAttribute('role','figure');
         card.setAttribute('aria-label',s.name+' grafiği');
         var pBadge=s.change_1d_pct!=null?fc(s.change_1d_pct):'';
-        card.innerHTML='<div class="chrt-title">'+logoImg(s,20)+'<span>'+s.name+'</span></div><div class="chrt-sub"><span class="live">'+fp(s.current)+' '+(s.unit||'')+'</span>'+pBadge+'</div><canvas id="'+cid+'" aria-hidden="true"></canvas>';    
+        card.innerHTML='<div class="chrt-title">'+logoImg(s,20)+'<span>'+s.name+'</span></div><div class="chrt-sub"><span class="live">'+fp(s.current)+' '+(s.unit||'')+'</span>'+pBadge+'</div><canvas id="'+cid+'" aria-hidden="true"></canvas>';
         el.appendChild(card);var ch=makeChart(cid,s,{color:gc(i),period:period});if(ch)charts.push(ch);
     });return charts;
 }
@@ -177,7 +190,7 @@ function buildTable(containerId,seriesList){
     var h='<table><thead><tr><th>İsim</th><th class="r">Fiyat</th><th class="r">1 Gün</th><th class="r">1 Hafta</th><th class="r">1 Ay</th><th class="r">YTD</th><th class="r">52H Aralık</th></tr></thead><tbody>';
     seriesList.forEach(function(s){if(!s)return;
         function cv(p){if(p==null)return'<td class="mono r dim">—</td>';return'<td class="mono r '+cc(p)+'">'+(p>=0?'+':'')+p.toFixed(2)+'%</td>'}
-        h+='<tr><td class="asset-name-cell">'+logoImg(s,18)+'<span>'+s.name+'</span></td><td class="mono r">'+fp(s.current)+' <span class="dim">'+(s.unit||'')+'</span></td>'+cv(s.change_1d_pct)+cv(s.change_1w_pct)+cv(s.change_1m_pct)+cv(s.change_ytd_pct)+'<td class="mono r dim" style="font-size:.7rem">'+(s.low_52w!=null?fp(s.low_52w)+' — '+fp(s.high_52w):'—')+'</td></tr>';   
+        h+='<tr><td class="asset-name-cell">'+logoImg(s,18)+'<span>'+s.name+'</span></td><td class="mono r">'+fp(s.current)+' <span class="dim">'+(s.unit||'')+'</span></td>'+cv(s.change_1d_pct)+cv(s.change_1w_pct)+cv(s.change_1m_pct)+cv(s.change_ytd_pct)+'<td class="mono r dim" style="font-size:.7rem">'+(s.low_52w!=null?fp(s.low_52w)+' — '+fp(s.high_52w):'—')+'</td></tr>';
     });h+='</tbody></table>';el.innerHTML=h;
 }
 
