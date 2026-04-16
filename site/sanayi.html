@@ -32,20 +32,47 @@
         <div class="update-info" id="updateInfo"></div>
     </div>
     <div class="ai-box"><div class="ai-header"><span>🤖 AI Piyasa Analizi</span><span class="ai-badge">AI</span></div><div class="ai-body" id="aiAnalysis"><span class="ai-loading">Analiz yükleniyor...</span></div></div>
-    <div class="summary-row" id="summaryCards"></div>
-    <div class="chart-timeframes global-timeframes"> 
-        <button class="tf-btn" data-tf="1A">1A</button>
-        <button class="tf-btn" data-tf="3A">3A</button>
-        <button class="tf-btn" data-tf="6A">6A</button>
-        <button class="tf-btn" data-tf="YTD">YTD</button>
-        <button class="tf-btn" data-tf="1Y">1Y</button>
-        <button class="tf-btn" data-tf="2Y">2Y</button>
-        <button class="tf-btn" data-tf="3Y">3Y</button>
-        <button class="tf-btn" data-tf="5Y">5Y</button>
-        <button class="tf-btn active" data-tf="Tümü">Tümü</button>
+    <div class="view-toggle" id="viewToggle">
+        <button class="view-btn on" data-view="cards">📋 Kartlar</button>
+        <button class="view-btn" data-view="bar">📊 Performans</button>
+        <button class="view-btn" data-view="heatmap">🔥 Isı Haritası</button>
     </div>
-    <div class="charts" id="chartsGrid"></div>
-    <div class="dtable" id="dataTable"></div>
+
+    <div class="view-section active" id="viewCards">
+        <div class="summary-row" id="summaryCards"></div>
+        <div class="chart-timeframes global-timeframes">
+            <button class="tf-btn" data-tf="1A">1A</button>
+            <button class="tf-btn" data-tf="3A">3A</button>
+            <button class="tf-btn" data-tf="6A">6A</button>
+            <button class="tf-btn" data-tf="YTD">YTD</button>
+            <button class="tf-btn" data-tf="1Y">1Y</button>
+            <button class="tf-btn" data-tf="2Y">2Y</button>
+            <button class="tf-btn" data-tf="3Y">3Y</button>
+            <button class="tf-btn" data-tf="5Y">5Y</button>
+            <button class="tf-btn active" data-tf="Tümü">Tümü</button>
+        </div>
+        <div class="charts" id="chartsGrid"></div>
+        <div class="dtable" id="dataTable"></div>
+    </div>
+
+    <div class="view-section" id="viewBar">
+        <div class="bar-chart-card">
+            <div class="chart-title">📊 Günlük Performans Sıralaması</div>
+            <div class="chart-subtitle">Tüm sanayi hammaddeleri — günlük % değişim</div>
+            <canvas id="perfBarDaily"></canvas>
+        </div>
+        <div class="bar-chart-card">
+            <div class="chart-title">📊 Aylık Performans Sıralaması</div>
+            <div class="chart-subtitle">Tüm sanayi hammaddeleri — 1 aylık % değişim</div>
+            <canvas id="perfBarMonthly"></canvas>
+        </div>
+    </div>
+
+    <div class="view-section" id="viewHeatmap">
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;overflow-x:auto;margin-bottom:16px">
+            <div id="heatmapContainer"></div>
+        </div>
+    </div>
 
 <div class="sec-title">🏭 Küresel İmalat PMI</div>
 <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow-x:auto;margin-bottom:18px"><table style="width:100%;border-collapse:collapse;min-width:400px;font-size:.78rem"><thead><tr style="background:var(--bg2)"><th style="padding:8px 12px;text-align:left;font-size:.65rem;color:var(--t3);text-transform:uppercase;border-bottom:1px solid var(--border)">Ülke/Bölge</th><th style="padding:8px 12px;text-align:right;font-size:.65rem;color:var(--t3);border-bottom:1px solid var(--border)">PMI</th><th style="padding:8px 12px;text-align:right;font-size:.65rem;color:var(--t3);border-bottom:1px solid var(--border)">Durum</th></tr></thead><tbody>
@@ -61,16 +88,51 @@
 <script src="assets/js/app.js"></script>
 <script>
 (function(){
-    var period='5y',allSeries=[],charts=[];
+    var currentView='cards',allSeries=[],chartInstances=[],barCharts=[];
+
+    function rebuildCards(){
+        if(chartInstances.length){chartInstances.forEach(function(c){if(c&&c.destroy)c.destroy()});} chartInstances=[];
+        var g=document.getElementById('chartsGrid');if(g)g.innerHTML='';
+        var s=document.getElementById('summaryCards');if(s)s.innerHTML='';
+        var d=document.getElementById('dataTable');if(d)d.innerHTML='';
+        if(!allSeries.length)return;
+        PM.buildSummary('summaryCards',allSeries);
+        chartInstances=PM.buildCharts('chartsGrid',allSeries,'all');
+        PM.buildTable('dataTable',allSeries);
+    }
+    function rebuildBar(){
+        if(barCharts.length){barCharts.forEach(function(c){if(c&&c.destroy)c.destroy()});} barCharts=[];
+        var c1=PM.buildBarChart('perfBarDaily',allSeries,'change_1d_pct');
+        var c2=PM.buildBarChart('perfBarMonthly',allSeries,'change_1m_pct');
+        if(c1)barCharts.push(c1);if(c2)barCharts.push(c2);
+    }
+    function rebuildHeatmap(){PM.buildHeatmap('heatmapContainer',allSeries);}
+    function rebuildCurrent(){
+        if(currentView==='cards')rebuildCards();
+        else if(currentView==='bar')rebuildBar();
+        else if(currentView==='heatmap')rebuildHeatmap();
+    }
+
     PM.loadData('industrial.json','sanayi').then(function(data){
         if(!data||!data.series||!data.series.length){document.getElementById('summaryCards').innerHTML='<div class="scard"><div class="scard-name">Veri bulunamadı.</div></div>';return}
         allSeries=data.series;
         var ui=document.getElementById('updateInfo');
         if(ui&&data.meta)ui.textContent='Son güncelleme: '+new Date(data.meta.updated_at).toLocaleString('tr-TR')+' \u00b7 '+data.meta.symbol_count+' seri';
-        PM.buildSummary('summaryCards',allSeries);
-        charts=PM.buildCharts('chartsGrid',allSeries,period);
-        PM.buildTable('dataTable',allSeries);
+        rebuildCards();
     });
+
+    document.getElementById('viewToggle').addEventListener('click',function(e){
+        var btn=e.target.closest('.view-btn');if(!btn)return;
+        document.querySelectorAll('.view-btn').forEach(function(b){b.classList.remove('on')});
+        btn.classList.add('on');
+        currentView=btn.getAttribute('data-view');
+        document.querySelectorAll('.view-section').forEach(function(s){s.classList.remove('active')});
+        if(currentView==='cards')document.getElementById('viewCards').classList.add('active');
+        else if(currentView==='bar')document.getElementById('viewBar').classList.add('active');
+        else if(currentView==='heatmap')document.getElementById('viewHeatmap').classList.add('active');
+        rebuildCurrent();
+    });
+
     fetch('/api/ai-analysis?cat=genel').then(function(r){return r.json()}).then(function(d){
         var el=document.getElementById('aiAnalysis');if(el&&d.analysis)el.textContent=d.analysis;
     }).catch(function(){var el=document.getElementById('aiAnalysis');if(el)el.innerHTML='<span class="ai-loading">Analiz yüklenemiyor.</span>'});

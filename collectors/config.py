@@ -251,40 +251,151 @@ STOCKS = {
     "file": "stocks.json",
     "category": "Hisse Senetleri",
     "symbols": {
-        # ── BIST (Borsa İstanbul) ──
-        "THYAO.IS":  {"name": "THY",             "unit": "TRY"},
-        "GARAN.IS":  {"name": "Garanti BBVA",    "unit": "TRY"},
-        "AKBNK.IS":  {"name": "Akbank",          "unit": "TRY"},
-        "YKBNK.IS":  {"name": "Yapı Kredi",      "unit": "TRY"},
-        "ISCTR.IS":  {"name": "İş Bankası C",    "unit": "TRY"},
+        # ═══════════════════════════════════════
+        # BIST — Bankacılık
+        # ═══════════════════════════════════════
+        "GARAN.IS":  {"name": "Garanti BBVA",      "unit": "TRY"},
+        "AKBNK.IS":  {"name": "Akbank",            "unit": "TRY"},
+        "YKBNK.IS":  {"name": "Yapı Kredi",        "unit": "TRY"},
+        "ISCTR.IS":  {"name": "İş Bankası C",      "unit": "TRY"},
+        "VAKBN.IS":  {"name": "VakıfBank",         "unit": "TRY"},
+        "HALKB.IS":  {"name": "Halkbank",          "unit": "TRY"},
+        "TSKB.IS":   {"name": "TSKB",              "unit": "TRY"},
+        "QNBFB.IS":  {"name": "QNB Finansbank",    "unit": "TRY"},
+        "ALBRK.IS":  {"name": "Albaraka Türk",     "unit": "TRY"},
+        "SKBNK.IS":  {"name": "Şekerbank",         "unit": "TRY"},
+        # ═══════════════════════════════════════
+        # BIST — Holding & Yatırım
+        # ═══════════════════════════════════════
+        "KCHOL.IS":  {"name": "Koç Holding",       "unit": "TRY"},
+        "SAHOL.IS":  {"name": "Sabancı Holding",   "unit": "TRY"},
+        "DOHOL.IS":  {"name": "Doğan Holding",     "unit": "TRY"},
+        "AGHOL.IS":  {"name": "AG Anadolu Grubu",  "unit": "TRY"},
+        "TKFEN.IS":  {"name": "Tekfen Holding",    "unit": "TRY"},
+        "TAVHL.IS":  {"name": "TAV Havalimanları",  "unit": "TRY"},
+        # ═══════════════════════════════════════
+        # BIST — Sanayi & Üretim
+        # ═══════════════════════════════════════
         "EREGL.IS":  {"name": "Ereğli Demir Çelik","unit": "TRY"},
-        "BIMAS.IS":  {"name": "BİM Mağazaları",  "unit": "TRY"},
-        "KCHOL.IS":  {"name": "Koç Holding",     "unit": "TRY"},
-        "SAHOL.IS":  {"name": "Sabancı Holding",  "unit": "TRY"},
-        "TUPRS.IS":  {"name": "Tüpraş",          "unit": "TRY"},
-        "ASELS.IS":  {"name": "ASELSAN",          "unit": "TRY"},
-        "FROTO.IS":  {"name": "Ford Otosan",      "unit": "TRY"},
-        "TOASO.IS":  {"name": "Tofaş Oto.",       "unit": "TRY"},
-        "SISE.IS":   {"name": "Şişecam",          "unit": "TRY"},
-        "TAVHL.IS":  {"name": "TAV Havalimanları", "unit": "TRY"},
-        "PGSUS.IS":  {"name": "Pegasus",          "unit": "TRY"},
-        "KOZAL.IS":  {"name": "Koza Altın",       "unit": "TRY"},
-        "EKGYO.IS":  {"name": "Emlak Konut GYO",  "unit": "TRY"},
-        "TCELL.IS":  {"name": "Turkcell",         "unit": "TRY"},
-        "TTKOM.IS":  {"name": "Türk Telekom",     "unit": "TRY"},
-        # ── ABD Mega-Cap ──
-        "AAPL":      {"name": "Apple",            "unit": "USD"},
-        "MSFT":      {"name": "Microsoft",        "unit": "USD"},
-        "GOOGL":     {"name": "Alphabet (Google)","unit": "USD"},
-        "AMZN":      {"name": "Amazon",           "unit": "USD"},
-        "NVDA":      {"name": "NVIDIA",           "unit": "USD"},
-        "META":      {"name": "Meta (Facebook)",  "unit": "USD"},
-        "TSLA":      {"name": "Tesla",            "unit": "USD"},
-        # ── Küresel ──
-        "ASML":      {"name": "ASML Holding",     "unit": "EUR"},
-        "TSM":       {"name": "TSMC",             "unit": "USD"},
-        "NVO":       {"name": "Novo Nordisk",     "unit": "USD"},
-        "005930.KS": {"name": "Samsung",          "unit": "KRW"},
+        "TUPRS.IS":  {"name": "Tüpraş",           "unit": "TRY"},
+        "ASELS.IS":  {"name": "ASELSAN",           "unit": "TRY"},
+        "FROTO.IS":  {"name": "Ford Otosan",       "unit": "TRY"},
+        "TOASO.IS":  {"name": "Tofaş Oto.",        "unit": "TRY"},
+        "SISE.IS":   {"name": "Şişecam",           "unit": "TRY"},
+        "ARCLK.IS":  {"name": "Arçelik",           "unit": "TRY"},
+        "VESTL.IS":  {"name": "Vestel",            "unit": "TRY"},
+        "OTKAR.IS":  {"name": "Otokar",            "unit": "TRY"},
+        "KRDMD.IS":  {"name": "Kardemir D",        "unit": "TRY"},
+        "TTRAK.IS":  {"name": "Türk Traktör",      "unit": "TRY"},
+        "BRISA.IS":  {"name": "Brisa",             "unit": "TRY"},
+        "PETKM.IS":  {"name": "Petkim",            "unit": "TRY"},
+        "ENKAI.IS":  {"name": "Enka İnşaat",       "unit": "TRY"},
+        "CIMSA.IS":  {"name": "Çimsa",             "unit": "TRY"},
+        "OYAKC.IS":  {"name": "Oyak Çimento",      "unit": "TRY"},
+        "SASA.IS":   {"name": "SASA Polyester",    "unit": "TRY"},
+        "EGEEN.IS":  {"name": "Ege Endüstri",      "unit": "TRY"},
+        "CEMTS.IS":  {"name": "Çemtaş Çelik",      "unit": "TRY"},
+        "KLMSN.IS":  {"name": "Klimasan",          "unit": "TRY"},
+        # ═══════════════════════════════════════
+        # BIST — Havacılık & Ulaşım
+        # ═══════════════════════════════════════
+        "THYAO.IS":  {"name": "THY",               "unit": "TRY"},
+        "PGSUS.IS":  {"name": "Pegasus",           "unit": "TRY"},
+        "DOAS.IS":   {"name": "Doğuş Otomotiv",    "unit": "TRY"},
+        # ═══════════════════════════════════════
+        # BIST — Perakende & Tüketim
+        # ═══════════════════════════════════════
+        "BIMAS.IS":  {"name": "BİM Mağazaları",   "unit": "TRY"},
+        "MGROS.IS":  {"name": "Migros",            "unit": "TRY"},
+        "SOKM.IS":   {"name": "Şok Market",        "unit": "TRY"},
+        "ULKER.IS":  {"name": "Ülker",             "unit": "TRY"},
+        "AEFES.IS":  {"name": "Anadolu Efes",      "unit": "TRY"},
+        "CCOLA.IS":  {"name": "Coca-Cola İçecek",  "unit": "TRY"},
+        # ═══════════════════════════════════════
+        # BIST — Telekom & Teknoloji
+        # ═══════════════════════════════════════
+        "TCELL.IS":  {"name": "Turkcell",          "unit": "TRY"},
+        "TTKOM.IS":  {"name": "Türk Telekom",      "unit": "TRY"},
+        "LOGO.IS":   {"name": "Logo Yazılım",      "unit": "TRY"},
+        # ═══════════════════════════════════════
+        # BIST — Enerji
+        # ═══════════════════════════════════════
+        "AKSEN.IS":  {"name": "Aksa Enerji",       "unit": "TRY"},
+        "AKSA.IS":   {"name": "Aksa Akrilik",      "unit": "TRY"},
+        # ═══════════════════════════════════════
+        # BIST — Madencilik & Tarım
+        # ═══════════════════════════════════════
+        "KOZAL.IS":  {"name": "Koza Altın",        "unit": "TRY"},
+        "KOZAA.IS":  {"name": "Koza Anadolu Metal","unit": "TRY"},
+        "GUBRF.IS":  {"name": "Gübre Fabrikaları", "unit": "TRY"},
+        "HEKTS.IS":  {"name": "Hektaş",            "unit": "TRY"},
+        # ═══════════════════════════════════════
+        # BIST — GYO & Sigorta & Finans
+        # ═══════════════════════════════════════
+        "EKGYO.IS":  {"name": "Emlak Konut GYO",   "unit": "TRY"},
+        "ISGYO.IS":  {"name": "İş GYO",            "unit": "TRY"},
+        "TURSG.IS":  {"name": "Türkiye Sigorta",   "unit": "TRY"},
+        "KONTR.IS":  {"name": "Kontrolmatik",      "unit": "TRY"},
+        # ═══════════════════════════════════════
+        # ABD — Mega-Cap Teknoloji
+        # ═══════════════════════════════════════
+        "AAPL":      {"name": "Apple",             "unit": "USD"},
+        "MSFT":      {"name": "Microsoft",         "unit": "USD"},
+        "GOOGL":     {"name": "Alphabet (Google)", "unit": "USD"},
+        "AMZN":      {"name": "Amazon",            "unit": "USD"},
+        "NVDA":      {"name": "NVIDIA",            "unit": "USD"},
+        "META":      {"name": "Meta (Facebook)",   "unit": "USD"},
+        "TSLA":      {"name": "Tesla",             "unit": "USD"},
+        "AVGO":      {"name": "Broadcom",          "unit": "USD"},
+        "AMD":       {"name": "AMD",               "unit": "USD"},
+        "INTC":      {"name": "Intel",             "unit": "USD"},
+        "CRM":       {"name": "Salesforce",        "unit": "USD"},
+        "ORCL":      {"name": "Oracle",            "unit": "USD"},
+        "ADBE":      {"name": "Adobe",             "unit": "USD"},
+        "NFLX":      {"name": "Netflix",           "unit": "USD"},
+        # ═══════════════════════════════════════
+        # ABD — Finans & Sağlık & Tüketim
+        # ═══════════════════════════════════════
+        "JPM":       {"name": "JPMorgan Chase",    "unit": "USD"},
+        "V":         {"name": "Visa",              "unit": "USD"},
+        "MA":        {"name": "Mastercard",        "unit": "USD"},
+        "JNJ":       {"name": "Johnson & Johnson", "unit": "USD"},
+        "UNH":       {"name": "UnitedHealth",      "unit": "USD"},
+        "LLY":       {"name": "Eli Lilly",         "unit": "USD"},
+        "PG":        {"name": "Procter & Gamble",  "unit": "USD"},
+        "KO":        {"name": "Coca-Cola",         "unit": "USD"},
+        "PEP":       {"name": "PepsiCo",           "unit": "USD"},
+        "WMT":       {"name": "Walmart",           "unit": "USD"},
+        "COST":      {"name": "Costco",            "unit": "USD"},
+        "HD":        {"name": "Home Depot",        "unit": "USD"},
+        "DIS":       {"name": "Disney",            "unit": "USD"},
+        # ═══════════════════════════════════════
+        # ABD — Enerji & Sanayi
+        # ═══════════════════════════════════════
+        "XOM":       {"name": "ExxonMobil",        "unit": "USD"},
+        "CVX":       {"name": "Chevron",           "unit": "USD"},
+        "BA":        {"name": "Boeing",            "unit": "USD"},
+        "CAT":       {"name": "Caterpillar",       "unit": "USD"},
+        # ═══════════════════════════════════════
+        # Küresel — Avrupa
+        # ═══════════════════════════════════════
+        "ASML":      {"name": "ASML Holding",      "unit": "EUR"},
+        "NVO":       {"name": "Novo Nordisk",      "unit": "USD"},
+        "SAP":       {"name": "SAP SE",            "unit": "USD"},
+        "SHEL":      {"name": "Shell",             "unit": "USD"},
+        "AZN":       {"name": "AstraZeneca",       "unit": "USD"},
+        "UL":        {"name": "Unilever",          "unit": "USD"},
+        "TTE":       {"name": "TotalEnergies",     "unit": "USD"},
+        # ═══════════════════════════════════════
+        # Küresel — Asya-Pasifik
+        # ═══════════════════════════════════════
+        "TSM":       {"name": "TSMC",              "unit": "USD"},
+        "005930.KS": {"name": "Samsung",           "unit": "KRW"},
+        "BABA":      {"name": "Alibaba",           "unit": "USD"},
+        "PDD":       {"name": "PDD (Pinduoduo)",   "unit": "USD"},
+        "TM":        {"name": "Toyota Motor",      "unit": "USD"},
+        "SONY":      {"name": "Sony Group",        "unit": "USD"},
+        "BHP":       {"name": "BHP Group",         "unit": "USD"},
     }
 }
 

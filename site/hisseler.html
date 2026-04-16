@@ -26,12 +26,6 @@
         .country-tab{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:.75rem;font-weight:700;cursor:pointer;transition:.2s;color:var(--t2)}
         .country-tab:hover{border-color:var(--blue)}
         .country-tab.on{background:var(--blue);color:#fff;border-color:var(--blue)}
-        .view-toggle{display:flex;gap:6px;margin-bottom:14px}
-        .view-btn{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:5px 12px;font-size:.72rem;font-weight:600;cursor:pointer;transition:.2s;color:var(--t2)}
-        .view-btn:hover{border-color:var(--blue)}
-        .view-btn.on{background:var(--blue);color:#fff;border-color:var(--blue)}
-        .view-section{display:none}
-        .view-section.active{display:block}
     </style>
 </head>
 <body>
@@ -40,7 +34,7 @@
 <div class="page-spacer"></div>
     <div class="page-head">
         <h1>💹 Hisse Senetleri</h1>
-        <div class="sub">BIST · ABD Mega-Cap · Küresel — 31 hisse senedi</div>
+        <div class="sub">BIST · ABD Mega-Cap · Küresel — 100+ hisse senedi</div>
         <div class="update-info" id="updateInfo"></div>
     </div>
     <div class="ai-box"><div class="ai-header"><span>🤖 AI Hisse Analizi</span><span class="ai-badge">AI</span></div><div class="ai-body" id="aiAnalysis"><span class="ai-loading">Analiz yükleniyor...</span></div></div>
@@ -102,8 +96,8 @@
     var cat='all', currentView='cards', allSeries=[], chartInstances=[], barCharts=[];
 
     // BIST ticker'ları .IS ile biter; ABD = belirli semboller; geri kalan = küresel
-    var US_TICKERS = ['AAPL','MSFT','GOOGL','AMZN','NVDA','META','TSLA'];
-    var GLOBAL_TICKERS = ['ASML','TSM','NVO','005930.KS'];
+    var US_TICKERS = ['AAPL','MSFT','GOOGL','AMZN','NVDA','META','TSLA','AVGO','AMD','INTC','CRM','ORCL','ADBE','NFLX','JPM','V','MA','JNJ','UNH','LLY','PG','KO','PEP','WMT','COST','HD','DIS','XOM','CVX','BA','CAT'];
+    var GLOBAL_TICKERS = ['ASML','TSM','NVO','005930.KS','SAP','SHEL','AZN','UL','TTE','BABA','PDD','TM','SONY','BHP'];
     function classifySeries(s){
         if(!s) return 'global';
         if(s.id && s.id.indexOf('.IS') !== -1) return 'bist';
