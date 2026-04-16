@@ -1127,3 +1127,14 @@ body {
         box-shadow: none !important;
     }
 }
+
+/* Emoji/flag rendering fallback */
+.country-tab,
+.rk-f,
+.pc-flag,
+.flag,
+[class*="flag"] {
+    /* Dışarıdan çekilen fontu en başa koyuyoruz */
+    font-family: 'Noto Color Emoji', "Apple Color Emoji", "Segoe UI Emoji", "Twemoji Mozilla", var(--fm);
+    font-variant-emoji: emoji;
+}
