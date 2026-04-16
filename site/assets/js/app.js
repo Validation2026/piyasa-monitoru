@@ -7,6 +7,7 @@ var PM=(function(){'use strict';
 var D='data/';
 var COLORS=['#3b82f6','#00d68f','#fbbf24','#ff4757','#a78bfa','#22d3ee','#ec4899','#84cc16','#f97316','#6366f1','#14b8a6','#e11d48'];
 var LOGO_CACHE={};
+var TV_LOGO_BASE='https://s3-symbol-logo.tradingview.com/';
 
 function fj(f){return fetch(D+f+'?t='+Date.now()).then(function(r){return r.json()}).catch(function(){return null})}
 function fs(d,id){if(!d||!d.series)return null;for(var i=0;i<d.series.length;i++)if(d.series[i].id===id)return d.series[i];return null}
@@ -48,11 +49,56 @@ function logoUrl(series){
     return url;
 }
 
+function tradingViewCandidates(series){
+    if(!series||!series.id)return [];
+    var id=(series.id||'').trim();
+    if(!id)return [];
+    var out=[];
+    var base=id.toUpperCase();
+    var suffixMap={'.IS':'BIST','.KS':'KRX','.L':'LSE','.PA':'EURONEXT','.DE':'XETR','.MI':'MIL','.TO':'TSX'};
+    var ex=null;
+    Object.keys(suffixMap).forEach(function(sf){
+        if(base.slice(-sf.length)===sf){ ex=suffixMap[sf]; base=base.slice(0,-sf.length); }
+    });
+    var normalized=base.toLowerCase().replace(/[^a-z0-9]/g,'');
+    if(ex){
+        out.push(TV_LOGO_BASE+ex+'-'+base+'.svg');
+        out.push(TV_LOGO_BASE+ex+'-'+base+'--big.svg');
+        out.push(TV_LOGO_BASE+ex+'-'+normalized+'.svg');
+    }
+    out.push(TV_LOGO_BASE+base.toLowerCase()+'.svg');
+    out.push(TV_LOGO_BASE+base.toLowerCase()+'--big.svg');
+    if(id.indexOf('-')!==-1){
+        out.push(TV_LOGO_BASE+id.toLowerCase().replace(/[^a-z0-9]/g,'')+'.svg');
+    }
+    return out.filter(function(u,idx){ return out.indexOf(u)===idx; });
+}
+
+function pmLogoNext(img){
+    if(!img)return;
+    var raw=img.getAttribute('data-logo-candidates')||'';
+    if(!raw)return;
+    var all=raw.split('|').filter(Boolean);
+    var idx=parseInt(img.getAttribute('data-logo-index')||'0',10);
+    idx++;
+    if(idx<all.length){
+        img.setAttribute('data-logo-index',String(idx));
+        img.src=all[idx];
+        return;
+    }
+    img.onerror=null;
+    img.src=img.getAttribute('data-logo-fallback')||logoUrl(null);
+}
+
 function logoImg(series,size){
     size=size||22;
     var safeName=((series&&series.name)||'Varlık').replace(/"/g,'');
-    return '<img class="asset-logo" src="'+logoUrl(series)+'" alt="'+safeName+' logosu" width="'+size+'" height="'+size+'" loading="lazy" decoding="async">';
+    var candidates=tradingViewCandidates(series);
+    var fallback=logoUrl(series);
+    var src=candidates.length?candidates[0]:fallback;
+    return '<img class="asset-logo" src="'+src+'" alt="'+safeName+' logosu" width="'+size+'" height="'+size+'" loading="lazy" decoding="async" data-logo-candidates="'+candidates.join('|')+'" data-logo-index="0" data-logo-fallback="'+fallback+'" onerror="window.PMLogoNext(this)">';
 }
+window.PMLogoNext=pmLogoNext;
                    
 function filterPeriod(data, period) {
     if (!data || !data.length) return [];
@@ -109,7 +155,7 @@ function buildSummary(containerId,seriesList){
         var sid='mini-spark-'+i;
         var ariaLabel = s.name+': '+fp(s.current)+' '+(s.unit||'')+(s.change_1d_pct!=null?', günlük değişim '+s.change_1d_pct.toFixed(2)+'%':'');
         h+='<div class="scard fade-in" style="animation-delay:'+(.05*i)+'s" role="group" aria-label="'+ariaLabel.replace(/"/g,'')+'"><div class="scard-name">'+logoImg(s,18)+'<span>'+s.name+'</span></div><div class="scard-price">'+fp(s.current)+' <span class="scard-unit">'+(s.unit||'')+'</span></div><div class="scard-chgs">'+chgs+'</div>'+(range?'<div class="scard-range">'+range+'</div>':'')+'<div class="scard-spark"><canvas id="'+sid+'" aria-hidden="true"></canvas></div></div>';    
-    });
+        });
     el.innerHTML=h;
     setTimeout(function(){seriesList.forEach(function(s,i){if(s&&s.data)miniSpark('mini-spark-'+i,s.data,gc(i))})},50);
 }
@@ -121,7 +167,8 @@ function buildCharts(containerId,seriesList,period){
         card.setAttribute('role','figure');
         card.setAttribute('aria-label',s.name+' grafiği');
         var pBadge=s.change_1d_pct!=null?fc(s.change_1d_pct):'';
-    card.innerHTML='<div class="chrt-title">'+logoImg(s,20)+'<span>'+s.name+'</span></div><div class="chrt-sub"><span class="live">'+fp(s.current)+' '+(s.unit||'')+'</span>'+pBadge+'</div><canvas id="'+cid+'" aria-hidden="true"></canvas>';        el.appendChild(card);var ch=makeChart(cid,s,{color:gc(i),period:period});if(ch)charts.push(ch);
+        card.innerHTML='<div class="chrt-title">'+logoImg(s,20)+'<span>'+s.name+'</span></div><div class="chrt-sub"><span class="live">'+fp(s.current)+' '+(s.unit||'')+'</span>'+pBadge+'</div><canvas id="'+cid+'" aria-hidden="true"></canvas>';    
+        el.appendChild(card);var ch=makeChart(cid,s,{color:gc(i),period:period});if(ch)charts.push(ch);
     });return charts;
 }
 
@@ -130,7 +177,7 @@ function buildTable(containerId,seriesList){
     var h='<table><thead><tr><th>İsim</th><th class="r">Fiyat</th><th class="r">1 Gün</th><th class="r">1 Hafta</th><th class="r">1 Ay</th><th class="r">YTD</th><th class="r">52H Aralık</th></tr></thead><tbody>';
     seriesList.forEach(function(s){if(!s)return;
         function cv(p){if(p==null)return'<td class="mono r dim">—</td>';return'<td class="mono r '+cc(p)+'">'+(p>=0?'+':'')+p.toFixed(2)+'%</td>'}
-        h+='<tr><td class="asset-name-cell">'+logoImg(s,18)+'<span>'+s.name+'</span></td><td class="mono r">'+fp(s.current)+' <span class="dim">'+(s.unit||'')+'</span></td>'+cv(s.change_1d_pct)+cv(s.change_1w_pct)+cv(s.change_1m_pct)+cv(s.change_ytd_pct)+'<td class="mono r dim" style="font-size:.7rem">'+(s.low_52w!=null?fp(s.low_52w)+' — '+fp(s.high_52w):'—')+'</td></tr>';    
+        h+='<tr><td class="asset-name-cell">'+logoImg(s,18)+'<span>'+s.name+'</span></td><td class="mono r">'+fp(s.current)+' <span class="dim">'+(s.unit||'')+'</span></td>'+cv(s.change_1d_pct)+cv(s.change_1w_pct)+cv(s.change_1m_pct)+cv(s.change_ytd_pct)+'<td class="mono r dim" style="font-size:.7rem">'+(s.low_52w!=null?fp(s.low_52w)+' — '+fp(s.high_52w):'—')+'</td></tr>';   
     });h+='</tbody></table>';el.innerHTML=h;
 }
 
