@@ -106,33 +106,29 @@ function pmLogoNext(img){
     img.src=img.getAttribute('data-logo-fallback')||logoUrl(null);
 }
 
+function safeId(id){
+    return(id||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+}
+
 function logoImg(series,size){
     size=size||22;
     var safeName=((series&&series.name)||'Varlık').replace(/"/g,'');
     var fallback=logoUrl(series);
+    var sid=safeId(series&&series.id);
 
-    // Yerel bayrak çifti (forex) — varsa öncelikli
-    var localPair = series && Array.isArray(series.logo_pair_local) ? series.logo_pair_local.filter(Boolean) : [];
-    var pair = localPair.length>=2 ? localPair
-        : (series && Array.isArray(series.logo_pair) ? series.logo_pair.filter(Boolean) : []);
-    if(pair.length>=2){
-        return '<span class="asset-logo-pair" aria-label="'+safeName+' parite logosu">'+
-            '<img class="asset-logo mini" src="'+pair[0]+'" alt="" width="'+size+'" height="'+size+'" loading="lazy" decoding="async" data-logo-candidates="'+pair.join('|')+'" data-logo-index="0" data-logo-fallback="'+fallback+'" onerror="window.PMLogoNext(this)">'+
-            '<img class="asset-logo mini overlap" src="'+pair[1]+'" alt="" width="'+size+'" height="'+size+'" loading="lazy" decoding="async" data-logo-candidates="'+pair.join('|')+'" data-logo-index="0" data-logo-fallback="'+fallback+'" onerror="window.PMLogoNext(this)">'+
-            '</span>';
-    }
+    // Aday listesi: yerel SVG ilk sırada
+    var candidates=[];
+    if(sid) candidates.push('assets/logos/'+sid+'.svg');
 
-    // Yerel logo varsa en başa ekle
-    var candidates = [];
-    if(series && series.logo_local) candidates.push(series.logo_local);
-    var cdnCandidates = (series && Array.isArray(series.logo_candidates) && series.logo_candidates.length)
-        ? series.logo_candidates.slice()
-        : tradingViewCandidates(series);
-    if(series && series.logo_url) cdnCandidates.unshift(series.logo_url);
-    candidates = candidates.concat(cdnCandidates);
-    candidates = candidates.filter(function(u,idx){ return u && candidates.indexOf(u)===idx; });
+    // CDN adayları (yedek)
+    var cdn=(series&&Array.isArray(series.logo_candidates)&&series.logo_candidates.length)
+        ? series.logo_candidates.slice() : tradingViewCandidates(series);
+    if(series&&series.logo_url) cdn.unshift(series.logo_url);
+    candidates=candidates.concat(cdn);
+    candidates=candidates.filter(function(u,idx){return u&&candidates.indexOf(u)===idx;});
+
     var src=candidates.length?candidates[0]:fallback;
-    return '<img class="asset-logo" src="'+src+'" alt="'+safeName+' logosu" width="'+size+'" height="'+size+'" loading="lazy" decoding="async" data-logo-candidates="'+candidates.join('|')+'" data-logo-index="0" data-logo-fallback="'+fallback+'" onerror="window.PMLogoNext(this)">';
+    return '<img class="asset-logo" src="'+src+'" alt="'+safeName+'" width="'+size+'" height="'+size+'" loading="lazy" decoding="async" data-logo-candidates="'+candidates.join('|')+'" data-logo-index="0" data-logo-fallback="'+fallback+'" onerror="window.PMLogoNext(this)">';
 }
 window.PMLogoNext=pmLogoNext;
 
