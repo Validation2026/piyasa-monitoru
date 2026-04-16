@@ -60,7 +60,7 @@ class TestConfigIntegrity:
 
     def test_known_symbol_formats(self):
         """Yahoo Finance sembol formatlarını doğrula."""
-        valid_suffixes = ("=F", "=X", "-USD", ".IS", ".SS")
+        valid_suffixes = ("=F", "=X", "-USD", ".IS", ".SS", ".KS")
         valid_prefixes = ("^",)
 
         for group in ALL_YF_GROUPS:
@@ -88,7 +88,7 @@ class TestConfigIntegrity:
                     seen[symbol] = group["category"]
 
         # Bilinen tekrarlar — bu kasıtlıysa bu satırları güncelleyin
-        known_duplicates = {"HG=F", "ALI=F", "LBS=F"}
+        known_duplicates = {"HG=F", "ALI=F", "LBS=F", "URA"}
         unexpected = [d for d in duplicates
                       if d.split(":")[0].strip() not in known_duplicates]
 

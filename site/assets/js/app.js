@@ -226,7 +226,128 @@ function flashUpdate(el, direction){
     el.classList.add(cls);
 }
 
-return{fj:fj,fs:fs,fp:fp,fc:fc,cc:cc,gc:gc,filterPeriod:filterPeriod,miniSpark:miniSpark,makeChart:makeChart,buildSummary:buildSummary,buildCharts:buildCharts,buildTable:buildTable,buildComparisonChart:buildComparisonChart,applyOverrides:applyOverrides,loadOverrides:loadOverrides,loadData:loadData,showStaleBanner:showStaleBanner,countUp:countUp,initScrollReveal:initScrollReveal,flashUpdate:flashUpdate};
+/* ══════════════════════════════════════════
+   BAR CHART — Performans sıralaması (yatay bar)
+   ══════════════════════════════════════════ */
+function buildBarChart(canvasId, seriesList, changeKey){
+    var c = document.getElementById(canvasId); if(!c) return null;
+    changeKey = changeKey || 'change_1d_pct';
+    var items = seriesList.filter(function(s){ return s && s[changeKey] != null; })
+        .map(function(s){ return { name: s.name, val: s[changeKey] }; })
+        .sort(function(a,b){ return b.val - a.val; });
+    if(!items.length) return null;
+    var labels = items.map(function(d){ return d.name; });
+    var vals = items.map(function(d){ return d.val; });
+    var colors = vals.map(function(v){ return v >= 0 ? '#00d68f' : '#ff4757'; });
+    var txt = '#475569';
+    return new Chart(c, {
+        type: 'bar',
+        data: { labels: labels, datasets: [{ data: vals, backgroundColor: colors, borderRadius: 4, barPercentage: 0.7 }] },
+        options: {
+            indexAxis: 'y', responsive: true, maintainAspectRatio: false, animation: { duration: 600 },
+            plugins: { legend: { display: false }, tooltip: {
+                callbacks: { label: function(ctx){ return (ctx.raw >= 0 ? '+' : '') + ctx.raw.toFixed(2) + '%'; } }
+            }},
+            scales: {
+                x: { grid: { color: 'rgba(0,0,0,.05)', drawBorder: false }, ticks: { color: txt, font: { size: 10, family: "'JetBrains Mono'" }, callback: function(v){ return (v>=0?'+':'')+v+'%'; } } },
+                y: { grid: { display: false }, ticks: { color: txt, font: { size: 11, family: "'Outfit'" } } }
+            }
+        }
+    });
+}
+
+/* ══════════════════════════════════════════
+   DONUT CHART — Dağılım/ağırlık gösterimi
+   ══════════════════════════════════════════ */
+function buildDonutChart(canvasId, labels, values, colors){
+    var c = document.getElementById(canvasId); if(!c) return null;
+    colors = colors || labels.map(function(_,i){ return gc(i); });
+    return new Chart(c, {
+        type: 'doughnut',
+        data: { labels: labels, datasets: [{ data: values, backgroundColor: colors, borderWidth: 2, borderColor: '#fff', hoverOffset: 6 }] },
+        options: {
+            responsive: true, maintainAspectRatio: false, animation: { duration: 600 },
+            cutout: '65%',
+            plugins: {
+                legend: { position: 'right', labels: { color: '#475569', font: { size: 11, family: "'Outfit'" }, padding: 10, boxWidth: 14 } },
+                tooltip: { callbacks: { label: function(ctx){ return ctx.label + ': ' + fp(ctx.raw); } } }
+            }
+        }
+    });
+}
+
+/* ══════════════════════════════════════════
+   HEATMAP TABLE — Renkli performans matrisi
+   ══════════════════════════════════════════ */
+function buildHeatmap(containerId, seriesList){
+    var el = document.getElementById(containerId); if(!el) return;
+    var periods = [
+        { key: 'change_1d_pct', label: '1G' },
+        { key: 'change_1w_pct', label: '1H' },
+        { key: 'change_1m_pct', label: '1A' },
+        { key: 'change_3m_pct', label: '3A' },
+        { key: 'change_ytd_pct', label: 'YTD' },
+        { key: 'change_1y_pct', label: '1Y' }
+    ];
+    function heatColor(v){
+        if(v == null) return 'background:transparent;color:var(--t3)';
+        var abs = Math.min(Math.abs(v), 10);
+        var intensity = abs / 10;
+        if(v >= 0) return 'background:rgba(0,214,143,' + (intensity * 0.25).toFixed(2) + ');color:#00a870';
+        return 'background:rgba(255,71,87,' + (intensity * 0.25).toFixed(2) + ');color:#e8364b';
+    }
+    var h = '<table class="heatmap-tbl"><thead><tr><th>Varlık</th><th class="r">Fiyat</th>';
+    periods.forEach(function(p){ h += '<th class="r">' + p.label + '</th>'; });
+    h += '</tr></thead><tbody>';
+    seriesList.forEach(function(s){
+        if(!s) return;
+        h += '<tr><td class="hm-name">' + s.name + '</td><td class="mono r">' + fp(s.current) + '</td>';
+        periods.forEach(function(p){
+            var v = s[p.key];
+            h += '<td class="mono r hm-cell" style="' + heatColor(v) + '">' + (v != null ? (v >= 0 ? '+' : '') + v.toFixed(2) + '%' : '—') + '</td>';
+        });
+        h += '</tr>';
+    });
+    h += '</tbody></table>';
+    el.innerHTML = h;
+}
+
+/* ══════════════════════════════════════════
+   AREA CHART — Gradient dolgulu alan grafiği
+   ══════════════════════════════════════════ */
+function makeAreaChart(canvasId, series, opts){
+    var c = document.getElementById(canvasId); if(!c || !series || !series.data || !series.data.length) return null;
+    opts = opts || {}; var color = opts.color || COLORS[0];
+    var filtered = filterPeriod(series.data, opts.period || 'all');
+    filtered = downsample(filtered, 300);
+    var labels = filtered.map(function(d){ return d.date; });
+    var vals = filtered.map(function(d){ return d.value; });
+    var ctx = c.getContext('2d');
+    var grad = ctx.createLinearGradient(0, 0, 0, c.parentElement ? c.parentElement.clientHeight || 260 : 260);
+    grad.addColorStop(0, color + '40');
+    grad.addColorStop(0.7, color + '08');
+    grad.addColorStop(1, color + '00');
+    var txt = '#475569';
+    var MO = ['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+    return new Chart(c, {
+        type: 'line',
+        data: { labels: labels, datasets: [{ label: series.name, data: vals, borderColor: color, backgroundColor: grad, fill: true, tension: 0.35, pointRadius: 0, pointHoverRadius: 5, pointHoverBackgroundColor: color, borderWidth: 2 }] },
+        options: {
+            responsive: true, maintainAspectRatio: false, animation: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: { legend: { display: false }, tooltip: {
+                backgroundColor: '#fff', titleColor: '#0f172a', bodyColor: '#475569', borderColor: '#dde4ed', borderWidth: 1, padding: 10, displayColors: false,
+                callbacks: { label: function(ctx){ return series.name + ': ' + fp(ctx.raw) + ' ' + (series.unit || ''); } }
+            }},
+            scales: {
+                x: { grid: { display: false }, ticks: { color: txt, font: { size: 10, family: "'JetBrains Mono'" }, maxTicksLimit: window.innerWidth < 600 ? 4 : 8, callback: function(v){ var l = this.getLabelForValue(v); var p = l.split('-'); if(p.length >= 2) return MO[parseInt(p[1])-1]+' '+p[0].slice(2); return l; } } },
+                y: { grid: { color: 'rgba(0,0,0,.04)', drawBorder: false }, ticks: { color: txt, font: { size: 10, family: "'JetBrains Mono'" }, callback: function(v){ return fp(v,0); } } }
+            }
+        }
+    });
+}
+
+return{fj:fj,fs:fs,fp:fp,fc:fc,cc:cc,gc:gc,filterPeriod:filterPeriod,miniSpark:miniSpark,makeChart:makeChart,makeAreaChart:makeAreaChart,buildSummary:buildSummary,buildCharts:buildCharts,buildTable:buildTable,buildComparisonChart:buildComparisonChart,buildBarChart:buildBarChart,buildDonutChart:buildDonutChart,buildHeatmap:buildHeatmap,applyOverrides:applyOverrides,loadOverrides:loadOverrides,loadData:loadData,showStaleBanner:showStaleBanner,countUp:countUp,initScrollReveal:initScrollReveal,flashUpdate:flashUpdate};
 })();
 
 // Scroll reveal'ı DOM hazır olunca başlat

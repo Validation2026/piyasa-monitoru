@@ -953,3 +953,63 @@ a:focus-visible {
     white-space: nowrap; border: 0;
 }
 
+/* ═══════════════════════════════════════
+   BAR CHART & DONUT CHART containers
+   ═══════════════════════════════════════ */
+.bar-chart-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 18px; margin-bottom: 16px;
+}
+.bar-chart-card canvas { height: 400px; max-height: 50vh; }
+.bar-chart-card .chart-title {
+    font-size: .88rem; font-weight: 700; margin-bottom: 8px;
+}
+.bar-chart-card .chart-subtitle {
+    font-size: .72rem; color: var(--t2); margin-bottom: 12px;
+}
+
+.donut-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 16px; }
+.donut-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 18px; text-align: center;
+}
+.donut-card canvas { height: 220px; }
+.donut-card .chart-title { font-size: .85rem; font-weight: 700; margin-bottom: 10px; }
+
+/* ═══════════════════════════════════════
+   HEATMAP TABLE — Performans ısı haritası
+   ═══════════════════════════════════════ */
+.heatmap-tbl { width: 100%; border-collapse: collapse; font-size: .78rem; }
+.heatmap-tbl th {
+    padding: 8px 10px; text-align: left; font-weight: 700;
+    color: var(--t2); border-bottom: 2px solid var(--border);
+    font-size: .7rem; text-transform: uppercase; letter-spacing: .5px;
+}
+.heatmap-tbl td { padding: 7px 10px; border-bottom: 1px solid var(--border); }
+.heatmap-tbl .hm-name { font-weight: 600; white-space: nowrap; }
+.heatmap-tbl .hm-cell {
+    font-weight: 600; border-radius: 4px; text-align: center;
+    min-width: 60px; transition: transform .15s;
+}
+.heatmap-tbl .hm-cell:hover { transform: scale(1.08); z-index: 1; position: relative; }
+.heatmap-tbl tbody tr:hover { background: rgba(59,130,246,.04); }
+
+@media(max-width:768px){
+    .bar-chart-card canvas { height: 300px; }
+    .donut-row { grid-template-columns: 1fr; }
+    .heatmap-tbl { font-size: .7rem; }
+    .heatmap-tbl td, .heatmap-tbl th { padding: 5px 6px; }
+    .hm-cell { min-width: 48px !important; }
+}
+
+/* ═══════════════════════════════════════
+   STOCK PAGE — Sektör badge'leri
+   ═══════════════════════════════════════ */
+.stock-badge {
+    display: inline-block; padding: 2px 8px; border-radius: 10px;
+    font-size: .65rem; font-weight: 700; letter-spacing: .3px;
+}
+.stock-badge.bist { background: #fef3c7; color: #92400e; }
+.stock-badge.us { background: #dbeafe; color: #1e40af; }
+.stock-badge.global { background: #e0e7ff; color: #4338ca; }
+

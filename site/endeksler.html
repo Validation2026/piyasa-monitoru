@@ -47,6 +47,12 @@
     <div class="charts" id="chartsGrid"></div>
     <div class="dtable" id="dataTable"></div>
 
+<div class="bar-chart-card" style="margin-top:16px">
+    <div class="chart-title">📊 Günlük Performans Sıralaması</div>
+    <div class="chart-subtitle">Tüm endeksler — günlük % değişim</div>
+    <canvas id="perfBarDaily"></canvas>
+</div>
+
 <div class="sec-title">📐 P/E Oranları Karşılaştırma</div>
 <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow-x:auto;margin-bottom:18px"><table style="width:100%;border-collapse:collapse;min-width:400px;font-size:.78rem"><thead><tr style="background:var(--bg2)"><th style="padding:8px 12px;text-align:left;font-size:.65rem;color:var(--t3);text-transform:uppercase;border-bottom:1px solid var(--border)">Endeks</th><th style="padding:8px 12px;text-align:right;font-size:.65rem;color:var(--t3);border-bottom:1px solid var(--border)">P/E (TTM)</th><th style="padding:8px 12px;text-align:right;font-size:.65rem;color:var(--t3);border-bottom:1px solid var(--border)">Forward P/E</th><th style="padding:8px 12px;text-align:right;font-size:.65rem;color:var(--t3);border-bottom:1px solid var(--border)">Değerleme</th></tr></thead><tbody>
 <tr><td style="padding:7px 12px;border-bottom:1px solid var(--border2)">S&amp;P 500</td><td style="padding:7px 12px;text-align:right;font-family:var(--mono);font-weight:600;border-bottom:1px solid var(--border2)">24.5x</td><td style="padding:7px 12px;text-align:right;font-family:var(--mono);border-bottom:1px solid var(--border2)">21.0x</td><td style="padding:7px 12px;text-align:right;color:#f59e0b;font-weight:700;border-bottom:1px solid var(--border2)">Ortalamanın Üstü</td></tr>
@@ -70,6 +76,7 @@
         PM.buildSummary('summaryCards',allSeries);
         charts=PM.buildCharts('chartsGrid',allSeries,period);
         PM.buildTable('dataTable',allSeries);
+        PM.buildBarChart('perfBarDaily',allSeries,'change_1d_pct');
     });
     fetch('/api/ai-analysis?cat=endeksler').then(function(r){return r.json()}).then(function(d){
         var el=document.getElementById('aiAnalysis');if(el&&d.analysis)el.textContent=d.analysis;
