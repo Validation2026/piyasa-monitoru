@@ -31,6 +31,7 @@
 .globe-hud .hud-row{display:flex;align-items:center;gap:6px;margin:3px 0}
 .globe-hud .hud-dot{width:8px;height:8px;border-radius:50%;box-shadow:0 0 8px currentColor}
 .globe-hud .hud-line{width:16px;height:2px;border-radius:2px}
+.globe-hud .hud-sep{margin:6px 0 2px;font-size:.58rem;color:#7dd3fc;text-transform:uppercase;letter-spacing:.08em;font-weight:700;opacity:.9}
 .globe-hud.collapsed .hud-body{display:none}
 .globe-controls{position:absolute;bottom:10px;left:10px;right:10px;display:flex;flex-wrap:wrap;gap:5px;z-index:10;justify-content:flex-start}
 .gbtn{background:rgba(15,23,42,.82);color:#cbd5e1;border:1px solid rgba(59,130,246,.35);padding:5px 9px;border-radius:8px;font-size:.65rem;font-weight:600;cursor:pointer;backdrop-filter:blur(6px);transition:.18s;white-space:nowrap}
@@ -121,11 +122,18 @@
     <div class="globe-hud" id="globeHud">
         <h4>Katmanlar<span class="hud-toggle" id="hudToggle" title="Aç/Kapat">▾</span></h4>
         <div class="hud-body">
-            <div class="hud-row"><div class="hud-dot" style="background:#22c55e;color:#22c55e"></div> Borsalar (pulse)</div>
-            <div class="hud-row"><div class="hud-line" style="background:#fbbf24"></div> Ticaret rotaları</div>
-            <div class="hud-row"><div class="hud-line" style="background:#3b82f6"></div> Enerji boru hatları</div>
-            <div class="hud-row"><div class="hud-line" style="background:#a78bfa"></div> Deniz kabloları</div>
+            <div class="hud-row"><div class="hud-dot" style="background:#22c55e;color:#22c55e"></div> Borsalar</div>
             <div class="hud-row"><div class="hud-dot" style="background:#ef4444;color:#ef4444"></div> Stratejik darboğaz</div>
+            <div class="hud-sep">Ticaret kargo</div>
+            <div class="hud-row"><div class="hud-line" style="background:#ef4444"></div> Petrol</div>
+            <div class="hud-row"><div class="hud-line" style="background:#60a5fa"></div> LNG</div>
+            <div class="hud-row"><div class="hud-line" style="background:#fbbf24"></div> Konteyner</div>
+            <div class="hud-row"><div class="hud-line" style="background:#22c55e"></div> Tahıl</div>
+            <div class="hud-sep">Boru hattı</div>
+            <div class="hud-row"><div class="hud-line" style="background:#06b6d4"></div> Doğal gaz</div>
+            <div class="hud-row"><div class="hud-line" style="background:#3b82f6"></div> Petrol boru</div>
+            <div class="hud-sep">Deniz kablosu</div>
+            <div class="hud-row"><div class="hud-line" style="background:#a78bfa"></div> Fiber-optik</div>
         </div>
     </div>
 
