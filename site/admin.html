@@ -111,14 +111,16 @@ function addRow(n,u,v,cpre,cytd){
 document.getElementById('addBtn').onclick=function(){addRow()};
 
 // Timeline olay ekleme
+// Timeline olay ekleme
 function addTlRow(date,title,desc,tag){
     var d=document.createElement('div');
+    d.className = 'tl-item'; // Silme işleminde referans almak için class ekledik
     d.style.cssText='background:#f8fafc;border:1px solid #dde4ed;border-radius:6px;padding:8px;margin-bottom:6px';
     var today=date||new Date().toISOString().slice(0,10);
     d.innerHTML='<div class="row" style="margin-bottom:4px"><div><label>Tarih</label><input type="date" class="tl-date" value="'+today+'"></div><div><label>Kategori</label><select class="tl-tag" style="width:100%;border:1px solid #dde4ed;border-radius:6px;padding:7px 9px;font-size:.82rem;background:#f8fafc"><option value="mil" '+(tag==='mil'?'selected':'')+'>🔴 Askeri</option><option value="dip" '+(tag==='dip'?'selected':'')+'>🔵 Diplomatik</option><option value="eco" '+(tag==='eco'?'selected':'')+'>🟡 Ekonomik</option><option value="nuk" '+(tag==='nuk'?'selected':'')+'>🟣 Nükleer</option></select></div></div>'+
     '<div style="margin-bottom:4px"><label>Başlık</label><input type="text" class="tl-title" value="'+(title||'')+'" placeholder="Kısa olay başlığı"></div>'+
     '<div style="margin-bottom:4px"><label>Açıklama</label><input type="text" class="tl-desc" value="'+(desc||'')+'" placeholder="1 cümle detay"></div>'+
-    '<div style="text-align:right"><button class="btn-del" onclick="this.closest(\'div[style]\').remove()">✕ Sil</button></div>';
+    '<div style="text-align:right"><button class="btn-del" onclick="this.closest(\'.tl-item\').remove()">✕ Sil</button></div>'; // Seçiciyi .tl-item olarak değiştirdik
     document.getElementById('tlEvents').appendChild(d);
 }
 document.getElementById('addTlBtn').onclick=function(){addTlRow()};
