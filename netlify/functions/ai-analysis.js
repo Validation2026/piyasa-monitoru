@@ -125,6 +125,32 @@ Türkiye'de TCMB'nin sıkı para politikası ve enflasyonla mücadele programı 
 
 ⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
 
+'jeopolitik-risk': `🌍 GENEL GÖRÜNÜM
+Küresel gerilim haritası Nisan 2026 itibarıyla çok odaklı bir seyir izliyor. Aktif sıcak çatışmalar (İran-İsrail, Ukrayna-Rusya) yanında deniz ticareti güzergâhlarındaki (Hürmüz, Bab el-Mandeb) güvenlik riskleri, Asya-Pasifik'teki (Tayvan, G. Çin Denizi, Kore) yüksek tansiyon ve Sahel gibi istikrarsızlık bölgeleri eşzamanlı izleniyor.
+
+🔥 ÖNE ÇIKAN GELİŞMELER
+• İran-İsrail savaşı karşılıklı saldırılarla sürüyor; bölgeye ABD kuvvet sevkiyatı devam ediyor
+• Hürmüz Boğazı'ndaki tanker geçişleri ve İran donanma hareketleri yüksek teyakkuzda
+• Kızıldeniz'de Husi saldırıları ticari gemileri Ümit Burnu rotasına yönlendirmeye devam ediyor
+• Ukrayna-Rusya cephesinde insansız hava aracı saldırıları ve enerji altyapısı vuruşları sürüyor
+• Tayvan Boğazı ve G. Çin Denizi'nde Çin hava-deniz ihlalleri rutin hale geldi
+
+💰 PİYASA ETKİLERİ
+• Brent petrol jeopolitik risk primiyle yüksek seyrediyor; Hürmüz kapanma riski fiyatlamaya dahil
+• Altın güvenli liman talebiyle rekor seviyelerini zorluyor; merkez bankası alımları sürüyor
+• Navlun ve deniz sigorta primleri Kızıldeniz/Basra Körfezi rotalarında normalin çok üzerinde
+• VIX ve kur volatiliteleri gelişen piyasa para birimlerinde baskıyı artırıyor
+• Savunma sanayi hisseleri ve uranyum uzun vadeli yapısal destek buluyor
+
+🔮 İZLENMESİ GEREKENLER
+• Hürmüz Boğazı'nda olası kapanma veya ciddi ticaret kesintisi
+• Tayvan çevresinde tatbikat ötesi askeri eskalasyon sinyalleri
+• Ukrayna'da cephe hareketleri ve NATO tepki kapasitesi
+• OPEC+ acil üretim kararları ve ABD stratejik rezerv açıklamaları
+• Kızıldeniz'de konteyner hatlarının rota tercihlerindeki değişim
+
+⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
+
 'ekonomik-takvim': `Önümüzdeki dönemde Fed, ECB ve TCMB faiz kararları piyasaların başlıca odak noktası olmaya devam edecek. ABD enflasyon verileri ve istihdam rakamları Fed'in faiz patikasını doğrudan belirleyecek.
 
 Türkiye'de TÜİK enflasyon verileri ve TCMB politika kararları TL varlıklar için kritik önem taşıyor. Dezenflasyon sürecinin hızı yatırımcı güvenini doğrudan etkiliyor.
