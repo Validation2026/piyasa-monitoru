@@ -84,12 +84,108 @@ function loadHotspots(cb){
 window.__JEO = {SEED:SEED, LVL_TEXT:LVL_TEXT, LVL_COLOR:LVL_COLOR, timeAgo:timeAgo, isStale:isStale, loadHotspots:loadHotspots};
 
 // ═══════════════════════════════════════
-// HARITA
+// HARITA — çok katmanlı: rotalar, çatışma hatları, ikincil işaretler, hotspot'lar
 // ═══════════════════════════════════════
+var CONFLICT_LINES = [
+    // [from, to, style, popup]
+    {pts:[[32,53],[31.5,34.8]], color:'#dc2626', name:'İran ↔ İsrail (karşılıklı saldırı)'},
+    {pts:[[50,36],[48.5,35]], color:'#dc2626', name:'Rusya → Ukrayna cephesi'},
+    {pts:[[15,45],[13,43]], color:'#dc2626', name:'Husi → Kızıldeniz saldırıları'},
+    {pts:[[40,125],[37,127]], color:'#eab308', name:'K. Kore füze testleri → G. Kore'},
+    {pts:[[23,117],[25,121]], color:'#eab308', name:'Çin tatbikat alanı → Tayvan'}
+];
+
+var AFFECTED_ROUTES = [
+    // Kızıldeniz → Ümit Burnu alternatif (kırmızı etkilenen + yeşil alternatif)
+    {pts:[[26.5,56],[22,58],[12.5,43.3],[15,41],[30.4,32.3],[35,20],[36,5]], color:'#f59e0b', name:'Basra → Avrupa (Süveyş/Kızıldeniz)', affected:true},
+    {pts:[[26.5,56],[22,58],[12,50],[-5,45],[-34,18],[-10,0],[36,5]], color:'#22c55e', name:'Basra → Avrupa (Ümit Burnu alternatif)', dashed:true},
+    {pts:[[26.5,56],[22,62],[15,68],[5,75],[1.3,103.8],[23,118]], color:'#f59e0b', name:'Basra → Asya'},
+    {pts:[[45,36],[41,29],[36,25],[36,5]], color:'#f59e0b', name:'Karadeniz tahıl koridoru'},
+    {pts:[[23,120],[25,122],[35,130],[37,127]], color:'#eab308', name:'Tayvan yarı iletken lojistiği'}
+];
+
+var NAVAL_FORCES = [
+    {lat:25,lng:55,icon:'⚓',name:'ABD 5. Filo — Basra Körfezi',info:'2 uçak gemisi grubu konuşlu'},
+    {lat:14,lng:52,icon:'⚓',name:'Koalisyon donanması — Aden',info:'Kızıldeniz ticaret koruması'},
+    {lat:37,lng:24,icon:'⚓',name:'NATO — Doğu Akdeniz',info:'Daimi devriye gücü'},
+    {lat:24,lng:123,icon:'⚓',name:'ABD 7. Filo — Okinawa',info:'Tayvan Boğazı geçişleri'}
+];
+
+var ENERGY_INFRA = [
+    {lat:33,lng:48,icon:'🛢️',name:'İsfahan / Natanz',info:'İran nükleer tesisleri (vurulan)'},
+    {lat:26,lng:50,icon:'🛢️',name:'Ras Tanura',info:'Suudi petrol terminali'},
+    {lat:50,lng:30,icon:'🛢️',name:'Ukrayna enerji ağı',info:'Rus saldırıları altında'},
+    {lat:60,lng:5,icon:'🛢️',name:'Norveç Kuzey Denizi',info:'Avrupa gaz tedariki'}
+];
+
+var SANCTION_ZONES = [
+    {center:[55,60], radius:1500000, color:'#6366f1', name:'Rusya — Batı yaptırımları'},
+    {center:[32,53], radius:800000, color:'#a855f7', name:'İran — OFAC yaptırımları'},
+    {center:[40,127], radius:400000, color:'#a855f7', name:'K. Kore — BMGK yaptırımları'}
+];
+
 function renderMap(hotspots){
-    var map = L.map('geoMap',{scrollWheelZoom:false,worldCopyJump:true}).setView([25,35],2);
+    var map = L.map('geoMap',{scrollWheelZoom:false,worldCopyJump:true,minZoom:2}).setView([28,45],3);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{maxZoom:10,attribution:'© OpenStreetMap © CARTO'}).addTo(map);
 
+    // 1. Yaptırım bölgesi halkaları (altta)
+    SANCTION_ZONES.forEach(function(z){
+        L.circle(z.center,{
+            radius: z.radius,
+            color: z.color,
+            fillColor: z.color,
+            fillOpacity: .06,
+            weight: 1,
+            dashArray: '4,6'
+        }).addTo(map).bindPopup('<b>'+z.name+'</b>');
+    });
+
+    // 2. Etkilenen ve alternatif ticaret rotaları
+    AFFECTED_ROUTES.forEach(function(r){
+        L.polyline(r.pts,{
+            color: r.color,
+            weight: r.dashed ? 2.5 : 3,
+            opacity: .75,
+            dashArray: r.dashed ? '6,8' : null,
+            className: r.affected ? 'animated-route' : ''
+        }).addTo(map).bindPopup('<b>'+r.name+'</b>');
+    });
+
+    // 3. Çatışma hatları (kırmızı kalın)
+    CONFLICT_LINES.forEach(function(cl){
+        L.polyline(cl.pts,{
+            color: cl.color,
+            weight: 3.5,
+            opacity: .85,
+            dashArray: '2,6'
+        }).addTo(map).bindPopup('<b>⚔️ '+cl.name+'</b>');
+    });
+
+    // 4. Donanma konuşlanmaları
+    NAVAL_FORCES.forEach(function(n){
+        L.marker([n.lat,n.lng],{
+            icon: L.divIcon({
+                html:'<div style="font-size:1.2rem;text-shadow:0 0 3px #fff,0 0 3px #fff">'+n.icon+'</div>',
+                className:'',
+                iconSize:[24,24],
+                iconAnchor:[12,12]
+            })
+        }).addTo(map).bindPopup('<b>'+n.name+'</b><br><small>'+n.info+'</small>');
+    });
+
+    // 5. Enerji altyapısı
+    ENERGY_INFRA.forEach(function(e){
+        L.marker([e.lat,e.lng],{
+            icon: L.divIcon({
+                html:'<div style="font-size:1rem;text-shadow:0 0 3px #fff,0 0 3px #fff">'+e.icon+'</div>',
+                className:'',
+                iconSize:[20,20],
+                iconAnchor:[10,10]
+            })
+        }).addTo(map).bindPopup('<b>'+e.name+'</b><br><small>'+e.info+'</small>');
+    });
+
+    // 6. Hotspot'lar (en üstte, pulse efektli)
     hotspots.forEach(function(h){
         var color = LVL_COLOR[h.level] || '#94a3b8';
         var marker = L.circleMarker([h.lat,h.lng],{
@@ -198,10 +294,83 @@ function loadAI(){
 }
 
 // ═══════════════════════════════════════
+// ÜST KPI SATIRI
+// ═══════════════════════════════════════
+function renderKPIs(hotspots){
+    var count = hotspots.length || 1;
+    var avg = hotspots.reduce(function(s,h){return s+(h.level||0)},0) / count;
+    var crit = hotspots.filter(function(h){return h.level===4}).length;
+    var high = hotspots.filter(function(h){return h.level===3}).length;
+    var freshest = hotspots.reduce(function(best,h){
+        var t = h.updatedAt ? new Date(h.updatedAt).getTime() : 0;
+        return t > best ? t : best;
+    }, 0);
+    var tensionIdx = Math.round(avg*25); // 1-4 → 25-100
+    var tensionCls = tensionIdx >= 75 ? 'crit' : (tensionIdx >= 50 ? 'warn' : 'ok');
+    var freshCls = freshest && (Date.now()-freshest) < 48*3600*1000 ? 'ok' : (freshest && (Date.now()-freshest) < 7*86400*1000 ? 'warn' : 'crit');
+    var freshTxt = freshest ? timeAgo(new Date(freshest).toISOString()) : '—';
+
+    var html = ''+
+        '<div class="kpi-cell '+tensionCls+'"><div class="kpi-l">Gerilim Endeksi</div><div class="kpi-v">'+tensionIdx+'<span style="font-size:.8rem;color:#94a3b8">/100</span></div><div class="kpi-s">Ortalama seviye '+avg.toFixed(1)+'/4</div></div>'+
+        '<div class="kpi-cell crit"><div class="kpi-l">Kritik Bölge</div><div class="kpi-v">'+crit+'</div><div class="kpi-s">Aktif çatışma / kapanma riski</div></div>'+
+        '<div class="kpi-cell warn"><div class="kpi-l">Yüksek Risk</div><div class="kpi-v">'+high+'</div><div class="kpi-s">Yakın izleme gerektiren</div></div>'+
+        '<div class="kpi-cell"><div class="kpi-l">Takipteki Bölge</div><div class="kpi-v">'+count+'</div><div class="kpi-s">Toplam gerilim noktası</div></div>'+
+        '<div class="kpi-cell '+freshCls+'"><div class="kpi-l">Son Güncelleme</div><div class="kpi-v" style="font-size:1rem">'+freshTxt+'</div><div class="kpi-s">En taze bölge kaydı</div></div>';
+    document.getElementById('kpiRow').innerHTML = html;
+}
+
+// ═══════════════════════════════════════
+// ETKİLENEN VARLIKLAR PANELİ
+// ═══════════════════════════════════════
+function renderAssets(hotspots){
+    // Hotspot'larda geçen varlıkları sayıp en çok etkilenenleri çıkar
+    var counts = {};
+    hotspots.forEach(function(h){
+        (h.assets||[]).forEach(function(a){ counts[a] = (counts[a]||0) + (h.level||1); });
+    });
+
+    var META = {
+        'BRENT':{icon:'🛢️',note:'Risk primi fiyatlamaya dahil, Hürmüz hassasiyeti yüksek'},
+        'WTI':{icon:'🛢️',note:'ABD stratejik rezerv ve OPEC+ kararları belirleyici'},
+        'XAU':{icon:'🥇',note:'Güvenli liman talebi + merkez bankası alımları güçlü'},
+        'VIX':{icon:'📊',note:'Volatilite, belirsizlik primi'},
+        'DXY':{icon:'💵',note:'Dolar güvenli liman akışı, EM para birimlerine baskı'},
+        'EUR':{icon:'💶',note:'Rusya-Ukrayna enerji kanalı ile korelasyon'},
+        'TTF':{icon:'🔥',note:'Avrupa doğalgaz; LNG rotaları ve jeopolitik hassas'},
+        'LNG':{icon:'🔥',note:'Tanker trafiği ve Hürmüz/Süveyş riskleriyle ilişkili'},
+        'Navlun':{icon:'🚢',note:'Kızıldeniz/Süveyş aksaklığı konteyner fiyatlarını yukarı itiyor'},
+        'Buğday':{icon:'🌾',note:'Karadeniz koridoru ve Ukrayna üretimine bağlı'},
+        'URANYUM':{icon:'☢️',note:'Sahel arzı ve nükleer gündemle destekli'},
+        'TSMC':{icon:'💻',note:'Tayvan riski, yarı iletken tedarik zinciri kritiği'},
+        'SOXX':{icon:'💻',note:'Yarı iletken endeksi, Tayvan Boğazı hassasiyeti'},
+        'KOSPI':{icon:'📈',note:'G. Kore endeksi, K. Kore füze testlerine duyarlı'},
+        'FXI':{icon:'📈',note:'Çin hisseleri, G. Çin Denizi ve Tayvan tansiyonu'},
+        'Savunma':{icon:'🛡️',note:'Savunma sanayi, uzun vadeli yapısal destek'},
+        'Konteyner':{icon:'📦',note:'Rota değişikliği, transit süresi artışı'},
+        'USD/CNY':{icon:'💱',note:'Çin-ABD gerginliği ve sermaye akışları'},
+        'USD/KRW':{icon:'💱',note:'Won — Kore yarımadası riski'},
+        'USD/PHP':{icon:'💱',note:'Peso — G. Çin Denizi gerilimi'}
+    };
+
+    var top = Object.keys(counts).sort(function(a,b){return counts[b]-counts[a]}).slice(0,8);
+    if(!top.length){ document.getElementById('assetsRow').innerHTML=''; return; }
+    var html = top.map(function(a){
+        var m = META[a] || {icon:'📌',note:'Hotspot bölgelerinde etkilenen varlık'};
+        return '<div class="asset-cell">'+
+               '<div class="asset-name"><span class="asset-icon">'+m.icon+'</span>'+a+'</div>'+
+               '<div class="asset-note">'+m.note+'</div>'+
+               '</div>';
+    }).join('');
+    document.getElementById('assetsRow').innerHTML = html;
+}
+
+// ═══════════════════════════════════════
 // BAŞLAT
 // ═══════════════════════════════════════
 loadHotspots(function(hotspots){
+    renderKPIs(hotspots);
     renderMap(hotspots);
+    renderAssets(hotspots);
     renderCards(hotspots);
     renderNews(hotspots);
 });
