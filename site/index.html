@@ -106,10 +106,13 @@
 
 <div class="stats-bar">
     <div class="stat"><div class="stat-v" id="stTotal">0</div><div class="stat-l">Varlık</div></div>
-    <div class="stat"><div class="stat-v" id="stCat">0</div><div class="stat-l">Kategori</div></div>
+    <div class="stat"><div class="stat-v" id="stComm">0</div><div class="stat-l">Emtia</div></div>
+    <div class="stat"><div class="stat-v" id="stSan">0</div><div class="stat-l">Sanayi</div></div>
+    <div class="stat"><div class="stat-v" id="stFx">0</div><div class="stat-l">Döviz</div></div>
+    <div class="stat"><div class="stat-v" id="stBond">0</div><div class="stat-l">Tahvil</div></div>
     <div class="stat"><div class="stat-v" id="stIdx">0</div><div class="stat-l">Endeks</div></div>
     <div class="stat"><div class="stat-v" id="stCry">0</div><div class="stat-l">Kripto</div></div>
-    <div class="stat"><div class="stat-v" id="stFx">0</div><div class="stat-l">Döviz Çifti</div></div>
+    <div class="stat"><div class="stat-v" id="stCat">0</div><div class="stat-l">Kategori</div></div>
     <div class="stat"><div class="stat-v" id="stUpdate">—</div><div class="stat-l">Son Güncelleme</div></div>
 </div>
 
@@ -221,11 +224,8 @@ function animateCounter(id, endVal, suffix = '') {
     window.requestAnimationFrame(step);
 }
 
-// Sayfa yüklendiğinde statik sayıları saydır
+// Kategori sayısı sabit (sidebar'daki veri sayfası sayısı)
 animateCounter('stCat', 9);
-animateCounter('stIdx', 17);
-animateCounter('stCry', 10);
-animateCounter('stFx', 18);
 
 function fj(f){return fetch(D+f+'?t='+Date.now()).then(function(r){return r.json()}).catch(function(){return null})}
 function fp(v,d){if(v==null)return'—';d=d!=null?d:2;return Number(v).toLocaleString('tr-TR',{minimumFractionDigits:d,maximumFractionDigits:d})}
@@ -279,20 +279,40 @@ fj('summary.json').then(function(data){
     buildMini(all);
     buildMovers(all);
 
-    // Kategori bazlı tablolar
-    var commIds=['BZ=F','CL=F','NG=F','TTF=F','MTF=F','HO=F','RB=F','USO','UNG','XLE','XOP','ICLN','TAN','NLR','KRBN','GC=F','SI=F','PL=F','PA=F','HG=F','ALI=F','GLD','SLV','PPLT','PALL','GDX','GDXJ','SIL','ZW=F','ZC=F','ZS=F','ZM=F','ZL=F','ZO=F','ZR=F','CT=F','KC=F','SB=F','CC=F','OJ=F','LBS=F','LE=F','HE=F','DBA','CORN','WEAT','SOYB','MOO','NI=F','SN=F','PB=F','RR=F','URA','LIT','COPX','SLX','BDRY','REMX','ZN=F'];
-    var fxIds=['USDTRY=X','EURTRY=X','GBPTRY=X','CHFTRY=X','JPYTRY=X','CADTRY=X','AUDTRY=X','CNYTRY=X','SARTRY=X','RUBTRY=X','AEDTRY=X','EURUSD=X','GBPUSD=X','USDJPY=X','USDCHF=X','AUDUSD=X','USDCAD=X','NZDUSD=X','USDCNY=X','USDBRL=X','USDMXN=X','USDINR=X','USDZAR=X','USDSEK=X','USDNOK=X','DX-Y.NYB','2YY=F','^FVX','^TNX','^TYX','JP2Y=RR','JP5Y=RR','JP10Y=RR','JP30Y=RR'];
+    // Kategori bazlı ID dizileri (alt gruplar ayrık)
+    var energyIds=['BZ=F','CL=F','NG=F','TTF=F','MTF=F','HO=F','RB=F','USO','UNG','XLE','XOP','ICLN','TAN','NLR','KRBN'];
+    var metalsIds=['GC=F','SI=F','PL=F','PA=F','HG=F','ALI=F','GLD','SLV','PPLT','PALL','GDX','GDXJ','SIL'];
+    var agriIds=['ZW=F','ZC=F','ZS=F','ZM=F','ZL=F','ZO=F','ZR=F','CT=F','KC=F','SB=F','CC=F','OJ=F','LBS=F','LE=F','HE=F','DBA','CORN','WEAT','SOYB','MOO'];
+    var industrialIds=['NI=F','SN=F','PB=F','RR=F','URA','LIT','COPX','SLX','BDRY','REMX','ZN=F'];
+    var commIds=energyIds.concat(metalsIds,agriIds,industrialIds);
+    var fxIds=['USDTRY=X','EURTRY=X','GBPTRY=X','CHFTRY=X','JPYTRY=X','CADTRY=X','AUDTRY=X','CNYTRY=X','SARTRY=X','RUBTRY=X','AEDTRY=X','EURUSD=X','GBPUSD=X','USDJPY=X','USDCHF=X','AUDUSD=X','USDCAD=X','NZDUSD=X','USDCNY=X','USDBRL=X','USDMXN=X','USDINR=X','USDZAR=X','USDSEK=X','USDNOK=X','DX-Y.NYB'];
+    var bondIds=['2YY=F','^FVX','^TNX','^TYX','JP2Y=RR','JP5Y=RR','JP10Y=RR','JP30Y=RR'];
+    var fxAllIds=fxIds.concat(bondIds);
     var idxIds=['XU100.IS','XU030.IS','^GSPC','^DJI','^IXIC','^RUT','^STOXX50E','^FTSE','^GDAXI','^FCHI','^N225','^HSI','000001.SS','^BSESN','^KS11','^TWII','^MERV'];
     var cryptoIds=['BTC-USD','ETH-USD','BNB-USD','SOL-USD','XRP-USD','ADA-USD','DOGE-USD','AVAX-USD','DOT-USD','LINK-USD'];
 
     function filterByIds(ids){return ids.map(function(id){return findS(all,id)}).filter(Boolean)}
-    buildTable('tblComm',filterByIds(commIds));
-    buildTable('tblFx',filterByIds(fxIds));
-    buildTable('tblIdx',filterByIds(idxIds));
-    buildTable('tblCrypto',filterByIds(cryptoIds));
+    var commSeries=filterByIds(commIds);
+    var fxSeries=filterByIds(fxAllIds);
+    var idxSeries=filterByIds(idxIds);
+    var cryptoSeries=filterByIds(cryptoIds);
+    buildTable('tblComm',commSeries);
+    buildTable('tblFx',fxSeries);
+    buildTable('tblIdx',idxSeries);
+    buildTable('tblCrypto',cryptoSeries);
 
-    // Toplam Varlık Sayısını Animasyonla Saydır
+    // Gerçek sayıları anime ederek göster (veride bulunanları say)
+    var commCount = filterByIds(energyIds.concat(metalsIds,agriIds)).length;
+    var sanCount  = filterByIds(industrialIds).length;
+    var fxCount   = filterByIds(fxIds).length;
+    var bondCount = filterByIds(bondIds).length;
     animateCounter('stTotal', all.length, '+');
+    animateCounter('stComm', commCount);
+    animateCounter('stSan',  sanCount);
+    animateCounter('stFx',   fxCount);
+    animateCounter('stBond', bondCount);
+    animateCounter('stIdx',  idxSeries.length);
+    animateCounter('stCry',  cryptoSeries.length);
 
     var su=document.getElementById('stUpdate');if(su&&data.meta){var d=new Date(data.meta.updated_at);su.textContent=String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+d.getFullYear()}
 });

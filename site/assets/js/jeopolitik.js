@@ -124,6 +124,61 @@ var SANCTION_ZONES = [
     {center:[40,127], radius:400000, color:'#a855f7', name:'K. Kore — BMGK yaptırımları'}
 ];
 
+// Çoklu saldırı vektörleri (kavisli yaylarla çizilecek) — hotspot'lara ek detay
+var ATTACK_VECTORS = [
+    // İran-İsrail: 3 paralel trajectory
+    {from:[32,53], to:[31.5,34.8], label:'Balistik füze', intensity:'high'},
+    {from:[32,53], to:[32.1,34.9], label:'İHA dalgası', intensity:'high'},
+    {from:[31.5,34.8], to:[32,53], label:'F-35 hava operasyonu', intensity:'high'},
+    // Husi → tanker
+    {from:[15.5,44], to:[13,43], label:'Anti-gemi füzesi', intensity:'med'},
+    {from:[15.5,44], to:[14,42], label:'İHA saldırısı', intensity:'med'},
+    // Rusya → Ukrayna çoklu
+    {from:[55,38], to:[50,30], label:'Kalibr füze', intensity:'med'},
+    {from:[52,40], to:[49,35], label:'Shahed İHA', intensity:'med'},
+    // Hizbullah → İsrail
+    {from:[33.9,35.5], to:[32.8,35], label:'Roket saldırısı', intensity:'med'}
+];
+
+// Kriz hedefleri (çarpı işaretli vurulan hedefler)
+var STRIKE_TARGETS = [
+    {lat:33.7,lng:52.4,name:'Natanz (vuruldu)',info:'İran nükleer tesisi — yoğun hasar'},
+    {lat:32.6,lng:51.6,name:'İsfahan UCF',info:'Uranyum dönüşüm tesisi — vuruldu'},
+    {lat:32.1,lng:34.8,name:'Tel Aviv yakınları',info:'İran balistik füze isabeti'},
+    {lat:33.9,lng:35.5,name:'Beyrut güney',info:'Hizbullah altyapısı vurulan bölge'},
+    {lat:50.4,lng:30.5,name:'Kiev enerji ağı',info:'Rus İHA/füze saldırısı'},
+    {lat:48.6,lng:37.6,name:'Doneck cephesi',info:'Aktif kara harekâtı'}
+];
+
+// Küçük skirmish / olay noktaları — genel atmosfer
+var SKIRMISHES = [
+    {lat:30.4,lng:48.5,c:'#dc2626'},{lat:29,lng:49,c:'#dc2626'},{lat:14,lng:44,c:'#f59e0b'},
+    {lat:13.5,lng:42.5,c:'#f59e0b'},{lat:17,lng:40,c:'#f59e0b'},{lat:47,lng:37,c:'#dc2626'},
+    {lat:49,lng:36,c:'#dc2626'},{lat:46,lng:34,c:'#dc2626'},{lat:51,lng:38,c:'#f59e0b'},
+    {lat:23,lng:120,c:'#eab308'},{lat:25,lng:120,c:'#eab308'},{lat:16,lng:115,c:'#eab308'},
+    {lat:17,lng:118,c:'#eab308'},{lat:38,lng:126,c:'#eab308'},{lat:40,lng:128,c:'#f59e0b'},
+    {lat:15,lng:-3,c:'#eab308'},{lat:14,lng:3,c:'#eab308'},{lat:16,lng:7,c:'#eab308'}
+];
+
+// Kavisli yay oluştur (iki nokta arası Bezier)
+function curvedArc(from, to, height){
+    height = height || 0.25;
+    var mid = [(from[0]+to[0])/2, (from[1]+to[1])/2];
+    var dx = to[1]-from[1], dy = to[0]-from[0];
+    var len = Math.sqrt(dx*dx+dy*dy);
+    // Dikey offset — kuzeye doğru şişir
+    var cp = [mid[0] + Math.abs(len)*height, mid[1]];
+    var pts = [];
+    var steps = 24;
+    for(var t=0; t<=steps; t++){
+        var s = t/steps;
+        var lat = (1-s)*(1-s)*from[0] + 2*(1-s)*s*cp[0] + s*s*to[0];
+        var lng = (1-s)*(1-s)*from[1] + 2*(1-s)*s*cp[1] + s*s*to[1];
+        pts.push([lat,lng]);
+    }
+    return pts;
+}
+
 function renderMap(hotspots){
     var map = L.map('geoMap',{scrollWheelZoom:false,worldCopyJump:true,minZoom:2}).setView([28,45],3);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{maxZoom:10,attribution:'© OpenStreetMap © CARTO'}).addTo(map);
@@ -185,23 +240,128 @@ function renderMap(hotspots){
         }).addTo(map).bindPopup('<b>'+e.name+'</b><br><small>'+e.info+'</small>');
     });
 
-    // 6. Hotspot'lar (en üstte, pulse efektli)
+    // 6. Skirmish noktaları (küçük titreşen ışıklar — atmosfer)
+    SKIRMISHES.forEach(function(s){
+        L.circleMarker([s.lat,s.lng],{
+            radius: 3,
+            color: s.c,
+            fillColor: s.c,
+            fillOpacity: .8,
+            weight: 0,
+            className: 'skirmish-dot',
+            interactive: false
+        }).addTo(map);
+    });
+
+    // 7. Kavisli saldırı yayları (füze/İHA/hava operasyonu)
+    ATTACK_VECTORS.forEach(function(v){
+        var arc = curvedArc(v.from, v.to, v.intensity==='high'?0.3:0.22);
+        var col = v.intensity==='high' ? '#dc2626' : '#f59e0b';
+        L.polyline(arc,{
+            color: col,
+            weight: 2,
+            opacity: .85,
+            className: 'missile-arc'
+        }).addTo(map).bindPopup('<b>⚔️ '+v.label+'</b>');
+    });
+
+    // 8. Strike target'lar (çarpı işaretli vurulan hedefler)
+    STRIKE_TARGETS.forEach(function(t){
+        L.marker([t.lat,t.lng],{
+            icon: L.divIcon({
+                html:'<div class="div-target"></div>',
+                className:'',
+                iconSize:[26,26],
+                iconAnchor:[13,13]
+            })
+        }).addTo(map).bindPopup('<b>🎯 '+t.name+'</b><br><small>'+t.info+'</small>');
+    });
+
+    // 9. Hotspot'lar — çoklu pulse halkası (kritik bölgede 3 katman)
     hotspots.forEach(function(h){
         var color = LVL_COLOR[h.level] || '#94a3b8';
+        var baseRadius = 10 + h.level*2;
+
+        // Kritik bölgede dış halka pulse
+        if(h.level >= 3){
+            L.circleMarker([h.lat,h.lng],{
+                radius: baseRadius + 4,
+                color: color,
+                weight: 2,
+                fillOpacity: 0,
+                opacity: .7,
+                className: h.level >= 4 ? 'pulse-crit' : 'pulse-warn',
+                interactive: false
+            }).addTo(map);
+            // İkinci halka gecikmeli (kritiklerde)
+            if(h.level === 4){
+                var el = L.circleMarker([h.lat,h.lng],{
+                    radius: baseRadius + 8,
+                    color: color,
+                    weight: 1.5,
+                    fillOpacity: 0,
+                    opacity: .5,
+                    className: 'pulse-crit',
+                    interactive: false
+                }).addTo(map);
+                // Animation gecikmesi için DOM'a eriş
+                setTimeout(function(){
+                    var p = el._path;
+                    if(p) p.style.animationDelay = '0.9s';
+                }, 100);
+            }
+        }
+
+        // Ana hotspot noktası
         var marker = L.circleMarker([h.lat,h.lng],{
-            radius: 10 + h.level*2,
+            radius: baseRadius,
             color: color,
             fillColor: color,
-            fillOpacity: .55,
+            fillOpacity: .65,
             weight: 3,
-            className: h.level >= 4 ? 'pulse-crit' : ''
+            className: h.level >= 4 ? 'critical-glow' : ''
         }).addTo(map);
+
+        // Bayrak etiketi (hotspot'un üstünde)
+        L.marker([h.lat,h.lng],{
+            icon: L.divIcon({
+                html:'<div class="div-flag">'+h.flag+'</div>',
+                className:'',
+                iconSize:[22,22],
+                iconAnchor:[11,28]
+            }),
+            interactive: false
+        }).addTo(map);
+
         var pop = '<b>'+h.flag+' '+h.name+'</b><br>'+
                   '<span style="color:'+color+';font-weight:700;font-size:.7rem">'+LVL_TEXT[h.level]+'</span><br>'+
                   '<small>'+(h.status||'')+'</small><br>'+
                   '<small style="color:#94a3b8">Güncelleme: '+timeAgo(h.updatedAt)+'</small>';
         marker.bindPopup(pop);
     });
+
+    // 10. Harita üst sağındaki canlı overlay
+    updateMapOverlay(hotspots);
+}
+
+function updateMapOverlay(hotspots){
+    var count = hotspots.length || 1;
+    var avg = hotspots.reduce(function(s,h){return s+(h.level||0)},0) / count;
+    var crit = hotspots.filter(function(h){return h.level===4}).length;
+    var high = hotspots.filter(function(h){return h.level===3}).length;
+    var freshest = hotspots.reduce(function(best,h){
+        var t = h.updatedAt ? new Date(h.updatedAt).getTime() : 0;
+        return t > best ? t : best;
+    }, 0);
+    var tensionIdx = Math.round(avg*25);
+    var ovT = document.getElementById('ovTension');
+    var ovC = document.getElementById('ovCrit');
+    var ovH = document.getElementById('ovHigh');
+    var ovF = document.getElementById('ovFresh');
+    if(ovT) ovT.textContent = tensionIdx+' / 100';
+    if(ovC) ovC.textContent = crit;
+    if(ovH) ovH.textContent = high;
+    if(ovF) ovF.textContent = freshest ? timeAgo(new Date(freshest).toISOString()) : '—';
 }
 
 // ═══════════════════════════════════════
@@ -368,7 +528,6 @@ function renderAssets(hotspots){
 // BAŞLAT
 // ═══════════════════════════════════════
 loadHotspots(function(hotspots){
-    renderKPIs(hotspots);
     renderMap(hotspots);
     renderAssets(hotspots);
     renderCards(hotspots);
