@@ -139,15 +139,22 @@ window.__FE = {COUNTRIES:COUNTRIES, METRICS:METRICS, heatColor:heatColor, realCo
 var D = window.__FE;
 if(!D || typeof L === 'undefined') return;
 
-var state = {metric:'rate', sort:{key:'rate', asc:false}};
+var state = {metric:'rate', sort:{key:'rate', asc:false}, query:'', onlyPinned:false, pins:{}};
 // Kullanıcı tercihleri localStorage'dan geri yükle
 try {
     var saved = JSON.parse(localStorage.getItem('fe_state') || 'null');
     if(saved && saved.metric) state.metric = saved.metric;
     if(saved && saved.sort) state.sort = saved.sort;
+    if(saved && saved.pins) state.pins = saved.pins;
+    if(saved && typeof saved.onlyPinned === 'boolean') state.onlyPinned = saved.onlyPinned;
 } catch(e){}
 function saveState(){
-    try { localStorage.setItem('fe_state', JSON.stringify({metric:state.metric, sort:state.sort})); } catch(e){}
+    try { localStorage.setItem('fe_state', JSON.stringify({metric:state.metric, sort:state.sort, pins:state.pins, onlyPinned:state.onlyPinned})); } catch(e){}
+}
+function togglePin(name){
+    if(state.pins[name]) delete state.pins[name]; else state.pins[name] = true;
+    saveState();
+    renderTable();
 }
 var map, markerLayer, pulseLayer, labelLayer, flagLayer;
 
@@ -323,17 +330,40 @@ function moveTag(m){
     return '<span class="pill hold">= Sabit</span>';
 }
 
+function filteredCountries(){
+    var q = (state.query || '').trim().toLocaleLowerCase('tr');
+    return D.COUNTRIES.filter(function(c){
+        if(state.onlyPinned && !state.pins[c.n]) return false;
+        if(!q) return true;
+        return c.n.toLocaleLowerCase('tr').indexOf(q) !== -1 ||
+               (c.cb || '').toLocaleLowerCase('tr').indexOf(q) !== -1;
+    });
+}
+
 function renderTable(){
     var key = state.sort.key;
     var asc = state.sort.asc;
-    var arr = D.COUNTRIES.slice().sort(function(a,b){
+    // Pin sıralama için özel key — önce favoriler, sonra alfabetik
+    var arr = filteredCountries().slice().sort(function(a,b){
+        if(key === 'pin'){
+            var pa = state.pins[a.n]?1:0, pb = state.pins[b.n]?1:0;
+            if(pa !== pb) return asc ? pa-pb : pb-pa;
+            return a.n.localeCompare(b.n, 'tr');
+        }
+        // Favoriler her zaman en üstte (sort yönünden bağımsız)
+        var pa = state.pins[a.n]?1:0, pb = state.pins[b.n]?1:0;
+        if(pa !== pb) return pb-pa;
         var va = a[key], vb = b[key];
         if(typeof va === 'string'){ return asc ? va.localeCompare(vb, 'tr') : vb.localeCompare(va, 'tr'); }
         return asc ? va-vb : vb-va;
     });
     var tb = document.getElementById('feTable');
+    var empty = document.getElementById('feEmpty');
+    if(empty) empty.hidden = arr.length > 0;
     tb.innerHTML = arr.map(function(c){
-        return '<tr>'+
+        var pinned = state.pins[c.n];
+        return '<tr'+(pinned?' class="pinned-row"':'')+'>'+
+            '<td class="fe-pin-col"><button type="button" class="fe-pin-btn'+(pinned?' pinned':'')+'" data-pin="'+c.n+'" title="'+(pinned?'Favorilerden çıkar':'Favorilere ekle')+'">'+(pinned?'⭐':'☆')+'</button></td>'+
             '<td><div class="flag-cell"><span class="fcf">'+c.flag+'</span><span>'+c.n+'</span></div></td>'+
             '<td class="num">'+c.rate.toFixed(2)+'</td>'+
             '<td class="num">'+c.infl.toFixed(1)+'</td>'+
@@ -343,6 +373,10 @@ function renderTable(){
             '<td style="color:#64748b;font-size:.72rem">'+c.cb+'</td>'+
         '</tr>';
     }).join('');
+    // Pin click handlers
+    tb.querySelectorAll('.fe-pin-btn').forEach(function(btn){
+        btn.addEventListener('click', function(e){ e.stopPropagation(); togglePin(btn.getAttribute('data-pin')); });
+    });
     // header sort indicator
     document.querySelectorAll('.fe-table th').forEach(function(th){
         th.classList.remove('sorted','asc');
@@ -351,6 +385,28 @@ function renderTable(){
             if(asc) th.classList.add('asc');
         }
     });
+}
+
+function exportCsv(){
+    var rows = filteredCountries();
+    var head = ['Ülke','Bayrak','Merkez Bankası','Politika Faizi %','Enflasyon %','Reel Faiz %','2Y Tahvil %','10Y Tahvil %','Son Hareket'];
+    var lines = [head.join(',')];
+    rows.forEach(function(c){
+        lines.push([
+            '"'+c.n+'"', c.flag, '"'+c.cb+'"',
+            c.rate.toFixed(2), c.infl.toFixed(2), c.real.toFixed(2),
+            c.m2y.toFixed(2), c.m10y.toFixed(2), c.move
+        ].join(','));
+    });
+    var blob = new Blob(['\ufeff' + lines.join('\n')], {type:'text/csv;charset=utf-8'});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'faiz-enflasyon-' + new Date().toISOString().slice(0,10) + '.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
 }
 
 // ─── Events ───
@@ -371,6 +427,39 @@ document.querySelectorAll('.fe-tab').forEach(function(t){
 document.querySelectorAll('.fe-tab').forEach(function(t){
     t.classList.toggle('active', t.getAttribute('data-metric') === state.metric);
 });
+
+// Arama kutusu
+var searchEl = document.getElementById('feSearch');
+var clearBtn = document.getElementById('feSearchClear');
+if(searchEl){
+    searchEl.addEventListener('input', function(){
+        state.query = searchEl.value;
+        if(clearBtn) clearBtn.hidden = !state.query;
+        renderTable();
+    });
+}
+if(clearBtn){
+    clearBtn.addEventListener('click', function(){
+        searchEl.value = '';
+        state.query = '';
+        clearBtn.hidden = true;
+        searchEl.focus();
+        renderTable();
+    });
+}
+// Favoriler filtresi
+var pinToggle = document.getElementById('feOnlyPinned');
+if(pinToggle){
+    pinToggle.checked = state.onlyPinned;
+    pinToggle.addEventListener('change', function(){
+        state.onlyPinned = pinToggle.checked;
+        saveState();
+        renderTable();
+    });
+}
+// CSV export
+var csvBtn = document.getElementById('feExportCsv');
+if(csvBtn) csvBtn.addEventListener('click', exportCsv);
 document.querySelectorAll('.fe-table th').forEach(function(th){
     th.addEventListener('click', function(){
         var k = th.getAttribute('data-sort');
