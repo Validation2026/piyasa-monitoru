@@ -92,12 +92,6 @@
 
 .badge-live{display:inline-block;margin-left:8px;padding:2px 8px;background:#16a34a;color:#fff;border-radius:10px;font-size:.6rem;font-weight:700;vertical-align:middle}
 
-/* Page lead + meta */
-.page-lead{margin:6px 0 6px;color:#475569;font-size:.82rem;line-height:1.5;max-width:760px}
-.fe-meta{display:flex;flex-wrap:wrap;gap:12px;font-size:.68rem;color:#64748b;margin-top:4px}
-.fe-meta .fe-updated b{color:#0f172a}
-@media(max-width:640px){.page-lead{font-size:.72rem}.fe-meta{font-size:.6rem;gap:8px}}
-
 /* Toolbar: arama + favoriler + CSV */
 .fe-toolbar{display:flex;gap:10px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
 .fe-search-wrap{position:relative;flex:1;min-width:200px;max-width:360px}
@@ -129,8 +123,8 @@
 <div class="page-spacer"></div>
 <div class="page-head">
     <h1>🌡️ Küresel Faiz & Enflasyon <span class="badge-live">50 ÜLKE</span></h1>
-    <p class="page-lead">50 ülkenin politika faizi, enflasyon, reel faiz ve tahvil getirileri tek ekranda. Üstteki sekmelerden metriği değiştir, haritada daireye tıklayıp detay gör, aşağıdaki tabloyu sıralayıp arayabilirsin.</p>
-    <div class="fe-meta"><span class="fe-updated">📅 Son güncellenme: <b>Nisan 2026</b></span> <span class="fe-source">Kaynak: merkez bankaları & piyasa verileri</span></div>
+    <div class="sub">50 ülkenin politika faizi, enflasyon, reel faiz ve tahvil getirileri tek ekranda. Sekmeden metriği değiştir, haritada daireye tıklayıp detay gör, tabloyu arayıp sıralayabilirsin.</div>
+    <div class="update-info">📅 Son güncellenme: Nisan 2026 · Kaynak: merkez bankaları & piyasa verileri</div>
 </div>
 
 <div class="fe-summary">
@@ -186,11 +180,6 @@
         <tbody id="feTable"></tbody>
     </table>
     <div id="feEmpty" class="fe-empty" hidden>Eşleşen ülke bulunamadı.</div>
-</div>
-
-<div class="chart-box">
-    <div class="chart-title">🤖 AI Makro Özet</div>
-    <div id="feAi" style="font-size:.82rem;line-height:1.6;color:#475569;white-space:pre-line">Yükleniyor...</div>
 </div>
 
 </div>

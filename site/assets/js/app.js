@@ -205,13 +205,116 @@ function buildCharts(containerId,seriesList,period){
     });return charts;
 }
 
-function buildTable(containerId,seriesList){
+function sparkSvg(data,color){
+    if(!data||data.length<2)return '';
+    var pts=data.slice(-20).map(function(d){return d.value});
+    var min=Math.min.apply(null,pts),max=Math.max.apply(null,pts);
+    var rng=(max-min)||1;
+    var W=48,H=16;
+    var step=W/(pts.length-1);
+    var path=pts.map(function(v,i){var x=(i*step).toFixed(1);var y=(H-((v-min)/rng)*H).toFixed(1);return(i?'L':'M')+x+' '+y}).join(' ');
+    var trendColor=color||(pts[pts.length-1]>=pts[0]?'#00d68f':'#ff4757');
+    return '<svg class="tbl-spark" width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" aria-hidden="true"><path d="'+path+'" fill="none" stroke="'+trendColor+'" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"/></svg>';
+}
+
+function isAnomaly(s){
+    if(!s||!s.data||s.data.length<10||s.change_1d_pct==null)return false;
+    var vals=s.data.slice(-30);
+    var changes=[];
+    for(var i=1;i<vals.length;i++){
+        var prev=vals[i-1].value,cur=vals[i].value;
+        if(prev)changes.push(((cur-prev)/prev)*100);
+    }
+    if(changes.length<5)return false;
+    var m=changes.reduce(function(a,b){return a+b},0)/changes.length;
+    var v=changes.reduce(function(a,b){return a+(b-m)*(b-m)},0)/changes.length;
+    var sd=Math.sqrt(v);
+    if(sd<0.01)return false;
+    return Math.abs(s.change_1d_pct-m)>2*sd;
+}
+
+function csvEscape(v){
+    if(v==null)return'';
+    var s=String(v);
+    if(s.indexOf(',')!==-1||s.indexOf('"')!==-1||s.indexOf('\n')!==-1){
+        return '"'+s.replace(/"/g,'""')+'"';
+    }
+    return s;
+}
+
+function exportTableCsv(seriesList,filename){
+    var rows=[['Varlık','Birim','Fiyat','1G %','1H %','1A %','YTD %','52H Düşük','52H Yüksek']];
+    seriesList.forEach(function(s){if(!s)return;
+        rows.push([
+            s.name||'',s.unit||'',
+            s.current!=null?s.current:'',
+            s.change_1d_pct!=null?s.change_1d_pct.toFixed(2):'',
+            s.change_1w_pct!=null?s.change_1w_pct.toFixed(2):'',
+            s.change_1m_pct!=null?s.change_1m_pct.toFixed(2):'',
+            s.change_ytd_pct!=null?s.change_ytd_pct.toFixed(2):'',
+            s.low_52w!=null?s.low_52w:'',
+            s.high_52w!=null?s.high_52w:''
+        ]);
+    });
+    var csv='\ufeff'+rows.map(function(r){return r.map(csvEscape).join(',')}).join('\n');
+    var blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');
+    a.href=url;a.download=(filename||'piyasa')+'.csv';
+    document.body.appendChild(a);a.click();
+    setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(url)},100);
+}
+
+function formatUpdatedAt(iso){
+    if(!iso)return'';
+    try{
+        var d=new Date(iso);if(isNaN(d.getTime()))return iso;
+        var pad=function(n){return String(n).padStart(2,'0')};
+        return pad(d.getDate())+'.'+pad(d.getMonth()+1)+'.'+d.getFullYear()+' '+pad(d.getHours())+':'+pad(d.getMinutes());
+    }catch(e){return iso}
+}
+
+function buildTable(containerId,seriesList,opts){
     var el=document.getElementById(containerId);if(!el)return;
-    var h='<table><thead><tr><th>İsim</th><th class="r">Fiyat</th><th class="r">1 Gün</th><th class="r">1 Hafta</th><th class="r">1 Ay</th><th class="r">YTD</th><th class="r">52H Aralık</th></tr></thead><tbody>';
+    opts=opts||{};
+    var stampSrc=opts.updatedAt||(_lastMeta&&_lastMeta.updated_at);
+    var updatedAt=stampSrc?formatUpdatedAt(stampSrc):'';
+    var fileBase=opts.file||(_lastMeta&&_lastMeta.pageId)||containerId||'piyasa';
+    var toolbar='<div class="tbl-toolbar">'+
+        '<div class="tbl-search-wrap"><span class="tbl-search-ico">🔍</span>'+
+        '<input type="search" class="tbl-search" id="'+containerId+'_search" placeholder="Varlık ara…" aria-label="Tabloda ara"></div>'+
+        '<button type="button" class="tbl-csv-btn" id="'+containerId+'_csv" aria-label="CSV olarak indir">⬇ CSV</button>'+
+        (updatedAt?'<span class="tbl-updated">📅 Son güncellenme: '+updatedAt+'</span>':'')+
+    '</div>';
+    var h=toolbar+'<div class="tbl-wrap"><table><thead><tr><th>İsim</th><th class="r">Fiyat</th><th class="r">1 Gün</th><th class="r">1 Hafta</th><th class="r">1 Ay</th><th class="r">YTD</th><th class="r">Trend</th><th class="r">52H Aralık</th></tr></thead><tbody>';
     seriesList.forEach(function(s){if(!s)return;
         function cv(p){if(p==null)return'<td class="mono r dim">—</td>';return'<td class="mono r '+cc(p)+'">'+(p>=0?'+':'')+p.toFixed(2)+'%</td>'}
-        h+='<tr><td class="asset-name-cell">'+logoImg(s,18)+'<span>'+s.name+'</span></td><td class="mono r">'+fp(s.current)+' <span class="dim">'+(s.unit||'')+'</span></td>'+cv(s.change_1d_pct)+cv(s.change_1w_pct)+cv(s.change_1m_pct)+cv(s.change_ytd_pct)+'<td class="mono r dim" style="font-size:.7rem">'+(s.low_52w!=null?fp(s.low_52w)+' — '+fp(s.high_52w):'—')+'</td></tr>';
-    });h+='</tbody></table>';el.innerHTML=h;
+        var anom=isAnomaly(s);
+        var nameKey=(s.name||'').toLocaleLowerCase('tr')+' '+(s.id||'').toLowerCase();
+        var anomTitle=anom?' title="Olağandışı hareket: 30 günlük ortalamadan 2σ sapma"':'';
+        h+='<tr class="'+(anom?'tbl-anomaly':'')+'" data-search="'+nameKey.replace(/"/g,'')+'"'+anomTitle+'>'+
+            '<td class="asset-name-cell">'+logoImg(s,18)+'<span>'+s.name+'</span>'+(anom?'<span class="tbl-anom-badge" aria-label="Olağandışı">⚠</span>':'')+'</td>'+
+            '<td class="mono r">'+fp(s.current)+' <span class="dim">'+(s.unit||'')+'</span></td>'+
+            cv(s.change_1d_pct)+cv(s.change_1w_pct)+cv(s.change_1m_pct)+cv(s.change_ytd_pct)+
+            '<td class="r">'+sparkSvg(s.data)+'</td>'+
+            '<td class="mono r dim" style="font-size:.7rem">'+(s.low_52w!=null?fp(s.low_52w)+' — '+fp(s.high_52w):'—')+'</td>'+
+        '</tr>';
+    });h+='</tbody></table></div>';el.innerHTML=h;
+
+    var search=document.getElementById(containerId+'_search');
+    var tbody=el.querySelector('tbody');
+    if(search&&tbody){
+        search.addEventListener('input',function(){
+            var q=(search.value||'').toLocaleLowerCase('tr').trim();
+            tbody.querySelectorAll('tr').forEach(function(tr){
+                if(!q){tr.style.display='';return}
+                var key=tr.getAttribute('data-search')||'';
+                tr.style.display=key.indexOf(q)!==-1?'':'none';
+            });
+        });
+    }
+    var csvBtn=document.getElementById(containerId+'_csv');
+    if(csvBtn)csvBtn.addEventListener('click',function(){exportTableCsv(seriesList,fileBase)});
 }
 
 // Comparison multi-line chart (normalized to %)
@@ -260,6 +363,7 @@ function loadOverrides(pageId) {
     }).catch(function() { return {}; });
 }
 
+var _lastMeta = null;
 function loadData(file, pageId) {
     // Veri ve override'lari paralel yukle, override'lari uygula
     return Promise.all([fj(file), loadOverrides(pageId)]).then(function(r){
@@ -268,10 +372,12 @@ function loadData(file, pageId) {
         // Veri eski mi? (60 dk üstü)
         if (data && data.meta && data.meta.updated_at) {
             try { showStaleBanner(data.meta.updated_at, 60); } catch(e){}
+            _lastMeta = { updated_at: data.meta.updated_at, file: file, pageId: pageId };
         }
         return data;
     });
 }
+function getLastMeta(){ return _lastMeta; }
 
 /* ══════════════════════════════════════════
    STALE DATA BANNER (Veri eskilik uyarısı)
@@ -466,7 +572,7 @@ function makeAreaChart(canvasId, series, opts){
     });
 }
 
-return{fj:fj,fs:fs,fp:fp,fc:fc,cc:cc,gc:gc,filterPeriod:filterPeriod,miniSpark:miniSpark,makeChart:makeChart,makeAreaChart:makeAreaChart,buildSummary:buildSummary,buildCharts:buildCharts,buildTable:buildTable,buildComparisonChart:buildComparisonChart,buildBarChart:buildBarChart,buildDonutChart:buildDonutChart,buildHeatmap:buildHeatmap,applyOverrides:applyOverrides,loadOverrides:loadOverrides,loadData:loadData,showStaleBanner:showStaleBanner,countUp:countUp,initScrollReveal:initScrollReveal,flashUpdate:flashUpdate};
+return{fj:fj,fs:fs,fp:fp,fc:fc,cc:cc,gc:gc,filterPeriod:filterPeriod,miniSpark:miniSpark,makeChart:makeChart,makeAreaChart:makeAreaChart,buildSummary:buildSummary,buildCharts:buildCharts,buildTable:buildTable,buildComparisonChart:buildComparisonChart,buildBarChart:buildBarChart,buildDonutChart:buildDonutChart,buildHeatmap:buildHeatmap,applyOverrides:applyOverrides,loadOverrides:loadOverrides,loadData:loadData,getLastMeta:getLastMeta,showStaleBanner:showStaleBanner,countUp:countUp,initScrollReveal:initScrollReveal,flashUpdate:flashUpdate,exportTableCsv:exportTableCsv,sparkSvg:sparkSvg,isAnomaly:isAnomaly,formatUpdatedAt:formatUpdatedAt};
 })();
 
 // Scroll reveal'ı DOM hazır olunca başlat

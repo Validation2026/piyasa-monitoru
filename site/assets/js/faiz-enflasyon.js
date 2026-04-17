@@ -477,14 +477,5 @@ renderSummary();
 renderLeaders();
 renderTable();
 
-// AI
-fetch('/api/ai-analysis?cat=faiz-enflasyon').then(function(r){return r.json()}).then(function(d){
-    var el = document.getElementById('feAi');
-    if(el && d && d.analysis) el.textContent = d.analysis;
-}).catch(function(){
-    var el = document.getElementById('feAi');
-    if(el) el.innerHTML = '<span style="color:#94a3b8;font-style:italic">AI özeti şu an yüklenemiyor.</span>';
-});
-
 })();
 
