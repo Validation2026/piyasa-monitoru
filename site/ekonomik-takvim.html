@@ -44,11 +44,13 @@
 </head>
 <body>
 <script src="assets/js/sidebar.js"></script>
+<script src="assets/js/app.js"></script>
 <div class="page">
 <div class="page-spacer"></div>
     <div class="page-head">
         <h1>📅 Ekonomik Takvim</h1>
         <div class="sub">Merkez bankası kararları, TÜFE açıklamaları, önemli ekonomik veriler</div>
+        <div style="margin-top:10px"><button type="button" class="tbl-csv-btn" id="calExcel" title="Tüm ekonomik takvim olaylarını Excel'e indir">⬇ Excel</button></div>
     </div>
 
     <div class="ai-box"><div class="ai-header"><span>🤖 AI Takvim Analizi</span><span class="ai-badge">AI</span></div><div class="ai-body" id="aiAnalysis"><span style="color:var(--t3);font-style:italic">Analiz yükleniyor...</span></div></div>
@@ -203,6 +205,26 @@ renderEvents('ecoEvents', ecoEvents);
 fetch('/api/ai-analysis?cat=genel').then(function(r){return r.json()}).then(function(d){
     var el=document.getElementById('aiAnalysis');if(el&&d.analysis)el.textContent=d.analysis;
 }).catch(function(){});
+
+// Excel indirme
+var calBtn = document.getElementById('calExcel');
+if(calBtn){
+    calBtn.addEventListener('click', function(){
+        if(!window.PM||!PM.downloadExcel){alert('PM modülü yüklü değil');return;}
+        var impactLabel = function(i){return i==='high'?'YÜKSEK':i==='med'?'ORTA':'DÜŞÜK'};
+        var cbRows = cbDates.slice().sort(function(a,b){return a.date.localeCompare(b.date)}).map(function(e){
+            return [e.date, e.name, e.desc, impactLabel(e.impact)];
+        });
+        var ecoRows = ecoEvents.slice().sort(function(a,b){return a.date.localeCompare(b.date)}).map(function(e){
+            return [e.date, e.name, e.desc, impactLabel(e.impact)];
+        });
+        var sheets = [
+            {name:'Merkez Bankası Kararları', headerRow:['Tarih','Olay','Açıklama','Etki'], dataRows:cbRows},
+            {name:'Ekonomik Veriler', headerRow:['Tarih','Olay','Açıklama','Etki'], dataRows:ecoRows}
+        ];
+        PM.downloadExcel(sheets, 'ekonomik-takvim-2026');
+    });
+}
 })();
 </script>
 </body>
