@@ -162,7 +162,7 @@ function initMap(){
     map = L.map('feMap', {
         zoomControl:true, attributionControl:false, worldCopyJump:true,
         preferCanvas:true
-    }).setView([39, 35], 5);
+    }).setView([39, 35], 4);
     // Light (Positron) tile layer
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
         subdomains:'abcd', maxZoom:10, minZoom:2
