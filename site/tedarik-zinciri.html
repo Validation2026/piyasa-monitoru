@@ -71,9 +71,12 @@
 </head>
 <body>
 <script src="assets/js/sidebar.js"></script>
+<script src="assets/js/app.js"></script>
 <div class="page">
 <div class="page-spacer"></div>
-<div class="page-head"><h1>🌍 Tedarik Zinciri Haritası</h1></div>
+<div class="page-head"><h1>🌍 Tedarik Zinciri Haritası</h1>
+<div style="margin-top:10px"><button type="button" class="tbl-csv-btn" id="supplyExcel" title="Tedarik zinciri verilerini Excel'e indir">⬇ Excel</button></div>
+</div>
 
 <div class="map-full">
 <h3>🗺️ Küresel Ticaret Rotaları & Darboğazlar</h3>
@@ -191,6 +194,37 @@ g.innerHTML=countries.map(function(c){
     var tags=c.items.map(function(i){return '<span class="pc-tag '+i.c+'">'+i.t+'</span>'}).join('');
     return '<div class="prod-card"><div class="pc-head"><span class="pc-flag">'+c.flag+'</span><span class="pc-name">'+c.name+'</span></div><div class="pc-list">'+tags+'</div></div>';
 }).join('');
+
+// Excel indirme
+var supplyBtn = document.getElementById('supplyExcel');
+if(supplyBtn){
+    supplyBtn.addEventListener('click', function(){
+        if(!window.PM||!PM.downloadExcel){alert('PM modülü yüklü değil');return;}
+        var routesRows = [
+            ['Basra Körfezi → Asya','Hürmüz Boğazı','21M varil petrol','Ham petrol, LNG','YÜKSEK'],
+            ['Akdeniz → Hint Okyanusu','Süveyş Kanalı','5.5M varil eşdeğer','Konteyner, petrol','ORTA'],
+            ['Kızıldeniz → Aden','Bab el-Mandeb','6.2M varil','Petrol, LNG, konteyner','YÜKSEK'],
+            ['Güney Çin Denizi','Malakka Boğazı','16M varil','Ham petrol, LNG, mal','DÜŞÜK'],
+            ['Panama Kanalı','Panama','1M varil eşdeğer','Konteyner, tahıl, LNG','DÜŞÜK (Kuraklık)'],
+            ['Türk Boğazları','İstanbul/Çanakkale','3M varil','Karadeniz petrolü, tahıl','ORTA']
+        ];
+        var prodRows = countries.map(function(c){
+            return [c.flag, c.name, c.items.map(function(i){return i.t}).join(' | ')];
+        });
+        var chokeRows = chokes.map(function(c){return [c.n, Number(c.lat), Number(c.lon), c.risk, c.info]});
+        var routeMapRows = routes.map(function(r){
+            var pts = r.pts.map(function(p){return p[0]+','+p[1]}).join(' → ');
+            return [r.name, pts, r.color];
+        });
+        var sheets = [
+            {name:'Kritik Rotalar', headerRow:['Rota','Geçiş Noktası','Günlük Hacim','Taşınan','Risk'], dataRows:routesRows},
+            {name:'Üretici Ülkeler', headerRow:['Bayrak','Ülke','Üretilen Ürünler'], dataRows:prodRows},
+            {name:'Darboğazlar', headerRow:['İsim','Enlem','Boylam','Risk','Bilgi'], dataRows:chokeRows},
+            {name:'Harita Rotaları', headerRow:['İsim','Geçiş Noktaları','Renk'], dataRows:routeMapRows}
+        ];
+        PM.downloadExcel(sheets, 'tedarik-zinciri-'+new Date().toISOString().slice(0,10));
+    });
+}
 })();
 </script>
 </body>

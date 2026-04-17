@@ -152,9 +152,12 @@
 </head>
 <body>
 <script src="assets/js/sidebar.js"></script>
+<script src="assets/js/app.js"></script>
 <div class="page">
 <div class="page-spacer"></div>
-<div class="page-head"><h1>🔴 İran Risk Monitörü</h1></div>
+<div class="page-head"><h1>🔴 İran Risk Monitörü</h1>
+<div style="margin-top:10px"><button type="button" class="tbl-csv-btn" id="iranExcel" title="Risk verisi, emtialar, zaman çizelgesi ve haberleri Excel'e indir">⬇ Excel</button></div>
+</div>
 
 <div class="war-banner" style="background:linear-gradient(135deg,#2b5b13,#2b5b13); border-color:#93c47d;">
 <div style="color:#6cd53e;font-size:1.5rem;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1;margin-bottom:8px">ATEŞKES</div>
@@ -461,6 +464,35 @@ document.getElementById('tlFilter').addEventListener('click',function(ev){
     ev.target.classList.add('on');
     renderTL(ev.target.getAttribute('data-f'));
 });
+
+// Excel indirme
+var iranBtn=document.getElementById('iranExcel');
+if(iranBtn){
+    iranBtn.addEventListener('click',function(){
+        if(!window.PM||!PM.downloadExcel){alert('PM modülü yüklü değil');return;}
+        var S=window._iranState||{};
+        var summary=[
+            ['Risk Skoru', S.riskScore!=null?Number(S.riskScore):''],
+            ['Hürmüz Boğazı', S.hurmuzStatus||''],
+            ['Çıkartma Tarihi', new Date().toISOString().slice(0,16).replace('T',' ')]
+        ];
+        var commData=COMMS.map(function(c){
+            var mc=(S.manualCommodities||{})[c.id]||{};
+            return [c.n, c.id, c.w, mc.value!=null?Number(mc.value):'', mc.past_prewar!=null?Number(mc.past_prewar):'', mc.past_ytd!=null?Number(mc.past_ytd):''];
+        });
+        var custom=(S.customMetrics||[]).map(function(m){return [m.name||'', m.unit||'', m.value!=null?Number(m.value):'', m.past_prewar!=null?Number(m.past_prewar):'', m.past_ytd!=null?Number(m.past_ytd):'']});
+        var tlData=TLE.map(function(e){return [e.d+'.2026', tagNames[e.tag]||e.tag, e.t, e.ds]});
+        var newsData=(typeof allNews!=='undefined'?allNews:[]).slice(0,200).map(function(n){return [n.date||'', n.title||'', n.link||'']});
+        var sheets=[
+            {name:'Özet', headerRow:['Gösterge','Değer'], dataRows:summary},
+            {name:'Risk Emtiaları', headerRow:['İsim','ID','Etki','Değer','Savaş Öncesi %','YTD %'], dataRows:commData},
+            {name:'Özel Metrikler', headerRow:['İsim','Birim','Değer','Savaş Öncesi %','YTD %'], dataRows:custom},
+            {name:'Zaman Çizelgesi', headerRow:['Tarih','Kategori','Olay','Açıklama'], dataRows:tlData},
+            {name:'Haberler', headerRow:['Tarih','Başlık','Bağlantı'], dataRows:newsData}
+        ];
+        PM.downloadExcel(sheets, 'iran-risk-'+new Date().toISOString().slice(0,10));
+    });
+}
 })();
 if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').then(function(reg){reg.update()});}
 </script>

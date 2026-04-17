@@ -71,6 +71,7 @@
 <div class="page-head">
     <h1>📊 Varlık Karşılaştırma & Korelasyon</h1>
     <div class="sub">Farklı varlık sınıflarını karşılaştırın, korelasyonları analiz edin</div>
+    <div style="margin-top:10px"><button type="button" class="tbl-csv-btn" id="karsExcel" title="Seçili varlıkların özet ve tarihsel verilerini Excel'e indir">⬇ Excel</button></div>
 </div>
 
 <div class="sec-title">Kategori Seç</div>
@@ -389,6 +390,16 @@ document.getElementById('periodSelector').addEventListener('click', function(e) 
     period = e.target.getAttribute('data-period');
     updateCharts();
 });
+
+// Excel indirme
+var karsBtn = document.getElementById('karsExcel');
+if(karsBtn){
+    karsBtn.addEventListener('click', function(){
+        var seriesList = selected.map(function(id){return allData[id]}).filter(Boolean);
+        if(!seriesList.length){alert('Önce karşılaştırılacak varlık seçin');return;}
+        PM.exportTableExcel(seriesList, 'karsilastirma-'+new Date().toISOString().slice(0,10));
+    });
+}
 
 })();
 </script>

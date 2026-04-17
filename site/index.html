@@ -261,8 +261,16 @@ function buildTable(id,items){var el=document.getElementById(id);if(!el)return;
     el.innerHTML=items.map(function(s, index){
         if(!s)return'';var p=s.change_1d_pct;var cls=p!=null?cc(p):'';var sign=p!=null?(p>=0?'+':''):'';var chg=p!=null?sign+p.toFixed(2)+'%':'—';
         // Animasyon gecikmesi eklendi
-        return'<div class="prow" style="animation-delay:'+(index*0.03)+'s"><div class="prow-n">'+s.name+'</div><div class="prow-v">'+fp(s.current)+'</div><div class="prow-c '+cls+'">'+chg+'</div></div>'
+        return'<div class="prow" style="animation-delay:'+(index*0.03)+'s" data-idx="'+index+'" tabindex="0"><div class="prow-n">'+s.name+'</div><div class="prow-v">'+fp(s.current)+'</div><div class="prow-c '+cls+'">'+chg+'</div></div>'
     }).join('');
+    // Tıklayınca/Enter'a basınca detay popup aç
+    el.querySelectorAll('.prow').forEach(function(row){
+        var idx=parseInt(row.getAttribute('data-idx'),10);
+        var s=items[idx];if(!s)return;
+        row.style.cursor='pointer';
+        row.addEventListener('click',function(){ if(window.PM&&PM.showAssetModal) PM.showAssetModal(s); });
+        row.addEventListener('keydown',function(e){ if((e.key==='Enter'||e.key===' ')&&window.PM&&PM.showAssetModal){e.preventDefault();PM.showAssetModal(s);} });
+    });
 }
 
 // Tek hafif dosya ile tüm veriyi yükle (8MB yerine ~114KB)

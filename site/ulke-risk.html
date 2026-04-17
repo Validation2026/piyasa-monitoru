@@ -67,9 +67,12 @@
 </head>
 <body>
 <script src="assets/js/sidebar.js"></script>
+<script src="assets/js/app.js"></script>
 <div class="page">
 <div class="page-spacer"></div>
-<div class="page-head"><h1>🌐 Ülke Risk Profilleri</h1></div>
+<div class="page-head"><h1>🌐 Ülke Risk Profilleri</h1>
+<div style="margin-top:10px"><button type="button" class="tbl-csv-btn" id="ulkeExcel" title="Ülke risk profillerini Excel'e indir">⬇ Excel</button></div>
+</div>
 
 <div class="ai-box">
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
@@ -183,6 +186,23 @@ fetch('/api/iran-state').then(function(r){return r.json()}).then(function(s){
 fetch('/api/ai-analysis?cat=genel').then(function(r){return r.json()}).then(function(d){
     if(d.analysis)document.getElementById('aiBox').textContent=d.analysis;
 }).catch(function(){});
+
+// Excel indirme
+var ulkeBtn = document.getElementById('ulkeExcel');
+if(ulkeBtn){
+    ulkeBtn.addEventListener('click', function(){
+        if(!window.PM||!PM.downloadExcel){alert('PM modülü yüklü değil');return;}
+        var rows = C.map(function(c){
+            return [c.f, c.n, c.risk, c.sp, c.fitch, c.moodys, c.cds, c.inflation, c.interest, c.debt, c.growth, c.note];
+        });
+        var sheets = [
+            {name:'Ülke Risk Profilleri',
+             headerRow:['Bayrak','Ülke','Risk Seviyesi','S&P','Fitch','Moody\'s','CDS (5Y) bps','Enflasyon','Politika Faizi','Borç/GSYİH','Büyüme Tahmini','Not'],
+             dataRows: rows}
+        ];
+        PM.downloadExcel(sheets, 'ulke-risk-'+new Date().toISOString().slice(0,10));
+    });
+}
 })();
 </script>
 </body>

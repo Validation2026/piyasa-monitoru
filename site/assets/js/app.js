@@ -191,6 +191,13 @@ function buildSummary(containerId,seriesList){
     });
     el.innerHTML=h;
     setTimeout(function(){seriesList.forEach(function(s,i){if(s&&s.data)miniSpark('mini-spark-'+i,s.data,gc(i))})},50);
+    // Tıklayınca detay popup aç
+    el.querySelectorAll('.scard').forEach(function(card,i){
+        card.style.cursor='pointer';
+        card.setAttribute('tabindex','0');
+        card.addEventListener('click',function(){ if(seriesList[i]) showAssetModal(seriesList[i]); });
+        card.addEventListener('keydown',function(e){ if((e.key==='Enter'||e.key===' ')&&seriesList[i]){e.preventDefault();showAssetModal(seriesList[i]);} });
+    });
 }
 
 function buildCharts(containerId,seriesList,period){
@@ -396,6 +403,22 @@ function buildTable(containerId,seriesList,opts){
     }
     var csvBtn=document.getElementById(containerId+'_csv');
     if(csvBtn)csvBtn.addEventListener('click',function(){exportTableExcel(seriesList,fileBase)});
+    // Tablo satırına tıklayınca detay popup aç
+    if(tbody){
+        var rows=tbody.querySelectorAll('tr');
+        var visibleIdx=0;
+        rows.forEach(function(tr,i){
+            var s=seriesList[i];
+            if(!s)return;
+            tr.style.cursor='pointer';
+            tr.setAttribute('tabindex','0');
+            tr.addEventListener('click',function(e){
+                if(e.target.closest('a,button,input,select,textarea'))return;
+                showAssetModal(s);
+            });
+            tr.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){e.preventDefault();showAssetModal(s);} });
+        });
+    }
 }
 
 /* ══════════════════════════════════════════

@@ -103,6 +103,7 @@
 <div class="page-head">
     <h1>🌐 3D Küre — Canlı Finans Dünyası</h1>
     <div class="sub">Dünyanın başlıca borsaları, ticaret rotaları, enerji boru hatları, deniz kabloları ve stratejik darboğazlar — hepsi tek bir canlı küresel görünümde. Noktalara ve yaylara tıklayıp detayları keşfet.</div>
+    <div style="margin-top:10px"><button type="button" class="tbl-csv-btn" id="kureExcel" title="Tüm küre verilerini Excel'e indir">⬇ Excel</button></div>
 </div>
 
 <div class="metrics-row">
@@ -166,6 +167,30 @@
 
 </div>
 <script src="https://unpkg.com/globe.gl@2.34.4/dist/globe.gl.min.js"></script>
+<script src="assets/js/app.js"></script>
 <script src="assets/js/kure.js"></script>
+<script>
+(function(){
+    var btn = document.getElementById('kureExcel');
+    if(!btn) return;
+    btn.addEventListener('click', function(){
+        if(!window.PM || !PM.downloadExcel || !window.__KURE){alert('Veri henüz yüklenmedi');return;}
+        var D = window.__KURE;
+        var sheets = [
+            {name:'Borsalar', headerRow:['Kod','İsim','Konum','Bayrak','Enlem','Boylam','Piyasa Değeri (T USD)','Saat Dilimi','Açılış Saati'],
+             dataRows: D.EXCHANGES.map(function(x){return [x.code,x.name,x.loc,x.flag,Number(x.lat),Number(x.lng),Number(x.cap),x.tz,x.open]})},
+            {name:'Ticaret Rotaları', headerRow:['İsim','Başlangıç Enlem','Başlangıç Boylam','Bitiş Enlem','Bitiş Boylam','Kargo','Hacim'],
+             dataRows: D.ROUTES.map(function(r){return [r.name,Number(r.s[0]),Number(r.s[1]),Number(r.e[0]),Number(r.e[1]),r.cargo,r.vol]})},
+            {name:'Boru Hatları', headerRow:['İsim','Başlangıç Enlem','Başlangıç Boylam','Bitiş Enlem','Bitiş Boylam','Tip'],
+             dataRows: D.PIPES.map(function(p){return [p.name,Number(p.s[0]),Number(p.s[1]),Number(p.e[0]),Number(p.e[1]),p.kind]})},
+            {name:'Deniz Kabloları', headerRow:['İsim','Başlangıç Enlem','Başlangıç Boylam','Bitiş Enlem','Bitiş Boylam','Tip'],
+             dataRows: D.CABLES.map(function(c){return [c.name,Number(c.s[0]),Number(c.s[1]),Number(c.e[0]),Number(c.e[1]),c.kind]})},
+            {name:'Stratejik Darboğazlar', headerRow:['İsim','Bayrak','Enlem','Boylam','Risk Skoru','Pay','Not'],
+             dataRows: D.BOTTLENECKS.map(function(b){return [b.name,b.flag,Number(b.lat),Number(b.lng),Number(b.risk),b.share,b.note]})}
+        ];
+        PM.downloadExcel(sheets, 'kure-veri-' + new Date().toISOString().slice(0,10));
+    });
+})();
+</script>
 </body>
 </html>
