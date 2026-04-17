@@ -543,98 +543,6 @@ tbody tr:hover {
     transform: translateX(4px); /* Çok hafif sağa kayar, okuma kolaylığı sağlar */
 }
 
-/* ══════════════════════════════════════════
-   AKILLI TAM EKRAN (BUTONLU) MODU
-   ══════════════════════════════════════════ */
-
-canvas {
-    cursor: zoom-in;
-}
-
-/* Grafiğin arka plan kutusunu referans alması için */
-.chart-box-relative {
-    position: relative !important;
-}
-
-/* Sağ Üstteki Büyütme Butonu (Varsayılan olarak gizli) */
-.chart-expand-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: var(--card);
-    border: 1px solid var(--border);
-    color: var(--t2);
-    width: 34px;
-    height: 34px;
-    border-radius: 8px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    opacity: 0; /* Üzerine gelene kadar görünmez */
-    transition: all 0.2s ease;
-    z-index: 10;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-}
-
-/* Kutunun üstüne gelince buton yumuşakça belirsin */
-.chart-box-relative:hover .chart-expand-btn {
-    opacity: 1;
-}
-
-.chart-expand-btn:hover {
-    background: var(--blue);
-    color: #fff;
-    border-color: var(--blue);
-    transform: scale(1.05);
-}
-
-/* Tam Ekran Modu (Kartın kendisi büyür) */
-.tv-fullscreen-mode {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    z-index: 999999 !important;
-    background: var(--bg) !important;
-    padding: 60px 40px 40px 40px !important; 
-    box-sizing: border-box !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important;
-    border-radius: 0 !important;
-    margin: 0 !important;
-}
-
-/* Tam ekrandayken grafiğin boyutları HD kalitede yayılır */
-.tv-fullscreen-mode canvas {
-    cursor: zoom-out !important;
-    height: 85vh !important;
-    width: 100% !important;
-    margin-top: 15px !important;
-}
-
-/* Tam ekrandayken buton kırmızı bir ÇARPI'ya dönüşür */
-.tv-fullscreen-mode .chart-expand-btn {
-    opacity: 1;
-    top: 20px;
-    right: 30px;
-    width: 45px;
-    height: 45px;
-    font-size: 1.5rem;
-    background: var(--red);
-    color: white;
-    border: none;
-    border-radius: 50%; /* Çarpı butonu yuvarlak daha şık durur */
-}
-
-.tv-fullscreen-mode .chart-expand-btn:hover {
-    background: #e63946; /* Üstüne gelince koyu kırmızı */
-    transform: rotate(90deg); /* Havalı bir dönme efekti */
-}
-
 /* Hareket hassasiyeti olan kullanıcılar için animasyonları azalt */
 @media (prefers-reduced-motion: reduce) {
     *,*::before,*::after{
@@ -654,38 +562,6 @@ canvas {
    MOBİL OPTİMİZASYON (YENİ SİSTEMLER İÇİN)
    ══════════════════════════════════════════ */
 @media (max-width: 768px) {
-    
-    /* 1. Büyütme Butonu Mobilde Hep Görünür Olsun */
-    /* (Mobilde hover olmadığı için buton gizli kalmasın) */
-    .chart-expand-btn {
-        opacity: 1 !important;
-        top: 5px !important;
-        right: 5px !important;
-        width: 32px !important;
-        height: 32px !important;
-        font-size: 1rem !important;
-        background: rgba(255, 255, 255, 0.8) !important; /* Grafiğin üstünde daha net okunsun */
-        backdrop-filter: blur(4px);
-    }
-    [data-theme=dark] .chart-expand-btn {
-        background: rgba(30, 41, 59, 0.8) !important;
-    }
-
-    /* 2. Tam Ekran Modu Mobilde Ekrana Tam Otursun */
-    /* (Mobilde kenar boşluklarını kısıyoruz ki grafik ezilmesin) */
-    .tv-fullscreen-mode {
-        padding: 50px 10px 20px 10px !important; 
-    }
-
-    /* Çarpı butonu mobilde parmakla basması kolay bir yere geçsin */
-    .tv-fullscreen-mode .chart-expand-btn {
-        top: 10px !important;
-        right: 10px !important;
-        width: 40px !important;
-        height: 40px !important;
-        font-size: 1.2rem !important;
-        background: var(--red) !important;
-    }
 
     /* 3. Zaman Filtreleri (1A, 3A, 5Y vs.) Parmak Dostu Olsun */
     .chart-timeframes {
@@ -1140,8 +1016,7 @@ body {
 .tf-btn,
 .view-btn,
 .country-tab,
-.sb-theme-btn,
-.chart-expand-btn {
+.sb-theme-btn {
     min-height: 36px;
     border-radius: 10px;
 }
@@ -1151,8 +1026,7 @@ body {
     .tf-btn,
     .view-btn,
     .country-tab,
-    .sb-theme-btn,
-    .chart-expand-btn {
+    .sb-theme-btn {
         min-height: 40px;
         padding-top: 8px !important;
         padding-bottom: 8px !important;
