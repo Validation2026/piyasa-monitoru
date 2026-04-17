@@ -1110,6 +1110,48 @@ body {
 .sb-search-trigger .sb-search-label{flex:1;color:var(--t3)}
 .sb-search-trigger .sb-kbd{font-family:var(--mono);font-size:.62rem;padding:2px 6px;background:var(--card);border:1px solid var(--border);border-radius:4px;color:var(--t3)}
 
+/* ══════════════════════════════
+   ASSET DETAIL MODAL (Cmd+K → seçim popup)
+   ══════════════════════════════ */
+.asset-modal-overlay{
+    position:fixed;inset:0;background:rgba(15,23,42,.55);backdrop-filter:blur(4px);
+    display:none;align-items:center;justify-content:center;z-index:2000;
+    padding:20px;animation:amFade .2s ease-out
+}
+.asset-modal-overlay.show{display:flex}
+.asset-modal{
+    background:var(--card);border:1px solid var(--border);border-radius:14px;
+    padding:22px 24px;max-width:520px;width:100%;max-height:90vh;overflow-y:auto;
+    box-shadow:0 20px 60px -15px rgba(0,0,0,.35);position:relative;
+    animation:amSlide .24s ease-out
+}
+.asset-modal-close{
+    position:absolute;top:10px;right:12px;background:none;border:none;
+    font-size:1.4rem;color:var(--t3);cursor:pointer;line-height:1;padding:4px 8px;border-radius:6px
+}
+.asset-modal-close:hover{background:var(--bg2);color:var(--t1)}
+.asset-modal-head{display:flex;align-items:center;gap:14px;margin-bottom:14px;padding-right:30px}
+.asset-modal-head img{border-radius:10px;border:1px solid var(--border)}
+.asset-modal-head h3{font-size:1.15rem;font-weight:800;letter-spacing:-.3px;margin:0}
+.asset-modal-sub{font-family:var(--mono);font-size:.72rem;color:var(--t3);margin-top:2px}
+.asset-modal-price{font-size:1.8rem;font-weight:800;letter-spacing:-.5px;color:var(--t1);margin-bottom:8px}
+.asset-modal-price .amu{font-size:.85rem;color:var(--t3);font-weight:500;margin-left:4px}
+.asset-modal-chgs{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px;font-size:.82rem}
+.asset-modal-chgs .chg-label{font-size:.65rem;color:var(--t3);margin-left:2px;margin-right:6px}
+.asset-modal-range{font-size:.78rem;color:var(--t2);margin-bottom:14px;font-family:var(--mono)}
+.asset-modal-chart{height:180px;margin-bottom:14px;background:var(--bg2);border-radius:10px;padding:8px;border:1px solid var(--border)}
+.asset-modal-chart canvas{width:100%!important;height:100%!important}
+.asset-modal-footer{text-align:right}
+.asset-modal-goto{display:inline-block;padding:8px 14px;background:var(--blue);color:#fff;text-decoration:none;border-radius:8px;font-size:.82rem;font-weight:600;transition:background .15s}
+.asset-modal-goto:hover{background:#2563eb}
+@keyframes amFade{from{opacity:0}to{opacity:1}}
+@keyframes amSlide{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:640px){
+    .asset-modal{padding:18px 16px}
+    .asset-modal-price{font-size:1.5rem}
+    .asset-modal-chart{height:140px}
+}
+
 /* Topbar arama butonu: hem masaüstünde hem mobilde her zaman görünür */
 .topbar-search{
     display:inline-flex;align-items:center;gap:6px;

@@ -93,6 +93,7 @@
 </head>
 <body>
 
+<script src="assets/js/app.js"></script>
 <script src="assets/js/sidebar.js"></script>
 
 <div class="page">
@@ -187,14 +188,14 @@
     <a class="cat" href="hisseler.html"><div class="cat-icon">💹</div><div class="cat-name">Hisse Senetleri</div><div class="cat-desc">BIST, ABD mega-cap, küresel hisseler</div><div class="cat-tag">100+ hisse</div></a>
 </div>
 
-<div class="sec-title">💹 Tüm Fiyatlar</div>
+<div class="sec-title">💹 Tüm Fiyatlar <button type="button" id="idxExcelAll" class="tbl-csv-btn" style="margin-left:10px;vertical-align:middle" title="Tüm tablo verilerini Excel'e indir">⬇ Excel</button></div>
 <div class="tables-row">
-    <div class="ptable"><div class="ptable-header">⛽ Emtia & Madenler & Tarım</div><div id="tblComm"></div></div>
-    <div class="ptable"><div class="ptable-header">💱 Döviz & Tahvil</div><div id="tblFx"></div></div>
+    <div class="ptable"><div class="ptable-header">⛽ Emtia & Madenler & Tarım <button type="button" class="tbl-csv-btn idx-xlsx" data-which="comm" style="float:right" title="Bu grubu Excel'e indir">⬇ Excel</button></div><div id="tblComm"></div></div>
+    <div class="ptable"><div class="ptable-header">💱 Döviz & Tahvil <button type="button" class="tbl-csv-btn idx-xlsx" data-which="fx" style="float:right" title="Bu grubu Excel'e indir">⬇ Excel</button></div><div id="tblFx"></div></div>
 </div>
 <div class="tables-row">
-    <div class="ptable"><div class="ptable-header">📈 Endeksler</div><div id="tblIdx"></div></div>
-    <div class="ptable"><div class="ptable-header">₿ Kripto Paralar</div><div id="tblCrypto"></div></div>
+    <div class="ptable"><div class="ptable-header">📈 Endeksler <button type="button" class="tbl-csv-btn idx-xlsx" data-which="idx" style="float:right" title="Bu grubu Excel'e indir">⬇ Excel</button></div><div id="tblIdx"></div></div>
+    <div class="ptable"><div class="ptable-header">₿ Kripto Paralar <button type="button" class="tbl-csv-btn idx-xlsx" data-which="crypto" style="float:right" title="Bu grubu Excel'e indir">⬇ Excel</button></div><div id="tblCrypto"></div></div>
 </div>
 
 <div class="footer">Risk Monitörü © 2026</div>
@@ -298,6 +299,23 @@ fj('summary.json').then(function(data){
     buildTable('tblFx',fxSeries);
     buildTable('tblIdx',idxSeries);
     buildTable('tblCrypto',cryptoSeries);
+
+    // Excel indirme — grup bazlı ve tüm tabloları
+    var groups = {comm:{series:commSeries,name:'Emtia'},fx:{series:fxSeries,name:'Doviz-Tahvil'},idx:{series:idxSeries,name:'Endeksler'},crypto:{series:cryptoSeries,name:'Kripto'}};
+    document.querySelectorAll('.idx-xlsx').forEach(function(btn){
+        btn.addEventListener('click', function(e){
+            e.stopPropagation();
+            var which = btn.getAttribute('data-which');
+            var g = groups[which];
+            if(g && window.PM && PM.exportTableExcel) PM.exportTableExcel(g.series, 'piyasa-' + g.name);
+        });
+    });
+    var allBtn = document.getElementById('idxExcelAll');
+    if(allBtn && window.PM && PM.exportTableExcel){
+        allBtn.addEventListener('click', function(){
+            PM.exportTableExcel(all, 'piyasa-ozet-' + new Date().toISOString().slice(0,10));
+        });
+    }
 
     // Gerçek sayıları anime ederek göster (veride bulunanları say)
     var commCount = commSeries.length;
