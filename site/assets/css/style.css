@@ -912,6 +912,20 @@ a:focus-visible {
 .bar-chart-card .chart-subtitle {
     font-size: .72rem; color: var(--t2); margin-bottom: 12px;
 }
+/* Generic chart-box başlıkları (ör: kure.html) — page-head stiline uygun */
+.chart-box > .chart-title{
+    font-family:'Outfit',system-ui,sans-serif;
+    font-size:1.05rem;font-weight:800;letter-spacing:-.3px;
+    color:var(--t1);margin-bottom:4px;display:flex;align-items:center;gap:8px
+}
+.chart-box > .chart-subtitle{
+    font-family:'Outfit',system-ui,sans-serif;
+    font-size:.82rem;font-weight:500;color:var(--t2);margin-bottom:12px;letter-spacing:-.1px
+}
+@media(max-width:640px){
+    .chart-box > .chart-title{font-size:.95rem}
+    .chart-box > .chart-subtitle{font-size:.75rem}
+}
 
 .donut-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 16px; }
 .donut-card {
@@ -1096,8 +1110,30 @@ body {
 .sb-search-trigger .sb-search-label{flex:1;color:var(--t3)}
 .sb-search-trigger .sb-kbd{font-family:var(--mono);font-size:.62rem;padding:2px 6px;background:var(--card);border:1px solid var(--border);border-radius:4px;color:var(--t3)}
 
-.topbar-search{display:none;background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--t2);padding:4px 8px;margin-left:auto;margin-right:4px}
-@media(max-width:900px){.topbar-search{display:inline-block}}
+/* Topbar arama butonu: hem masaüstünde hem mobilde her zaman görünür */
+.topbar-search{
+    display:inline-flex;align-items:center;gap:6px;
+    background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.3);
+    font-size:.78rem;font-weight:600;cursor:pointer;color:var(--blue);
+    padding:5px 12px;border-radius:8px;margin-left:auto;margin-right:8px;
+    font-family:inherit;transition:all .15s
+}
+.topbar-search:hover{background:rgba(59,130,246,.15);border-color:var(--blue)}
+.topbar-search .tbs-kbd{font-family:var(--mono);font-size:.62rem;padding:1px 5px;background:var(--card);border:1px solid var(--border);border-radius:4px;color:var(--t3)}
+@media(max-width:900px){.topbar-search{padding:5px 10px;font-size:.7rem}.topbar-search .tbs-kbd{display:none}}
+/* Floating Search FAB — mobilde ayrıca görünen büyük buton (kolay erişim) */
+.search-fab{
+    position:fixed;bottom:78px;right:14px;z-index:1000;
+    width:46px;height:46px;border-radius:50%;
+    background:var(--blue);color:#fff;border:none;cursor:pointer;
+    font-size:1.15rem;display:none;align-items:center;justify-content:center;
+    box-shadow:0 4px 14px rgba(59,130,246,.4),0 2px 4px rgba(0,0,0,.1);
+    transition:transform .18s ease, box-shadow .18s ease, background .18s ease
+}
+.search-fab:hover{transform:translateY(-2px) scale(1.05);box-shadow:0 6px 20px rgba(59,130,246,.55),0 3px 6px rgba(0,0,0,.12);background:#2563eb}
+.search-fab:active{transform:scale(.95)}
+.search-fab:focus-visible{outline:3px solid rgba(59,130,246,.4);outline-offset:2px}
+@media(max-width:900px){.search-fab{display:flex}}
 
 /* ══════════════════════════════
    COMMAND PALETTE

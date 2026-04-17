@@ -57,10 +57,12 @@ sidebarLinks +
 '<div class="topbar" id="topbar" role="banner">' +
 '<button class="topbar-hamburger" id="hamburger" aria-label="Menüyü aç" aria-expanded="false" aria-controls="sidebar">☰</button>' +
 '<a href="index.html" style="text-decoration:none;font-size:.85rem;font-weight:800;color:var(--blue)" aria-label="Ana sayfa"><span aria-hidden="true">📊 RM</span></a>' +
-'<button type="button" class="topbar-search" id="topbarSearch" aria-label="Arama">🔍</button>' +
+'<button type="button" class="topbar-search" id="topbarSearch" aria-label="Arama (Ctrl+K)" title="Ara (Ctrl+K)"><span aria-hidden="true">🔍</span><span class="tbs-label">Ara</span><span class="tbs-kbd">⌘K</span></button>' +
 '<span class="topbar-clock" id="clock" aria-live="off"></span>' +
 '</div>' +
 '<nav class="mobile-nav" id="mobileNav" aria-label="Sayfa gezinme">' + mobileLinks + '</nav>' +
+// Floating search FAB — her sayfada her zaman görünür
+'<button type="button" class="search-fab" id="searchFab" aria-label="Arama (Ctrl+K)" title="Ara (Ctrl+K)"><span aria-hidden="true">🔍</span></button>' +
 // Command palette modal
 '<div class="cmdk-overlay" id="cmdkOverlay" aria-hidden="true">' +
 '  <div class="cmdk-modal" role="dialog" aria-modal="true" aria-label="Arama">' +
@@ -221,6 +223,8 @@ setInterval(tick,30000);tick();
     if(trigger) trigger.addEventListener('click', open);
     var topTrigger = document.getElementById('topbarSearch');
     if(topTrigger) topTrigger.addEventListener('click', open);
+    var fabTrigger = document.getElementById('searchFab');
+    if(fabTrigger) fabTrigger.addEventListener('click', open);
 
     // Klavye kısayolu: Cmd+K veya Ctrl+K
     document.addEventListener('keydown', function(e){

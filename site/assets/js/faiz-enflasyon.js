@@ -162,7 +162,7 @@ function initMap(){
     map = L.map('feMap', {
         zoomControl:true, attributionControl:false, worldCopyJump:true,
         preferCanvas:true
-    }).setView([30, 20], 3);
+    }).setView([39, 35], 5);
     // Light (Positron) tile layer
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
         subdomains:'abcd', maxZoom:10, minZoom:2
@@ -387,22 +387,47 @@ function renderTable(){
     });
 }
 
+function xmlEsc(v){return String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function xCell(v){
+    if(v==null||v==='')return '<Cell><Data ss:Type="String"></Data></Cell>';
+    if(typeof v==='number'&&isFinite(v))return '<Cell><Data ss:Type="Number">'+v+'</Data></Cell>';
+    return '<Cell><Data ss:Type="String">'+xmlEsc(v)+'</Data></Cell>';
+}
+function xRow(cells){return '<Row>'+cells.map(xCell).join('')+'</Row>'}
+
 function exportCsv(){
     var rows = filteredCountries();
-    var head = ['Ülke','Bayrak','Merkez Bankası','Politika Faizi %','Enflasyon %','Reel Faiz %','2Y Tahvil %','10Y Tahvil %','Son Hareket'];
-    var lines = [head.join(',')];
+    var summaryRows = [];
+    summaryRows.push(xRow(['Bayrak','Ülke','Merkez Bankası','Politika Faizi %','Enflasyon %','Reel Faiz %','2Y Tahvil %','10Y Tahvil %','Son Hareket']));
     rows.forEach(function(c){
-        lines.push([
-            '"'+c.n+'"', c.flag, '"'+c.cb+'"',
-            c.rate.toFixed(2), c.infl.toFixed(2), c.real.toFixed(2),
-            c.m2y.toFixed(2), c.m10y.toFixed(2), c.move
-        ].join(','));
+        summaryRows.push(xRow([
+            c.flag, c.n, c.cb,
+            Number(c.rate.toFixed(2)), Number(c.infl.toFixed(2)), Number(c.real.toFixed(2)),
+            Number(c.m2y.toFixed(2)), Number(c.m10y.toFixed(2)), c.move
+        ]));
     });
-    var blob = new Blob(['\ufeff' + lines.join('\n')], {type:'text/csv;charset=utf-8'});
+    // Metriklere göre sıralama sheet'leri
+    var metricDefs = [
+        {k:'rate', label:'Politika Faizi'},
+        {k:'infl', label:'Enflasyon'},
+        {k:'real', label:'Reel Faiz'},
+        {k:'m10y', label:'10Y Tahvil'}
+    ];
+    var sheetsXml = '<Worksheet ss:Name="Özet"><Table>'+summaryRows.join('')+'</Table></Worksheet>';
+    metricDefs.forEach(function(md){
+        var sorted = rows.slice().sort(function(a,b){return b[md.k]-a[md.k]});
+        var r=[xRow(['Sıra','Bayrak','Ülke', md.label+' %'])];
+        sorted.forEach(function(c,i){r.push(xRow([i+1,c.flag,c.n,Number(c[md.k].toFixed(2))]))});
+        sheetsXml += '<Worksheet ss:Name="'+xmlEsc(md.label)+'"><Table>'+r.join('')+'</Table></Worksheet>';
+    });
+    var xml = '<?xml version="1.0"?>\n<?mso-application progid="Excel.Sheet"?>\n'+
+        '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">'+
+        sheetsXml+'</Workbook>';
+    var blob = new Blob([xml], {type:'application/vnd.ms-excel;charset=utf-8'});
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
     a.href = url;
-    a.download = 'faiz-enflasyon-' + new Date().toISOString().slice(0,10) + '.csv';
+    a.download = 'faiz-enflasyon-' + new Date().toISOString().slice(0,10) + '.xls';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

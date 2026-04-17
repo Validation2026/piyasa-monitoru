@@ -233,34 +233,81 @@ function isAnomaly(s){
     return Math.abs(s.change_1d_pct-m)>2*sd;
 }
 
-function csvEscape(v){
+function xmlEscape(v){
     if(v==null)return'';
-    var s=String(v);
-    if(s.indexOf(',')!==-1||s.indexOf('"')!==-1||s.indexOf('\n')!==-1){
-        return '"'+s.replace(/"/g,'""')+'"';
-    }
-    return s;
+    return String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
+function xlsCell(v){
+    if(v==null||v==='')return '<Cell><Data ss:Type="String"></Data></Cell>';
+    if(typeof v==='number'&&isFinite(v))return '<Cell><Data ss:Type="Number">'+v+'</Data></Cell>';
+    return '<Cell><Data ss:Type="String">'+xmlEscape(v)+'</Data></Cell>';
+}
+function xlsRow(cells){return '<Row>'+cells.map(xlsCell).join('')+'</Row>'}
 
-function exportTableCsv(seriesList,filename){
-    var rows=[['Varlık','Birim','Fiyat','1G %','1H %','1A %','YTD %','52H Düşük','52H Yüksek']];
+function exportTableExcel(seriesList,filename){
+    // Sheet 1: Özet — anlık görüntü
+    var summaryRows = [];
+    summaryRows.push(xlsRow(['Varlık','Birim','Fiyat','1G %','1H %','1A %','YTD %','52H Düşük','52H Yüksek']));
     seriesList.forEach(function(s){if(!s)return;
-        rows.push([
-            s.name||'',s.unit||'',
-            s.current!=null?s.current:'',
-            s.change_1d_pct!=null?s.change_1d_pct.toFixed(2):'',
-            s.change_1w_pct!=null?s.change_1w_pct.toFixed(2):'',
-            s.change_1m_pct!=null?s.change_1m_pct.toFixed(2):'',
-            s.change_ytd_pct!=null?s.change_ytd_pct.toFixed(2):'',
-            s.low_52w!=null?s.low_52w:'',
-            s.high_52w!=null?s.high_52w:''
-        ]);
+        summaryRows.push(xlsRow([
+            s.name||'', s.unit||'',
+            s.current!=null?Number(s.current):'',
+            s.change_1d_pct!=null?Number(s.change_1d_pct.toFixed(4)):'',
+            s.change_1w_pct!=null?Number(s.change_1w_pct.toFixed(4)):'',
+            s.change_1m_pct!=null?Number(s.change_1m_pct.toFixed(4)):'',
+            s.change_ytd_pct!=null?Number(s.change_ytd_pct.toFixed(4)):'',
+            s.low_52w!=null?Number(s.low_52w):'',
+            s.high_52w!=null?Number(s.high_52w):''
+        ]));
     });
-    var csv='\ufeff'+rows.map(function(r){return r.map(csvEscape).join(',')}).join('\n');
-    var blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+
+    // Sheet 2: Tarihsel Veri — uzun format (Tarih | Varlık | Değer | Birim)
+    var histRows = [];
+    histRows.push(xlsRow(['Tarih','Varlık','Değer','Birim']));
+    seriesList.forEach(function(s){
+        if(!s||!s.data||!s.data.length)return;
+        s.data.forEach(function(d){
+            if(!d||d.value==null)return;
+            histRows.push(xlsRow([d.date||'', s.name||'', Number(d.value), s.unit||'']));
+        });
+    });
+
+    // Sheet 3: Tarihsel (Geniş) — tarih satırları, her varlık bir sütun
+    var wideRows = [];
+    var header=['Tarih'];
+    var namedSeries = seriesList.filter(function(s){return s&&s.data&&s.data.length});
+    namedSeries.forEach(function(s){header.push(s.name||'')});
+    wideRows.push(xlsRow(header));
+    var dateMap = {};
+    namedSeries.forEach(function(s){
+        s.data.forEach(function(d){
+            if(!d||d.value==null)return;
+            if(!dateMap[d.date])dateMap[d.date]={};
+            dateMap[d.date][s.id||s.name]=d.value;
+        });
+    });
+    var dates = Object.keys(dateMap).sort();
+    dates.forEach(function(dt){
+        var row=[dt];
+        namedSeries.forEach(function(s){
+            var key=s.id||s.name;
+            row.push(dateMap[dt][key]!=null?Number(dateMap[dt][key]):'');
+        });
+        wideRows.push(xlsRow(row));
+    });
+
+    var xml = '<?xml version="1.0"?>\n<?mso-application progid="Excel.Sheet"?>\n'+
+        '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">'+
+        '<Styles><Style ss:ID="hdr"><Font ss:Bold="1"/><Interior ss:Color="#E5E7EB" ss:Pattern="Solid"/></Style></Styles>'+
+        '<Worksheet ss:Name="Özet"><Table>'+summaryRows.join('')+'</Table></Worksheet>'+
+        '<Worksheet ss:Name="Tarihsel"><Table>'+histRows.join('')+'</Table></Worksheet>'+
+        '<Worksheet ss:Name="Tarihsel (Geniş)"><Table>'+wideRows.join('')+'</Table></Worksheet>'+
+        '</Workbook>';
+
+    var blob=new Blob([xml],{type:'application/vnd.ms-excel;charset=utf-8'});
     var url=URL.createObjectURL(blob);
     var a=document.createElement('a');
-    a.href=url;a.download=(filename||'piyasa')+'.csv';
+    a.href=url;a.download=(filename||'piyasa')+'.xls';
     document.body.appendChild(a);a.click();
     setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(url)},100);
 }
@@ -283,7 +330,7 @@ function buildTable(containerId,seriesList,opts){
     var toolbar='<div class="tbl-toolbar">'+
         '<div class="tbl-search-wrap"><span class="tbl-search-ico">🔍</span>'+
         '<input type="search" class="tbl-search" id="'+containerId+'_search" placeholder="Varlık ara…" aria-label="Tabloda ara"></div>'+
-        '<button type="button" class="tbl-csv-btn" id="'+containerId+'_csv" aria-label="CSV olarak indir">⬇ CSV</button>'+
+        '<button type="button" class="tbl-csv-btn" id="'+containerId+'_csv" aria-label="Excel olarak indir" title="Özet + tarihsel verileri Excel\'e indir">⬇ Excel</button>'+
         (updatedAt?'<span class="tbl-updated">📅 Son güncellenme: '+updatedAt+'</span>':'')+
     '</div>';
     var h=toolbar+'<div class="tbl-wrap"><table><thead><tr><th>İsim</th><th class="r">Fiyat</th><th class="r">1 Gün</th><th class="r">1 Hafta</th><th class="r">1 Ay</th><th class="r">YTD</th><th class="r">Trend</th><th class="r">52H Aralık</th></tr></thead><tbody>';
@@ -314,7 +361,7 @@ function buildTable(containerId,seriesList,opts){
         });
     }
     var csvBtn=document.getElementById(containerId+'_csv');
-    if(csvBtn)csvBtn.addEventListener('click',function(){exportTableCsv(seriesList,fileBase)});
+    if(csvBtn)csvBtn.addEventListener('click',function(){exportTableExcel(seriesList,fileBase)});
 }
 
 // Comparison multi-line chart (normalized to %)
@@ -572,7 +619,7 @@ function makeAreaChart(canvasId, series, opts){
     });
 }
 
-return{fj:fj,fs:fs,fp:fp,fc:fc,cc:cc,gc:gc,filterPeriod:filterPeriod,miniSpark:miniSpark,makeChart:makeChart,makeAreaChart:makeAreaChart,buildSummary:buildSummary,buildCharts:buildCharts,buildTable:buildTable,buildComparisonChart:buildComparisonChart,buildBarChart:buildBarChart,buildDonutChart:buildDonutChart,buildHeatmap:buildHeatmap,applyOverrides:applyOverrides,loadOverrides:loadOverrides,loadData:loadData,getLastMeta:getLastMeta,showStaleBanner:showStaleBanner,countUp:countUp,initScrollReveal:initScrollReveal,flashUpdate:flashUpdate,exportTableCsv:exportTableCsv,sparkSvg:sparkSvg,isAnomaly:isAnomaly,formatUpdatedAt:formatUpdatedAt};
+return{fj:fj,fs:fs,fp:fp,fc:fc,cc:cc,gc:gc,filterPeriod:filterPeriod,miniSpark:miniSpark,makeChart:makeChart,makeAreaChart:makeAreaChart,buildSummary:buildSummary,buildCharts:buildCharts,buildTable:buildTable,buildComparisonChart:buildComparisonChart,buildBarChart:buildBarChart,buildDonutChart:buildDonutChart,buildHeatmap:buildHeatmap,applyOverrides:applyOverrides,loadOverrides:loadOverrides,loadData:loadData,getLastMeta:getLastMeta,showStaleBanner:showStaleBanner,countUp:countUp,initScrollReveal:initScrollReveal,flashUpdate:flashUpdate,exportTableExcel:exportTableExcel,sparkSvg:sparkSvg,isAnomaly:isAnomaly,formatUpdatedAt:formatUpdatedAt};
 })();
 
 // Scroll reveal'ı DOM hazır olunca başlat
