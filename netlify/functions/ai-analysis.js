@@ -125,29 +125,11 @@ Türkiye'de TCMB'nin sıkı para politikası ve enflasyonla mücadele programı 
 
 ⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
 
-'jeopolitik-risk': `🌍 GENEL GÖRÜNÜM
-Küresel gerilim haritası Nisan 2026 itibarıyla çok odaklı bir seyir izliyor. Aktif sıcak çatışmalar (İran-İsrail, Ukrayna-Rusya) yanında deniz ticareti güzergâhlarındaki (Hürmüz, Bab el-Mandeb) güvenlik riskleri, Asya-Pasifik'teki (Tayvan, G. Çin Denizi, Kore) yüksek tansiyon ve Sahel gibi istikrarsızlık bölgeleri eşzamanlı izleniyor.
+'jeopolitik-risk': `Küresel risk haritası çok odaklı: iki sıcak çatışma (İran-İsrail, Ukrayna-Rusya), iki kritik deniz geçidi (Hürmüz, Bab el-Mandeb) ve Asya-Pasifik'te yüksek tansiyon (Tayvan, G. Çin Denizi, Kore) eşzamanlı izleniyor.
 
-🔥 ÖNE ÇIKAN GELİŞMELER
-• İran-İsrail savaşı karşılıklı saldırılarla sürüyor; bölgeye ABD kuvvet sevkiyatı devam ediyor
-• Hürmüz Boğazı'ndaki tanker geçişleri ve İran donanma hareketleri yüksek teyakkuzda
-• Kızıldeniz'de Husi saldırıları ticari gemileri Ümit Burnu rotasına yönlendirmeye devam ediyor
-• Ukrayna-Rusya cephesinde insansız hava aracı saldırıları ve enerji altyapısı vuruşları sürüyor
-• Tayvan Boğazı ve G. Çin Denizi'nde Çin hava-deniz ihlalleri rutin hale geldi
+Piyasa yansıması: Brent'te risk primi yerleşik, altın güvenli liman talebiyle güçlü, navlun ve sigorta primleri Basra-Kızıldeniz hattında normal üstü. VIX ve gelişen ülke kurlarında volatilite artık baz senaryonun parçası.
 
-💰 PİYASA ETKİLERİ
-• Brent petrol jeopolitik risk primiyle yüksek seyrediyor; Hürmüz kapanma riski fiyatlamaya dahil
-• Altın güvenli liman talebiyle rekor seviyelerini zorluyor; merkez bankası alımları sürüyor
-• Navlun ve deniz sigorta primleri Kızıldeniz/Basra Körfezi rotalarında normalin çok üzerinde
-• VIX ve kur volatiliteleri gelişen piyasa para birimlerinde baskıyı artırıyor
-• Savunma sanayi hisseleri ve uranyum uzun vadeli yapısal destek buluyor
-
-🔮 İZLENMESİ GEREKENLER
-• Hürmüz Boğazı'nda olası kapanma veya ciddi ticaret kesintisi
-• Tayvan çevresinde tatbikat ötesi askeri eskalasyon sinyalleri
-• Ukrayna'da cephe hareketleri ve NATO tepki kapasitesi
-• OPEC+ acil üretim kararları ve ABD stratejik rezerv açıklamaları
-• Kızıldeniz'de konteyner hatlarının rota tercihlerindeki değişim
+Takip listesi: Hürmüz'de olası kapanma, Tayvan'da tatbikat ötesi eskalasyon, OPEC+ acil kararları ve Kızıldeniz'de rota tercihlerindeki değişim.
 
 ⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
 
