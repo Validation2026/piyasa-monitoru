@@ -33,7 +33,7 @@ var COUNTRIES = [
     {n:'İzlanda',      flag:'🇮🇸', lat:64.13, lng:-21.89, rate:7.50, infl:4.0,  m2y:7.25, m10y:6.95, cb:'Sedlabanki', move:'hike'},
 
     // Asya-Pasifik
-    {n:'Çin',          flag:'🇨🇳', lat:39.90, lng:116.40, rate:3.00, infl:-1.0, m2y:1.40, m10y:1.80, cb:'PBoC',       move:'hold'},
+    {n:'Çin',          flag:'🇨🇳', lat:39.90, lng:116.40, rate:3.00, infl:1.0,  m2y:1.40, m10y:1.80, cb:'PBoC',       move:'hold'},
     {n:'Hindistan',    flag:'🇮🇳', lat:28.61, lng:77.21,  rate:5.25, infl:3.2,  m2y:5.95, m10y:6.45, cb:'RBI',        move:'hold'},
     {n:'Güney Kore',   flag:'🇰🇷', lat:37.57, lng:126.98, rate:2.50, infl:2.3,  m2y:2.45, m10y:2.95, cb:'BoK',        move:'hold'},
     {n:'Tayvan',       flag:'🇹🇼', lat:25.03, lng:121.57, rate:2.00, infl:1.75, m2y:1.40, m10y:1.65, cb:'CBC',        move:'hold'},
@@ -140,6 +140,15 @@ var D = window.__FE;
 if(!D || typeof L === 'undefined') return;
 
 var state = {metric:'rate', sort:{key:'rate', asc:false}};
+// Kullanıcı tercihleri localStorage'dan geri yükle
+try {
+    var saved = JSON.parse(localStorage.getItem('fe_state') || 'null');
+    if(saved && saved.metric) state.metric = saved.metric;
+    if(saved && saved.sort) state.sort = saved.sort;
+} catch(e){}
+function saveState(){
+    try { localStorage.setItem('fe_state', JSON.stringify({metric:state.metric, sort:state.sort})); } catch(e){}
+}
 var map, markerLayer, pulseLayer, labelLayer, flagLayer;
 
 function initMap(){
@@ -224,11 +233,13 @@ function renderMap(){
             L.marker([c.lat, c.lng], {icon:pulse, interactive:false, keyboard:false}).addTo(pulseLayer);
         }
 
-        // Bayrak emoji — haritada HER ülke için (marker'ın hemen sağında)
+        // Bayrak emoji — haritada HER ülke için
+        // Değer etiketi olan ülkelerde bayrağı alt-sağa koy (çakışmayı önle), diğerlerinde üst-sağa
         var flagOffX = r + 3;
+        var flagOffY = labelSet[c.n] ? (r - 2) : -8;
         var flagIcon = L.divIcon({
             className:'',
-            html:'<div class="fe-flag-marker" style="position:absolute;left:'+flagOffX+'px;top:-8px;white-space:nowrap">'+c.flag+'</div>',
+            html:'<div class="fe-flag-marker" style="position:absolute;left:'+flagOffX+'px;top:'+flagOffY+'px;white-space:nowrap">'+c.flag+'</div>',
             iconSize:[0,0],
             iconAnchor:[0,0]
         });
@@ -350,16 +361,22 @@ document.querySelectorAll('.fe-tab').forEach(function(t){
         state.metric = t.getAttribute('data-metric');
         state.sort.key = state.metric;
         state.sort.asc = false;
+        saveState();
         renderMap();
         renderLeaders();
         renderTable();
     });
+});
+// Başlangıçta kayıtlı metrik sekmesini aktif et
+document.querySelectorAll('.fe-tab').forEach(function(t){
+    t.classList.toggle('active', t.getAttribute('data-metric') === state.metric);
 });
 document.querySelectorAll('.fe-table th').forEach(function(th){
     th.addEventListener('click', function(){
         var k = th.getAttribute('data-sort');
         if(state.sort.key === k) state.sort.asc = !state.sort.asc;
         else { state.sort.key = k; state.sort.asc = false; }
+        saveState();
         renderTable();
     });
 });

@@ -236,7 +236,9 @@ globe.arcColor('color')
         if(d.type==='route') return '🚢 '+d.data.name+' · '+d.data.vol;
         if(d.type==='pipe') return '⚡ '+d.data.name+' ('+d.data.kind.toUpperCase()+')';
         return '🔌 '+d.data.name;
-    });
+    })
+    .onArcClick(function(d){ showArcInfo(d) })
+    .onArcHover(function(d){ if(d) el.style.cursor='pointer'; else el.style.cursor='' });
 
 globe.ringColor(function(r){
         var rgb = hexRgb(r.color);
@@ -346,9 +348,34 @@ function showInfo(p){
     inf.classList.add('show');
     globe.pointOfView({lat:p.lat, lng:p.lng, altitude:1.6}, 900);
 }
+
+// Arc (rota/boru/kablo) info — dokunmatik cihazlar için
+function showArcInfo(d){
+    var inf = document.getElementById('globeInfo');
+    var t = document.getElementById('giTitle');
+    var b = document.getElementById('giBody');
+    if(!inf||!t||!b||!d) return;
+    var icon = d.type==='route'?'🚢':d.type==='pipe'?'⚡':'🔌';
+    var label = d.type==='route'?'Ticaret Rotası':d.type==='pipe'?'Boru Hattı':'Deniz Kablosu';
+    t.textContent = icon+' '+d.data.name;
+    var rows = '<div class="gi-row"><span>Tip</span><span>'+label+'</span></div>';
+    if(d.type==='route') rows += '<div class="gi-row"><span>Kargo</span><span>'+d.data.cargo.toUpperCase()+'</span></div><div class="gi-row"><span>Hacim</span><span>'+d.data.vol+'</span></div>';
+    else if(d.type==='pipe') rows += '<div class="gi-row"><span>Tür</span><span>'+d.data.kind.toUpperCase()+'</span></div>';
+    else rows += '<div class="gi-row"><span>Tür</span><span>'+d.data.kind.toUpperCase()+'</span></div>';
+    b.innerHTML = rows;
+    inf.classList.add('show');
+}
+
 var closeBtn = document.getElementById('giClose');
 if(closeBtn) closeBtn.addEventListener('click', function(){
     document.getElementById('globeInfo').classList.remove('show');
+});
+// ESC ile info paneli kapansın
+document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape'){
+        var inf = document.getElementById('globeInfo');
+        if(inf) inf.classList.remove('show');
+    }
 });
 
 // Resize handling

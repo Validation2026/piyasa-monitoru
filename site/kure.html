@@ -58,12 +58,15 @@
     .globe-info .gi-title{font-size:.78rem}
     .globe-info .gi-row{font-size:.64rem}
     .globe-title-bar{font-size:.58rem;padding:4px 10px;top:8px}
-    .globe-controls{bottom:6px;left:6px;right:6px;gap:4px}
-    .gbtn{font-size:.58rem;padding:4px 7px;border-radius:6px}
+    /* Mobilde: 4-sütunlu düzenli grid (7 buton → 4+3) */
+    .globe-controls{bottom:6px;left:6px;right:6px;display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+    .gbtn{font-size:.58rem;padding:5px 4px;border-radius:6px;text-align:center;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 }
 @media(max-width:420px){
     .globe-hud{max-width:130px}
     .globe-info{min-width:150px;max-width:calc(100vw - 170px)}
+    .globe-controls{grid-template-columns:repeat(3,1fr)}
+    .gbtn{font-size:.54rem;padding:4px 3px}
 }
 
 .metrics-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px}
