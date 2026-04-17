@@ -107,11 +107,9 @@
 <div class="stats-bar">
     <div class="stat"><div class="stat-v" id="stTotal">0</div><div class="stat-l">Varlık</div></div>
     <div class="stat"><div class="stat-v" id="stComm">0</div><div class="stat-l">Emtia</div></div>
-    <div class="stat"><div class="stat-v" id="stSan">0</div><div class="stat-l">Sanayi</div></div>
     <div class="stat"><div class="stat-v" id="stFx">0</div><div class="stat-l">Döviz</div></div>
-    <div class="stat"><div class="stat-v" id="stBond">0</div><div class="stat-l">Tahvil</div></div>
-    <div class="stat"><div class="stat-v" id="stIdx">0</div><div class="stat-l">Endeks</div></div>
     <div class="stat"><div class="stat-v" id="stCry">0</div><div class="stat-l">Kripto</div></div>
+    <div class="stat"><div class="stat-v" id="stHisse">0</div><div class="stat-l">Hisse</div></div>
     <div class="stat"><div class="stat-v" id="stCat">0</div><div class="stat-l">Kategori</div></div>
     <div class="stat"><div class="stat-v" id="stUpdate">—</div><div class="stat-l">Son Güncelleme</div></div>
 </div>
@@ -302,20 +300,20 @@ fj('summary.json').then(function(data){
     buildTable('tblCrypto',cryptoSeries);
 
     // Gerçek sayıları anime ederek göster (veride bulunanları say)
-    var commCount = filterByIds(energyIds.concat(metalsIds,agriIds)).length;
-    var sanCount  = filterByIds(industrialIds).length;
+    var commCount = commSeries.length;
     var fxCount   = filterByIds(fxIds).length;
-    var bondCount = filterByIds(bondIds).length;
     animateCounter('stTotal', all.length, '+');
     animateCounter('stComm', commCount);
-    animateCounter('stSan',  sanCount);
     animateCounter('stFx',   fxCount);
-    animateCounter('stBond', bondCount);
-    animateCounter('stIdx',  idxSeries.length);
     animateCounter('stCry',  cryptoSeries.length);
 
     var su=document.getElementById('stUpdate');if(su&&data.meta){var d=new Date(data.meta.updated_at);su.textContent=String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+d.getFullYear()}
 });
+
+// Hisse sayısı — stocks.json'dan dinamik
+fj('stocks.json').then(function(sd){
+    if(sd && sd.series) animateCounter('stHisse', sd.series.length);
+}).catch(function(){});
 
 // AI
 fetch('/api/ai-analysis?cat=genel').then(function(r){return r.json()}).then(function(d){var el=document.getElementById('indexAiAnalysis');if(el&&d.analysis)el.textContent=d.analysis}).catch(function(){var el=document.getElementById('indexAiAnalysis');if(el)el.innerHTML='<span style="color:var(--t3);font-style:italic">Piyasa özeti şu an yüklenemiyor.</span>'});

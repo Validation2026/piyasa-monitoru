@@ -125,14 +125,6 @@ Türkiye'de TCMB'nin sıkı para politikası ve enflasyonla mücadele programı 
 
 ⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
 
-'jeopolitik-risk': `Küresel risk haritası çok odaklı: iki sıcak çatışma (İran-İsrail, Ukrayna-Rusya), iki kritik deniz geçidi (Hürmüz, Bab el-Mandeb) ve Asya-Pasifik'te yüksek tansiyon (Tayvan, G. Çin Denizi, Kore) eşzamanlı izleniyor.
-
-Piyasa yansıması: Brent'te risk primi yerleşik, altın güvenli liman talebiyle güçlü, navlun ve sigorta primleri Basra-Kızıldeniz hattında normal üstü. VIX ve gelişen ülke kurlarında volatilite artık baz senaryonun parçası.
-
-Takip listesi: Hürmüz'de olası kapanma, Tayvan'da tatbikat ötesi eskalasyon, OPEC+ acil kararları ve Kızıldeniz'de rota tercihlerindeki değişim.
-
-⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
-
 'ekonomik-takvim': `Önümüzdeki dönemde Fed, ECB ve TCMB faiz kararları piyasaların başlıca odak noktası olmaya devam edecek. ABD enflasyon verileri ve istihdam rakamları Fed'in faiz patikasını doğrudan belirleyecek.
 
 Türkiye'de TÜİK enflasyon verileri ve TCMB politika kararları TL varlıklar için kritik önem taşıyor. Dezenflasyon sürecinin hızı yatırımcı güvenini doğrudan etkiliyor.

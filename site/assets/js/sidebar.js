@@ -18,7 +18,6 @@ var links = [
     ['kripto','₿','Kripto'],
     ['karsilastirma','📊','Karşılaştır'],
     ['iran-risk','🔴','İran Risk'],
-    ['jeopolitik-risk','🌍','Jeopolitik Risk'],
     ['tedarik-zinciri','🚢','Tedarik Zinciri'],
     ['ekonomik-takvim','📅','Takvim'],
     ['merkez-bankalari','🏛️','Merkez Bank.'],
