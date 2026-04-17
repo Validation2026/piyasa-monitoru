@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="light">
+<head>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b1220">
+<title>3D Küre — Risk Monitörü</title>
+<meta name="description" content="Canlı 3D dünya küresi — borsalar, ticaret rotaları, enerji boru hatları ve deniz kabloları">
+<meta property="og:title" content="3D Küre — Risk Monitörü">
+<meta property="og:description" content="Canlı 3D dünya küresi — borsalar, ticaret rotaları, enerji boru hatları ve deniz kabloları">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="tr_TR">
+<link rel="manifest" href="manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌐</text></svg>">
+<link rel="preconnect" href="https://unpkg.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+.globe-wrap{position:relative;background:radial-gradient(ellipse at center,#0e1a33 0%,#050810 100%);border:1px solid #1e293b;border-radius:14px;overflow:hidden;margin-bottom:16px;box-shadow:0 10px 40px -10px rgba(59,130,246,.35)}
+#globeViz{width:100%;height:640px;display:block}
+@media(max-width:768px){#globeViz{height:460px}}
+.globe-hud{position:absolute;top:12px;left:12px;background:rgba(15,23,42,.86);backdrop-filter:blur(8px);border:1px solid rgba(59,130,246,.35);border-radius:10px;padding:10px 12px;color:#e2e8f0;font-size:.72rem;z-index:10;max-width:280px;line-height:1.45}
+.globe-hud h4{font-size:.68rem;letter-spacing:.08em;color:#7dd3fc;text-transform:uppercase;margin-bottom:6px}
+.globe-hud .hud-row{display:flex;align-items:center;gap:6px;margin:3px 0}
+.globe-hud .hud-dot{width:8px;height:8px;border-radius:50%;box-shadow:0 0 8px currentColor}
+.globe-hud .hud-line{width:16px;height:2px;border-radius:2px}
+.globe-controls{position:absolute;bottom:12px;left:12px;display:flex;flex-wrap:wrap;gap:6px;z-index:10}
+.gbtn{background:rgba(15,23,42,.82);color:#cbd5e1;border:1px solid rgba(59,130,246,.35);padding:6px 10px;border-radius:8px;font-size:.68rem;font-weight:600;cursor:pointer;backdrop-filter:blur(6px);transition:.18s}
+.gbtn:hover{background:rgba(59,130,246,.25);color:#fff;border-color:#60a5fa}
+.gbtn.active{background:#3b82f6;color:#fff;border-color:#60a5fa;box-shadow:0 0 12px rgba(59,130,246,.6)}
+.globe-info{position:absolute;top:12px;right:12px;background:rgba(15,23,42,.88);backdrop-filter:blur(8px);border:1px solid rgba(59,130,246,.4);border-radius:10px;padding:12px 14px;color:#e2e8f0;font-size:.75rem;z-index:10;min-width:220px;max-width:280px;display:none;animation:slideIn .25s ease-out}
+.globe-info.show{display:block}
+.globe-info .gi-title{font-size:.9rem;font-weight:800;color:#fbbf24;margin-bottom:6px}
+.globe-info .gi-row{display:flex;justify-content:space-between;margin:2px 0;font-size:.7rem}
+.globe-info .gi-row span:first-child{color:#94a3b8}
+.globe-info .gi-row span:last-child{color:#f1f5f9;font-weight:600}
+.globe-info .gi-close{position:absolute;top:6px;right:8px;cursor:pointer;color:#64748b;font-size:1.1rem;line-height:1}
+.globe-info .gi-close:hover{color:#f87171}
+@keyframes slideIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
+.globe-title-bar{position:absolute;top:12px;left:50%;transform:translateX(-50%);background:rgba(15,23,42,.88);backdrop-filter:blur(8px);border:1px solid rgba(59,130,246,.35);border-radius:999px;padding:6px 16px;color:#e2e8f0;font-size:.7rem;font-weight:700;letter-spacing:.05em;z-index:9;pointer-events:none;display:flex;align-items:center;gap:10px}
+.globe-title-bar .live{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e;animation:livePulse 1.5s ease-in-out infinite}
+@keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+
+.metrics-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:16px}
+.metric-card{background:#fff;border:1px solid #dde4ed;border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px}
+.metric-card .mc-icon{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem}
+.metric-card .mc-val{font-size:1.15rem;font-weight:800;font-family:'JetBrains Mono',monospace}
+.metric-card .mc-lbl{font-size:.62rem;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+
+.exchange-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-bottom:16px}
+.ex-card{background:#fff;border:1px solid #dde4ed;border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px;transition:.18s;cursor:pointer}
+.ex-card:hover{border-color:#3b82f6;transform:translateY(-2px);box-shadow:0 4px 14px -6px rgba(59,130,246,.35)}
+.ex-card .ex-flag{font-size:1.5rem}
+.ex-card .ex-name{font-size:.8rem;font-weight:700}
+.ex-card .ex-loc{font-size:.62rem;color:#94a3b8}
+
+.bottleneck-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;margin-bottom:16px}
+.bn-card{background:#fff;border:1px solid #dde4ed;border-radius:10px;padding:12px 14px}
+.bn-card .bn-head{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.bn-card .bn-flag{font-size:1.2rem}
+.bn-card .bn-name{font-size:.85rem;font-weight:800}
+.bn-card .bn-sub{font-size:.64rem;color:#94a3b8;margin-bottom:6px}
+.bn-card .bn-bar{height:5px;border-radius:3px;background:#f1f5f9;overflow:hidden}
+.bn-card .bn-fill{height:100%;border-radius:3px;transition:width 1s}
+
+[data-theme="light"] body{background:#f7f9fc}
+</style>
+</head>
+<body>
+<script src="assets/js/sidebar.js"></script>
+<div class="page">
+<div class="page-spacer"></div>
+<div class="page-head"><h1>🌐 3D Küre — Canlı Finans Dünyası</h1></div>
+
+<div class="metrics-row">
+    <div class="metric-card"><div class="mc-icon" style="background:#dcfce7;color:#16a34a">🏛️</div><div><div class="mc-val" id="mBorsa">0</div><div class="mc-lbl">Borsa</div></div></div>
+    <div class="metric-card"><div class="mc-icon" style="background:#fef3c7;color:#d97706">🚢</div><div><div class="mc-val" id="mRota">0</div><div class="mc-lbl">Ticaret Rotası</div></div></div>
+    <div class="metric-card"><div class="mc-icon" style="background:#dbeafe;color:#2563eb">⚡</div><div><div class="mc-val" id="mBoru">0</div><div class="mc-lbl">Enerji Boru Hattı</div></div></div>
+    <div class="metric-card"><div class="mc-icon" style="background:#f3e8ff;color:#7c3aed">🔌</div><div><div class="mc-val" id="mKablo">0</div><div class="mc-lbl">Deniz Kablosu</div></div></div>
+    <div class="metric-card"><div class="mc-icon" style="background:#fee2e2;color:#ef4444">⚠️</div><div><div class="mc-val" id="mDar">0</div><div class="mc-lbl">Stratejik Darboğaz</div></div></div>
+</div>
+
+<div class="globe-wrap">
+    <div id="globeViz"></div>
+    <div class="globe-title-bar"><span class="live"></span> CANLI · KÜRESEL PİYASA AĞI</div>
+
+    <div class="globe-hud">
+        <h4>Katmanlar</h4>
+        <div class="hud-row"><div class="hud-dot" style="background:#22c55e;color:#22c55e"></div> Borsalar (pulse)</div>
+        <div class="hud-row"><div class="hud-line" style="background:#fbbf24"></div> Deniz ticaret rotaları</div>
+        <div class="hud-row"><div class="hud-line" style="background:#3b82f6"></div> Enerji boru hatları</div>
+        <div class="hud-row"><div class="hud-line" style="background:#a78bfa"></div> Deniz kabloları</div>
+        <div class="hud-row"><div class="hud-dot" style="background:#ef4444;color:#ef4444"></div> Stratejik darboğaz</div>
+    </div>
+
+    <div class="globe-controls">
+        <button class="gbtn active" data-layer="all">Tümü</button>
+        <button class="gbtn" data-layer="ex">Borsalar</button>
+        <button class="gbtn" data-layer="tr">Rotalar</button>
+        <button class="gbtn" data-layer="en">Enerji</button>
+        <button class="gbtn" data-layer="ca">Kablolar</button>
+        <button class="gbtn" id="rotToggle">⏸ Dönüş</button>
+        <button class="gbtn" id="homeBtn">🌍 Anasayfa</button>
+    </div>
+
+    <div class="globe-info" id="globeInfo">
+        <span class="gi-close" id="giClose">×</span>
+        <div class="gi-title" id="giTitle">—</div>
+        <div id="giBody"></div>
+    </div>
+</div>
+
+<div class="chart-box" style="margin-bottom:16px">
+    <div class="chart-title">🏛️ Başlıca Dünya Borsaları</div>
+    <div class="chart-subtitle">Küredeki parlak noktalar — tıklayıp detay gör</div>
+    <div class="exchange-grid" id="exGrid"></div>
+</div>
+
+<div class="chart-box" style="margin-bottom:16px">
+    <div class="chart-title">⚠️ Stratejik Deniz Darboğazları</div>
+    <div class="chart-subtitle">Küresel ticaretin kritik geçiş noktaları</div>
+    <div class="bottleneck-grid" id="bnGrid"></div>
+</div>
+
+<div class="chart-box">
+    <div class="chart-title">🤖 AI Jeopolitik Özet</div>
+    <div id="kureAi" style="font-size:.82rem;line-height:1.6;color:#475569;white-space:pre-line">Yükleniyor...</div>
+</div>
+
+</div>
+<script src="https://unpkg.com/three@0.149.0/build/three.min.js"></script>
+<script src="https://unpkg.com/globe.gl@2.32.0/dist/globe.gl.min.js"></script>
+<script src="assets/js/kure.js"></script>
+</body>
+</html>

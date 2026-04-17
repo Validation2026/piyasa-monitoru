@@ -125,6 +125,34 @@ Türkiye'de TCMB'nin sıkı para politikası ve enflasyonla mücadele programı 
 
 ⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
 
+'kure': `Küre genelinde para akışları 24 saat boyunca üç büyük zaman diliminde el değiştiriyor: Asya (Tokyo-Şanghay-Hong Kong), Avrupa (Londra-Frankfurt) ve Amerika (New York-Toronto). Günlük ~7 trilyon USD FX hacmi, yaklaşık 100 trilyon USD küresel piyasa değeri bu ağda dolaşıyor.
+
+Stratejik darboğazlar kritik: Hürmüz'den günde 20 milyon varil petrol, Malakka'dan küresel ticaretin %25'i, Süveyş'ten konteyner trafiğinin %30'u geçiyor. Bab el-Mandeb Husi saldırıları nedeniyle yüksek sigorta primiyle işliyor; Kerç aktif çatışma hattında.
+
+Enerji altyapısı: TürkStream, TANAP ve BTC Türkiye'yi enerji hub'ı haline getiriyor. Nord Stream devre dışı; Druzhba yaptırım baskısı altında. ABD Körfez LNG ihracatı Avrupa'ya yönelirken Katar LNG Asya'nın bel kemiği.
+
+Deniz kabloları: 2Africa, MAREA, JUPITER gibi mega kablolar küresel internetin %95'ini taşıyor. Kızıldeniz'de kablo kesintileri veri trafiğinde şok yaratabilir.
+
+⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
+
+'treemap': `Piyasa haritası tek bakışta piyasa genişliğini, lider-gerileyen ayrımını ve sektör rotasyonunu gösteriyor. Treemap'te kutu boyutu önemi, renk günlük performansı temsil ediyor.
+
+Yükselen günlerde haritanın yeşil ağırlıklı olması piyasa genişliği güçlü; izole yeşil kutular ise dar liderlik anlamına gelir. Kripto tarafı tipik olarak piyasaların en volatil köşesi, hisse tarafında büyük kap'lar rotasyon göstergesi.
+
+Döviz köşesinde USDTRY ve EURUSD küresel risk iştahının birinci barometresi. Emtia kutularında Brent/WTI ve altın jeopolitik risk primini doğrudan fiyatlıyor; bakır küresel büyüme göstergesi olarak öne çıkıyor.
+
+⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
+
+'faiz-enflasyon': `Küresel para politikası döngüsü çok kutuplu: Fed/BoE temkinli duraklama, ECB/BoC/Riksbank/SNB aktif indirim patikasında, BoJ ise normalleşme adımlarıyla ters yönde. Türkiye yüksek faiz - yüksek enflasyon ikileminde dezenflasyon patikasına geçiş denemesinde.
+
+Reel faiz haritası: Brezilya, Meksika ve Kolombiya yüksek pozitif reel faizle öne çıkarken, Çin ve bazı EM'ler düşük/negatif reel faizle büyümeye ağırlık veriyor. Rusya savaş ekonomisinde yüksek faize rağmen enflasyon baskısı sürüyor. Arjantin ve Türkiye yüksek nominal faiz ama enflasyonu aşan reel patika yakalamaya çalışıyor.
+
+10Y tahvil cephesinde: ABD 4.4% bandı küresel risksiz faiz referansı, Euro bölgesi 2.5% civarında, EM'lerde 6-15% aralığında geniş bir spektrum. Japonya 10Y'nin 1.4% üzerine çıkması yen-taşıma ticareti üzerinde risk unsuru.
+
+Takip: Fed nokta grafiği, ECB ileri yönlendirme, TCMB adım büyüklüğü, BoJ tahvil alım programının sonlandırılması.
+
+⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
+
 'ekonomik-takvim': `Önümüzdeki dönemde Fed, ECB ve TCMB faiz kararları piyasaların başlıca odak noktası olmaya devam edecek. ABD enflasyon verileri ve istihdam rakamları Fed'in faiz patikasını doğrudan belirleyecek.
 
 Türkiye'de TÜİK enflasyon verileri ve TCMB politika kararları TL varlıklar için kritik önem taşıyor. Dezenflasyon sürecinin hızı yatırımcı güvenini doğrudan etkiliyor.

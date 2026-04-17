@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="light">
+<head>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#3b82f6">
+<title>Küresel Faiz & Enflasyon — Risk Monitörü</title>
+<meta name="description" content="50 ülke tek ekranda — politika faizi, enflasyon ve reel faiz ısı haritası">
+<meta property="og:title" content="Küresel Faiz & Enflasyon — Risk Monitörü">
+<meta property="og:description" content="50 ülke tek ekranda politika faizi, enflasyon ve reel faiz haritası">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="tr_TR">
+<link rel="manifest" href="manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌡️</text></svg>">
+<link rel="preconnect" href="https://unpkg.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+.fe-tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.fe-tab{padding:6px 14px;border:1px solid #dde4ed;border-radius:999px;background:#fff;color:#475569;font-size:.72rem;font-weight:700;cursor:pointer;transition:.15s}
+.fe-tab:hover{border-color:#3b82f6;color:#3b82f6}
+.fe-tab.active{background:#3b82f6;color:#fff;border-color:#3b82f6}
+.fe-map-wrap{background:#fff;border:1px solid #dde4ed;border-radius:12px;overflow:hidden;margin-bottom:16px;position:relative}
+#feMap{height:520px;z-index:1;background:#f1f5f9}
+@media(max-width:768px){#feMap{height:400px}}
+.fe-legend{position:absolute;bottom:12px;right:12px;background:rgba(255,255,255,.96);border:1px solid #dde4ed;border-radius:8px;padding:8px 10px;z-index:400;font-size:.64rem}
+.fe-legend h5{font-size:.66rem;letter-spacing:.05em;text-transform:uppercase;margin-bottom:4px;color:#64748b}
+.fe-legend .lg-row{display:flex;align-items:center;gap:6px;margin:2px 0}
+.fe-legend .lg-swatch{width:22px;height:10px;border-radius:2px}
+
+.fe-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:14px}
+.fe-card{background:#fff;border:1px solid #dde4ed;border-radius:10px;padding:10px 12px}
+.fe-card .fc-v{font-size:1.1rem;font-weight:800;font-family:'JetBrains Mono',monospace}
+.fe-card .fc-l{font-size:.6rem;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+
+.fe-table-wrap{background:#fff;border:1px solid #dde4ed;border-radius:10px;overflow-x:auto;margin-bottom:16px}
+.fe-table{width:100%;border-collapse:collapse;min-width:720px}
+.fe-table th{padding:10px 12px;text-align:left;font-size:.66rem;color:#64748b;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid #e2e8f0;background:#f8fafc;cursor:pointer;user-select:none}
+.fe-table th:hover{color:#3b82f6}
+.fe-table th.sorted{color:#3b82f6}
+.fe-table th.sorted::after{content:' ▼';font-size:.6rem}
+.fe-table th.sorted.asc::after{content:' ▲'}
+.fe-table td{padding:8px 12px;font-size:.78rem;border-bottom:1px solid #f1f5f9}
+.fe-table tr:hover td{background:#f8fafc}
+.fe-table .num{font-family:'JetBrains Mono',monospace;font-weight:600;text-align:right}
+.fe-table .flag-cell{display:flex;align-items:center;gap:8px}
+.fe-table .flag-cell .fcf{font-size:1.1rem}
+.pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.65rem;font-weight:700}
+.pill.hike{background:#fee2e2;color:#b91c1c}
+.pill.cut{background:#dcfce7;color:#15803d}
+.pill.hold{background:#f1f5f9;color:#64748b}
+
+.fe-leaders{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+@media(max-width:640px){.fe-leaders{grid-template-columns:1fr}}
+.fe-list{background:#fff;border:1px solid #dde4ed;border-radius:10px;padding:10px 12px}
+.fe-list h4{font-size:.78rem;margin-bottom:8px;color:#334155}
+.fe-list .fl-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid #f1f5f9;font-size:.74rem}
+.fe-list .fl-row:last-child{border:none}
+.fe-list .fl-flag{font-size:1.1rem;margin-right:6px}
+.fe-list .fl-num{font-family:'JetBrains Mono',monospace;font-weight:700}
+
+.badge-live{display:inline-block;margin-left:8px;padding:2px 8px;background:#16a34a;color:#fff;border-radius:10px;font-size:.6rem;font-weight:700;vertical-align:middle}
+</style>
+</head>
+<body>
+<script src="assets/js/sidebar.js"></script>
+<div class="page">
+<div class="page-spacer"></div>
+<div class="page-head"><h1>🌡️ Küresel Faiz & Enflasyon <span class="badge-live">50 ÜLKE</span></h1></div>
+
+<div class="fe-summary">
+    <div class="fe-card"><div class="fc-v" id="fsCount">0</div><div class="fc-l">Ülke</div></div>
+    <div class="fe-card"><div class="fc-v" id="fsAvgR" style="color:#3b82f6">—</div><div class="fc-l">Ort. Politika Faizi</div></div>
+    <div class="fe-card"><div class="fc-v" id="fsAvgI" style="color:#f59e0b">—</div><div class="fc-l">Ort. Enflasyon</div></div>
+    <div class="fe-card"><div class="fc-v" id="fsAvgReal" style="color:#16a34a">—</div><div class="fc-l">Ort. Reel Faiz</div></div>
+    <div class="fe-card"><div class="fc-v" id="fsNextHike">—</div><div class="fc-l">Son Faiz Kararı</div></div>
+</div>
+
+<div class="fe-tabs">
+    <button class="fe-tab active" data-metric="rate">Politika Faizi</button>
+    <button class="fe-tab" data-metric="infl">Enflasyon (YoY)</button>
+    <button class="fe-tab" data-metric="real">Reel Faiz</button>
+    <button class="fe-tab" data-metric="m2y">2Y Tahvil</button>
+    <button class="fe-tab" data-metric="m10y">10Y Tahvil</button>
+</div>
+
+<div class="fe-map-wrap">
+    <div id="feMap"></div>
+    <div class="fe-legend" id="feLegend"></div>
+</div>
+
+<div class="fe-leaders">
+    <div class="fe-list"><h4>🔥 En Yüksek <span id="leaderHiLabel">Faiz</span></h4><div id="leaderHi"></div></div>
+    <div class="fe-list"><h4>❄️ En Düşük <span id="leaderLoLabel">Faiz</span></h4><div id="leaderLo"></div></div>
+</div>
+
+<div class="fe-table-wrap">
+    <table class="fe-table">
+        <thead><tr>
+            <th data-sort="name">Ülke</th>
+            <th data-sort="rate" class="num">Faiz %</th>
+            <th data-sort="infl" class="num">Enfl. %</th>
+            <th data-sort="real" class="num">Reel %</th>
+            <th data-sort="m10y" class="num">10Y %</th>
+            <th data-sort="move">Son Hareket</th>
+            <th data-sort="cb">Merkez Bank.</th>
+        </tr></thead>
+        <tbody id="feTable"></tbody>
+    </table>
+</div>
+
+<div class="chart-box">
+    <div class="chart-title">🤖 AI Makro Özet</div>
+    <div id="feAi" style="font-size:.82rem;line-height:1.6;color:#475569;white-space:pre-line">Yükleniyor...</div>
+</div>
+
+</div>
+<script src="assets/js/faiz-enflasyon.js"></script>
+</body>
+</html>
