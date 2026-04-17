@@ -27,15 +27,38 @@
 .fe-tab{padding:6px 14px;border:1px solid #dde4ed;border-radius:999px;background:#fff;color:#475569;font-size:.72rem;font-weight:700;cursor:pointer;transition:.15s}
 .fe-tab:hover{border-color:#3b82f6;color:#3b82f6}
 .fe-tab.active{background:#3b82f6;color:#fff;border-color:#3b82f6}
-.fe-map-wrap{background:#fff;border:1px solid #dde4ed;border-radius:12px;overflow:hidden;margin-bottom:16px;position:relative}
-#feMap{height:520px;z-index:1;background:#f1f5f9}
-@media(max-width:768px){#feMap{height:380px}}
-@media(max-width:420px){#feMap{height:320px}}
-.fe-legend{position:absolute;bottom:12px;right:12px;background:rgba(255,255,255,.96);border:1px solid #dde4ed;border-radius:8px;padding:8px 10px;z-index:400;font-size:.64rem;max-width:140px}
-@media(max-width:640px){.fe-legend{bottom:6px;right:6px;padding:5px 7px;font-size:.56rem;max-width:110px}.fe-legend h5{font-size:.58rem}.fe-legend .lg-swatch{width:16px;height:8px}}
-.fe-legend h5{font-size:.66rem;letter-spacing:.05em;text-transform:uppercase;margin-bottom:4px;color:#64748b}
+.fe-map-wrap{background:radial-gradient(ellipse at center,#0f172a 0%,#020617 100%);border:1px solid #1e293b;border-radius:14px;overflow:hidden;margin-bottom:16px;position:relative;box-shadow:0 10px 40px -10px rgba(59,130,246,.35)}
+#feMap{height:560px;z-index:1;background:#020617}
+@media(max-width:768px){#feMap{height:400px}}
+@media(max-width:420px){#feMap{height:340px}}
+.fe-map-title{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:rgba(15,23,42,.88);backdrop-filter:blur(8px);border:1px solid rgba(59,130,246,.35);border-radius:999px;padding:5px 14px;color:#e2e8f0;font-size:.65rem;font-weight:700;letter-spacing:.08em;z-index:500;pointer-events:none;display:flex;align-items:center;gap:8px;white-space:nowrap;text-transform:uppercase}
+.fe-map-title .fe-live{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 10px #22c55e;animation:feLivePulse 1.6s ease-in-out infinite}
+@keyframes feLivePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(1.35)}}
+.fe-legend{position:absolute;bottom:12px;right:12px;background:rgba(15,23,42,.88);backdrop-filter:blur(8px);border:1px solid rgba(59,130,246,.35);border-radius:10px;padding:9px 11px;z-index:500;font-size:.64rem;max-width:150px;color:#e2e8f0}
+@media(max-width:640px){.fe-legend{bottom:6px;right:6px;padding:6px 8px;font-size:.56rem;max-width:115px}.fe-legend h5{font-size:.58rem}.fe-legend .lg-swatch{width:16px;height:8px}}
+.fe-legend h5{font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px;color:#7dd3fc}
 .fe-legend .lg-row{display:flex;align-items:center;gap:6px;margin:2px 0}
-.fe-legend .lg-swatch{width:22px;height:10px;border-radius:2px}
+.fe-legend .lg-swatch{width:22px;height:10px;border-radius:2px;box-shadow:0 0 8px currentColor}
+
+/* Leaflet canvas renderer — glow için */
+.fe-marker-glow{filter:drop-shadow(0 0 6px currentColor)}
+.leaflet-container{background:#020617 !important;outline:none}
+.leaflet-tooltip{background:rgba(15,23,42,.95) !important;color:#e2e8f0 !important;border:1px solid rgba(59,130,246,.45) !important;border-radius:8px !important;box-shadow:0 4px 18px rgba(0,0,0,.5) !important;padding:6px 10px !important;font-size:.7rem !important}
+.leaflet-tooltip-top:before{border-top-color:rgba(15,23,42,.95) !important}
+.leaflet-control-zoom a{background:rgba(15,23,42,.88) !important;color:#e2e8f0 !important;border:1px solid rgba(59,130,246,.35) !important}
+.leaflet-control-zoom a:hover{background:rgba(59,130,246,.3) !important}
+
+/* Pulse halkası — top ülkeler için */
+.fe-pulse-ring{border:2px solid;border-radius:50%;animation:fePulseRing 2s cubic-bezier(.4,0,.6,1) infinite;box-shadow:0 0 12px currentColor;pointer-events:none}
+@keyframes fePulseRing{
+    0%{transform:scale(.3);opacity:.95}
+    100%{transform:scale(2.2);opacity:0}
+}
+/* Floating value label */
+.fe-val-label{background:rgba(15,23,42,.94);color:#fbbf24;border:1px solid rgba(251,191,36,.5);border-radius:999px;padding:2px 8px;font-size:.65rem;font-weight:800;font-family:'JetBrains Mono',monospace;white-space:nowrap;box-shadow:0 2px 10px rgba(0,0,0,.4);pointer-events:none;text-shadow:0 0 4px rgba(251,191,36,.6)}
+.fe-val-label.hot{color:#fca5a5;border-color:rgba(252,165,165,.5);text-shadow:0 0 4px rgba(252,165,165,.6)}
+.fe-val-label.cool{color:#7dd3fc;border-color:rgba(125,211,252,.5);text-shadow:0 0 4px rgba(125,211,252,.6)}
+@media(max-width:640px){.fe-val-label{font-size:.55rem;padding:1px 6px}}
 
 .fe-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:14px}
 .fe-card{background:#fff;border:1px solid #dde4ed;border-radius:10px;padding:10px 12px}
@@ -97,6 +120,7 @@
 
 <div class="fe-map-wrap">
     <div id="feMap"></div>
+    <div class="fe-map-title"><span class="fe-live"></span> <span id="feTitleMetric">POLİTİKA FAİZİ</span> · 50 ÜLKE</div>
     <div class="fe-legend" id="feLegend"></div>
 </div>
 
