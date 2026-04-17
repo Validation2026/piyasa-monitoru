@@ -153,6 +153,49 @@ setInterval(tick,30000);tick();
     ];
     QUICK.forEach(function(q){ SEARCH_INDEX.push({type:'Varlık', icon:q[1], label:q[0], href:q[2]}); });
 
+    // Tüm data dosyaları → sayfalar eşlemesi — arama tüm site verilerini kapsasın
+    var DATA_FILES = [
+        {file:'commodities_energy.json', page:'emtia-enerji.html', icon:'⛽'},
+        {file:'commodities_metals.json', page:'emtia-metaller.html', icon:'🥇'},
+        {file:'commodities_agriculture.json', page:'emtia-tarim.html', icon:'🌾'},
+        {file:'industrial.json', page:'sanayi.html', icon:'🏭'},
+        {file:'currencies.json', page:'kurlar.html', icon:'💱'},
+        {file:'bonds.json', page:'tahviller.html', icon:'📜'},
+        {file:'indices.json', page:'endeksler.html', icon:'📈'},
+        {file:'stocks.json', page:'hisseler.html', icon:'💹'},
+        {file:'crypto.json', page:'kripto.html', icon:'₿'}
+    ];
+    var dataIndexLoaded = false, dataIndexLoading = false;
+    function loadDataIndex(){
+        if(dataIndexLoaded || dataIndexLoading) return Promise.resolve();
+        dataIndexLoading = true;
+        var fetches = DATA_FILES.map(function(d){
+            return fetch('data/'+d.file+'?t='+Date.now(), {cache:'no-store'})
+                .then(function(r){return r.json()})
+                .then(function(json){
+                    if(!json || !json.series) return;
+                    json.series.forEach(function(s){
+                        if(!s || !s.name) return;
+                        SEARCH_INDEX.push({
+                            type:'Varlık', icon:d.icon, label:s.name,
+                            href: d.page + '?asset=' + encodeURIComponent(s.id || s.name),
+                            seriesId: s.id,
+                            pageOnly: d.page
+                        });
+                    });
+                }).catch(function(){});
+        });
+        return Promise.all(fetches).then(function(){
+            dataIndexLoaded = true; dataIndexLoading = false;
+            // Duplikeleri temizle (href bazlı)
+            var seen = {};
+            SEARCH_INDEX = SEARCH_INDEX.filter(function(it){
+                var k = it.href + '|' + it.label;
+                if(seen[k]) return false; seen[k] = true; return true;
+            });
+        });
+    }
+
     function trLower(s){ return (s||'').toLocaleLowerCase('tr'); }
     function score(item, q){
         var lab = trLower(item.label);
@@ -212,6 +255,10 @@ setInterval(tick,30000);tick();
         input.value = '';
         updateList();
         setTimeout(function(){ input.focus(); }, 30);
+        // Arka planda tüm site verilerini yükle; tamamlanınca listeyi tazele
+        if(!dataIndexLoaded){
+            loadDataIndex().then(function(){ updateList(); });
+        }
     }
     function close(){
         overlay.classList.remove('show');

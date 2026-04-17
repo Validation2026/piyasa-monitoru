@@ -237,19 +237,65 @@ function xmlEscape(v){
     if(v==null)return'';
     return String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-function xlsCell(v){
-    if(v==null||v==='')return '<Cell><Data ss:Type="String"></Data></Cell>';
-    if(typeof v==='number'&&isFinite(v))return '<Cell><Data ss:Type="Number">'+v+'</Data></Cell>';
-    return '<Cell><Data ss:Type="String">'+xmlEscape(v)+'</Data></Cell>';
+function xlsCellHtml(v){
+    if(v==null||v==='')return '<td></td>';
+    if(typeof v==='number'&&isFinite(v))return '<td style="mso-number-format:\'0.00##\'">'+v+'</td>';
+    return '<td>'+xmlEscape(v)+'</td>';
 }
-function xlsRow(cells){return '<Row>'+cells.map(xlsCell).join('')+'</Row>'}
+function xlsRowHtml(cells, isHeader){
+    var tag=isHeader?'th':'td';
+    if(!isHeader)return '<tr>'+cells.map(xlsCellHtml).join('')+'</tr>';
+    return '<tr>'+cells.map(function(v){return '<'+tag+' style="background:#e5e7eb;font-weight:bold">'+xmlEscape(v)+'</'+tag+'></tr>'}).join('')+'</tr>';
+}
+
+// Tek bir HTML tablosunu (başlıklı satır[0], diğer satırlar veri) Excel sayfası olarak üret
+function htmlSheetTable(headerRow, dataRows){
+    var thead='<thead><tr>'+headerRow.map(function(v){return '<th style="background:#e5e7eb;font-weight:bold;border:1px solid #999">'+xmlEscape(v)+'</th>'}).join('')+'</tr></thead>';
+    var tbody='<tbody>'+dataRows.map(function(r){
+        return '<tr>'+r.map(function(v){
+            if(v==null||v==='')return '<td style="border:1px solid #ccc"></td>';
+            if(typeof v==='number'&&isFinite(v))return '<td style="border:1px solid #ccc;mso-number-format:\'0.00##\'">'+v+'</td>';
+            return '<td style="border:1px solid #ccc">'+xmlEscape(v)+'</td>';
+        }).join('')+'</tr>';
+    }).join('')+'</tbody>';
+    return '<table border="1" cellspacing="0" cellpadding="4">'+thead+tbody+'</table>';
+}
+
+// Çok sayfalı HTML-Excel dosyası üret (Excel 2007+ tüm sayfa tanımlarını okur)
+function buildExcelHtmlDoc(sheets){
+    // sheets: [{name, headerRow, dataRows}, ...]
+    var worksheetXml = sheets.map(function(s){
+        return '<x:ExcelWorksheet><x:Name>'+xmlEscape(s.name)+'</x:Name><x:WorksheetOptions xmlns:x="urn:schemas-microsoft-com:office:excel"><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet>';
+    }).join('');
+    var tablesHtml = sheets.map(function(s, i){
+        var tbl = htmlSheetTable(s.headerRow, s.dataRows);
+        // Sayfa kırılması: ilk tablo hariç page-break-before ekle
+        if(i===0) return tbl;
+        return '<br clear="all" style="mso-special-character:line-break;page-break-before:always"/>'+tbl;
+    }).join('');
+    return '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">'+
+        '<head><meta http-equiv="Content-Type" content="application/vnd.ms-excel; charset=UTF-8"/>'+
+        '<!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets>'+worksheetXml+'</x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->'+
+        '<style>table{border-collapse:collapse}td,th{padding:4px 8px;font-family:Calibri,Arial,sans-serif;font-size:11pt}</style>'+
+        '</head><body>'+tablesHtml+'</body></html>';
+}
+
+function downloadExcelFile(html, filename){
+    // UTF-8 BOM ekle — Türkçe karakterler için
+    var blob=new Blob(['\ufeff'+html],{type:'application/vnd.ms-excel;charset=utf-8'});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');
+    a.href=url;a.download=(filename||'piyasa')+'.xls';
+    document.body.appendChild(a);a.click();
+    setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(url)},100);
+}
 
 function exportTableExcel(seriesList,filename){
     // Sheet 1: Özet — anlık görüntü
-    var summaryRows = [];
-    summaryRows.push(xlsRow(['Varlık','Birim','Fiyat','1G %','1H %','1A %','YTD %','52H Düşük','52H Yüksek']));
+    var summaryHeader=['Varlık','Birim','Fiyat','1G %','1H %','1A %','YTD %','52H Düşük','52H Yüksek'];
+    var summaryData=[];
     seriesList.forEach(function(s){if(!s)return;
-        summaryRows.push(xlsRow([
+        summaryData.push([
             s.name||'', s.unit||'',
             s.current!=null?Number(s.current):'',
             s.change_1d_pct!=null?Number(s.change_1d_pct.toFixed(4)):'',
@@ -258,27 +304,24 @@ function exportTableExcel(seriesList,filename){
             s.change_ytd_pct!=null?Number(s.change_ytd_pct.toFixed(4)):'',
             s.low_52w!=null?Number(s.low_52w):'',
             s.high_52w!=null?Number(s.high_52w):''
-        ]));
+        ]);
     });
 
-    // Sheet 2: Tarihsel Veri — uzun format (Tarih | Varlık | Değer | Birim)
-    var histRows = [];
-    histRows.push(xlsRow(['Tarih','Varlık','Değer','Birim']));
+    // Sheet 2: Tarihsel (uzun format)
+    var longHeader=['Tarih','Varlık','Değer','Birim'];
+    var longData=[];
     seriesList.forEach(function(s){
         if(!s||!s.data||!s.data.length)return;
         s.data.forEach(function(d){
             if(!d||d.value==null)return;
-            histRows.push(xlsRow([d.date||'', s.name||'', Number(d.value), s.unit||'']));
+            longData.push([d.date||'', s.name||'', Number(d.value), s.unit||'']);
         });
     });
 
-    // Sheet 3: Tarihsel (Geniş) — tarih satırları, her varlık bir sütun
-    var wideRows = [];
-    var header=['Tarih'];
+    // Sheet 3: Tarihsel (geniş format — her varlık bir sütun)
     var namedSeries = seriesList.filter(function(s){return s&&s.data&&s.data.length});
-    namedSeries.forEach(function(s){header.push(s.name||'')});
-    wideRows.push(xlsRow(header));
-    var dateMap = {};
+    var wideHeader=['Tarih'].concat(namedSeries.map(function(s){return s.name||''}));
+    var dateMap={};
     namedSeries.forEach(function(s){
         s.data.forEach(function(d){
             if(!d||d.value==null)return;
@@ -286,30 +329,21 @@ function exportTableExcel(seriesList,filename){
             dateMap[d.date][s.id||s.name]=d.value;
         });
     });
-    var dates = Object.keys(dateMap).sort();
-    dates.forEach(function(dt){
+    var wideData=Object.keys(dateMap).sort().map(function(dt){
         var row=[dt];
         namedSeries.forEach(function(s){
             var key=s.id||s.name;
             row.push(dateMap[dt][key]!=null?Number(dateMap[dt][key]):'');
         });
-        wideRows.push(xlsRow(row));
+        return row;
     });
 
-    var xml = '<?xml version="1.0"?>\n<?mso-application progid="Excel.Sheet"?>\n'+
-        '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">'+
-        '<Styles><Style ss:ID="hdr"><Font ss:Bold="1"/><Interior ss:Color="#E5E7EB" ss:Pattern="Solid"/></Style></Styles>'+
-        '<Worksheet ss:Name="Özet"><Table>'+summaryRows.join('')+'</Table></Worksheet>'+
-        '<Worksheet ss:Name="Tarihsel"><Table>'+histRows.join('')+'</Table></Worksheet>'+
-        '<Worksheet ss:Name="Tarihsel (Geniş)"><Table>'+wideRows.join('')+'</Table></Worksheet>'+
-        '</Workbook>';
-
-    var blob=new Blob([xml],{type:'application/vnd.ms-excel;charset=utf-8'});
-    var url=URL.createObjectURL(blob);
-    var a=document.createElement('a');
-    a.href=url;a.download=(filename||'piyasa')+'.xls';
-    document.body.appendChild(a);a.click();
-    setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(url)},100);
+    var html = buildExcelHtmlDoc([
+        {name:'Özet', headerRow:summaryHeader, dataRows:summaryData},
+        {name:'Tarihsel', headerRow:longHeader, dataRows:longData},
+        {name:'Tarihsel (Geniş)', headerRow:wideHeader, dataRows:wideData}
+    ]);
+    downloadExcelFile(html, filename||'piyasa');
 }
 
 function formatUpdatedAt(iso){
@@ -364,6 +398,104 @@ function buildTable(containerId,seriesList,opts){
     if(csvBtn)csvBtn.addEventListener('click',function(){exportTableExcel(seriesList,fileBase)});
 }
 
+/* ══════════════════════════════════════════
+   ASSET DETAIL MODAL (arama sonucu popup)
+   ══════════════════════════════════════════ */
+var _assetModalEl = null;
+function ensureAssetModal(){
+    if(_assetModalEl) return _assetModalEl;
+    var el = document.createElement('div');
+    el.className = 'asset-modal-overlay';
+    el.id = 'assetModalOverlay';
+    el.setAttribute('aria-hidden','true');
+    el.innerHTML = '<div class="asset-modal" role="dialog" aria-modal="true" aria-labelledby="assetModalTitle">'+
+        '<button type="button" class="asset-modal-close" aria-label="Kapat">×</button>'+
+        '<div class="asset-modal-head"><div id="assetModalIcon"></div><div><h3 id="assetModalTitle">—</h3><div class="asset-modal-sub" id="assetModalSub"></div></div></div>'+
+        '<div class="asset-modal-price"><span class="amv" id="assetModalValue">—</span> <span class="amu" id="assetModalUnit"></span></div>'+
+        '<div class="asset-modal-chgs" id="assetModalChgs"></div>'+
+        '<div class="asset-modal-range" id="assetModalRange"></div>'+
+        '<div class="asset-modal-chart"><canvas id="assetModalChart"></canvas></div>'+
+        '<div class="asset-modal-footer"><a class="asset-modal-goto" id="assetModalGoto" href="#">Tam sayfa detayı →</a></div>'+
+    '</div>';
+    document.body.appendChild(el);
+    el.addEventListener('click', function(e){ if(e.target === el) closeAssetModal(); });
+    el.querySelector('.asset-modal-close').addEventListener('click', closeAssetModal);
+    document.addEventListener('keydown', function(e){
+        if(e.key === 'Escape' && el.classList.contains('show')) closeAssetModal();
+    });
+    _assetModalEl = el;
+    return el;
+}
+var _assetModalChart = null;
+function closeAssetModal(){
+    var el = _assetModalEl;
+    if(!el) return;
+    el.classList.remove('show');
+    el.setAttribute('aria-hidden','true');
+    if(_assetModalChart){try{_assetModalChart.destroy()}catch(e){} _assetModalChart=null}
+    // URL'den asset parametresini temizle
+    try{
+        var u = new URL(location.href);
+        if(u.searchParams.has('asset')){
+            u.searchParams.delete('asset');
+            history.replaceState({}, '', u.toString());
+        }
+    }catch(e){}
+}
+function showAssetModal(series, opts){
+    if(!series) return;
+    opts = opts || {};
+    ensureAssetModal();
+    var el = _assetModalEl;
+    document.getElementById('assetModalIcon').innerHTML = logoImg(series, 36);
+    document.getElementById('assetModalTitle').textContent = series.name || series.id;
+    document.getElementById('assetModalSub').textContent = (series.id||'')+(opts.pageLabel?(' · '+opts.pageLabel):'');
+    document.getElementById('assetModalValue').textContent = fp(series.current);
+    document.getElementById('assetModalUnit').textContent = series.unit || '';
+    var chgsEl = document.getElementById('assetModalChgs');
+    var chgs = '';
+    if(series.change_1d_pct!=null) chgs += fc(series.change_1d_pct)+'<span class="chg-label">1G</span> ';
+    if(series.change_1w_pct!=null) chgs += fc(series.change_1w_pct)+'<span class="chg-label">1H</span> ';
+    if(series.change_1m_pct!=null) chgs += fc(series.change_1m_pct)+'<span class="chg-label">1A</span> ';
+    if(series.change_ytd_pct!=null) chgs += fc(series.change_ytd_pct)+'<span class="chg-label">YTD</span>';
+    chgsEl.innerHTML = chgs;
+    var rangeEl = document.getElementById('assetModalRange');
+    rangeEl.innerHTML = series.low_52w!=null ? ('52H: <b>'+fp(series.low_52w)+'</b> — <b>'+fp(series.high_52w)+'</b>') : '';
+    var gotoEl = document.getElementById('assetModalGoto');
+    if(opts.pageHref){gotoEl.href = opts.pageHref; gotoEl.style.display=''}
+    else gotoEl.style.display='none';
+
+    el.classList.add('show');
+    el.setAttribute('aria-hidden','false');
+    // Mini chart
+    setTimeout(function(){
+        if(_assetModalChart){try{_assetModalChart.destroy()}catch(e){}}
+        if(series.data && series.data.length){
+            _assetModalChart = makeChart('assetModalChart', series, {color:'#3b82f6', period:'1y'});
+        }
+    }, 30);
+}
+function openAssetFromUrl(data){
+    if(!data || !data.series) return false;
+    try{
+        var u = new URL(location.href);
+        var assetId = u.searchParams.get('asset');
+        if(!assetId) return false;
+        var match = null;
+        for(var i=0;i<data.series.length;i++){
+            var s = data.series[i];
+            if(s && (s.id === assetId || (s.name && s.name.toLowerCase() === assetId.toLowerCase()))){
+                match = s; break;
+            }
+        }
+        if(match) {
+            setTimeout(function(){ showAssetModal(match); }, 200);
+            return true;
+        }
+    }catch(e){}
+    return false;
+}
+
 // Comparison multi-line chart (normalized to %)
 function buildComparisonChart(canvasId,seriesList,period){
     var c=document.getElementById(canvasId);if(!c||!seriesList||!seriesList.length)return null;
@@ -411,6 +543,7 @@ function loadOverrides(pageId) {
 }
 
 var _lastMeta = null;
+var _lastData = null;
 function loadData(file, pageId) {
     // Veri ve override'lari paralel yukle, override'lari uygula
     return Promise.all([fj(file), loadOverrides(pageId)]).then(function(r){
@@ -421,6 +554,9 @@ function loadData(file, pageId) {
             try { showStaleBanner(data.meta.updated_at, 60); } catch(e){}
             _lastMeta = { updated_at: data.meta.updated_at, file: file, pageId: pageId };
         }
+        _lastData = data;
+        // URL'de ?asset=ID varsa detay popup'ını otomatik aç
+        try { openAssetFromUrl(data); } catch(e){}
         return data;
     });
 }
@@ -619,7 +755,11 @@ function makeAreaChart(canvasId, series, opts){
     });
 }
 
-return{fj:fj,fs:fs,fp:fp,fc:fc,cc:cc,gc:gc,filterPeriod:filterPeriod,miniSpark:miniSpark,makeChart:makeChart,makeAreaChart:makeAreaChart,buildSummary:buildSummary,buildCharts:buildCharts,buildTable:buildTable,buildComparisonChart:buildComparisonChart,buildBarChart:buildBarChart,buildDonutChart:buildDonutChart,buildHeatmap:buildHeatmap,applyOverrides:applyOverrides,loadOverrides:loadOverrides,loadData:loadData,getLastMeta:getLastMeta,showStaleBanner:showStaleBanner,countUp:countUp,initScrollReveal:initScrollReveal,flashUpdate:flashUpdate,exportTableExcel:exportTableExcel,sparkSvg:sparkSvg,isAnomaly:isAnomaly,formatUpdatedAt:formatUpdatedAt};
+function downloadExcel(sheets, filename){
+    var html=buildExcelHtmlDoc(sheets);
+    downloadExcelFile(html, filename);
+}
+return{fj:fj,fs:fs,fp:fp,fc:fc,cc:cc,gc:gc,filterPeriod:filterPeriod,miniSpark:miniSpark,makeChart:makeChart,makeAreaChart:makeAreaChart,buildSummary:buildSummary,buildCharts:buildCharts,buildTable:buildTable,buildComparisonChart:buildComparisonChart,buildBarChart:buildBarChart,buildDonutChart:buildDonutChart,buildHeatmap:buildHeatmap,applyOverrides:applyOverrides,loadOverrides:loadOverrides,loadData:loadData,getLastMeta:getLastMeta,showStaleBanner:showStaleBanner,countUp:countUp,initScrollReveal:initScrollReveal,flashUpdate:flashUpdate,exportTableExcel:exportTableExcel,downloadExcel:downloadExcel,sparkSvg:sparkSvg,isAnomaly:isAnomaly,formatUpdatedAt:formatUpdatedAt,showAssetModal:showAssetModal,openAssetFromUrl:openAssetFromUrl};
 })();
 
 // Scroll reveal'ı DOM hazır olunca başlat
