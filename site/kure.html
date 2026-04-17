@@ -90,13 +90,18 @@
 .bn-card .bn-fill{height:100%;border-radius:3px;transition:width 1s}
 
 [data-theme="light"] body{background:#f7f9fc}
+.page-lead{margin:6px 0 0;color:#475569;font-size:.82rem;line-height:1.5;max-width:760px}
+@media(max-width:640px){.page-lead{font-size:.72rem;line-height:1.45}}
 </style>
 </head>
 <body>
 <script src="assets/js/sidebar.js"></script>
 <div class="page">
 <div class="page-spacer"></div>
-<div class="page-head"><h1>🌐 3D Küre — Canlı Finans Dünyası</h1></div>
+<div class="page-head">
+    <h1>🌐 3D Küre — Canlı Finans Dünyası</h1>
+    <p class="page-lead">Dünyanın başlıca borsaları, ticaret rotaları, enerji boru hatları, deniz kabloları ve stratejik darboğazlar — hepsi tek bir canlı küresel görünümde. Noktalara tıklayıp detayları keşfet.</p>
+</div>
 
 <div class="metrics-row">
     <div class="metric-card"><div class="mc-icon" style="background:#dcfce7;color:#16a34a">🏛️</div><div><div class="mc-val" id="mBorsa">0</div><div class="mc-lbl">Borsa</div></div></div>
@@ -148,11 +153,6 @@
     <div class="chart-title">⚠️ Stratejik Deniz Darboğazları</div>
     <div class="chart-subtitle">Küresel ticaretin kritik geçiş noktaları</div>
     <div class="bottleneck-grid" id="bnGrid"></div>
-</div>
-
-<div class="chart-box">
-    <div class="chart-title">🤖 AI Jeopolitik Özet</div>
-    <div id="kureAi" style="font-size:.82rem;line-height:1.6;color:#475569;white-space:pre-line">Yükleniyor...</div>
 </div>
 
 </div>
