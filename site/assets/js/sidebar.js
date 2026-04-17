@@ -51,14 +51,30 @@ var HTML = '' +
 '<div class="sb-overlay" id="sbOverlay"></div>' +
 '<aside class="sidebar" id="sidebar" role="navigation" aria-label="Ana menü">' +
 '<a class="sb-brand" href="index.html" aria-label="Ana sayfaya dön"><span style="font-size:1.1rem" aria-hidden="true">📊</span><span class="sb-brand-text">Risk Monitörü</span></a>' +
+'<button type="button" class="sb-search-trigger" id="sbSearchTrigger" aria-label="Arama (Ctrl+K)"><span class="sb-ico">🔍</span><span class="sb-search-label">Ara…</span><span class="sb-kbd">⌘K</span></button>' +
 sidebarLinks +
 '</aside>' +
 '<div class="topbar" id="topbar" role="banner">' +
 '<button class="topbar-hamburger" id="hamburger" aria-label="Menüyü aç" aria-expanded="false" aria-controls="sidebar">☰</button>' +
 '<a href="index.html" style="text-decoration:none;font-size:.85rem;font-weight:800;color:var(--blue)" aria-label="Ana sayfa"><span aria-hidden="true">📊 RM</span></a>' +
+'<button type="button" class="topbar-search" id="topbarSearch" aria-label="Arama (Ctrl+K)" title="Ara (Ctrl+K)"><span aria-hidden="true">🔍</span><span class="tbs-label">Ara</span><span class="tbs-kbd">⌘K</span></button>' +
 '<span class="topbar-clock" id="clock" aria-live="off"></span>' +
 '</div>' +
-'<nav class="mobile-nav" id="mobileNav" aria-label="Sayfa gezinme">' + mobileLinks + '</nav>';
+'<nav class="mobile-nav" id="mobileNav" aria-label="Sayfa gezinme">' + mobileLinks + '</nav>' +
+// Floating search FAB — her sayfada her zaman görünür
+'<button type="button" class="search-fab" id="searchFab" aria-label="Arama (Ctrl+K)" title="Ara (Ctrl+K)"><span aria-hidden="true">🔍</span></button>' +
+// Command palette modal
+'<div class="cmdk-overlay" id="cmdkOverlay" aria-hidden="true">' +
+'  <div class="cmdk-modal" role="dialog" aria-modal="true" aria-label="Arama">' +
+'    <div class="cmdk-input-wrap">' +
+'      <span class="cmdk-ico">🔍</span>' +
+'      <input type="text" id="cmdkInput" placeholder="Sayfa, emtia, hisse veya ülke ara…" autocomplete="off">' +
+'      <span class="cmdk-hint">ESC kapat</span>' +
+'    </div>' +
+'    <div class="cmdk-results" id="cmdkResults"></div>' +
+'    <div class="cmdk-footer"><span>↑↓ gez</span><span>↵ aç</span><span>ESC kapat</span></div>' +
+'  </div>' +
+'</div>';
 
 document.body.insertAdjacentHTML('afterbegin', HTML);
 
@@ -109,6 +125,127 @@ function tick(){
     el.textContent=String(n.getDate()).padStart(2,'0')+'.'+String(n.getMonth()+1).padStart(2,'0')+'.'+n.getFullYear()+' '+String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');
 }
 setInterval(tick,30000);tick();
+
+// ═══════════════════════════════════════════
+// COMMAND PALETTE (Cmd/Ctrl+K) — global arama
+// ═══════════════════════════════════════════
+(function(){
+    // Popüler varlıklar ve ülkeler — hızlı atlama için
+    var SEARCH_INDEX = [];
+    // Sayfalar
+    links.forEach(function(l){
+        if(isExt(l)) SEARCH_INDEX.push({type:'Harici', icon:lIcon(l), label:lLabel(l), href:l.ext, ext:true});
+        else SEARCH_INDEX.push({type:'Sayfa', icon:lIcon(l), label:lLabel(l), href:l[0]+'.html'});
+    });
+    // Popüler varlıklar (sayfa + anchor)
+    var QUICK = [
+        ['Bitcoin (BTC)','₿','kripto.html'],['Ethereum (ETH)','Ξ','kripto.html'],['Solana (SOL)','◎','kripto.html'],
+        ['Brent Ham Petrol','🛢️','emtia-enerji.html'],['WTI Ham Petrol','🛢️','emtia-enerji.html'],['Doğalgaz (HH)','🔥','emtia-enerji.html'],
+        ['Altın (XAU)','🥇','emtia-metaller.html'],['Gümüş (XAG)','🥈','emtia-metaller.html'],['Bakır','🟠','emtia-metaller.html'],['Platin','⚪','emtia-metaller.html'],
+        ['Buğday','🌾','emtia-tarim.html'],['Mısır','🌽','emtia-tarim.html'],['Soya','🫘','emtia-tarim.html'],
+        ['USD/TRY','💵','kurlar.html'],['EUR/TRY','💶','kurlar.html'],['GBP/TRY','💷','kurlar.html'],['Dolar Endeksi (DXY)','📊','kurlar.html'],
+        ['BIST 100','🇹🇷','endeksler.html'],['S&P 500','🇺🇸','endeksler.html'],['NASDAQ','💹','endeksler.html'],['DAX','🇩🇪','endeksler.html'],['Nikkei','🇯🇵','endeksler.html'],
+        ['ABD 10Y Tahvil','📜','tahviller.html'],['Türkiye 10Y Tahvil','📜','tahviller.html'],['Almanya 10Y Bund','📜','tahviller.html'],
+        ['THYAO','✈️','hisseler.html'],['ASELS','🔧','hisseler.html'],['KCHOL','🏢','hisseler.html'],['GARAN','🏦','hisseler.html'],['NVDA','💻','hisseler.html'],['AAPL','🍎','hisseler.html'],['TSLA','🚗','hisseler.html'],
+        ['Fed','🏛️','merkez-bankalari.html'],['ECB','🏛️','merkez-bankalari.html'],['TCMB','🏛️','merkez-bankalari.html'],['BoJ','🏛️','merkez-bankalari.html'],
+        ['Türkiye','🇹🇷','faiz-enflasyon.html'],['ABD','🇺🇸','faiz-enflasyon.html'],['Çin','🇨🇳','faiz-enflasyon.html'],['Japonya','🇯🇵','faiz-enflasyon.html'],['İran','🇮🇷','faiz-enflasyon.html'],['Rusya','🇷🇺','faiz-enflasyon.html'],
+        ['Hürmüz Boğazı','🌊','kure.html'],['Süveyş Kanalı','🌊','kure.html'],['Malakka Boğazı','🌊','kure.html']
+    ];
+    QUICK.forEach(function(q){ SEARCH_INDEX.push({type:'Varlık', icon:q[1], label:q[0], href:q[2]}); });
+
+    function trLower(s){ return (s||'').toLocaleLowerCase('tr'); }
+    function score(item, q){
+        var lab = trLower(item.label);
+        if(!q) return 0;
+        if(lab === q) return 100;
+        if(lab.indexOf(q) === 0) return 80;
+        if(lab.indexOf(' '+q) !== -1) return 60;
+        if(lab.indexOf(q) !== -1) return 40;
+        return 0;
+    }
+
+    var overlay = document.getElementById('cmdkOverlay');
+    var input = document.getElementById('cmdkInput');
+    var results = document.getElementById('cmdkResults');
+    if(!overlay || !input || !results) return;
+    var activeIdx = 0, current = [];
+
+    function render(list){
+        if(!list.length){
+            results.innerHTML = '<div class="cmdk-empty">Eşleşme yok — sayfa veya varlık adı yaz</div>';
+            return;
+        }
+        results.innerHTML = list.map(function(it, i){
+            return '<a class="cmdk-row'+(i===activeIdx?' active':'')+'" href="'+it.href+'"'+(it.ext?' target="_blank" rel="noopener"':'')+' data-i="'+i+'">'+
+                '<span class="cmdk-row-ico">'+it.icon+'</span>'+
+                '<span class="cmdk-row-label">'+it.label+'</span>'+
+                '<span class="cmdk-row-type">'+it.type+'</span>'+
+            '</a>';
+        }).join('');
+        // Klavye ile seçim: mouse hover de activeIdx güncellesin
+        results.querySelectorAll('.cmdk-row').forEach(function(el){
+            el.addEventListener('mouseenter', function(){
+                activeIdx = parseInt(el.getAttribute('data-i'));
+                results.querySelectorAll('.cmdk-row').forEach(function(x,idx){x.classList.toggle('active', idx===activeIdx)});
+            });
+        });
+    }
+
+    function updateList(){
+        var q = trLower(input.value.trim());
+        if(!q){
+            current = SEARCH_INDEX.slice(0, 20);
+        } else {
+            current = SEARCH_INDEX.map(function(it){return {it:it, s:score(it,q)}})
+                .filter(function(x){return x.s>0})
+                .sort(function(a,b){return b.s-a.s})
+                .slice(0,30)
+                .map(function(x){return x.it});
+        }
+        activeIdx = 0;
+        render(current);
+    }
+
+    function open(){
+        overlay.classList.add('show');
+        overlay.setAttribute('aria-hidden','false');
+        input.value = '';
+        updateList();
+        setTimeout(function(){ input.focus(); }, 30);
+    }
+    function close(){
+        overlay.classList.remove('show');
+        overlay.setAttribute('aria-hidden','true');
+    }
+
+    // Trigger butonları
+    var trigger = document.getElementById('sbSearchTrigger');
+    if(trigger) trigger.addEventListener('click', open);
+    var topTrigger = document.getElementById('topbarSearch');
+    if(topTrigger) topTrigger.addEventListener('click', open);
+    var fabTrigger = document.getElementById('searchFab');
+    if(fabTrigger) fabTrigger.addEventListener('click', open);
+
+    // Klavye kısayolu: Cmd+K veya Ctrl+K
+    document.addEventListener('keydown', function(e){
+        if((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')){
+            e.preventDefault();
+            overlay.classList.contains('show') ? close() : open();
+            return;
+        }
+        if(!overlay.classList.contains('show')) return;
+        if(e.key === 'Escape'){ e.preventDefault(); close(); }
+        else if(e.key === 'ArrowDown'){ e.preventDefault(); activeIdx = Math.min(current.length-1, activeIdx+1); render(current); }
+        else if(e.key === 'ArrowUp'){ e.preventDefault(); activeIdx = Math.max(0, activeIdx-1); render(current); }
+        else if(e.key === 'Enter'){
+            var it = current[activeIdx];
+            if(it){ e.preventDefault(); if(it.ext) window.open(it.href,'_blank','noopener'); else location.href = it.href; }
+        }
+    });
+
+    input.addEventListener('input', updateList);
+    overlay.addEventListener('click', function(e){ if(e.target === overlay) close(); });
+})();
 
 // Otomatik yenileme: admin paneli kaydedince ilgili sayfa kendiliginden refresh olur
 (function(){
