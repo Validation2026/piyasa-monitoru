@@ -123,13 +123,20 @@ window.__KURE = {EXCHANGES:EXCHANGES, ROUTES:ROUTES, PIPES:PIPES, CABLES:CABLES,
 (function(){'use strict';
 
 var D = window.__KURE;
+var el = document.getElementById('globeViz');
+if(!el) return;
+
 if(!D || typeof Globe === 'undefined'){
-    console.warn('Globe.gl not loaded, falling back to placeholder');
+    el.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#fbbf24;font-size:.85rem;text-align:center;padding:20px">🌐 Küre yüklenemiyor. Tarayıcının WebGL desteklediğinden ve <code>unpkg.com</code>\'a erişebildiğinden emin olun.</div>';
     return;
 }
 
-var el = document.getElementById('globeViz');
-if(!el) return;
+// Hex → rgb helper (ringColor için)
+function hexRgb(h){
+    h = h.replace('#','');
+    if(h.length===3) h = h.split('').map(function(c){return c+c}).join('');
+    return {r:parseInt(h.substr(0,2),16), g:parseInt(h.substr(2,2),16), b:parseInt(h.substr(4,2),16)};
+}
 
 // Renk paleti
 var C = {
@@ -196,22 +203,34 @@ var state = {
     rotating:true
 };
 
-// Globe init
-var globe = Globe()(el)
-    .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-night.jpg')
-    .bumpImageUrl('https://unpkg.com/three-globe/example/img/earth-topology.png')
-    .backgroundColor('rgba(0,0,0,0)')
+// Globe init — önce boyutla, sonra görsel/data
+var globe;
+try {
+    globe = Globe()(el);
+} catch(e){
+    console.error('Globe init failed:', e);
+    el.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#fbbf24;font-size:.85rem">🌐 Küre başlatılamadı: '+e.message+'</div>';
+    return;
+}
+
+// Önce boyut (texture yüklenmeden canvas yaratılsın)
+globe.width(el.clientWidth || 800).height(el.clientHeight || 600);
+
+globe.backgroundColor('rgba(0,0,0,0)')
     .showAtmosphere(true)
     .atmosphereColor('#60a5fa')
     .atmosphereAltitude(0.22)
-    .pointAltitude('size')
+    .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
+    .bumpImageUrl('//unpkg.com/three-globe/example/img/earth-topology.png');
+
+globe.pointAltitude('size')
     .pointRadius(0.35)
     .pointColor('color')
     .pointLabel(function(d){return '<div style="font:600 12px sans-serif;background:rgba(15,23,42,.9);color:#fff;padding:6px 10px;border-radius:6px;border:1px solid #3b82f6">'+d.label+'</div>'})
     .pointsMerge(false)
-    .pointsTransitionDuration(400)
-    .onPointClick(function(p){showInfo(p)})
-    .arcColor('color')
+    .onPointClick(function(p){showInfo(p)});
+
+globe.arcColor('color')
     .arcAltitudeAutoScale(0.35)
     .arcStroke(0.4)
     .arcDashLength(0.35)
@@ -221,12 +240,17 @@ var globe = Globe()(el)
         if(d.type==='route') return '🚢 '+d.data.name+' · '+d.data.vol;
         if(d.type==='pipe') return '⚡ '+d.data.name+' ('+d.data.kind.toUpperCase()+')';
         return '🔌 '+d.data.name;
+    });
+
+globe.ringColor(function(r){
+        var rgb = hexRgb(r.color);
+        return function(t){ return 'rgba('+rgb.r+','+rgb.g+','+rgb.b+','+(1-t).toFixed(2)+')'; };
     })
-    .ringColor(function(r){return function(t){return r.color.replace(')',','+(1-t)+')').replace('#','rgba(').replace(/^rgba\(([a-f0-9]{6})/,function(m,h){var R=parseInt(h.substr(0,2),16),G=parseInt(h.substr(2,2),16),B=parseInt(h.substr(4,2),16);return 'rgba('+R+','+G+','+B});}})
     .ringMaxRadius('maxR')
     .ringPropagationSpeed('propSpeed')
-    .ringRepeatPeriod('repeatPeriod')
-    .labelText('text')
+    .ringRepeatPeriod('repeatPeriod');
+
+globe.labelText('text')
     .labelSize('size')
     .labelColor(function(d){return d.color})
     .labelAltitude('alt')
@@ -242,8 +266,20 @@ ctrl.autoRotateSpeed = 0.4;
 ctrl.enableDamping = true;
 ctrl.dampingFactor = 0.12;
 
-// İlk kamera pozisyonu
-globe.pointOfView({lat:35, lng:30, altitude:2.4}, 1200);
+// İlk kamera pozisyonu — mobilde biraz daha uzaklaş
+var initAlt = window.innerWidth < 640 ? 2.9 : 2.4;
+globe.pointOfView({lat:35, lng:30, altitude:initAlt}, 1200);
+
+// HUD toggle (mobilde)
+var hudEl = document.getElementById('globeHud');
+var hudTog = document.getElementById('hudToggle');
+if(hudTog && hudEl){
+    hudTog.addEventListener('click', function(){
+        hudEl.classList.toggle('collapsed');
+        hudTog.textContent = hudEl.classList.contains('collapsed') ? '▸' : '▾';
+    });
+    if(window.innerWidth < 640) hudEl.classList.add('collapsed'), hudTog.textContent='▸';
+}
 
 function applyArcs(){
     var arr = [];
