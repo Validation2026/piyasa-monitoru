@@ -2,73 +2,74 @@
  * Küresel Faiz & Enflasyon Haritası
  * 50 ülke için politika faizi, enflasyon, reel faiz, 2Y ve 10Y tahvil
  * Leaflet tabanlı circle marker heatmap
+ * Veriler: Nisan 2026 — merkez bankası açıklamaları & piyasa verileri
  */
 (function(){'use strict';
 
-// ─── ÜLKE VERİLERİ (50 ülke) ───
+// ─── ÜLKE VERİLERİ (50 ülke) — Nisan 2026 resmi verileri ───
 // rate: politika faizi, infl: TÜFE YoY, m2y/m10y: tahvil getirisi, cb: merkez bankası, move: son karar (hike/cut/hold)
 var COUNTRIES = [
     // G7
-    {n:'ABD',          flag:'🇺🇸', lat:38.9,  lng:-77.0,  rate:4.50, infl:2.9,  m2y:4.25, m10y:4.42, cb:'Fed',        move:'hold'},
-    {n:'Euro Bölgesi', flag:'🇪🇺', lat:50.85, lng:4.35,   rate:2.50, infl:2.4,  m2y:2.05, m10y:2.55, cb:'ECB',        move:'cut'},
-    {n:'Japonya',      flag:'🇯🇵', lat:35.68, lng:139.69, rate:0.50, infl:2.6,  m2y:0.72, m10y:1.38, cb:'BoJ',        move:'hike'},
-    {n:'İngiltere',    flag:'🇬🇧', lat:51.50, lng:-0.12,  rate:4.50, infl:3.0,  m2y:4.10, m10y:4.52, cb:'BoE',        move:'hold'},
-    {n:'Almanya',      flag:'🇩🇪', lat:52.52, lng:13.40,  rate:2.50, infl:2.2,  m2y:2.10, m10y:2.35, cb:'Bundesbank', move:'cut'},
-    {n:'Fransa',       flag:'🇫🇷', lat:48.85, lng:2.35,   rate:2.50, infl:1.9,  m2y:2.15, m10y:3.10, cb:'Banque FR',  move:'cut'},
-    {n:'İtalya',       flag:'🇮🇹', lat:41.90, lng:12.50,  rate:2.50, infl:1.8,  m2y:2.45, m10y:3.45, cb:'Banca IT',   move:'cut'},
-    {n:'Kanada',       flag:'🇨🇦', lat:45.42, lng:-75.70, rate:2.75, infl:2.6,  m2y:2.55, m10y:3.12, cb:'BoC',        move:'cut'},
+    {n:'ABD',          flag:'🇺🇸', lat:38.9,  lng:-77.0,  rate:3.75, infl:2.8,  m2y:3.78, m10y:4.31, cb:'Fed',        move:'hold'},
+    {n:'Euro Bölgesi', flag:'🇪🇺', lat:50.85, lng:4.35,   rate:2.00, infl:2.6,  m2y:2.55, m10y:3.00, cb:'ECB',        move:'hold'},
+    {n:'Japonya',      flag:'🇯🇵', lat:35.68, lng:139.69, rate:0.75, infl:1.3,  m2y:0.95, m10y:2.42, cb:'BoJ',        move:'hike'},
+    {n:'İngiltere',    flag:'🇬🇧', lat:51.50, lng:-0.12,  rate:3.75, infl:3.2,  m2y:4.21, m10y:4.75, cb:'BoE',        move:'hold'},
+    {n:'Almanya',      flag:'🇩🇪', lat:52.52, lng:13.40,  rate:2.00, infl:2.3,  m2y:2.61, m10y:3.05, cb:'Bundesbank', move:'hold'},
+    {n:'Fransa',       flag:'🇫🇷', lat:48.85, lng:2.35,   rate:2.00, infl:2.0,  m2y:2.65, m10y:3.55, cb:'Banque FR',  move:'hold'},
+    {n:'İtalya',       flag:'🇮🇹', lat:41.90, lng:12.50,  rate:2.00, infl:1.9,  m2y:2.75, m10y:3.95, cb:'Banca IT',   move:'hold'},
+    {n:'Kanada',       flag:'🇨🇦', lat:45.42, lng:-75.70, rate:2.25, infl:1.8,  m2y:2.45, m10y:3.22, cb:'BoC',        move:'hold'},
 
     // Avrupa (non-EUR)
-    {n:'İsviçre',      flag:'🇨🇭', lat:46.95, lng:7.45,   rate:0.25, infl:0.4,  m2y:0.15, m10y:0.42, cb:'SNB',        move:'cut'},
-    {n:'İsveç',        flag:'🇸🇪', lat:59.33, lng:18.07,  rate:2.25, infl:1.6,  m2y:2.05, m10y:2.35, cb:'Riksbank',   move:'cut'},
-    {n:'Norveç',       flag:'🇳🇴', lat:59.91, lng:10.75,  rate:4.25, infl:3.4,  m2y:4.00, m10y:3.95, cb:'Norges',     move:'hold'},
-    {n:'Danimarka',    flag:'🇩🇰', lat:55.68, lng:12.57,  rate:2.10, infl:1.8,  m2y:2.00, m10y:2.40, cb:'DNB',        move:'cut'},
-    {n:'Polonya',      flag:'🇵🇱', lat:52.23, lng:21.01,  rate:5.75, infl:4.9,  m2y:5.25, m10y:5.65, cb:'NBP',        move:'hold'},
-    {n:'Çekya',        flag:'🇨🇿', lat:50.08, lng:14.42,  rate:3.75, infl:2.7,  m2y:3.55, m10y:4.05, cb:'CNB',        move:'cut'},
-    {n:'Macaristan',   flag:'🇭🇺', lat:47.50, lng:19.04,  rate:6.50, infl:4.5,  m2y:6.35, m10y:6.85, cb:'MNB',        move:'hold'},
-    {n:'Romanya',      flag:'🇷🇴', lat:44.43, lng:26.10,  rate:6.50, infl:5.2,  m2y:6.60, m10y:7.20, cb:'BNR',        move:'hold'},
-    {n:'Rusya',        flag:'🇷🇺', lat:55.75, lng:37.62,  rate:21.00,infl:8.5,  m2y:18.50,m10y:15.20,cb:'CBR',        move:'hike'},
-    {n:'Türkiye',      flag:'🇹🇷', lat:39.92, lng:32.85,  rate:42.50,infl:38.8, m2y:42.20,m10y:32.50,cb:'TCMB',       move:'cut'},
-    {n:'İzlanda',      flag:'🇮🇸', lat:64.13, lng:-21.89, rate:7.75, infl:4.1,  m2y:7.50, m10y:7.10, cb:'Sedlabanki', move:'cut'},
+    {n:'İsviçre',      flag:'🇨🇭', lat:46.95, lng:7.45,   rate:0.00, infl:0.5,  m2y:0.05, m10y:0.55, cb:'SNB',        move:'hold'},
+    {n:'İsveç',        flag:'🇸🇪', lat:59.33, lng:18.07,  rate:1.75, infl:1.1,  m2y:1.95, m10y:2.60, cb:'Riksbank',   move:'hold'},
+    {n:'Norveç',       flag:'🇳🇴', lat:59.91, lng:10.75,  rate:4.00, infl:3.0,  m2y:3.95, m10y:4.10, cb:'Norges',     move:'hold'},
+    {n:'Danimarka',    flag:'🇩🇰', lat:55.68, lng:12.57,  rate:1.60, infl:1.7,  m2y:1.75, m10y:3.10, cb:'DNB',        move:'hold'},
+    {n:'Polonya',      flag:'🇵🇱', lat:52.23, lng:21.01,  rate:3.75, infl:3.0,  m2y:4.55, m10y:5.25, cb:'NBP',        move:'hold'},
+    {n:'Çekya',        flag:'🇨🇿', lat:50.08, lng:14.42,  rate:3.50, infl:2.5,  m2y:3.45, m10y:4.15, cb:'CNB',        move:'hold'},
+    {n:'Macaristan',   flag:'🇭🇺', lat:47.50, lng:19.04,  rate:6.25, infl:4.8,  m2y:6.15, m10y:6.95, cb:'MNB',        move:'hold'},
+    {n:'Romanya',      flag:'🇷🇴', lat:44.43, lng:26.10,  rate:6.50, infl:9.3,  m2y:6.85, m10y:7.55, cb:'BNR',        move:'hold'},
+    {n:'Rusya',        flag:'🇷🇺', lat:55.75, lng:37.62,  rate:15.00,infl:7.8,  m2y:15.50,m10y:13.80,cb:'CBR',        move:'cut'},
+    {n:'Türkiye',      flag:'🇹🇷', lat:39.92, lng:32.85,  rate:37.00,infl:30.87,m2y:39.50,m10y:30.20,cb:'TCMB',       move:'hold'},
+    {n:'İzlanda',      flag:'🇮🇸', lat:64.13, lng:-21.89, rate:7.50, infl:4.0,  m2y:7.25, m10y:6.95, cb:'Sedlabanki', move:'hike'},
 
     // Asya-Pasifik
-    {n:'Çin',          flag:'🇨🇳', lat:39.90, lng:116.40, rate:3.10, infl:0.5,  m2y:1.35, m10y:1.75, cb:'PBoC',       move:'cut'},
-    {n:'Hindistan',    flag:'🇮🇳', lat:28.61, lng:77.21,  rate:6.25, infl:5.0,  m2y:6.30, m10y:6.75, cb:'RBI',        move:'cut'},
-    {n:'Güney Kore',   flag:'🇰🇷', lat:37.57, lng:126.98, rate:2.75, infl:2.1,  m2y:2.55, m10y:2.95, cb:'BoK',        move:'cut'},
-    {n:'Tayvan',       flag:'🇹🇼', lat:25.03, lng:121.57, rate:2.00, infl:2.0,  m2y:1.35, m10y:1.62, cb:'CBC',        move:'hold'},
-    {n:'Avustralya',   flag:'🇦🇺', lat:-35.28,lng:149.13, rate:4.10, infl:2.8,  m2y:3.85, m10y:4.45, cb:'RBA',        move:'cut'},
-    {n:'Yeni Zelanda', flag:'🇳🇿', lat:-41.29,lng:174.77, rate:3.75, infl:2.2,  m2y:3.55, m10y:4.35, cb:'RBNZ',       move:'cut'},
-    {n:'Endonezya',    flag:'🇮🇩', lat:-6.20, lng:106.84, rate:5.75, infl:2.3,  m2y:6.25, m10y:7.10, cb:'BI',         move:'cut'},
-    {n:'Tayland',      flag:'🇹🇭', lat:13.75, lng:100.50, rate:2.00, infl:1.1,  m2y:1.85, m10y:2.25, cb:'BoT',        move:'cut'},
-    {n:'Malezya',      flag:'🇲🇾', lat:3.14,  lng:101.68, rate:3.00, infl:1.8,  m2y:3.25, m10y:3.75, cb:'BNM',        move:'hold'},
-    {n:'Filipinler',   flag:'🇵🇭', lat:14.60, lng:120.98, rate:5.50, infl:2.8,  m2y:5.75, m10y:6.15, cb:'BSP',        move:'cut'},
-    {n:'Vietnam',      flag:'🇻🇳', lat:21.03, lng:105.85, rate:4.50, infl:3.6,  m2y:2.85, m10y:3.10, cb:'SBV',        move:'hold'},
-    {n:'Singapur',     flag:'🇸🇬', lat:1.35,  lng:103.82, rate:3.25, infl:1.7,  m2y:2.65, m10y:2.85, cb:'MAS',        move:'hold'},
-    {n:'Pakistan',     flag:'🇵🇰', lat:33.69, lng:73.05,  rate:12.00,infl:4.1,  m2y:11.20,m10y:12.85,cb:'SBP',        move:'cut'},
+    {n:'Çin',          flag:'🇨🇳', lat:39.90, lng:116.40, rate:3.00, infl:-1.0, m2y:1.40, m10y:1.80, cb:'PBoC',       move:'hold'},
+    {n:'Hindistan',    flag:'🇮🇳', lat:28.61, lng:77.21,  rate:5.25, infl:3.2,  m2y:5.95, m10y:6.45, cb:'RBI',        move:'hold'},
+    {n:'Güney Kore',   flag:'🇰🇷', lat:37.57, lng:126.98, rate:2.50, infl:2.3,  m2y:2.45, m10y:2.95, cb:'BoK',        move:'hold'},
+    {n:'Tayvan',       flag:'🇹🇼', lat:25.03, lng:121.57, rate:2.00, infl:1.75, m2y:1.40, m10y:1.65, cb:'CBC',        move:'hold'},
+    {n:'Avustralya',   flag:'🇦🇺', lat:-35.28,lng:149.13, rate:4.10, infl:3.0,  m2y:4.05, m10y:4.55, cb:'RBA',        move:'hike'},
+    {n:'Yeni Zelanda', flag:'🇳🇿', lat:-41.29,lng:174.77, rate:2.25, infl:2.4,  m2y:2.95, m10y:4.10, cb:'RBNZ',       move:'hold'},
+    {n:'Endonezya',    flag:'🇮🇩', lat:-6.20, lng:106.84, rate:4.75, infl:2.2,  m2y:5.85, m10y:6.75, cb:'BI',         move:'hold'},
+    {n:'Tayland',      flag:'🇹🇭', lat:13.75, lng:100.50, rate:1.00, infl:0.3,  m2y:1.15, m10y:1.85, cb:'BoT',        move:'cut'},
+    {n:'Malezya',      flag:'🇲🇾', lat:3.14,  lng:101.68, rate:2.75, infl:1.5,  m2y:3.10, m10y:3.65, cb:'BNM',        move:'hold'},
+    {n:'Filipinler',   flag:'🇵🇭', lat:14.60, lng:120.98, rate:4.25, infl:4.1,  m2y:5.25, m10y:6.10, cb:'BSP',        move:'hold'},
+    {n:'Vietnam',      flag:'🇻🇳', lat:21.03, lng:105.85, rate:4.50, infl:3.4,  m2y:3.05, m10y:3.25, cb:'SBV',        move:'hold'},
+    {n:'Singapur',     flag:'🇸🇬', lat:1.35,  lng:103.82, rate:2.65, infl:1.8,  m2y:2.55, m10y:2.95, cb:'MAS',        move:'hike'},
+    {n:'Pakistan',     flag:'🇵🇰', lat:33.69, lng:73.05,  rate:10.50,infl:4.5,  m2y:10.95,m10y:12.10,cb:'SBP',        move:'hold'},
 
     // Orta Doğu
-    {n:'İsrail',       flag:'🇮🇱', lat:31.78, lng:35.22,  rate:4.50, infl:3.2,  m2y:4.10, m10y:4.55, cb:'BoI',        move:'hold'},
-    {n:'Suudi Arab.',  flag:'🇸🇦', lat:24.71, lng:46.68,  rate:4.75, infl:1.9,  m2y:4.70, m10y:5.10, cb:'SAMA',       move:'hold'},
-    {n:'BAE',          flag:'🇦🇪', lat:24.47, lng:54.37,  rate:4.40, infl:2.1,  m2y:4.35, m10y:4.70, cb:'CBUAE',      move:'hold'},
-    {n:'Katar',        flag:'🇶🇦', lat:25.29, lng:51.53,  rate:4.60, infl:1.5,  m2y:4.50, m10y:4.85, cb:'QCB',        move:'hold'},
-    {n:'Mısır',        flag:'🇪🇬', lat:30.04, lng:31.24,  rate:24.00,infl:15.5, m2y:22.50,m10y:21.00,cb:'CBE',        move:'hold'},
-    {n:'İran',         flag:'🇮🇷', lat:35.69, lng:51.42,  rate:23.00,infl:42.5, m2y:28.00,m10y:26.50,cb:'CBI',        move:'hike'},
+    {n:'İsrail',       flag:'🇮🇱', lat:31.78, lng:35.22,  rate:4.00, infl:2.9,  m2y:3.95, m10y:4.45, cb:'BoI',        move:'hold'},
+    {n:'Suudi Arab.',  flag:'🇸🇦', lat:24.71, lng:46.68,  rate:4.25, infl:2.0,  m2y:4.20, m10y:4.80, cb:'SAMA',       move:'hold'},
+    {n:'BAE',          flag:'🇦🇪', lat:24.47, lng:54.37,  rate:3.65, infl:2.1,  m2y:3.75, m10y:4.35, cb:'CBUAE',      move:'hold'},
+    {n:'Katar',        flag:'🇶🇦', lat:25.29, lng:51.53,  rate:4.10, infl:1.4,  m2y:4.05, m10y:4.55, cb:'QCB',        move:'hold'},
+    {n:'Mısır',        flag:'🇪🇬', lat:30.04, lng:31.24,  rate:19.00,infl:13.4, m2y:22.50,m10y:21.00,cb:'CBE',        move:'hold'},
+    {n:'İran',         flag:'🇮🇷', lat:35.69, lng:51.42,  rate:23.00,infl:46.3, m2y:32.00,m10y:29.50,cb:'CBI',        move:'hike'},
 
     // Amerika
-    {n:'Meksika',      flag:'🇲🇽', lat:19.43, lng:-99.13, rate:9.00, infl:3.8,  m2y:9.05, m10y:9.95, cb:'Banxico',    move:'cut'},
-    {n:'Brezilya',     flag:'🇧🇷', lat:-15.83,lng:-47.86, rate:14.75,infl:5.1,  m2y:14.50,m10y:14.20,cb:'BCB',        move:'hike'},
-    {n:'Arjantin',     flag:'🇦🇷', lat:-34.61,lng:-58.38, rate:29.00,infl:65.5, m2y:38.00,m10y:30.00,cb:'BCRA',       move:'cut'},
-    {n:'Şili',         flag:'🇨🇱', lat:-33.45,lng:-70.67, rate:5.00, infl:4.2,  m2y:5.25, m10y:5.95, cb:'BCCh',       move:'hold'},
-    {n:'Peru',         flag:'🇵🇪', lat:-12.05,lng:-77.04, rate:4.50, infl:1.9,  m2y:4.65, m10y:5.85, cb:'BCRP',       move:'hold'},
-    {n:'Kolombiya',    flag:'🇨🇴', lat:4.71,  lng:-74.07, rate:9.25, infl:5.2,  m2y:9.55, m10y:10.25,cb:'BanRep',     move:'cut'},
+    {n:'Meksika',      flag:'🇲🇽', lat:19.43, lng:-99.13, rate:6.75, infl:4.63, m2y:8.15, m10y:9.45, cb:'Banxico',    move:'cut'},
+    {n:'Brezilya',     flag:'🇧🇷', lat:-15.83,lng:-47.86, rate:14.75,infl:3.81, m2y:14.20,m10y:13.85,cb:'BCB',        move:'cut'},
+    {n:'Arjantin',     flag:'🇦🇷', lat:-34.61,lng:-58.38, rate:29.00,infl:50.0, m2y:34.00,m10y:28.00,cb:'BCRA',       move:'cut'},
+    {n:'Şili',         flag:'🇨🇱', lat:-33.45,lng:-70.67, rate:4.50, infl:4.0,  m2y:4.75, m10y:5.85, cb:'BCCh',       move:'hold'},
+    {n:'Peru',         flag:'🇵🇪', lat:-12.05,lng:-77.04, rate:4.25, infl:3.8,  m2y:4.55, m10y:5.95, cb:'BCRP',       move:'hold'},
+    {n:'Kolombiya',    flag:'🇨🇴', lat:4.71,  lng:-74.07, rate:11.25,infl:5.8,  m2y:10.45,m10y:11.25,cb:'BanRep',     move:'hike'},
 
     // Afrika
-    {n:'G. Afrika',    flag:'🇿🇦', lat:-25.75,lng:28.19,  rate:7.50, infl:3.5,  m2y:8.25, m10y:10.55,cb:'SARB',       move:'cut'},
-    {n:'Nijerya',      flag:'🇳🇬', lat:9.08,  lng:7.49,   rate:27.50,infl:24.0, m2y:24.50,m10y:21.50,cb:'CBN',        move:'hold'},
-    {n:'Kenya',        flag:'🇰🇪', lat:-1.29, lng:36.82,  rate:10.75,infl:3.8,  m2y:11.20,m10y:13.50,cb:'CBK',        move:'cut'},
-    {n:'Fas',          flag:'🇲🇦', lat:34.02, lng:-6.84,  rate:2.50, infl:1.3,  m2y:2.75, m10y:3.65, cb:'BAM',        move:'cut'},
-    {n:'Gana',         flag:'🇬🇭', lat:5.60,  lng:-0.19,  rate:27.00,infl:22.4, m2y:25.50,m10y:26.80,cb:'BoG',        move:'hold'},
-    {n:'Etiyopya',     flag:'🇪🇹', lat:9.03,  lng:38.74,  rate:15.00,infl:18.5, m2y:14.00,m10y:13.50,cb:'NBE',        move:'hike'}
+    {n:'G. Afrika',    flag:'🇿🇦', lat:-25.75,lng:28.19,  rate:7.50, infl:3.5,  m2y:8.15, m10y:10.35,cb:'SARB',       move:'hold'},
+    {n:'Nijerya',      flag:'🇳🇬', lat:9.08,  lng:7.49,   rate:26.50,infl:15.1, m2y:22.50,m10y:20.50,cb:'CBN',        move:'cut'},
+    {n:'Kenya',        flag:'🇰🇪', lat:-1.29, lng:36.82,  rate:8.75, infl:3.8,  m2y:9.75, m10y:13.85,cb:'CBK',        move:'hold'},
+    {n:'Fas',          flag:'🇲🇦', lat:34.02, lng:-6.84,  rate:2.25, infl:0.8,  m2y:2.35, m10y:3.45, cb:'BAM',        move:'hold'},
+    {n:'Gana',         flag:'🇬🇭', lat:5.60,  lng:-0.19,  rate:14.00,infl:3.2,  m2y:15.50,m10y:17.50,cb:'BoG',        move:'cut'},
+    {n:'Etiyopya',     flag:'🇪🇹', lat:9.03,  lng:38.74,  rate:15.00,infl:9.7,  m2y:13.50,m10y:12.85,cb:'NBE',        move:'hold'}
 ];
 
 // Reel faiz hesapla
@@ -120,11 +121,11 @@ function realColor(v){
 }
 
 var METRICS = {
-    rate:  {label:'Politika Faizi',  unit:'%', domain:{min:0, max:30}, sort:'desc'},
-    infl:  {label:'Enflasyon (YoY)', unit:'%', domain:{min:0, max:30}, sort:'desc'},
+    rate:  {label:'Politika Faizi',  unit:'%', domain:{min:0, max:40}, sort:'desc'},
+    infl:  {label:'Enflasyon (YoY)', unit:'%', domain:{min:0, max:50}, sort:'desc'},
     real:  {label:'Reel Faiz',       unit:'%', color:'real',           sort:'desc'},
-    m2y:   {label:'2Y Tahvil',       unit:'%', domain:{min:0, max:30}, sort:'desc'},
-    m10y:  {label:'10Y Tahvil',      unit:'%', domain:{min:0, max:30}, sort:'desc'}
+    m2y:   {label:'2Y Tahvil',       unit:'%', domain:{min:0, max:40}, sort:'desc'},
+    m10y:  {label:'10Y Tahvil',      unit:'%', domain:{min:0, max:35}, sort:'desc'}
 };
 
 window.__FE = {COUNTRIES:COUNTRIES, METRICS:METRICS, heatColor:heatColor, realColor:realColor};
