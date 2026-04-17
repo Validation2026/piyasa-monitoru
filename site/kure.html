@@ -23,30 +23,51 @@
 <style>
 .globe-wrap{position:relative;background:radial-gradient(ellipse at center,#0e1a33 0%,#050810 100%);border:1px solid #1e293b;border-radius:14px;overflow:hidden;margin-bottom:16px;box-shadow:0 10px 40px -10px rgba(59,130,246,.35)}
 #globeViz{width:100%;height:640px;display:block}
-@media(max-width:768px){#globeViz{height:460px}}
-.globe-hud{position:absolute;top:12px;left:12px;background:rgba(15,23,42,.86);backdrop-filter:blur(8px);border:1px solid rgba(59,130,246,.35);border-radius:10px;padding:10px 12px;color:#e2e8f0;font-size:.72rem;z-index:10;max-width:280px;line-height:1.45}
-.globe-hud h4{font-size:.68rem;letter-spacing:.08em;color:#7dd3fc;text-transform:uppercase;margin-bottom:6px}
+@media(max-width:768px){#globeViz{height:420px}}
+@media(max-width:420px){#globeViz{height:340px}}
+.globe-hud{position:absolute;top:12px;left:12px;background:rgba(15,23,42,.86);backdrop-filter:blur(8px);border:1px solid rgba(59,130,246,.35);border-radius:10px;padding:10px 12px;color:#e2e8f0;font-size:.72rem;z-index:10;max-width:240px;line-height:1.45}
+.globe-hud h4{font-size:.68rem;letter-spacing:.08em;color:#7dd3fc;text-transform:uppercase;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
+.globe-hud .hud-toggle{cursor:pointer;color:#cbd5e1;font-size:.9rem;line-height:1;display:none}
 .globe-hud .hud-row{display:flex;align-items:center;gap:6px;margin:3px 0}
 .globe-hud .hud-dot{width:8px;height:8px;border-radius:50%;box-shadow:0 0 8px currentColor}
 .globe-hud .hud-line{width:16px;height:2px;border-radius:2px}
-.globe-controls{position:absolute;bottom:12px;left:12px;display:flex;flex-wrap:wrap;gap:6px;z-index:10}
-.gbtn{background:rgba(15,23,42,.82);color:#cbd5e1;border:1px solid rgba(59,130,246,.35);padding:6px 10px;border-radius:8px;font-size:.68rem;font-weight:600;cursor:pointer;backdrop-filter:blur(6px);transition:.18s}
+.globe-hud.collapsed .hud-body{display:none}
+.globe-controls{position:absolute;bottom:10px;left:10px;right:10px;display:flex;flex-wrap:wrap;gap:5px;z-index:10;justify-content:flex-start}
+.gbtn{background:rgba(15,23,42,.82);color:#cbd5e1;border:1px solid rgba(59,130,246,.35);padding:5px 9px;border-radius:8px;font-size:.65rem;font-weight:600;cursor:pointer;backdrop-filter:blur(6px);transition:.18s;white-space:nowrap}
 .gbtn:hover{background:rgba(59,130,246,.25);color:#fff;border-color:#60a5fa}
 .gbtn.active{background:#3b82f6;color:#fff;border-color:#60a5fa;box-shadow:0 0 12px rgba(59,130,246,.6)}
-.globe-info{position:absolute;top:12px;right:12px;background:rgba(15,23,42,.88);backdrop-filter:blur(8px);border:1px solid rgba(59,130,246,.4);border-radius:10px;padding:12px 14px;color:#e2e8f0;font-size:.75rem;z-index:10;min-width:220px;max-width:280px;display:none;animation:slideIn .25s ease-out}
+.globe-info{position:absolute;top:12px;right:12px;background:rgba(15,23,42,.92);backdrop-filter:blur(8px);border:1px solid rgba(59,130,246,.4);border-radius:10px;padding:12px 14px;color:#e2e8f0;font-size:.75rem;z-index:11;min-width:220px;max-width:260px;display:none;animation:slideIn .25s ease-out}
 .globe-info.show{display:block}
-.globe-info .gi-title{font-size:.9rem;font-weight:800;color:#fbbf24;margin-bottom:6px}
-.globe-info .gi-row{display:flex;justify-content:space-between;margin:2px 0;font-size:.7rem}
-.globe-info .gi-row span:first-child{color:#94a3b8}
-.globe-info .gi-row span:last-child{color:#f1f5f9;font-weight:600}
-.globe-info .gi-close{position:absolute;top:6px;right:8px;cursor:pointer;color:#64748b;font-size:1.1rem;line-height:1}
+.globe-info .gi-title{font-size:.9rem;font-weight:800;color:#fbbf24;margin-bottom:6px;padding-right:20px}
+.globe-info .gi-row{display:flex;justify-content:space-between;margin:2px 0;font-size:.7rem;gap:8px}
+.globe-info .gi-row span:first-child{color:#94a3b8;flex-shrink:0}
+.globe-info .gi-row span:last-child{color:#f1f5f9;font-weight:600;text-align:right}
+.globe-info .gi-close{position:absolute;top:6px;right:10px;cursor:pointer;color:#64748b;font-size:1.3rem;line-height:1}
 .globe-info .gi-close:hover{color:#f87171}
 @keyframes slideIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
-.globe-title-bar{position:absolute;top:12px;left:50%;transform:translateX(-50%);background:rgba(15,23,42,.88);backdrop-filter:blur(8px);border:1px solid rgba(59,130,246,.35);border-radius:999px;padding:6px 16px;color:#e2e8f0;font-size:.7rem;font-weight:700;letter-spacing:.05em;z-index:9;pointer-events:none;display:flex;align-items:center;gap:10px}
+.globe-title-bar{position:absolute;top:12px;left:50%;transform:translateX(-50%);background:rgba(15,23,42,.88);backdrop-filter:blur(8px);border:1px solid rgba(59,130,246,.35);border-radius:999px;padding:5px 14px;color:#e2e8f0;font-size:.65rem;font-weight:700;letter-spacing:.05em;z-index:9;pointer-events:none;display:flex;align-items:center;gap:8px;white-space:nowrap}
 .globe-title-bar .live{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e;animation:livePulse 1.5s ease-in-out infinite}
 @keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
 
-.metrics-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:16px}
+/* ─── MOBİL ─── */
+@media(max-width:640px){
+    .globe-hud{top:8px;left:8px;padding:7px 9px;font-size:.62rem;max-width:160px}
+    .globe-hud h4{font-size:.58rem}
+    .globe-hud .hud-toggle{display:block}
+    .globe-info{top:8px;right:8px;min-width:180px;max-width:calc(100vw - 200px);padding:9px 11px;font-size:.68rem}
+    .globe-info .gi-title{font-size:.78rem}
+    .globe-info .gi-row{font-size:.64rem}
+    .globe-title-bar{font-size:.58rem;padding:4px 10px;top:8px}
+    .globe-controls{bottom:6px;left:6px;right:6px;gap:4px}
+    .gbtn{font-size:.58rem;padding:4px 7px;border-radius:6px}
+}
+@media(max-width:420px){
+    .globe-hud{max-width:130px}
+    .globe-info{min-width:150px;max-width:calc(100vw - 170px)}
+}
+
+.metrics-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px}
+@media(max-width:640px){.metrics-row{grid-template-columns:repeat(2,1fr);gap:8px}.metric-card{padding:8px 10px}.metric-card .mc-icon{width:32px;height:32px;font-size:1rem}.metric-card .mc-val{font-size:.95rem}}
 .metric-card{background:#fff;border:1px solid #dde4ed;border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px}
 .metric-card .mc-icon{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem}
 .metric-card .mc-val{font-size:1.15rem;font-weight:800;font-family:'JetBrains Mono',monospace}
@@ -89,13 +110,15 @@
     <div id="globeViz"></div>
     <div class="globe-title-bar"><span class="live"></span> CANLI · KÜRESEL PİYASA AĞI</div>
 
-    <div class="globe-hud">
-        <h4>Katmanlar</h4>
-        <div class="hud-row"><div class="hud-dot" style="background:#22c55e;color:#22c55e"></div> Borsalar (pulse)</div>
-        <div class="hud-row"><div class="hud-line" style="background:#fbbf24"></div> Deniz ticaret rotaları</div>
-        <div class="hud-row"><div class="hud-line" style="background:#3b82f6"></div> Enerji boru hatları</div>
-        <div class="hud-row"><div class="hud-line" style="background:#a78bfa"></div> Deniz kabloları</div>
-        <div class="hud-row"><div class="hud-dot" style="background:#ef4444;color:#ef4444"></div> Stratejik darboğaz</div>
+    <div class="globe-hud" id="globeHud">
+        <h4>Katmanlar<span class="hud-toggle" id="hudToggle" title="Aç/Kapat">▾</span></h4>
+        <div class="hud-body">
+            <div class="hud-row"><div class="hud-dot" style="background:#22c55e;color:#22c55e"></div> Borsalar (pulse)</div>
+            <div class="hud-row"><div class="hud-line" style="background:#fbbf24"></div> Ticaret rotaları</div>
+            <div class="hud-row"><div class="hud-line" style="background:#3b82f6"></div> Enerji boru hatları</div>
+            <div class="hud-row"><div class="hud-line" style="background:#a78bfa"></div> Deniz kabloları</div>
+            <div class="hud-row"><div class="hud-dot" style="background:#ef4444;color:#ef4444"></div> Stratejik darboğaz</div>
+        </div>
     </div>
 
     <div class="globe-controls">
@@ -133,8 +156,7 @@
 </div>
 
 </div>
-<script src="https://unpkg.com/three@0.149.0/build/three.min.js"></script>
-<script src="https://unpkg.com/globe.gl@2.32.0/dist/globe.gl.min.js"></script>
+<script src="https://unpkg.com/globe.gl@2.34.4/dist/globe.gl.min.js"></script>
 <script src="assets/js/kure.js"></script>
 </body>
 </html>

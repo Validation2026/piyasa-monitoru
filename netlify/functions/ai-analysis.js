@@ -135,14 +135,6 @@ Deniz kabloları: 2Africa, MAREA, JUPITER gibi mega kablolar küresel internetin
 
 ⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
 
-'treemap': `Piyasa haritası tek bakışta piyasa genişliğini, lider-gerileyen ayrımını ve sektör rotasyonunu gösteriyor. Treemap'te kutu boyutu önemi, renk günlük performansı temsil ediyor.
-
-Yükselen günlerde haritanın yeşil ağırlıklı olması piyasa genişliği güçlü; izole yeşil kutular ise dar liderlik anlamına gelir. Kripto tarafı tipik olarak piyasaların en volatil köşesi, hisse tarafında büyük kap'lar rotasyon göstergesi.
-
-Döviz köşesinde USDTRY ve EURUSD küresel risk iştahının birinci barometresi. Emtia kutularında Brent/WTI ve altın jeopolitik risk primini doğrudan fiyatlıyor; bakır küresel büyüme göstergesi olarak öne çıkıyor.
-
-⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
-
 'faiz-enflasyon': `Küresel para politikası döngüsü çok kutuplu: Fed/BoE temkinli duraklama, ECB/BoC/Riksbank/SNB aktif indirim patikasında, BoJ ise normalleşme adımlarıyla ters yönde. Türkiye yüksek faiz - yüksek enflasyon ikileminde dezenflasyon patikasına geçiş denemesinde.
 
 Reel faiz haritası: Brezilya, Meksika ve Kolombiya yüksek pozitif reel faizle öne çıkarken, Çin ve bazı EM'ler düşük/negatif reel faizle büyümeye ağırlık veriyor. Rusya savaş ekonomisinde yüksek faize rağmen enflasyon baskısı sürüyor. Arjantin ve Türkiye yüksek nominal faiz ama enflasyonu aşan reel patika yakalamaya çalışıyor.
