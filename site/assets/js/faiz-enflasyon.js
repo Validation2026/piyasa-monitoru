@@ -140,17 +140,23 @@ var D = window.__FE;
 if(!D || typeof L === 'undefined') return;
 
 var state = {metric:'rate', sort:{key:'rate', asc:false}};
-var map, markerLayer;
+var map, markerLayer, pulseLayer, labelLayer;
 
 function initMap(){
-    map = L.map('feMap', {zoomControl:true, attributionControl:false, worldCopyJump:true}).setView([25, 15], 2);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
+    map = L.map('feMap', {
+        zoomControl:true, attributionControl:false, worldCopyJump:true,
+        preferCanvas:true
+    }).setView([25, 15], 2);
+    // Dark matter tile layer
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
         subdomains:'abcd', maxZoom:10, minZoom:2
     }).addTo(map);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png', {
-        subdomains:'abcd', maxZoom:10, minZoom:2, pane:'shadowPane'
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png', {
+        subdomains:'abcd', maxZoom:10, minZoom:2, pane:'shadowPane', opacity:0.85
     }).addTo(map);
     markerLayer = L.layerGroup().addTo(map);
+    pulseLayer = L.layerGroup().addTo(map);
+    labelLayer = L.layerGroup().addTo(map);
 }
 
 function colorFor(c){
@@ -164,33 +170,86 @@ function colorFor(c){
 function sizeFor(c){
     var m = state.metric;
     var v = Math.abs(c[m]||0);
-    return 7 + Math.min(22, v*0.55);
+    return 7 + Math.min(24, v*0.6);
 }
 
 function renderMap(){
     markerLayer.clearLayers();
+    pulseLayer.clearLayers();
+    labelLayer.clearLayers();
+
+    // En yüksek 5 ve en düşük 3 ülkeyi tespit et (spotlight için)
+    var metric = state.metric;
+    var sorted = D.COUNTRIES.slice().sort(function(a,b){return b[metric]-a[metric]});
+    var topHot = sorted.slice(0,5).map(function(c){return c.n});
+    var topCool = sorted.slice(-3).map(function(c){return c.n});
+    var labelSet = {};
+    sorted.slice(0,8).concat(sorted.slice(-4)).forEach(function(c){ labelSet[c.n] = true });
+
     D.COUNTRIES.forEach(function(c){
-        var v = c[state.metric];
+        var v = c[metric];
         var col = colorFor(c);
-        var m = L.circleMarker([c.lat, c.lng], {
-            radius: sizeFor(c),
+        var r = sizeFor(c);
+        var isHot = topHot.indexOf(c.n) !== -1;
+        var isCool = topCool.indexOf(c.n) !== -1;
+
+        // Outer glow (büyük, şeffaf)
+        L.circleMarker([c.lat, c.lng], {
+            radius: r * 1.8,
             fillColor: col,
-            color: '#1e293b',
-            weight: 1,
-            fillOpacity: 0.85
+            color: 'transparent',
+            weight: 0,
+            fillOpacity: 0.15,
+            interactive: false
+        }).addTo(markerLayer);
+
+        // Main marker
+        var m = L.circleMarker([c.lat, c.lng], {
+            radius: r,
+            fillColor: col,
+            color: '#0f172a',
+            weight: 1.5,
+            fillOpacity: 0.92,
+            className: 'fe-marker-glow'
         });
-        var sign = v>=0?'':'';
         m.bindTooltip(
-            '<div style="min-width:150px"><b>'+c.flag+' '+c.n+'</b><br>'+
-            '<small>'+D.METRICS[state.metric].label+': <b>'+sign+(v||0).toFixed(2)+'%</b></small><br>'+
-            '<small>Faiz: '+c.rate.toFixed(2)+'% · Enfl: '+c.infl.toFixed(1)+'% · Reel: '+c.real.toFixed(2)+'%</small><br>'+
-            '<small>10Y: '+c.m10y.toFixed(2)+'% · '+c.cb+'</small></div>',
-            {direction:'top', opacity:0.96}
+            '<div style="min-width:160px"><b style="font-size:.85rem">'+c.flag+' '+c.n+'</b><br>'+
+            '<small style="color:#fbbf24"><b>'+D.METRICS[metric].label+': '+(v||0).toFixed(2)+'%</b></small><br>'+
+            '<small style="color:#94a3b8">Faiz '+c.rate.toFixed(2)+'% · Enfl '+c.infl.toFixed(1)+'% · Reel '+(c.real>=0?'+':'')+c.real.toFixed(2)+'%</small><br>'+
+            '<small style="color:#94a3b8">10Y '+c.m10y.toFixed(2)+'% · '+c.cb+'</small></div>',
+            {direction:'top', opacity:1}
         );
         m.on('click', function(){ map.flyTo([c.lat, c.lng], 4, {duration:0.7}) });
         markerLayer.addLayer(m);
+
+        // Pulse halkası — en yüksek 5 ülke için
+        if(isHot){
+            var pulseSize = Math.max(24, r*2.4);
+            var pulse = L.divIcon({
+                className:'',
+                html:'<div class="fe-pulse-ring" style="width:'+pulseSize+'px;height:'+pulseSize+'px;margin-left:-'+(pulseSize/2)+'px;margin-top:-'+(pulseSize/2)+'px;color:'+col+'"></div>',
+                iconSize:[0,0]
+            });
+            L.marker([c.lat, c.lng], {icon:pulse, interactive:false, keyboard:false}).addTo(pulseLayer);
+        }
+
+        // Floating value label — top 8 + bottom 4
+        if(labelSet[c.n]){
+            var cls = isHot ? 'hot' : (isCool ? 'cool' : '');
+            var valTxt = (v>=0?'':'') + v.toFixed(metric==='infl'?1:2) + '%';
+            var offY = r + 14;
+            var label = L.divIcon({
+                className:'',
+                html:'<div class="fe-val-label '+cls+'" style="position:absolute;transform:translate(-50%,-100%);left:0;top:-'+offY+'px;white-space:nowrap">'+c.flag+' '+valTxt+'</div>',
+                iconSize:[0,0],
+                iconAnchor:[0,0]
+            });
+            L.marker([c.lat, c.lng], {icon:label, interactive:false, keyboard:false}).addTo(labelLayer);
+        }
     });
     renderLegend();
+    var titleEl = document.getElementById('feTitleMetric');
+    if(titleEl) titleEl.textContent = D.METRICS[metric].label.toUpperCase();
 }
 
 function renderLegend(){
