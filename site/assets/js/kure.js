@@ -183,18 +183,14 @@ var arcsRoute = arcsOf(D.ROUTES, 'route', function(r){return C.route[r.cargo]||'
 var arcsPipe  = arcsOf(D.PIPES,  'pipe',  function(r){return C.pipe[r.kind]||'#3b82f6'});
 var arcsCable = arcsOf(D.CABLES, 'cable', function(r){return C.cable[r.kind]||'#a78bfa'});
 
-// ─── Rings: sadece en büyük 4 borsa (sakin nabız) ───
-var rings = D.EXCHANGES.slice().sort(function(a,b){return b.cap-a.cap}).slice(0,4).map(function(x){
-    return {lat:x.lat, lng:x.lng, maxR:2.5 + x.cap/8, propSpeed:0.55, repeatPeriod:3200, color:'#22c55e'};
-});
-// En riskli 2 darboğaz — yavaş kırmızı uyarı
-D.BOTTLENECKS.filter(function(b){return b.risk>80}).forEach(function(b){
-    rings.push({lat:b.lat, lng:b.lng, maxR:3, propSpeed:0.7, repeatPeriod:2800, color:'#ef4444'});
+// ─── Rings: sadece en büyük 3 borsa (çok sakin nabız) ───
+var rings = D.EXCHANGES.slice().sort(function(a,b){return b.cap-a.cap}).slice(0,3).map(function(x){
+    return {lat:x.lat, lng:x.lng, maxR:2.2 + x.cap/10, propSpeed:0.4, repeatPeriod:4500, color:'#22c55e'};
 });
 
-// ─── Labels (sadece en büyük 5 borsa — çok sadeleştirildi) ───
-var labels = D.EXCHANGES.slice().sort(function(a,b){return b.cap-a.cap}).slice(0,5).map(function(x){
-    return {lat:x.lat, lng:x.lng, text:x.code, size:0.42, color:'#fbbf24', alt:0.02};
+// ─── Labels (sadece en büyük 3 borsa — minimum gürültü) ───
+var labels = D.EXCHANGES.slice().sort(function(a,b){return b.cap-a.cap}).slice(0,3).map(function(x){
+    return {lat:x.lat, lng:x.lng, text:x.code, size:0.38, color:'#fbbf24', alt:0.02};
 });
 
 // State — ilk açılışta sadece borsalar görünsün (temiz görünüm)
@@ -219,12 +215,12 @@ globe.width(el.clientWidth || 800).height(el.clientHeight || 600);
 globe.backgroundColor('rgba(0,0,0,0)')
     .showAtmosphere(true)
     .atmosphereColor('#60a5fa')
-    .atmosphereAltitude(0.17)
+    .atmosphereAltitude(0.14)
     .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
     .bumpImageUrl('//unpkg.com/three-globe/example/img/earth-topology.png');
 
 globe.pointAltitude('size')
-    .pointRadius(0.32)
+    .pointRadius(0.3)
     .pointColor('color')
     .pointLabel(function(d){return '<div style="font:600 12px sans-serif;background:rgba(15,23,42,.9);color:#fff;padding:6px 10px;border-radius:6px;border:1px solid #3b82f6">'+d.label+'</div>'})
     .pointsMerge(false)
@@ -232,10 +228,10 @@ globe.pointAltitude('size')
 
 globe.arcColor('color')
     .arcAltitudeAutoScale(0.4)
-    .arcStroke(0.22)
-    .arcDashLength(0.28)
-    .arcDashGap(0.35)
-    .arcDashAnimateTime(function(d){return d.type==='route'?6000:d.type==='pipe'?8000:10000})
+    .arcStroke(0.18)
+    .arcDashLength(0.25)
+    .arcDashGap(0.45)
+    .arcDashAnimateTime(function(d){return d.type==='route'?8000:d.type==='pipe'?11000:13000})
     .arcLabel(function(d){
         if(d.type==='route') return '🚢 '+d.data.name+' · '+d.data.vol;
         if(d.type==='pipe') return '⚡ '+d.data.name+' ('+d.data.kind.toUpperCase()+')';
@@ -262,9 +258,9 @@ applyArcs();
 // Kontroller — yavaş, sakin dönüş
 var ctrl = globe.controls();
 ctrl.autoRotate = true;
-ctrl.autoRotateSpeed = 0.2;
+ctrl.autoRotateSpeed = 0.15;
 ctrl.enableDamping = true;
-ctrl.dampingFactor = 0.08;
+ctrl.dampingFactor = 0.06;
 
 // İlk kamera pozisyonu — mobilde biraz daha uzaklaş
 var initAlt = window.innerWidth < 640 ? 2.9 : 2.4;
@@ -402,15 +398,6 @@ if(bg){
         '</div>';
     }).join('');
 }
-
-// AI analiz
-fetch('/api/ai-analysis?cat=kure').then(function(r){return r.json()}).then(function(d){
-    var el = document.getElementById('kureAi');
-    if(el && d && d.analysis) el.textContent = d.analysis;
-}).catch(function(){
-    var el = document.getElementById('kureAi');
-    if(el) el.innerHTML = '<span style="color:#94a3b8;font-style:italic">AI özeti şu an yüklenemiyor.</span>';
-});
 
 })();
 

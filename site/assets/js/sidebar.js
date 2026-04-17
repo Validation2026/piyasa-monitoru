@@ -7,7 +7,6 @@
 
 var links = [
     ['index','🏠','Ana Panel'],
-    ['kure','🌐','3D Küre'],
     ['emtia-enerji','⛽','Enerji'],
     ['emtia-metaller','🥇','Madenler'],
     ['emtia-tarim','🌾','Tarım'],
@@ -18,6 +17,7 @@ var links = [
     ['hisseler','💹','Hisseler'],
     ['kripto','₿','Kripto'],
     ['faiz-enflasyon','🌡️','Faiz & Enflasyon'],
+    ['kure','🌐','3D Küre'],
     ['karsilastirma','📊','Karşılaştır'],
     ['iran-risk','🔴','İran Risk'],
     ['tedarik-zinciri','🚢','Tedarik Zinciri'],
