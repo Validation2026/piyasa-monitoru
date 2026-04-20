@@ -274,7 +274,15 @@ function buildMovers(all){var sorted=all.filter(function(s){return s&&s.change_1
 }
 function buildPulse(all){
     var el=document.getElementById('marketPulseList'); if(!el) return;
-    var list=all.filter(function(s){return s&&s.change_1d_pct!=null;})
+    var seen={};
+    var unique=all.filter(function(s){
+        if(!s||s.change_1d_pct==null) return false;
+        var key=(s.id||s.name||'').toLocaleLowerCase('tr').trim();
+        if(!key||seen[key]) return false;
+        seen[key]=1;
+        return true;
+    });
+    var list=unique
         .sort(function(a,b){return Math.abs(b.change_1d_pct)-Math.abs(a.change_1d_pct);})
         .slice(0,5);
     el.innerHTML=list.map(function(s){

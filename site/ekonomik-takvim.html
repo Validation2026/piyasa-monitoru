@@ -43,9 +43,6 @@
         .impact-radar{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;margin-bottom:16px}
         .impact-radar h3{font-size:.86rem;font-weight:800;margin:0 0 4px}
         .impact-radar p{font-size:.72rem;color:var(--t3);margin:0 0 10px}
-        .radar-modes{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
-        .rmode{border:1px solid var(--border);background:var(--bg2);color:var(--t2);border-radius:999px;padding:5px 10px;font-size:.66rem;font-weight:700;cursor:pointer}
-        .rmode.active{background:#dbeafe;color:#1d4ed8;border-color:#93c5fd}
         .impact-radar canvas{width:100%;height:290px;max-height:290px}
         @media(max-width:600px){.cal-item{grid-template-columns:70px 1fr;gap:8px}.cal-impact{display:none}}
     </style>
@@ -65,12 +62,6 @@
     <div class="impact-radar">
         <h3>📡 Etki Radarı (Önümüzdeki 30 Gün)</h3>
         <p>Faiz, enflasyon, büyüme, istihdam ve diğer olayların ağırlıklı etki puanı.</p>
-        <div class="radar-modes" id="radarModes">
-            <button type="button" class="rmode active" data-mode="base">Baz Senaryo</button>
-            <button type="button" class="rmode" data-mode="hawk">Şahin Senaryo</button>
-            <button type="button" class="rmode" data-mode="dove">Güvercin Senaryo</button>
-            <button type="button" class="rmode" data-mode="stag">Stagflasyon</button>
-        </div>
         <canvas id="impactRadar"></canvas>
     </div>
 
@@ -221,9 +212,7 @@ function renderEvents(containerId, events){
 renderEvents('cbEvents', cbDates);
 renderEvents('ecoEvents', ecoEvents);
 
-var impactChart = null;
-function renderImpactRadar(mode){
-    mode = mode || 'base';
+function renderImpactRadar(){
     var c=document.getElementById('impactRadar'); if(!c || !window.Chart) return;
     var now=new Date(today);
     var horizon=new Date(now.getTime()+30*24*60*60*1000);
@@ -242,27 +231,13 @@ function renderImpactRadar(mode){
         else if(n.indexOf('gsyih')>-1 || n.indexOf('büyüme')>-1) buckets.buyume+=w;
         else buckets.diger+=w;
     });
-    var mult = {
-        base:{faiz:1,enflasyon:1,istihdam:1,buyume:1,diger:1},
-        hawk:{faiz:1.35,enflasyon:1.2,istihdam:.9,buyume:.95,diger:1},
-        dove:{faiz:.85,enflasyon:.9,istihdam:1.1,buyume:1.15,diger:1},
-        stag:{faiz:1.2,enflasyon:1.45,istihdam:1.15,buyume:.7,diger:1.05}
-    }[mode] || {faiz:1,enflasyon:1,istihdam:1,buyume:1,diger:1};
-    var vals = [
-        Math.round(buckets.faiz*mult.faiz),
-        Math.round(buckets.enflasyon*mult.enflasyon),
-        Math.round(buckets.istihdam*mult.istihdam),
-        Math.round(buckets.buyume*mult.buyume),
-        Math.round(buckets.diger*mult.diger)
-    ];
-    if(impactChart){ impactChart.destroy(); }
-    impactChart = new Chart(c,{
+    new Chart(c,{
         type:'radar',
         data:{
             labels:['Faiz','Enflasyon','İstihdam','Büyüme','Diğer'],
             datasets:[{
                 label:'Etki Puanı',
-                data:vals,
+                data:[buckets.faiz,buckets.enflasyon,buckets.istihdam,buckets.buyume,buckets.diger],
                 fill:true,
                 backgroundColor:'rgba(59,130,246,.18)',
                 borderColor:'#3b82f6',
@@ -280,15 +255,6 @@ function renderImpactRadar(mode){
     });
 }
 renderImpactRadar();
-var radarModes=document.getElementById('radarModes');
-if(radarModes){
-    radarModes.addEventListener('click',function(e){
-        var b=e.target.closest('.rmode'); if(!b) return;
-        radarModes.querySelectorAll('.rmode').forEach(function(x){x.classList.remove('active')});
-        b.classList.add('active');
-        renderImpactRadar(b.getAttribute('data-mode'));
-    });
-}
 
 fetch('/api/ai-analysis?cat=genel').then(function(r){return r.json()}).then(function(d){
     var el=document.getElementById('aiAnalysis');if(el&&d.analysis)el.textContent=d.analysis;
