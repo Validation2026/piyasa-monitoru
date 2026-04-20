@@ -12,7 +12,7 @@
 if(window.PMWidgets && window.PMWidgets.__loaded) return;
 
 var pageId = (location.pathname.split('/').pop() || 'index').replace('.html','') || 'index';
-if(pageId === 'iran-risk'){ window.PMWidgets = {skip:true}; return; }
+if(pageId === 'iran-risk' || pageId === 'index'){ window.PMWidgets = {skip:true}; return; }
 
 var POLL_MS = 60 * 1000;    // ticker auto-refresh
 var CLOCK_MS = 30 * 1000;   // market clock tick
@@ -36,30 +36,38 @@ function cacheBustedFetch(path){
 // ======================================================
 //  TICKER
 // ======================================================
-var TICKER_PRIORITY = [
-    'BZ=F','CL=F','NG=F','GC=F','SI=F','HG=F',
-    '^GSPC','^IXIC','^DJI','^GDAXI','^FTSE','^N225','XU100.IS',
-    '^TNX','DX-Y.NYB',
-    'BTC-USD','ETH-USD','SOL-USD',
-    'USDTRY=X','EURUSD=X','GBPUSD=X','USDJPY=X','EURTRY=X'
-];
+var PAGE_DATA_FILES = {
+    'emtia-enerji':'commodities_energy.json',
+    'emtia-metaller':'commodities_metals.json',
+    'emtia-tarim':'commodities_agriculture.json',
+    'sanayi':'industrial.json',
+    'kurlar':'currencies.json',
+    'tahviller':'bonds.json',
+    'endeksler':'indices.json',
+    'hisseler':'stocks.json',
+    'kripto':'crypto.json',
+    'faiz-enflasyon':'turkiye_makro.json',
+    'kure':'activities.json',
+    'karsilastirma':'summary.json'
+};
 var _prevTickerPrices = {};
 var _tickerTimer = null;
 
 function buildTickerItems(data){
     if(!data || !data.series) return [];
-    var seen = {};
-    var items = [];
-    TICKER_PRIORITY.forEach(function(id){
-        var s = byId(data.series, id);
-        if(s){ items.push(s); seen[id] = true; }
-    });
-    // Kalan yerleri günlük değişime göre en hareketlilerle doldur
-    var movers = data.series
-        .filter(function(s){ return !seen[s.id] && s.change_1d_pct != null && s.current != null; })
-        .sort(function(a,b){ return Math.abs(b.change_1d_pct) - Math.abs(a.change_1d_pct); })
-        .slice(0, 30);
-    return items.concat(movers);
+    return data.series
+        .filter(function(s){ return s && s.current != null; })
+        .sort(function(a,b){
+            var ac = Math.abs(a.change_1d_pct || 0);
+            var bc = Math.abs(b.change_1d_pct || 0);
+            return bc - ac;
+        })
+        .slice(0, 24);
+}
+
+function tickerDataPath(){
+    var file = PAGE_DATA_FILES[pageId] || 'summary.json';
+    return 'data/' + file;
 }
 
 function renderTicker(items){
@@ -133,7 +141,7 @@ function applyPriceFlashes(items){
 }
 
 function refreshTicker(){
-    return cacheBustedFetch('data/summary.json').then(function(data){
+    return cacheBustedFetch(tickerDataPath()).then(function(data){
         if(!data || !data.series) return;
         var items = buildTickerItems(data);
         if(!items.length) return;
@@ -160,14 +168,14 @@ function startTicker(){
 // ======================================================
 // open/close dakika cinsinden (local tz). days: 0=Pazar ... 6=Cmt
 var MARKETS = [
-    {code:'NYSE',    name:'New York',   tz:'America/New_York',   flag:'🇺🇸', open:9*60+30, close:16*60,     days:[1,2,3,4,5]},
-    {code:'LSE',     name:'Londra',     tz:'Europe/London',      flag:'🇬🇧', open:8*60,    close:16*60+30,  days:[1,2,3,4,5]},
-    {code:'FRA',     name:'Frankfurt',  tz:'Europe/Berlin',      flag:'🇩🇪', open:9*60,    close:17*60+30,  days:[1,2,3,4,5]},
-    {code:'BIST',    name:'İstanbul',   tz:'Europe/Istanbul',    flag:'🇹🇷', open:10*60,   close:18*60,     days:[1,2,3,4,5]},
-    {code:'TSE',     name:'Tokyo',      tz:'Asia/Tokyo',         flag:'🇯🇵', open:9*60,    close:15*60,     days:[1,2,3,4,5]},
-    {code:'SSE',     name:'Şanghay',    tz:'Asia/Shanghai',      flag:'🇨🇳', open:9*60+30, close:15*60,     days:[1,2,3,4,5]},
-    {code:'HKEX',    name:'Hong Kong',  tz:'Asia/Hong_Kong',     flag:'🇭🇰', open:9*60+30, close:16*60,     days:[1,2,3,4,5]},
-    {code:'ASX',     name:'Sidney',     tz:'Australia/Sydney',   flag:'🇦🇺', open:10*60,   close:16*60,     days:[1,2,3,4,5]}
+    {code:'NYSE', name:'New York',  tz:'America/New_York', flag:'🇺🇸', days:[1,2,3,4,5], sessions:[[9*60+30,16*60]]},
+    {code:'LSE',  name:'Londra',    tz:'Europe/London',    flag:'🇬🇧', days:[1,2,3,4,5], sessions:[[8*60,16*60+30]]},
+    {code:'XETRA',name:'Frankfurt', tz:'Europe/Berlin',    flag:'🇩🇪', days:[1,2,3,4,5], sessions:[[9*60,17*60+30]]},
+    {code:'BIST', name:'İstanbul',  tz:'Europe/Istanbul',  flag:'🇹🇷', days:[1,2,3,4,5], sessions:[[10*60,18*60]]},
+    {code:'TSE',  name:'Tokyo',     tz:'Asia/Tokyo',       flag:'🇯🇵', days:[1,2,3,4,5], sessions:[[9*60,11*60+30],[12*60+30,15*60+30]]},
+    {code:'SSE',  name:'Şanghay',   tz:'Asia/Shanghai',    flag:'🇨🇳', days:[1,2,3,4,5], sessions:[[9*60+30,11*60+30],[13*60,15*60]]},
+    {code:'HKEX', name:'Hong Kong', tz:'Asia/Hong_Kong',   flag:'🇭🇰', days:[1,2,3,4,5], sessions:[[9*60+30,12*60],[13*60,16*60]]},
+    {code:'ASX',  name:'Sidney',    tz:'Australia/Sydney', flag:'🇦🇺', days:[1,2,3,4,5], sessions:[[10*60,16*60]]}
 ];
 
 function marketStatus(m, now){
@@ -182,18 +190,31 @@ function marketStatus(m, now){
     var mm = parseInt(parts.minute, 10);
     var mins = (isNaN(hh)?0:hh)*60 + (isNaN(mm)?0:mm);
     var isTradingDay = m.days.indexOf(dow) >= 0;
-    var isOpen = isTradingDay && mins >= m.open && mins < m.close;
-
-    var toNext = null;
-    if(isOpen){
-        toNext = m.close - mins; // kapanışa
-    } else if(isTradingDay && mins < m.open){
-        toNext = m.open - mins;  // bugünkü açılışa
+    var sessions = m.sessions || [];
+    var isOpen = false;
+    var toNextClose = null;
+    var toNextOpen = null;
+    if(isTradingDay){
+        for(var i=0;i<sessions.length;i++){
+            var open = sessions[i][0], close = sessions[i][1];
+            if(mins >= open && mins < close){
+                isOpen = true;
+                toNextClose = close - mins;
+                break;
+            }
+            if(mins < open){
+                toNextOpen = open - mins;
+                break;
+            }
+        }
     }
+    var openingSoon = !isOpen && toNextOpen != null && toNextOpen <= 60;
     return {
         open: isOpen,
+        openingSoon: openingSoon,
         timeStr: (parts.hour||'--') + ':' + (parts.minute||'--'),
-        toNext: toNext
+        toNextClose: toNextClose,
+        toNextOpen: toNextOpen
     };
 }
 
@@ -208,16 +229,15 @@ function fmtToNext(mins){
 function renderMarketClock(now){
     var cells = MARKETS.map(function(m){
         var st = marketStatus(m, now);
-        var label = st.open ? 'Açık' : (st.toNext != null ? 'Açılıyor' : 'Kapalı');
-        var tail = st.open
-            ? '<span class="mkc-tail">Kapanışa ' + fmtToNext(st.toNext) + '</span>'
-            : (st.toNext != null ? '<span class="mkc-tail">Açılışa ' + fmtToNext(st.toNext) + '</span>' : '<span class="mkc-tail">Hafta sonu</span>');
-        var cls = st.open ? 'open' : 'closed';
+        var statusText = st.open
+            ? 'Kapanışa ' + fmtToNext(st.toNextClose) + ' kaldı'
+            : (st.toNextOpen != null ? 'Açılışa ' + fmtToNext(st.toNextOpen) + ' kaldı' : 'Kapalı');
+        var cls = st.open ? 'open' : (st.openingSoon ? 'opening' : 'closed');
         return '<div class="mkc-item ' + cls + '" title="' + escapeHtml(m.name) + ' · ' + m.tz + '">' +
             '<span class="mkc-flag" aria-hidden="true">' + m.flag + '</span>' +
             '<span class="mkc-body">' +
                 '<span class="mkc-row1"><span class="mkc-code">' + m.code + '</span><span class="mkc-time">' + st.timeStr + '</span></span>' +
-                '<span class="mkc-row2"><span class="mkc-dot"></span>' + label + ' · ' + tail + '</span>' +
+                '<span class="mkc-row2"><span class="mkc-dot"></span><span class="mkc-tail">' + statusText + '</span></span>' +
             '</span>' +
         '</div>';
     }).join('');
