@@ -19,6 +19,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
         .ai-box{border-top:none;position:relative;overflow:hidden}
@@ -39,6 +40,10 @@
 
         .cal-today{border-left:3px solid var(--blue);background:rgba(59,130,246,.04)}
         .cal-past{opacity:.5}
+        .impact-radar{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;margin-bottom:16px}
+        .impact-radar h3{font-size:.86rem;font-weight:800;margin:0 0 4px}
+        .impact-radar p{font-size:.72rem;color:var(--t3);margin:0 0 10px}
+        .impact-radar canvas{width:100%;height:290px;max-height:290px}
         @media(max-width:600px){.cal-item{grid-template-columns:70px 1fr;gap:8px}.cal-impact{display:none}}
     </style>
 </head>
@@ -54,6 +59,11 @@
     </div>
 
     <div class="ai-box"><div class="ai-header"><span>🤖 AI Takvim Analizi</span><span class="ai-badge">AI</span></div><div class="ai-body" id="aiAnalysis"><span style="color:var(--t3);font-style:italic">Analiz yükleniyor...</span></div></div>
+    <div class="impact-radar">
+        <h3>📡 Etki Radarı (Önümüzdeki 30 Gün)</h3>
+        <p>Faiz, enflasyon, büyüme, istihdam ve diğer olayların ağırlıklı etki puanı.</p>
+        <canvas id="impactRadar"></canvas>
+    </div>
 
     <div class="cal-card">
         <div class="cal-header">🏛️ Merkez Bankası Faiz Kararları — 2026</div>
@@ -201,6 +211,50 @@ function renderEvents(containerId, events){
 
 renderEvents('cbEvents', cbDates);
 renderEvents('ecoEvents', ecoEvents);
+
+function renderImpactRadar(){
+    var c=document.getElementById('impactRadar'); if(!c || !window.Chart) return;
+    var now=new Date(today);
+    var horizon=new Date(now.getTime()+30*24*60*60*1000);
+    var all=cbDates.concat(ecoEvents).filter(function(e){
+        var d=new Date(e.date);
+        return d>=now && d<=horizon;
+    });
+    var buckets={faiz:0,enflasyon:0,istihdam:0,buyume:0,diger:0};
+    function weight(i){return i==='high'?3:i==='med'?2:1;}
+    all.forEach(function(e){
+        var n=(e.name||'').toLocaleLowerCase('tr');
+        var w=weight(e.impact);
+        if(n.indexOf('faiz')>-1 || n.indexOf('fomc')>-1) buckets.faiz+=w;
+        else if(n.indexOf('tüfe')>-1 || n.indexOf('enflasyon')>-1) buckets.enflasyon+=w;
+        else if(n.indexOf('istihdam')>-1) buckets.istihdam+=w;
+        else if(n.indexOf('gsyih')>-1 || n.indexOf('büyüme')>-1) buckets.buyume+=w;
+        else buckets.diger+=w;
+    });
+    new Chart(c,{
+        type:'radar',
+        data:{
+            labels:['Faiz','Enflasyon','İstihdam','Büyüme','Diğer'],
+            datasets:[{
+                label:'Etki Puanı',
+                data:[buckets.faiz,buckets.enflasyon,buckets.istihdam,buckets.buyume,buckets.diger],
+                fill:true,
+                backgroundColor:'rgba(59,130,246,.18)',
+                borderColor:'#3b82f6',
+                pointBackgroundColor:'#1d4ed8',
+                pointBorderColor:'#fff',
+                pointRadius:4
+            }]
+        },
+        options:{
+            responsive:true,
+            maintainAspectRatio:false,
+            scales:{r:{beginAtZero:true,grid:{color:'rgba(100,116,139,.25)'},angleLines:{color:'rgba(100,116,139,.25)'},pointLabels:{color:'#334155',font:{size:11,weight:700}},ticks:{display:false}}},
+            plugins:{legend:{display:false}}
+        }
+    });
+}
+renderImpactRadar();
 
 fetch('/api/ai-analysis?cat=genel').then(function(r){return r.json()}).then(function(d){
     var el=document.getElementById('aiAnalysis');if(el&&d.analysis)el.textContent=d.analysis;
