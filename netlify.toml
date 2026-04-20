@@ -18,7 +18,7 @@
 [[headers]]
   for = "/data/*"
   [headers.values]
-    Cache-Control = "public, max-age=300"
+    Cache-Control = "public, max-age=60"
     Access-Control-Allow-Origin = "*"
 
 [[headers]]
