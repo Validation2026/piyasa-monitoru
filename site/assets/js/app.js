@@ -855,6 +855,41 @@ document.addEventListener("click", function(e) {
 });
 
 /* ══════════════════════════════════════════
+   HEATMAP -> DETAILS GEÇİŞİ (ortak animasyon)
+   ══════════════════════════════════════════ */
+document.addEventListener('click', function(e){
+    var row = e.target && e.target.closest ? e.target.closest('.heatmap-tbl tbody tr') : null;
+    if(!row) return;
+    var table = row.closest('.heatmap-tbl');
+    if(!table) return;
+    var nameEl = row.querySelector('.hm-name');
+    var assetName = nameEl ? (nameEl.textContent || '').trim() : '';
+    if(!assetName) return;
+
+    row.classList.remove('heatmap-jump-flash');
+    void row.offsetWidth;
+    row.classList.add('heatmap-jump-flash');
+
+    var cardsBtn = document.querySelector('.view-btn[data-view="cards"]');
+    if(cardsBtn && !cardsBtn.classList.contains('on')) cardsBtn.click();
+
+    setTimeout(function(){
+        var candidates = Array.prototype.slice.call(document.querySelectorAll('.chrt,.scard'));
+        if(!candidates.length) return;
+        var normalized = assetName.toLocaleLowerCase('tr').replace(/\s+/g,' ').trim();
+        var hit = candidates.find(function(el){
+            var txt = (el.textContent || '').toLocaleLowerCase('tr').replace(/\s+/g,' ').trim();
+            return txt.indexOf(normalized) !== -1;
+        }) || candidates[0];
+        if(!hit) return;
+        hit.scrollIntoView({behavior:'smooth', block:'center'});
+        hit.classList.remove('detail-jump-pulse');
+        void hit.offsetWidth;
+        hit.classList.add('detail-jump-pulse');
+    }, 260);
+});
+
+/* ══════════════════════════════════════════
    AKILLI OTOMATİK YENİLEME (MOBİL İÇİN)
    ══════════════════════════════════════════ */
 (function() {
