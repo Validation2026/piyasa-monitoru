@@ -62,22 +62,34 @@ def _local_logo_meta(symbol):
 
 YAHOO_CHART_URL = "https://query2.finance.yahoo.com/v8/finance/chart/{symbol}"
 
+YAHOO_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "Accept": "application/json",
+    "Cache-Control": "no-cache",
+    "Pragma": "no-cache",
+}
+
+
 def fetch_yahoo_direct(symbol: str, range_str: str = "5y", interval: str = "1d") -> tuple[list, float | None] | None:
-    """Yahoo Finance chart API'sinden veri çeker. query2 kullanır.
+    """Yahoo Finance chart API'sinden tarihsel (günlük) veri çeker.
 
     Dönüş: (points, live_price) — live_price, meta.regularMarketPrice
-    alanından gelir ve piyasa açıkken intraday canlı fiyatı temsil eder.
+    alanından gelir. Fakat bu alan bazen kapanış fiyatına takılır;
+    daha güncel bir canlı fiyat için fetch_yahoo_intraday_latest() kullanılır.
     """
 
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    # includePrePost=true: vadeli ve 24 saat işlem gören enstrümanlar için kritik
+    params = {
+        "range": range_str,
+        "interval": interval,
+        "includePrePost": "true",
+        "_": int(time.time() * 1000),  # cache-buster
     }
-    params = {"range": range_str, "interval": interval, "includePrePost": "false"}
 
     try:
         resp = requests.get(
             YAHOO_CHART_URL.format(symbol=symbol),
-            headers=headers, params=params, timeout=15,
+            headers=YAHOO_HEADERS, params=params, timeout=15,
         )
         resp.raise_for_status()
         data = resp.json()
@@ -119,6 +131,68 @@ def fetch_yahoo_direct(symbol: str, range_str: str = "5y", interval: str = "1d")
 
     except Exception as e:
         print(f"      Yahoo API hatası ({symbol}): {e}")
+        return None
+
+
+def fetch_yahoo_intraday_latest(symbol: str) -> float | None:
+    """En güncel canlı fiyatı 1 dakikalık intraday bar'dan çeker.
+
+    Günlük bar'lar piyasa kapanışına kadar tazelenmediği için,
+    chart meta'daki regularMarketPrice bazen saatlerce eski kalıyor.
+    1m/5d interval + includePrePost ile Yahoo'nun şu anki en son
+    yayınladığı bar'ı alırız — bu gerçek canlı fiyata en yakın veri.
+    """
+    params = {
+        "range": "5d",
+        "interval": "1m",
+        "includePrePost": "true",
+        "_": int(time.time() * 1000),
+    }
+    try:
+        resp = requests.get(
+            YAHOO_CHART_URL.format(symbol=symbol),
+            headers=YAHOO_HEADERS, params=params, timeout=15,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+
+        result = data.get("chart", {}).get("result", [])
+        if not result:
+            return None
+
+        chart = result[0]
+        meta = chart.get("meta", {}) or {}
+
+        # 1) meta.regularMarketPrice (intraday endpoint'inde genelde taze)
+        meta_price = meta.get("regularMarketPrice")
+        meta_time = meta.get("regularMarketTime")
+
+        # 2) intraday bar'ların son non-null kapanışı
+        timestamps = chart.get("timestamp", []) or []
+        closes = chart.get("indicators", {}).get("quote", [{}])[0].get("close", []) or []
+        last_bar_price = None
+        last_bar_time = None
+        for t, c in zip(reversed(timestamps), reversed(closes)):
+            if c is not None:
+                last_bar_price = c
+                last_bar_time = t
+                break
+
+        # En taze timestamp hangisiyse onu kullan
+        candidates = []
+        if meta_price is not None and meta_time is not None:
+            candidates.append((int(meta_time), float(meta_price)))
+        if last_bar_price is not None and last_bar_time is not None:
+            candidates.append((int(last_bar_time), float(last_bar_price)))
+
+        if not candidates:
+            return None
+
+        candidates.sort(key=lambda x: x[0], reverse=True)
+        return round(candidates[0][1], 4)
+
+    except Exception as e:
+        print(f"      Intraday hatası ({symbol}): {e}")
         return None
 
 
@@ -230,6 +304,13 @@ def fetch_group(group: dict) -> dict:
             errors.append(symbol)
             print(f"   ❌ {meta['name']} ({symbol}): Veri alınamadı")
             continue
+
+        # Canlı fiyatı intraday 1m bar'dan override et — günlük endpoint
+        # meta'sı bazen saatlerce eski kalıyor, intraday her zaman daha taze.
+        intraday_price = fetch_yahoo_intraday_latest(symbol)
+        if intraday_price is not None:
+            live_price = intraday_price
+            source = f"{source} + 1m"
 
         # Piyasa açıkken regularMarketPrice son günlük kapanışı geçebilir.
         # Değişim hesapları için canlı fiyatı bugünün bar'ı gibi ekliyoruz;
