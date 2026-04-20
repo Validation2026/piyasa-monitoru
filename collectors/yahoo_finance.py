@@ -62,8 +62,12 @@ def _local_logo_meta(symbol):
 
 YAHOO_CHART_URL = "https://query2.finance.yahoo.com/v8/finance/chart/{symbol}"
 
-def fetch_yahoo_direct(symbol: str, range_str: str = "5y", interval: str = "1d") -> list | None:
-    """Yahoo Finance chart API'sinden veri çeker. query2 kullanır."""
+def fetch_yahoo_direct(symbol: str, range_str: str = "5y", interval: str = "1d") -> tuple[list, float | None] | None:
+    """Yahoo Finance chart API'sinden veri çeker. query2 kullanır.
+
+    Dönüş: (points, live_price) — live_price, meta.regularMarketPrice
+    alanından gelir ve piyasa açıkken intraday canlı fiyatı temsil eder.
+    """
 
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
@@ -99,7 +103,19 @@ def fetch_yahoo_direct(symbol: str, range_str: str = "5y", interval: str = "1d")
                     "value": round(float(val), 4)
                 })
 
-        return points if points else None
+        if not points:
+            return None
+
+        meta = chart.get("meta", {}) or {}
+        live_raw = meta.get("regularMarketPrice")
+        live_price = None
+        if live_raw is not None:
+            try:
+                live_price = round(float(live_raw), 4)
+            except (TypeError, ValueError):
+                live_price = None
+
+        return points, live_price
 
     except Exception as e:
         print(f"      Yahoo API hatası ({symbol}): {e}")
@@ -197,8 +213,13 @@ def fetch_group(group: dict) -> dict:
         meta = symbol_meta[symbol]
 
         # Önce doğrudan API dene
-        points = fetch_yahoo_direct(symbol)
-        source = "Yahoo API"
+        live_price = None
+        direct = fetch_yahoo_direct(symbol)
+        if direct is not None:
+            points, live_price = direct
+            source = "Yahoo API"
+        else:
+            points = None
 
         # Başarısızsa yfinance dene
         if points is None:
@@ -210,8 +231,22 @@ def fetch_group(group: dict) -> dict:
             print(f"   ❌ {meta['name']} ({symbol}): Veri alınamadı")
             continue
 
-        current = points[-1]["value"]
-        changes = calculate_changes(points)
+        # Piyasa açıkken regularMarketPrice son günlük kapanışı geçebilir.
+        # Değişim hesapları için canlı fiyatı bugünün bar'ı gibi ekliyoruz;
+        # tarihsel veri ("data" alanı) yine sadece kapanış noktalarını içerir.
+        if live_price is not None:
+            current = live_price
+            today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+            synthetic_today = {"date": today_str, "value": live_price}
+            if points[-1]["date"] == today_str:
+                points_for_calc = points[:-1] + [synthetic_today]
+            else:
+                points_for_calc = points + [synthetic_today]
+        else:
+            current = points[-1]["value"]
+            points_for_calc = points
+
+        changes = calculate_changes(points_for_calc)
         values = [p["value"] for p in points]
         logo_meta = tradingview_logo_meta(symbol, meta)
         local_meta = _local_logo_meta(symbol)
