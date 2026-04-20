@@ -50,11 +50,13 @@
 .shock-box p{font-size:.72rem;color:#64748b;margin:0}
 .shock-select{border:1px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:.76rem;background:#fff;color:#0f172a}
 .shock-btn{border:0;background:#ef4444;color:#fff;border-radius:8px;padding:8px 12px;font-size:.72rem;font-weight:800;cursor:pointer}
+.shock-btn.alt{background:#2563eb}
 .shock-btn:disabled{opacity:.55;cursor:not-allowed}
 .shock-stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
 .shock-chip{padding:6px 10px;border-radius:999px;font-size:.68rem;font-weight:700;border:1px solid #e2e8f0;background:#f8fafc;color:#334155}
 .shock-chip b{font-family:var(--mono)}
 .route-shock td{background:rgba(239,68,68,.08)!important;transition:background .3s ease}
+.shock-actions{display:flex;gap:8px;justify-content:flex-end;margin-bottom:10px;flex-wrap:wrap}
 @media(max-width:768px){#supplyMap{height:350px}.prod-grid{grid-template-columns:1fr}}
 @media(max-width:880px){.shock-box{grid-template-columns:1fr}.shock-btn,.shock-select{width:100%}}
 
@@ -103,6 +105,9 @@
 <option value="reset">Sıfırla</option>
 </select>
 <button type="button" class="shock-btn" id="runShockBtn">Simülasyonu Çalıştır</button>
+</div>
+<div class="shock-actions">
+<button type="button" class="shock-btn alt" id="dominoShockBtn">🎬 Domino Mode</button>
 </div>
 <div class="shock-stats" id="shockStats">
 <span class="shock-chip">Gecikme: <b id="shockDelay">+0 gün</b></span>
@@ -228,6 +233,7 @@ g.innerHTML=countries.map(function(c){
 
 // Şok simülasyonu
 var shockBtn = document.getElementById('runShockBtn');
+var dominoBtn = document.getElementById('dominoShockBtn');
 var shockSel = document.getElementById('shockScenario');
 var shockDelay = document.getElementById('shockDelay');
 var shockCost = document.getElementById('shockCost');
@@ -267,6 +273,23 @@ if(shockBtn && shockSel){
         if(shockCost) shockCost.textContent = s.cost;
         if(shockIns) shockIns.textContent = s.ins;
         map.flyTo(s.center, s.zoom, {duration:1.1});
+    });
+}
+if(dominoBtn){
+    dominoBtn.addEventListener('click', function(){
+        var sequence=['hormuz','suez','malakka','reset'];
+        var idx=0;
+        dominoBtn.disabled=true;
+        var t=setInterval(function(){
+            var key=sequence[idx];
+            if(!key){ clearInterval(t); dominoBtn.disabled=false; return; }
+            if(shockSel) shockSel.value=key;
+            if(shockBtn) shockBtn.click();
+            idx++;
+            if(idx>=sequence.length){
+                setTimeout(function(){clearInterval(t);dominoBtn.disabled=false;},1200);
+            }
+        },1700);
     });
 }
 

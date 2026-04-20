@@ -45,9 +45,20 @@
         .stat{text-align:center}
         .stat-v{font-size:1.4rem;font-weight:800;font-family:var(--mono);background:linear-gradient(135deg,var(--blue),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
         .stat-l{font-size:.65rem;color:var(--t3);text-transform:uppercase;letter-spacing:.5px}
+        .pulse-strip{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-bottom:14px}
+        .pulse-title{display:flex;align-items:center;gap:8px;font-size:.74rem;font-weight:800;color:var(--t2);margin-bottom:7px}
+        .pulse-live{width:8px;height:8px;border-radius:999px;background:#ef4444;box-shadow:0 0 0 0 rgba(239,68,68,.6);animation:pulseLive 1.6s infinite}
+        @keyframes pulseLive{70%{box-shadow:0 0 0 8px rgba(239,68,68,0)}100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}}
+        .pulse-list{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+        .pulse-item{border:1px solid var(--border2);background:var(--bg2);border-radius:8px;padding:8px}
+        .pulse-item b{display:block;font-size:.69rem;color:var(--t1);margin-bottom:2px}
+        .pulse-item span{font-size:.62rem;color:var(--t3)}
+        .pulse-item .u{color:var(--green);font-family:var(--mono);font-weight:700}
+        .pulse-item .d{color:var(--red);font-family:var(--mono);font-weight:700}
 
         @media(max-width:768px){.hero h1{font-size:1.3rem}.kpi-row{grid-template-columns:repeat(2,1fr)}.stats-bar{gap:16px}}
-        @media(max-width:480px){.kpi-row{grid-template-columns:1fr}.mc{min-width:115px;padding:7px 10px}}
+        @media(max-width:860px){.pulse-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+        @media(max-width:480px){.kpi-row{grid-template-columns:1fr}.mc{min-width:115px;padding:7px 10px}.pulse-list{grid-template-columns:1fr}}
 
         /* ══════════════════════════════════════════
            PREMIUM VİTRİN ANİMASYONLARI
@@ -113,6 +124,11 @@
     <div class="stat"><div class="stat-v" id="stHisse">0</div><div class="stat-l">Hisse</div></div>
     <div class="stat"><div class="stat-v" id="stCat">0</div><div class="stat-l">Kategori</div></div>
     <div class="stat"><div class="stat-v" id="stUpdate">—</div><div class="stat-l">Son Güncelleme</div></div>
+</div>
+
+<div class="pulse-strip">
+    <div class="pulse-title"><span class="pulse-live"></span> Market Pulse — Günün Alarm Paneli</div>
+    <div class="pulse-list" id="marketPulseList"></div>
 </div>
 
 <a href="iran-risk.html" style="display:block;background:linear-gradient(135deg,#b45309,#c2410c);border:2px solid #fdba74;border-radius:12px;padding:14px 20px;margin-bottom:14px;text-decoration:none;transition:.2s" onmouseover="this.style.borderColor='#fb923c'" onmouseout="this.style.borderColor='#fdba74'">
@@ -256,6 +272,17 @@ function buildMovers(all){var sorted=all.filter(function(s){return s&&s.change_1
     render('moversUp',sorted.slice(0,7));
     render('moversDown',sorted.slice(-7).reverse());
 }
+function buildPulse(all){
+    var el=document.getElementById('marketPulseList'); if(!el) return;
+    var list=all.filter(function(s){return s&&s.change_1d_pct!=null;})
+        .sort(function(a,b){return Math.abs(b.change_1d_pct)-Math.abs(a.change_1d_pct);})
+        .slice(0,5);
+    el.innerHTML=list.map(function(s){
+        var p=s.change_1d_pct||0, cls=p>=0?'u':'d', sign=p>=0?'+':'';
+        var label=Math.abs(p)>=3?'Aşırı Oynak':(Math.abs(p)>=1.5?'Momentum':'Takip');
+        return '<div class="pulse-item"><b>'+s.name+'</b><span>'+label+' · <i class="'+cls+'">'+sign+p.toFixed(2)+'%</i></span></div>';
+    }).join('');
+}
 
 function buildTable(id,items){var el=document.getElementById(id);if(!el)return;
     el.innerHTML=items.map(function(s, index){
@@ -285,6 +312,7 @@ fj('summary.json').then(function(data){
 
     buildMini(all);
     buildMovers(all);
+    buildPulse(all);
 
     // Kategori bazlı ID dizileri (alt gruplar ayrık)
     var energyIds=['BZ=F','CL=F','NG=F','TTF=F','MTF=F','HO=F','RB=F','USO','UNG','XLE','XOP','ICLN','TAN','NLR','KRBN'];

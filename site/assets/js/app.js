@@ -890,6 +890,45 @@ document.addEventListener('click', function(e){
 });
 
 /* ══════════════════════════════════════════
+   HEATMAP AUTO TOUR (mobil uyumlu)
+   ══════════════════════════════════════════ */
+function ensureHeatmapTourButton(){
+    var wrap = document.getElementById('viewToggle') || document.querySelector('.view-toggle');
+    if(!wrap || wrap.querySelector('.heatmap-tour-btn')) return;
+    if(!document.querySelector('.view-btn[data-view="heatmap"]')) return;
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'heatmap-tour-btn';
+    btn.textContent = '🎬 Demo Turu';
+    btn.setAttribute('aria-label','Heatmap demo turu');
+    wrap.appendChild(btn);
+}
+function runHeatmapTour(){
+    var heatBtn = document.querySelector('.view-btn[data-view="heatmap"]');
+    if(heatBtn && !heatBtn.classList.contains('on')) heatBtn.click();
+    setTimeout(function(){
+        var rows = Array.prototype.slice.call(document.querySelectorAll('.heatmap-tbl tbody tr')).slice(0,5);
+        if(!rows.length) return;
+        var i = 0;
+        var timer = setInterval(function(){
+            var row = rows[i];
+            if(!row){ clearInterval(timer); return; }
+            row.scrollIntoView({behavior:'smooth', block:'center'});
+            row.click();
+            i++;
+            if(i >= rows.length) clearInterval(timer);
+        }, 1200);
+    }, 280);
+}
+document.addEventListener('click', function(e){
+    var t = e.target && e.target.closest ? e.target.closest('.heatmap-tour-btn') : null;
+    if(!t) return;
+    runHeatmapTour();
+});
+if(document.readyState !== 'loading') ensureHeatmapTourButton();
+else document.addEventListener('DOMContentLoaded', ensureHeatmapTourButton);
+
+/* ══════════════════════════════════════════
    AKILLI OTOMATİK YENİLEME (MOBİL İÇİN)
    ══════════════════════════════════════════ */
 (function() {
