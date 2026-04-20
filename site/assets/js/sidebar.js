@@ -93,6 +93,15 @@ document.querySelectorAll('.sb-direct,.mb-link').forEach(function(a){
     if(a.getAttribute('data-page')===cur) a.classList.add('active');
 });
 
+// Canlı ticker + piyasa saati widget'ını her sayfaya yükle (iran-risk hariç)
+if(cur !== 'iran-risk' && !document.getElementById('pmLiveWidgetsScript')){
+    var lw = document.createElement('script');
+    lw.id = 'pmLiveWidgetsScript';
+    lw.src = 'assets/js/live-widgets.js';
+    lw.defer = true;
+    document.head.appendChild(lw);
+}
+
 // Mobilde aktif sekmeyi görünür yap (scroll into view)
 setTimeout(function(){
     var activeTab = document.querySelector('.mobile-nav .mb-link.active');

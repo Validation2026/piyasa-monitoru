@@ -213,9 +213,60 @@ body{font-family:var(--fm);background:var(--bg);color:var(--t1);line-height:1.6;
 .ticker-track:hover{animation-play-state:paused}
 .ti{display:inline-flex;align-items:center;gap:6px;padding:0 14px;font-size:.75rem;height:100%;border-right:1px solid var(--border2)}
 .ti-n{color:var(--t2);font-weight:500}.ti-p{color:var(--t1);font-family:var(--mono);font-weight:600}
+.ti-u{color:var(--t3);font-size:.62rem;font-weight:500;margin-left:-2px}
 .ti-c{font-family:var(--mono);font-size:.68rem;font-weight:600}
 .ti-c.u{color:var(--green)}.ti-c.d{color:var(--red)}
 @keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* Canlı ticker wrap — her sayfada update-info altına enjekte edilir */
+.pm-ticker-wrap{margin:8px -16px 10px;border-top:1px solid var(--border2)}
+.pm-ticker-wrap .ticker{border-radius:0}
+@media(min-width:640px){
+    .pm-ticker-wrap{margin:10px 0 12px;border-radius:8px;border:1px solid var(--border2);overflow:hidden}
+    .pm-ticker-wrap .ticker{border:none}
+}
+@media(max-width:480px){
+    .pm-ticker-wrap{margin:6px -12px 8px}
+    .pm-ticker-wrap .ticker{height:32px}
+    .pm-ticker-wrap .ti{padding:0 10px;font-size:.68rem;gap:4px}
+    .pm-ticker-wrap .ti-c{font-size:.62rem}
+    .pm-ticker-wrap .ticker-track{animation-duration:60s}
+}
+@media(prefers-reduced-motion:reduce){
+    .pm-ticker-wrap .ticker-track{animation:none}
+}
+
+/* ══════════════════════════════
+   MARKET CLOCK — dünya borsa saatleri
+   ══════════════════════════════ */
+.pm-clock-wrap{margin:0 0 14px}
+.mkc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:6px}
+.mkc-item{display:flex;align-items:center;gap:8px;padding:7px 9px;background:var(--card);border:1px solid var(--border);border-radius:8px;transition:.2s;min-width:0}
+.mkc-item:hover{border-color:var(--blue)}
+.mkc-flag{font-size:1.15rem;line-height:1;flex-shrink:0}
+.mkc-body{display:flex;flex-direction:column;min-width:0;flex:1;gap:1px}
+.mkc-row1{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:.72rem;font-weight:700}
+.mkc-row2{display:flex;align-items:center;gap:5px;font-size:.58rem;color:var(--t3);text-transform:uppercase;letter-spacing:.04em;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mkc-code{color:var(--t1);font-weight:800;letter-spacing:-.01em}
+.mkc-time{color:var(--t2);font-family:var(--mono);font-size:.7rem}
+.mkc-dot{width:6px;height:6px;border-radius:50%;background:var(--t3);flex-shrink:0}
+.mkc-tail{opacity:.9;overflow:hidden;text-overflow:ellipsis}
+.mkc-item.open .mkc-dot{background:#22c55e;box-shadow:0 0 6px rgba(34,197,94,.6);animation:mkcPulse 1.6s ease-in-out infinite}
+.mkc-item.open{border-color:rgba(34,197,94,.35);background:linear-gradient(135deg,var(--card),rgba(34,197,94,.04))}
+.mkc-item.closed .mkc-dot{background:#ef4444;opacity:.7}
+.mkc-item.closed{opacity:.85}
+@keyframes mkcPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:.6}}
+@media(max-width:640px){
+    .mkc-grid{grid-template-columns:repeat(2,1fr);gap:5px}
+    .mkc-item{padding:6px 7px}
+    .mkc-flag{font-size:1rem}
+    .mkc-row1{font-size:.66rem}
+    .mkc-time{font-size:.64rem}
+    .mkc-row2{font-size:.52rem}
+}
+@media(max-width:380px){
+    .mkc-grid{grid-template-columns:1fr}
+}
 
 /* ══════════════════════════════
    SUMMARY CARDS
