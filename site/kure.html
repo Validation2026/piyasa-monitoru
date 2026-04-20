@@ -93,6 +93,37 @@
 .bn-card .bn-bar{height:5px;border-radius:3px;background:#f1f5f9;overflow:hidden}
 .bn-card .bn-fill{height:100%;border-radius:3px;transition:width 1s}
 
+/* Yeni: Canlı Açılış Savaşı */
+.open-war-box{background:#fff;border:1px solid #dde4ed;border-radius:12px;padding:12px 14px;margin-bottom:14px}
+.open-war-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.open-war-upd{font-size:.62rem;color:#64748b;font-family:var(--mono)}
+.open-war-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px}
+.ow-card{border:1px solid #e2e8f0;border-radius:10px;padding:8px 9px;background:linear-gradient(180deg,#fff,#f8fbff)}
+.ow-top{display:flex;justify-content:space-between;align-items:center;gap:6px;margin-bottom:5px}
+.ow-name{font-size:.75rem;font-weight:800;display:flex;gap:6px;align-items:center}
+.ow-tag{font-size:.56rem;font-weight:700;padding:2px 6px;border-radius:999px;text-transform:uppercase;letter-spacing:.04em}
+.ow-tag.open{background:#dcfce7;color:#166534}
+.ow-tag.soon{background:#fef3c7;color:#92400e}
+.ow-tag.closed{background:#fee2e2;color:#991b1b}
+.ow-time{font-size:.66rem;color:#475569;font-family:var(--mono);font-weight:700}
+.ow-bar{height:5px;background:#e2e8f0;border-radius:4px;overflow:hidden}
+.ow-fill{height:100%;border-radius:4px;transition:width .4s ease}
+.ow-sub{margin-top:4px;font-size:.62rem;color:#64748b}
+
+/* Yeni: Risk Haritası - Isı Akışı */
+.risk-flow-box{background:#fff;border:1px solid #dde4ed;border-radius:12px;padding:12px 14px;margin-bottom:16px}
+.rf-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.rf-legend{display:flex;gap:8px;flex-wrap:wrap}
+.rf-dot{display:inline-flex;align-items:center;gap:5px;font-size:.58rem;color:#64748b}
+.rf-dot i{width:8px;height:8px;border-radius:50%}
+.rf-map-wrap{position:relative;background:radial-gradient(circle at 50% 42%,#f8fbff 0%,#eef3fb 70%,#e8eef9 100%);border:1px solid #dbe5f5;border-radius:10px;padding:8px}
+.rf-map{width:100%;height:220px;display:block}
+.rf-link{fill:none;stroke-linecap:round;stroke-dasharray:6 8;animation:rfFlow 5s linear infinite;opacity:.7}
+.rf-node{stroke:#fff;stroke-width:2}
+.rf-label{font-size:10px;fill:#334155;font-weight:700}
+@keyframes rfFlow{to{stroke-dashoffset:-56}}
+@media(max-width:640px){.rf-map{height:180px}}
+
 [data-theme="light"] body{background:#f7f9fc}
 </style>
 </head>
@@ -112,6 +143,28 @@
     <div class="metric-card"><div class="mc-icon" style="background:#dbeafe;color:#2563eb">⚡</div><div><div class="mc-val" id="mBoru">0</div><div class="mc-lbl">Enerji Boru Hattı</div></div></div>
     <div class="metric-card"><div class="mc-icon" style="background:#f3e8ff;color:#7c3aed">🔌</div><div><div class="mc-val" id="mKablo">0</div><div class="mc-lbl">Deniz Kablosu</div></div></div>
     <div class="metric-card"><div class="mc-icon" style="background:#fee2e2;color:#ef4444">⚠️</div><div><div class="mc-val" id="mDar">0</div><div class="mc-lbl">Stratejik Darboğaz</div></div></div>
+</div>
+
+<div class="open-war-box">
+    <div class="open-war-head">
+        <div class="chart-title" style="margin:0">⚔️ Canlı Açılış Savaşı Ekranı</div>
+        <div class="open-war-upd" id="openingBattleUpdated">—</div>
+    </div>
+    <div class="open-war-grid" id="openingBattleGrid"></div>
+</div>
+
+<div class="risk-flow-box">
+    <div class="rf-head">
+        <div class="chart-title" style="margin:0">🔥 Risk Haritası: Dünya Üzerinde Isı Akışı</div>
+        <div class="rf-legend">
+            <span class="rf-dot"><i style="background:#22c55e"></i>Düşük</span>
+            <span class="rf-dot"><i style="background:#f59e0b"></i>Orta</span>
+            <span class="rf-dot"><i style="background:#ef4444"></i>Yüksek</span>
+        </div>
+    </div>
+    <div class="rf-map-wrap">
+        <svg class="rf-map" id="riskFlowMap" viewBox="0 0 860 300" aria-label="Küresel risk ısı akışı haritası"></svg>
+    </div>
 </div>
 
 <div class="globe-wrap">

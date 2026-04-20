@@ -426,5 +426,158 @@ if(bg){
     }).join('');
 }
 
-})();
+// ═════════════════════════════════════════════
+// YENİ: CANLI AÇILIŞ SAVAŞI
+// ═════════════════════════════════════════════
+var MARKET_HOURS = {
+    NYSE:{tz:'America/New_York', days:[1,2,3,4,5], sessions:[[9*60+30,16*60]]},
+    NASDAQ:{tz:'America/New_York', days:[1,2,3,4,5], sessions:[[9*60+30,16*60]]},
+    LSE:{tz:'Europe/London', days:[1,2,3,4,5], sessions:[[8*60,16*60+30]]},
+    EURONEXT:{tz:'Europe/Paris', days:[1,2,3,4,5], sessions:[[9*60,17*60+30]]},
+    XETRA:{tz:'Europe/Berlin', days:[1,2,3,4,5], sessions:[[9*60,17*60+30]]},
+    SIX:{tz:'Europe/Zurich', days:[1,2,3,4,5], sessions:[[9*60,17*60+30]]},
+    BIST:{tz:'Europe/Istanbul', days:[1,2,3,4,5], sessions:[[10*60,18*60]]},
+    TSE:{tz:'Asia/Tokyo', days:[1,2,3,4,5], sessions:[[9*60,11*60+30],[12*60+30,15*60+30]]},
+    SSE:{tz:'Asia/Shanghai', days:[1,2,3,4,5], sessions:[[9*60+30,11*60+30],[13*60,15*60]]},
+    SZSE:{tz:'Asia/Shanghai', days:[1,2,3,4,5], sessions:[[9*60+30,11*60+30],[13*60,15*60]]},
+    HKEX:{tz:'Asia/Hong_Kong', days:[1,2,3,4,5], sessions:[[9*60+30,12*60],[13*60,16*60]]},
+    KRX:{tz:'Asia/Seoul', days:[1,2,3,4,5], sessions:[[9*60,15*60+30]]},
+    ASX:{tz:'Australia/Sydney', days:[1,2,3,4,5], sessions:[[10*60,16*60]]},
+    TSX:{tz:'America/Toronto', days:[1,2,3,4,5], sessions:[[9*60+30,16*60]]},
+    BSE:{tz:'Asia/Kolkata', days:[1,2,3,4,5], sessions:[[9*60+15,15*60+30]]},
+    SGX:{tz:'Asia/Singapore', days:[1,2,3,4,5], sessions:[[9*60,17*60]]},
+    MOEX:{tz:'Europe/Moscow', days:[1,2,3,4,5], sessions:[[10*60,18*60+50]]},
+    B3:{tz:'America/Sao_Paulo', days:[1,2,3,4,5], sessions:[[10*60,17*60]]},
+    JSE:{tz:'Africa/Johannesburg', days:[1,2,3,4,5], sessions:[[9*60,17*60]]},
+    TWSE:{tz:'Asia/Taipei', days:[1,2,3,4,5], sessions:[[9*60,13*60+30]]},
+    TADAWUL:{tz:'Asia/Riyadh', days:[0,1,2,3,4], sessions:[[10*60,15*60]]},
+    DFM:{tz:'Asia/Dubai', days:[1,2,3,4,5], sessions:[[10*60,14*60+45]]}
+};
+function trNowText(){ return new Date().toLocaleString('tr-TR',{hour12:false}); }
+function fmtMins(mins){
+    mins = Math.max(0, mins|0);
+    var h = Math.floor(mins/60), m = mins%60;
+    if(h<=0) return m + ' dk';
+    return h + 's ' + m + ' dk';
+}
+function marketPhase(code, now){
+    var cfg = MARKET_HOURS[code];
+    if(!cfg) return {phase:'closed', text:'Takvim yok', eta:null, progress:0};
+    var fmt = new Intl.DateTimeFormat('en-GB',{timeZone:cfg.tz, weekday:'short', hour:'2-digit', minute:'2-digit', hour12:false});
+    var parts={}; fmt.formatToParts(now).forEach(function(p){parts[p.type]=p.value;});
+    var dow=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(parts.weekday);
+    var mins=(parseInt(parts.hour,10)||0)*60 + (parseInt(parts.minute,10)||0);
+    if(cfg.days.indexOf(dow) < 0) return {phase:'closed', text:'Bugün kapalı', eta:null, progress:0};
+    for(var i=0;i<cfg.sessions.length;i++){
+        var s=cfg.sessions[i][0], e=cfg.sessions[i][1];
+        if(mins>=s && mins<e){
+            var elapsed=mins-s, total=Math.max(1,e-s);
+            return {phase:'open', text:'Kapanışa '+fmtMins(e-mins), eta:e-mins, progress:Math.round((elapsed/total)*100)};
+        }
+        if(mins<s){
+            var remain=s-mins;
+            return {phase:remain<=90?'soon':'closed', text:'Açılışa '+fmtMins(remain), eta:remain, progress:Math.max(8,100-Math.round((remain/360)*100))};
+        }
+    }
+    return {phase:'closed', text:'Seans bitti', eta:null, progress:100};
+}
+function renderOpeningBattle(){
+    var grid=document.getElementById('openingBattleGrid');
+    var upd=document.getElementById('openingBattleUpdated');
+    if(!grid) return;
+    var now=new Date();
+    var list=D.EXCHANGES.map(function(ex){
+        var st=marketPhase(ex.code, now);
+        return {ex:ex, st:st};
+    }).sort(function(a,b){
+        var rank={open:0,soon:1,closed:2};
+        var ra=rank[a.st.phase]||3, rb=rank[b.st.phase]||3;
+        if(ra!==rb) return ra-rb;
+        var ea=a.st.eta==null?99999:a.st.eta;
+        var eb=b.st.eta==null?99999:b.st.eta;
+        return ea-eb;
+    }).slice(0,10);
+    grid.innerHTML=list.map(function(x){
+        var p=x.st.phase, cls=(p==='open'?'open':(p==='soon'?'soon':'closed'));
+        var color=p==='open'?'#22c55e':(p==='soon'?'#f59e0b':'#ef4444');
+        var badge=p==='open'?'Aksiyon':(p==='soon'?'Yakında':'Kapalı');
+        return '<div class="ow-card">'+
+            '<div class="ow-top"><div class="ow-name">'+x.ex.flag+' '+x.ex.code+'</div><span class="ow-tag '+cls+'">'+badge+'</span></div>'+
+            '<div class="ow-time">'+x.st.text+'</div>'+
+            '<div class="ow-bar"><div class="ow-fill" style="width:'+x.st.progress+'%;background:'+color+'"></div></div>'+
+            '<div class="ow-sub">'+x.ex.name+'</div>'+
+        '</div>';
+    }).join('');
+    if(upd) upd.textContent = 'Güncellendi: ' + trNowText();
+}
 
+// ═════════════════════════════════════════════
+// YENİ: RİSK HARİTASI — DÜNYA ÜZERİNDE ISI AKIŞI
+// ═════════════════════════════════════════════
+function riskColor(v){
+    if(v>=65) return '#ef4444';
+    if(v>=40) return '#f59e0b';
+    return '#22c55e';
+}
+function regionScores(indices){
+    var byId={}; (indices||[]).forEach(function(s){byId[s.id]=s;});
+    function avg(ids){
+        var vals=ids.map(function(id){return byId[id]&&byId[id].change_1d_pct;}).filter(function(v){return v!=null && isFinite(v);});
+        if(!vals.length) return 35;
+        var m=vals.reduce(function(a,b){return a+Math.abs(b);},0)/vals.length;
+        return Math.max(8, Math.min(92, Math.round(m*18)));
+    }
+    return {
+        NA: avg(['^GSPC','^IXIC','^DJI']),
+        EU: avg(['^GDAXI','^FCHI','^FTSE']),
+        AP: avg(['^N225','^KS11','^TWII','000001.SS']),
+        LATAM: avg(['^MERV','^BVSP']),
+        MEA: Math.round((avg(['XU100.IS']) + D.BOTTLENECKS.reduce(function(a,b){return a+b.risk;},0)/D.BOTTLENECKS.length)/2)
+    };
+}
+function renderRiskFlow(scores){
+    var elMap=document.getElementById('riskFlowMap');
+    if(!elMap) return;
+    var P={NA:[165,92], EU:[395,85], AP:[640,110], LATAM:[250,210], MEA:[455,155]};
+    function node(k,label){
+        var s=scores[k]||30, c=riskColor(s), p=P[k];
+        var r=8 + (s/100)*12;
+        return '<circle class="rf-node" cx="'+p[0]+'" cy="'+p[1]+'" r="'+r+'" fill="'+c+'"/>'+
+            '<text class="rf-label" x="'+(p[0]+14)+'" y="'+(p[1]+4)+'">'+label+' · '+s+'</text>';
+    }
+    function link(a,b,w){
+        var pa=P[a], pb=P[b];
+        var c=(scores[a]+scores[b])/2;
+        return '<path class="rf-link" d="M'+pa[0]+','+pa[1]+' Q'+((pa[0]+pb[0])/2)+','+(Math.min(pa[1],pb[1])-35)+' '+pb[0]+','+pb[1]+'" stroke="'+riskColor(c)+'" stroke-width="'+(1.4+w/38).toFixed(2)+'"/>';
+    }
+    elMap.innerHTML =
+        '<rect x="0" y="0" width="860" height="300" rx="10" fill="transparent"/>'+
+        '<path d="M72 80 L130 56 L210 66 L235 95 L206 126 L127 124 L92 100 Z" fill="#d9e7fa" opacity=".55"/>'+
+        '<path d="M240 170 L272 140 L308 150 L318 205 L286 244 L252 220 Z" fill="#d9e7fa" opacity=".55"/>'+
+        '<path d="M340 75 L405 58 L465 73 L500 95 L465 125 L388 126 L352 108 Z" fill="#d9e7fa" opacity=".55"/>'+
+        '<path d="M440 150 L498 145 L520 185 L492 232 L438 218 L420 182 Z" fill="#d9e7fa" opacity=".55"/>'+
+        '<path d="M532 86 L615 70 L715 90 L748 122 L715 151 L624 154 L560 130 Z" fill="#d9e7fa" opacity=".55"/>'+
+        '<path d="M696 198 L739 188 L770 210 L742 232 L702 224 Z" fill="#d9e7fa" opacity=".55"/>'+
+        link('NA','EU',scores.NA)+link('EU','MEA',scores.EU)+link('MEA','AP',scores.MEA)+link('NA','LATAM',scores.NA)+link('AP','EU',scores.AP)+
+        node('NA','K. Amerika')+node('EU','Avrupa')+node('AP','Asya Pasifik')+node('LATAM','Latin Amerika')+node('MEA','Ortadoğu/Afrika');
+}
+function refreshRiskFlow(){
+    fetch('data/indices.json?t='+Date.now(),{cache:'no-store'})
+        .then(function(r){return r.json();})
+        .then(function(j){
+            var scores=regionScores((j&&j.series)||[]);
+            renderRiskFlow(scores);
+        })
+        .catch(function(){
+            renderRiskFlow({NA:44,EU:40,AP:42,LATAM:35,MEA:58});
+        });
+}
+
+renderOpeningBattle();
+refreshRiskFlow();
+setInterval(function(){
+    renderOpeningBattle();
+    if(!document.hidden) refreshRiskFlow();
+}, 30000);
+
+})();
