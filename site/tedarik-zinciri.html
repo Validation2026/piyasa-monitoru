@@ -45,7 +45,20 @@
 .route-table td{padding:8px 12px;font-size:.78rem;border-bottom:1px solid #f1f5f9}
 .route-table tr:hover td{background:#f8fafc}
 .risk-high{color:#ff4757;font-weight:700}.risk-med{color:#f59e0b;font-weight:700}.risk-low{color:#00d68f;font-weight:700}
+.shock-box{background:#fff;border:1px solid #dde4ed;border-radius:12px;padding:12px 14px;margin-bottom:14px;display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center}
+.shock-box h4{font-size:.84rem;margin:0 0 2px;font-weight:800}
+.shock-box p{font-size:.72rem;color:#64748b;margin:0}
+.shock-select{border:1px solid #cbd5e1;border-radius:8px;padding:8px 10px;font-size:.76rem;background:#fff;color:#0f172a}
+.shock-btn{border:0;background:#ef4444;color:#fff;border-radius:8px;padding:8px 12px;font-size:.72rem;font-weight:800;cursor:pointer}
+.shock-btn.alt{background:#2563eb}
+.shock-btn:disabled{opacity:.55;cursor:not-allowed}
+.shock-stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.shock-chip{padding:6px 10px;border-radius:999px;font-size:.68rem;font-weight:700;border:1px solid #e2e8f0;background:#f8fafc;color:#334155}
+.shock-chip b{font-family:var(--mono)}
+.route-shock td{background:rgba(239,68,68,.08)!important;transition:background .3s ease}
+.shock-actions{display:flex;gap:8px;justify-content:flex-end;margin-bottom:10px;flex-wrap:wrap}
 @media(max-width:768px){#supplyMap{height:350px}.prod-grid{grid-template-columns:1fr}}
+@media(max-width:880px){.shock-box{grid-template-columns:1fr}.shock-btn,.shock-select{width:100%}}
 
 /* ══════════════════════════════════════════
    HARİTA ANİMASYONLARI (TEDARİK ZİNCİRİ)
@@ -80,6 +93,27 @@
 
 <div class="map-full">
 <h3>🗺️ Küresel Ticaret Rotaları & Darboğazlar</h3>
+<div class="shock-box">
+<div>
+<h4>⚠️ Şok Simülasyonu</h4>
+<p>Bir senaryo seç, darboğaz etkisini ve rota gecikmesini harita + tablo üzerinde canlı gör.</p>
+</div>
+<select id="shockScenario" class="shock-select" aria-label="Şok senaryosu">
+<option value="hormuz">Hürmüz Gerilimi (Enerji Şoku)</option>
+<option value="suez">Süveyş Blokajı (Lojistik Şoku)</option>
+<option value="malakka">Malakka Daralması (Asya Koridoru)</option>
+<option value="reset">Sıfırla</option>
+</select>
+<button type="button" class="shock-btn" id="runShockBtn">Simülasyonu Çalıştır</button>
+</div>
+<div class="shock-actions">
+<button type="button" class="shock-btn alt" id="dominoShockBtn">🎬 Domino Mode</button>
+</div>
+<div class="shock-stats" id="shockStats">
+<span class="shock-chip">Gecikme: <b id="shockDelay">+0 gün</b></span>
+<span class="shock-chip">Maliyet: <b id="shockCost">+0%</b></span>
+<span class="shock-chip">Sigorta Primi: <b id="shockIns">+0 bp</b></span>
+</div>
 <div class="leg">
 <span><div class="ld" style="background:#ff4757"></div> Yüksek Risk Bölgesi</span>
 <span><div class="ld" style="background:#fbbf24"></div> Orta Risk</span>
@@ -97,10 +131,10 @@
 <table>
 <thead><tr><th>Rota</th><th>Geçiş Noktası</th><th>Günlük Hacim</th><th>Taşınan</th><th>Risk</th></tr></thead>
 <tbody>
-<tr><td>Basra Körfezi → Asya</td><td>Hürmüz Boğazı</td><td>21M varil petrol</td><td>Ham petrol, LNG</td><td class="risk-high">🔴 YÜKSEK</td></tr>
-<tr><td>Akdeniz → Hint Okyanusu</td><td>Süveyş Kanalı</td><td>5.5M varil eşdeğer</td><td>Konteyner, petrol</td><td class="risk-med">🟡 ORTA</td></tr>
+<tr data-route-key="hormuz"><td>Basra Körfezi → Asya</td><td>Hürmüz Boğazı</td><td>21M varil petrol</td><td>Ham petrol, LNG</td><td class="risk-high">🔴 YÜKSEK</td></tr>
+<tr data-route-key="suez"><td>Akdeniz → Hint Okyanusu</td><td>Süveyş Kanalı</td><td>5.5M varil eşdeğer</td><td>Konteyner, petrol</td><td class="risk-med">🟡 ORTA</td></tr>
 <tr><td>Kızıldeniz → Aden</td><td>Bab el-Mandeb</td><td>6.2M varil</td><td>Petrol, LNG, konteyner</td><td class="risk-high">🔴 YÜKSEK</td></tr>
-<tr><td>Güney Çin Denizi</td><td>Malakka Boğazı</td><td>16M varil</td><td>Ham petrol, LNG, mal</td><td class="risk-low">🟢 DÜŞÜK</td></tr>
+<tr data-route-key="malakka"><td>Güney Çin Denizi</td><td>Malakka Boğazı</td><td>16M varil</td><td>Ham petrol, LNG, mal</td><td class="risk-low">🟢 DÜŞÜK</td></tr>
 <tr><td>Panama Kanalı</td><td>Panama</td><td>1M varil eşdeğer</td><td>Konteyner, tahıl, LNG</td><td class="risk-low">🟢 DÜŞÜK (Kuraklık)</td></tr>
 <tr><td>Türk Boğazları</td><td>İstanbul/Çanakkale</td><td>3M varil</td><td>Karadeniz petrolü, tahıl</td><td class="risk-med">🟡 ORTA</td></tr>
 </tbody>
@@ -145,14 +179,16 @@ var routes=[
     {pts:[[-23,113],[5,105],[1.3,103.8],[15,100],[30,120],[35,130]],color:'#3b82f6',name:'Avustralya→Çin'},
     {pts:[[30,120],[35,130],[40,140],[35,145]],color:'#22d3ee',name:'LNG→Japonya'},
 ];
+var routeLayers = {};
 routes.forEach(function(r){
-    L.polyline(r.pts,{
+    var layer = L.polyline(r.pts,{
         color: r.color,
         weight: 3, // Çizgiyi biraz kalınlaştırdık ki animasyon net görünsün
         opacity: 0.8,
         // Akış animasyonu sınıfını ekliyoruz
         className: 'animated-route'
     }).addTo(map).bindPopup('<b>'+r.name+'</b>');
+    routeLayers[r.name] = layer;
 });
 
 // Üretici ülke noktaları
@@ -194,6 +230,68 @@ g.innerHTML=countries.map(function(c){
     var tags=c.items.map(function(i){return '<span class="pc-tag '+i.c+'">'+i.t+'</span>'}).join('');
     return '<div class="prod-card"><div class="pc-head"><span class="pc-flag">'+c.flag+'</span><span class="pc-name">'+c.name+'</span></div><div class="pc-list">'+tags+'</div></div>';
 }).join('');
+
+// Şok simülasyonu
+var shockBtn = document.getElementById('runShockBtn');
+var dominoBtn = document.getElementById('dominoShockBtn');
+var shockSel = document.getElementById('shockScenario');
+var shockDelay = document.getElementById('shockDelay');
+var shockCost = document.getElementById('shockCost');
+var shockIns = document.getElementById('shockIns');
+var scenarios = {
+    hormuz: {delay:'+5 gün', cost:'+11%', ins:'+145 bp', center:[26.56,56.24], zoom:5, affected:['hormuz']},
+    suez: {delay:'+7 gün', cost:'+9%', ins:'+120 bp', center:[30.45,32.35], zoom:5, affected:['suez']},
+    malakka: {delay:'+4 gün', cost:'+6%', ins:'+85 bp', center:[1.35,103.8], zoom:5, affected:['malakka']},
+    reset: {delay:'+0 gün', cost:'+0%', ins:'+0 bp', center:[25,50], zoom:3, affected:[]}
+};
+function resetShockStyles(){
+    Object.keys(routeLayers).forEach(function(k){
+        routeLayers[k].setStyle({weight:3,opacity:.8,color:(k.indexOf('Ümit Burnu')>-1?'#f97316':k.indexOf('LNG')>-1?'#22d3ee':'#3b82f6')});
+    });
+    document.querySelectorAll('tr[data-route-key]').forEach(function(tr){tr.classList.remove('route-shock');});
+}
+if(shockBtn && shockSel){
+    shockBtn.addEventListener('click', function(){
+        var key = shockSel.value;
+        var s = scenarios[key] || scenarios.reset;
+        resetShockStyles();
+        if(key === 'hormuz'){
+            routeLayers['Körfez→Asya'] && routeLayers['Körfez→Asya'].setStyle({color:'#ef4444',weight:6,opacity:1});
+            routeLayers['Körfez→Avrupa (Süveyş)'] && routeLayers['Körfez→Avrupa (Süveyş)'].setStyle({color:'#ef4444',weight:6,opacity:1});
+        }else if(key === 'suez'){
+            routeLayers['Körfez→Avrupa (Süveyş)'] && routeLayers['Körfez→Avrupa (Süveyş)'].setStyle({color:'#ef4444',weight:6,opacity:1});
+            routeLayers['Körfez→Avrupa (Ümit Burnu)'] && routeLayers['Körfez→Avrupa (Ümit Burnu)'].setStyle({color:'#f97316',weight:5,opacity:1});
+        }else if(key === 'malakka'){
+            routeLayers['Körfez→Asya'] && routeLayers['Körfez→Asya'].setStyle({color:'#ef4444',weight:6,opacity:1});
+            routeLayers['Avustralya→Çin'] && routeLayers['Avustralya→Çin'].setStyle({color:'#ef4444',weight:6,opacity:1});
+        }
+        s.affected.forEach(function(kx){
+            var tr = document.querySelector('tr[data-route-key="'+kx+'"]');
+            if(tr) tr.classList.add('route-shock');
+        });
+        if(shockDelay) shockDelay.textContent = s.delay;
+        if(shockCost) shockCost.textContent = s.cost;
+        if(shockIns) shockIns.textContent = s.ins;
+        map.flyTo(s.center, s.zoom, {duration:1.1});
+    });
+}
+if(dominoBtn){
+    dominoBtn.addEventListener('click', function(){
+        var sequence=['hormuz','suez','malakka','reset'];
+        var idx=0;
+        dominoBtn.disabled=true;
+        var t=setInterval(function(){
+            var key=sequence[idx];
+            if(!key){ clearInterval(t); dominoBtn.disabled=false; return; }
+            if(shockSel) shockSel.value=key;
+            if(shockBtn) shockBtn.click();
+            idx++;
+            if(idx>=sequence.length){
+                setTimeout(function(){clearInterval(t);dominoBtn.disabled=false;},1200);
+            }
+        },1700);
+    });
+}
 
 // Excel indirme
 var supplyBtn = document.getElementById('supplyExcel');

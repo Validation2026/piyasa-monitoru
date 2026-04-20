@@ -855,6 +855,80 @@ document.addEventListener("click", function(e) {
 });
 
 /* ══════════════════════════════════════════
+   HEATMAP -> DETAILS GEÇİŞİ (ortak animasyon)
+   ══════════════════════════════════════════ */
+document.addEventListener('click', function(e){
+    var row = e.target && e.target.closest ? e.target.closest('.heatmap-tbl tbody tr') : null;
+    if(!row) return;
+    var table = row.closest('.heatmap-tbl');
+    if(!table) return;
+    var nameEl = row.querySelector('.hm-name');
+    var assetName = nameEl ? (nameEl.textContent || '').trim() : '';
+    if(!assetName) return;
+
+    row.classList.remove('heatmap-jump-flash');
+    void row.offsetWidth;
+    row.classList.add('heatmap-jump-flash');
+
+    var cardsBtn = document.querySelector('.view-btn[data-view="cards"]');
+    if(cardsBtn && !cardsBtn.classList.contains('on')) cardsBtn.click();
+
+    setTimeout(function(){
+        var candidates = Array.prototype.slice.call(document.querySelectorAll('.chrt,.scard'));
+        if(!candidates.length) return;
+        var normalized = assetName.toLocaleLowerCase('tr').replace(/\s+/g,' ').trim();
+        var hit = candidates.find(function(el){
+            var txt = (el.textContent || '').toLocaleLowerCase('tr').replace(/\s+/g,' ').trim();
+            return txt.indexOf(normalized) !== -1;
+        }) || candidates[0];
+        if(!hit) return;
+        hit.scrollIntoView({behavior:'smooth', block:'center'});
+        hit.classList.remove('detail-jump-pulse');
+        void hit.offsetWidth;
+        hit.classList.add('detail-jump-pulse');
+    }, 260);
+});
+
+/* ══════════════════════════════════════════
+   HEATMAP AUTO TOUR (mobil uyumlu)
+   ══════════════════════════════════════════ */
+function ensureHeatmapTourButton(){
+    var wrap = document.getElementById('viewToggle') || document.querySelector('.view-toggle');
+    if(!wrap || wrap.querySelector('.heatmap-tour-btn')) return;
+    if(!document.querySelector('.view-btn[data-view="heatmap"]')) return;
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'heatmap-tour-btn';
+    btn.textContent = '🎬 Demo Turu';
+    btn.setAttribute('aria-label','Heatmap demo turu');
+    wrap.appendChild(btn);
+}
+function runHeatmapTour(){
+    var heatBtn = document.querySelector('.view-btn[data-view="heatmap"]');
+    if(heatBtn && !heatBtn.classList.contains('on')) heatBtn.click();
+    setTimeout(function(){
+        var rows = Array.prototype.slice.call(document.querySelectorAll('.heatmap-tbl tbody tr')).slice(0,5);
+        if(!rows.length) return;
+        var i = 0;
+        var timer = setInterval(function(){
+            var row = rows[i];
+            if(!row){ clearInterval(timer); return; }
+            row.scrollIntoView({behavior:'smooth', block:'center'});
+            row.click();
+            i++;
+            if(i >= rows.length) clearInterval(timer);
+        }, 1200);
+    }, 280);
+}
+document.addEventListener('click', function(e){
+    var t = e.target && e.target.closest ? e.target.closest('.heatmap-tour-btn') : null;
+    if(!t) return;
+    runHeatmapTour();
+});
+if(document.readyState !== 'loading') ensureHeatmapTourButton();
+else document.addEventListener('DOMContentLoaded', ensureHeatmapTourButton);
+
+/* ══════════════════════════════════════════
    AKILLI OTOMATİK YENİLEME (MOBİL İÇİN)
    ══════════════════════════════════════════ */
 (function() {
