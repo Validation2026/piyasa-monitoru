@@ -131,9 +131,15 @@ document.addEventListener('keydown', function(e){
 function tick(){
     var el=document.getElementById('clock');if(!el)return;
     var n=new Date();
-    el.textContent=String(n.getDate()).padStart(2,'0')+'.'+String(n.getMonth()+1).padStart(2,'0')+'.'+n.getFullYear()+' '+String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');
+    var dd=String(n.getDate()).padStart(2,'0');
+    var mm=String(n.getMonth()+1).padStart(2,'0');
+    var yyyy=n.getFullYear();
+    var hh=String(n.getHours()).padStart(2,'0');
+    var mi=String(n.getMinutes()).padStart(2,'0');
+    var t=dd+'.'+mm+'.'+yyyy+' '+hh+':'+mi;
+    el.textContent=t;
 }
-setInterval(tick,30000);tick();
+setInterval(tick,1000);tick();
 
 // ═══════════════════════════════════════════
 // COMMAND PALETTE (Cmd/Ctrl+K) — global arama
