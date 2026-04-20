@@ -21,18 +21,17 @@ def _mock_response(json_data, status_code=200):
     return mock
 
 
-def _chart_response(timestamps, closes):
+def _chart_response(timestamps, closes, regular_market_price=None):
     """Geçerli Yahoo chart API yanıt formatı oluşturur."""
-    return {
-        "chart": {
-            "result": [{
-                "timestamp": timestamps,
-                "indicators": {
-                    "quote": [{"close": closes}]
-                }
-            }]
+    result = {
+        "timestamp": timestamps,
+        "indicators": {
+            "quote": [{"close": closes}]
         }
     }
+    if regular_market_price is not None:
+        result["meta"] = {"regularMarketPrice": regular_market_price}
+    return {"chart": {"result": [result]}}
 
 
 class TestFetchYahooDirect:
@@ -46,10 +45,12 @@ class TestFetchYahooDirect:
         result = fetch_yahoo_direct("TEST")
 
         assert result is not None
-        assert len(result) == 3
-        assert result[0]["date"] == "2024-01-01"
-        assert result[0]["value"] == 100.1234
-        assert result[2]["value"] == 102.9999  # round(102.9999, 4) = 102.9999
+        points, live_price = result
+        assert len(points) == 3
+        assert points[0]["date"] == "2024-01-01"
+        assert points[0]["value"] == 100.1234
+        assert points[2]["value"] == 102.9999  # round(102.9999, 4) = 102.9999
+        assert live_price is None  # meta yok
 
     @patch("yahoo_finance.requests.get")
     def test_empty_result_array(self, mock_get):
@@ -82,9 +83,10 @@ class TestFetchYahooDirect:
         result = fetch_yahoo_direct("TEST")
 
         assert result is not None
-        assert len(result) == 2
-        assert result[0]["value"] == 100.0
-        assert result[1]["value"] == 102.0
+        points, _ = result
+        assert len(points) == 2
+        assert points[0]["value"] == 100.0
+        assert points[1]["value"] == 102.0
 
     @patch("yahoo_finance.requests.get")
     def test_all_none_values_returns_none(self, mock_get):
@@ -115,5 +117,33 @@ class TestFetchYahooDirect:
         mock_get.return_value = _mock_response(_chart_response(ts, closes))
 
         result = fetch_yahoo_direct("TEST")
-        assert len(result[0]["date"]) == 10
-        assert result[0]["date"].count("-") == 2
+        points, _ = result
+        assert len(points[0]["date"]) == 10
+        assert points[0]["date"].count("-") == 2
+
+    @patch("yahoo_finance.requests.get")
+    def test_live_price_from_meta(self, mock_get):
+        ts = [1704067200, 1704153600]
+        closes = [100.0, 101.0]
+        mock_get.return_value = _mock_response(
+            _chart_response(ts, closes, regular_market_price=105.5)
+        )
+
+        result = fetch_yahoo_direct("TEST")
+        assert result is not None
+        points, live_price = result
+        assert len(points) == 2
+        assert live_price == 105.5
+
+    @patch("yahoo_finance.requests.get")
+    def test_live_price_invalid_value(self, mock_get):
+        ts = [1704067200]
+        closes = [100.0]
+        mock_get.return_value = _mock_response(
+            _chart_response(ts, closes, regular_market_price="N/A")
+        )
+
+        result = fetch_yahoo_direct("TEST")
+        assert result is not None
+        _, live_price = result
+        assert live_price is None
