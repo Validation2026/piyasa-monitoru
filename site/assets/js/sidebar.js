@@ -60,6 +60,7 @@ sidebarLinks +
 '<button type="button" class="topbar-search" id="topbarSearch" aria-label="Arama (Ctrl+K)" title="Ara (Ctrl+K)"><span aria-hidden="true">🔍</span><span class="tbs-label">Ara</span><span class="tbs-kbd">⌘K</span></button>' +
 '<span class="topbar-clock" id="clock" aria-live="off"></span>' +
 '</div>' +
+'<div class="global-live-clock" id="globalLiveClock" aria-live="off"></div>' +
 '<nav class="mobile-nav" id="mobileNav" aria-label="Sayfa gezinme">' + mobileLinks + '</nav>' +
 // Floating search FAB — her sayfada her zaman görünür
 '<button type="button" class="search-fab" id="searchFab" aria-label="Arama (Ctrl+K)" title="Ara (Ctrl+K)"><span aria-hidden="true">🔍</span></button>' +
@@ -131,9 +132,18 @@ document.addEventListener('keydown', function(e){
 function tick(){
     var el=document.getElementById('clock');if(!el)return;
     var n=new Date();
-    el.textContent=String(n.getDate()).padStart(2,'0')+'.'+String(n.getMonth()+1).padStart(2,'0')+'.'+n.getFullYear()+' '+String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');
+    var dd=String(n.getDate()).padStart(2,'0');
+    var mm=String(n.getMonth()+1).padStart(2,'0');
+    var yyyy=n.getFullYear();
+    var hh=String(n.getHours()).padStart(2,'0');
+    var mi=String(n.getMinutes()).padStart(2,'0');
+    var ss=String(n.getSeconds()).padStart(2,'0');
+    var t=dd+'.'+mm+'.'+yyyy+' '+hh+':'+mi;
+    el.textContent=t;
+    var gl=document.getElementById('globalLiveClock');
+    if(gl) gl.textContent='🕒 Canlı Saat · '+hh+':'+mi+':'+ss;
 }
-setInterval(tick,30000);tick();
+setInterval(tick,1000);tick();
 
 // ═══════════════════════════════════════════
 // COMMAND PALETTE (Cmd/Ctrl+K) — global arama
