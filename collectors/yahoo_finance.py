@@ -27,6 +27,10 @@ from config import ALL_YF_GROUPS, DATA_DIR, FOREX_COUNTRY_MAP, tradingview_logo_
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
 LOGO_DIR = ROOT_DIR / "site" / "assets" / "logos"
+SYMBOL_PRICE_SCALE = {
+    # Yahoo ZR=F fiyatını cent bazında döndürebildiği için her zaman /100 normalize et.
+    "ZR=F": 0.01,
+}
 
 
 def _safe_id(symbol):
@@ -55,6 +59,32 @@ def _local_logo_meta(symbol):
             if len(pair) == 2:
                 meta["logo_pair_local"] = pair
     return meta
+
+
+def _scale_value(symbol: str, value: float | None) -> float | None:
+    """Sembol bazlı fiyat ölçek düzeltmesi uygula."""
+    if value is None:
+        return None
+    factor = SYMBOL_PRICE_SCALE.get(symbol, 1.0)
+    return round(float(value) * factor, 4)
+
+
+def _apply_symbol_scale(symbol: str, points: list[dict]) -> list[dict]:
+    """Sembol bazlı ölçek düzeltmesini tarihsel veri noktalarına uygula."""
+    factor = SYMBOL_PRICE_SCALE.get(symbol, 1.0)
+    if factor == 1.0:
+        return points
+    scaled = []
+    for p in points:
+        v = p.get("value")
+        if v is None:
+            scaled.append(p)
+            continue
+        scaled.append({
+            "date": p["date"],
+            "value": round(float(v) * factor, 4),
+        })
+    return scaled
 
 # ═══════════════════════════════════════════════════════════
 #  YÖNTEM 1 (Birincil): Doğrudan Yahoo Chart API — query2
@@ -328,12 +358,18 @@ def fetch_group(group: dict) -> dict:
             print(f"   ❌ {meta['name']} ({symbol}): Veri alınamadı")
             continue
 
+        # Sembol bazlı tarihsel fiyat ölçek düzeltmesi.
+        points = _apply_symbol_scale(symbol, points)
+
         # Canlı fiyatı intraday 1m bar'dan override et — günlük endpoint
         # meta'sı bazen saatlerce eski kalıyor, intraday her zaman daha taze.
         intraday_price = fetch_yahoo_intraday_latest(symbol)
         if intraday_price is not None:
             live_price = intraday_price
             source = f"{source} + 1m"
+
+        # Sembol bazlı canlı fiyat ölçek düzeltmesi.
+        live_price = _scale_value(symbol, live_price)
 
         # Birim/ölçek tutarsızlığı koruması: Yahoo bazı future'ları (ör. ZR=F)
         # tarihsel veride USc/cwt, intraday'da USD/cwt gibi farklı ölçeklerde

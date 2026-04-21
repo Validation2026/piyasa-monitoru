@@ -55,6 +55,7 @@
 
     <div class="view-section active" id="viewCards">
         <div class="summary-row" id="summaryCards"></div>
+        <div id="cardsPager" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:8px 0 12px 0;flex-wrap:wrap"></div>
         <div class="chart-timeframes global-timeframes">
             <button class="tf-btn" data-tf="1A">1A</button>
             <button class="tf-btn" data-tf="3A">3A</button>
@@ -95,6 +96,8 @@
 <script>
 (function(){
     var cat='all', currentView='cards', allSeries=[], chartInstances=[], barCharts=[];
+    var page = 1;
+    var PAGE_SIZE = 24;
 
     // BIST ticker'ları .IS ile biter; ABD = belirli semboller; geri kalan = küresel
     var US_TICKERS = ['AAPL','MSFT','GOOGL','AMZN','NVDA','META','TSLA','AVGO','AMD','INTC','CRM','ORCL','ADBE','NFLX','JPM','V','MA','JNJ','UNH','LLY','PG','KO','PEP','WMT','COST','HD','DIS','XOM','CVX','BA','CAT'];
@@ -112,17 +115,52 @@
         return allSeries.filter(function(s){ return classifySeries(s) === cat; });
     }
 
+    function paged(list){
+        var total = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
+        if(page > total) page = total;
+        var start = (page - 1) * PAGE_SIZE;
+        return list.slice(start, start + PAGE_SIZE);
+    }
+
+    function renderPager(totalItems){
+        var el = document.getElementById('cardsPager');
+        if(!el) return;
+        var totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
+        var start = totalItems ? ((page - 1) * PAGE_SIZE + 1) : 0;
+        var end = Math.min(totalItems, page * PAGE_SIZE);
+        el.innerHTML = '' +
+            '<div style="color:var(--muted);font-size:12px">' +
+                'Gösterilen: <b>'+start+'-'+end+'</b> / '+totalItems+
+            '</div>' +
+            '<div style="display:flex;gap:8px;align-items:center">' +
+                '<button class="tf-btn" id="prevPageBtn" '+(page<=1?'disabled':'')+'>← Önceki</button>' +
+                '<span style="font-size:12px;color:var(--muted)">Sayfa '+page+' / '+totalPages+'</span>' +
+                '<button class="tf-btn" id="nextPageBtn" '+(page>=totalPages?'disabled':'')+'>Sonraki →</button>' +
+            '</div>';
+
+        var prev = document.getElementById('prevPageBtn');
+        var next = document.getElementById('nextPageBtn');
+        if(prev) prev.addEventListener('click', function(){
+            if(page > 1){ page--; rebuildCards(); }
+        });
+        if(next) next.addEventListener('click', function(){
+            if(page < totalPages){ page++; rebuildCards(); }
+        });
+    }
+
     function rebuildCards(){
         var active = applyFilter();
+        var visible = paged(active);
         if(chartInstances.length){ chartInstances.forEach(function(c){ if(c&&c.destroy) c.destroy(); }); }
         chartInstances = [];
         var grid = document.getElementById('chartsGrid'); if(grid) grid.innerHTML='';
         var sc = document.getElementById('summaryCards'); if(sc) sc.innerHTML='';
         var dt = document.getElementById('dataTable'); if(dt) dt.innerHTML='';
+        renderPager(active.length);
         if(!active.length){ if(sc) sc.innerHTML='<div class="scard"><div class="scard-name">Bu kategoride veri yok.</div></div>'; return; }
-        PM.buildSummary('summaryCards', active);
-        chartInstances = PM.buildCharts('chartsGrid', active, 'all');
-        PM.buildTable('dataTable', active);
+        PM.buildSummary('summaryCards', visible);
+        chartInstances = PM.buildCharts('chartsGrid', visible, 'all');
+        PM.buildTable('dataTable', visible);
     }
 
     function rebuildBar(){
@@ -164,6 +202,7 @@
         document.querySelectorAll('#catTabs .country-tab').forEach(function(b){ b.classList.remove('on'); b.setAttribute('aria-selected','false'); });
         btn.classList.add('on'); btn.setAttribute('aria-selected','true');
         cat = btn.getAttribute('data-cat');
+        page = 1;
         rebuildCurrent();
     });
 
