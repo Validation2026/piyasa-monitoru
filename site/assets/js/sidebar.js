@@ -16,6 +16,7 @@ var links = [
     ['endeksler','📈','Endeksler'],
     ['hisseler','💹','Hisseler'],
     ['kripto','₿','Kripto'],
+    ['canli-terminal','🔴','Canlı Terminal'],
     ['faiz-enflasyon','🌡️','Faiz & Enflasyon'],
     ['kure','🌐','3D Küre'],
     ['karsilastirma','📊','Karşılaştır'],
