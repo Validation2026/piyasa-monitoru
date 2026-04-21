@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="light">
+<head>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ef4444">
+    <title>🔴 Canlı Terminal — Risk Monitörü</title>
+    <meta name="description" content="Bloomberg tarzı canlı kripto terminali — tick-by-tick fiyatlar, WebSocket üzerinden gerçek zamanlı akış">
+    <meta property="og:title" content="Canlı Terminal — Risk Monitörü">
+    <meta property="og:description" content="WebSocket üzerinden tick-by-tick canlı piyasa verileri">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="tr_TR">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔴</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .term-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:14px 0 10px;border-bottom:1px solid var(--border);margin-bottom:14px}
+        .term-title{font-size:1.35rem;font-weight:800;letter-spacing:-.5px;display:flex;align-items:center;gap:10px}
+        .term-title .dot{width:10px;height:10px;border-radius:50%;background:#ef4444;box-shadow:0 0 0 0 rgba(239,68,68,.7);animation:livePulse 1.4s infinite}
+        @keyframes livePulse{0%{box-shadow:0 0 0 0 rgba(239,68,68,.7)}70%{box-shadow:0 0 0 10px rgba(239,68,68,0)}100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}}
+        .term-status{display:flex;gap:14px;margin-left:auto;font-family:var(--mono);font-size:.72rem;color:var(--t2);flex-wrap:wrap}
+        .term-status .s-k{color:var(--t3);text-transform:uppercase;letter-spacing:.5px;font-size:.62rem}
+        .term-status .s-v{color:var(--t1);font-weight:700;margin-left:4px}
+        .term-status .s-v.ok{color:var(--green)}
+        .term-status .s-v.bad{color:var(--red)}
+
+        .kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}
+        @media(max-width:980px){.kpi-grid{grid-template-columns:repeat(3,1fr)}}
+        @media(max-width:720px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+        @media(max-width:420px){.kpi-grid{grid-template-columns:1fr}}
+
+        .kpi-cell{position:relative;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 14px 12px;overflow:hidden;transition:border-color .2s, transform .2s}
+        .kpi-cell:hover{border-color:var(--blue);transform:translateY(-2px)}
+        .kpi-cell::before{content:"";position:absolute;inset:0;background:transparent;pointer-events:none;transition:background .6s}
+        .kpi-cell.flash-u::before{background:rgba(0,214,143,.18)}
+        .kpi-cell.flash-d::before{background:rgba(255,71,87,.18)}
+
+        .kpi-top{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+        .kpi-sym{font-weight:800;font-size:.95rem;letter-spacing:-.3px}
+        .kpi-name{font-size:.65rem;color:var(--t3);text-transform:uppercase;letter-spacing:.5px}
+        .kpi-live{margin-left:auto;font-size:.55rem;color:#ef4444;font-weight:800;letter-spacing:1px;opacity:.7}
+
+        .kpi-price{font-family:var(--mono);font-size:1.45rem;font-weight:800;color:var(--t1);line-height:1.1;letter-spacing:-.5px;transition:color .3s}
+        .kpi-cell.flash-u .kpi-price{color:var(--green)}
+        .kpi-cell.flash-d .kpi-price{color:var(--red)}
+
+        .kpi-meta{display:flex;justify-content:space-between;align-items:baseline;margin-top:8px;gap:8px}
+        .kpi-chg{font-family:var(--mono);font-size:.82rem;font-weight:700;padding:2px 8px;border-radius:6px}
+        .kpi-chg.u{color:var(--green);background:var(--gbg)}
+        .kpi-chg.d{color:var(--red);background:var(--rbg)}
+
+        .kpi-sub{font-family:var(--mono);font-size:.62rem;color:var(--t3);display:flex;gap:10px;margin-top:6px;flex-wrap:wrap}
+        .kpi-sub span b{color:var(--t2);font-weight:600}
+
+        .kpi-spark{display:block;width:100%;height:34px;margin-top:8px}
+
+        .tape{background:#0b1220;color:#e2e8f0;border:1px solid #1e293b;border-radius:10px;padding:9px 0;margin-bottom:16px;overflow:hidden;position:relative}
+        .tape-track{display:inline-flex;gap:28px;white-space:nowrap;animation:tapeRoll 60s linear infinite;padding-left:100%}
+        .tape:hover .tape-track{animation-play-state:paused}
+        @keyframes tapeRoll{0%{transform:translateX(0)}100%{transform:translateX(-100%)}}
+        .tape-item{font-family:var(--mono);font-size:.78rem;display:inline-flex;gap:8px;align-items:baseline}
+        .tape-item .t-s{font-weight:800;color:#fbbf24}
+        .tape-item .t-p{color:#f1f5f9;font-weight:600}
+        .tape-item .t-c{font-size:.7rem;font-weight:700}
+        .tape-item .t-c.u{color:#10b981}
+        .tape-item .t-c.d{color:#f43f5e}
+
+        .term-log{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-top:10px}
+        .term-log h4{font-size:.7rem;color:var(--t2);font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+        .term-log ul{list-style:none;font-family:var(--mono);font-size:.7rem;max-height:200px;overflow-y:auto}
+        .term-log li{padding:3px 0;border-bottom:1px dashed var(--border2);display:flex;gap:10px}
+        .term-log li:last-child{border-bottom:0}
+        .term-log .lt{color:var(--t3);min-width:68px}
+        .term-log .ls{color:var(--t1);font-weight:700;min-width:72px}
+        .term-log .lp.u{color:var(--green);font-weight:700}
+        .term-log .lp.d{color:var(--red);font-weight:700}
+
+        .term-foot{margin-top:14px;padding:10px 12px;background:var(--card2);border:1px dashed var(--border);border-radius:8px;font-size:.7rem;color:var(--t3);line-height:1.55}
+        .term-foot b{color:var(--t2)}
+    </style>
+</head>
+<body>
+<script src="assets/js/sidebar.js"></script>
+<div class="page">
+<div class="page-spacer"></div>
+
+    <div class="term-head">
+        <div class="term-title"><span class="dot"></span> Canlı Terminal</div>
+        <div class="term-status">
+            <span><span class="s-k">Bağlantı</span><span class="s-v" id="stConn">bekleniyor…</span></span>
+            <span><span class="s-k">Gecikme</span><span class="s-v" id="stLat">— ms</span></span>
+            <span><span class="s-k">Tick</span><span class="s-v" id="stTicks">0</span></span>
+            <span><span class="s-k">Saat</span><span class="s-v" id="stClock">—</span></span>
+        </div>
+    </div>
+
+    <div class="tape" aria-label="Canlı fiyat şeridi">
+        <div class="tape-track" id="tapeTrack"></div>
+    </div>
+
+    <div class="kpi-grid" id="kpiGrid"></div>
+
+    <div class="term-log" aria-live="polite">
+        <h4>📡 Son tick akışı</h4>
+        <ul id="tickLog"></ul>
+    </div>
+
+    <div class="term-foot">
+        <b>Veri kaynağı:</b> Binance Spot WebSocket (<code>wss://stream.binance.com:9443</code>) — ücretsiz, gerçek zamanlı tick akışı.
+        Fiyatlar doğrudan borsa tick'inden gelir, herhangi bir arka uç veya polling kullanılmaz. Yalnızca bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.
+    </div>
+
+</div>
+<script>
+(function(){
+    'use strict';
+
+    var SYMBOLS = [
+        {s:'BTCUSDT',  n:'Bitcoin',      e:'₿'},
+        {s:'ETHUSDT',  n:'Ethereum',     e:'Ξ'},
+        {s:'BNBUSDT',  n:'BNB',          e:'🟡'},
+        {s:'SOLUSDT',  n:'Solana',       e:'◎'},
+        {s:'XRPUSDT',  n:'XRP',          e:'✕'},
+        {s:'DOGEUSDT', n:'Dogecoin',     e:'🐕'},
+        {s:'ADAUSDT',  n:'Cardano',      e:'₳'},
+        {s:'AVAXUSDT', n:'Avalanche',    e:'🔺'},
+        {s:'LINKUSDT', n:'Chainlink',    e:'🔗'},
+        {s:'DOTUSDT',  n:'Polkadot',     e:'●'},
+        {s:'LTCUSDT',  n:'Litecoin',     e:'Ł'},
+        {s:'PAXGUSDT', n:'Altın (PAXG)', e:'🥇'}
+    ];
+
+    var state = {};
+    SYMBOLS.forEach(function(x){ state[x.s] = {last:null, hist:[]}; });
+
+    var grid  = document.getElementById('kpiGrid');
+    var tape  = document.getElementById('tapeTrack');
+    var log   = document.getElementById('tickLog');
+    var stConn = document.getElementById('stConn');
+    var stLat  = document.getElementById('stLat');
+    var stTicks= document.getElementById('stTicks');
+    var stClock= document.getElementById('stClock');
+    var tickCount = 0;
+
+    function fmtPrice(v){
+        if(v==null||isNaN(v)) return '—';
+        var n = +v;
+        if(n >= 1000) return n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+        if(n >= 1)    return n.toLocaleString('en-US',{minimumFractionDigits:3,maximumFractionDigits:3});
+        return n.toLocaleString('en-US',{minimumFractionDigits:5,maximumFractionDigits:5});
+    }
+    function fmtVol(v){
+        v = +v;
+        if(v>=1e9) return (v/1e9).toFixed(2)+'B';
+        if(v>=1e6) return (v/1e6).toFixed(2)+'M';
+        if(v>=1e3) return (v/1e3).toFixed(1)+'K';
+        return v.toFixed(0);
+    }
+
+    SYMBOLS.forEach(function(x){
+        var el = document.createElement('div');
+        el.className = 'kpi-cell';
+        el.id = 'c_'+x.s;
+        el.innerHTML =
+            '<div class="kpi-top">'+
+              '<span style="font-size:1rem">'+x.e+'</span>'+
+              '<div><div class="kpi-sym">'+x.s.replace('USDT','/USDT')+'</div>'+
+              '<div class="kpi-name">'+x.n+'</div></div>'+
+              '<span class="kpi-live">● LIVE</span>'+
+            '</div>'+
+            '<div class="kpi-price" data-price>—</div>'+
+            '<div class="kpi-meta"><span class="kpi-chg" data-chg>—</span><span style="font-family:var(--mono);font-size:.66rem;color:var(--t3)" data-vol>vol —</span></div>'+
+            '<div class="kpi-sub"><span>Y <b data-hi>—</b></span><span>D <b data-lo>—</b></span><span>24h <b data-open>—</b></span></div>'+
+            '<svg class="kpi-spark" data-spark viewBox="0 0 100 34" preserveAspectRatio="none"></svg>';
+        grid.appendChild(el);
+
+        var tItem = document.createElement('span');
+        tItem.className = 'tape-item';
+        tItem.id = 't_'+x.s;
+        tItem.innerHTML = '<span class="t-s">'+x.s.replace('USDT','')+'</span> <span class="t-p">—</span> <span class="t-c">—</span>';
+        tape.appendChild(tItem);
+    });
+
+    setInterval(function(){
+        var d = new Date();
+        stClock.textContent = d.toLocaleTimeString('tr-TR');
+    }, 1000);
+
+    function drawSpark(cell, hist){
+        var svg = cell.querySelector('[data-spark]');
+        if(!svg || hist.length < 2) return;
+        var min = Math.min.apply(null, hist);
+        var max = Math.max.apply(null, hist);
+        var rng = (max - min) || 1;
+        var step = 100 / (hist.length - 1);
+        var pts = hist.map(function(v,i){
+            var x = (i*step).toFixed(2);
+            var y = (32 - ((v-min)/rng)*30).toFixed(2);
+            return x+','+y;
+        }).join(' ');
+        var up = hist[hist.length-1] >= hist[0];
+        var color = up ? 'var(--green)' : 'var(--red)';
+        svg.innerHTML =
+            '<polyline fill="none" stroke="'+color+'" stroke-width="1.5" points="'+pts+'"/>'+
+            '<polyline fill="'+color+'" fill-opacity="0.12" stroke="none" points="0,34 '+pts+' 100,34"/>';
+    }
+
+    function pushLog(sym, price, dir){
+        var li = document.createElement('li');
+        var ts = new Date().toLocaleTimeString('tr-TR',{hour12:false});
+        li.innerHTML = '<span class="lt">'+ts+'</span><span class="ls">'+sym.replace('USDT','')+'</span><span class="lp '+(dir>0?'u':dir<0?'d':'')+'">'+(dir>0?'▲':dir<0?'▼':'·')+' '+fmtPrice(price)+'</span>';
+        log.insertBefore(li, log.firstChild);
+        while(log.children.length > 40) log.removeChild(log.lastChild);
+    }
+
+    function handleTicker(d){
+        var sym = d.s;
+        var st  = state[sym];
+        if(!st) return;
+        var price = +d.c;          // last
+        var pct   = +d.P;          // 24h change %
+        var hi    = +d.h, lo = +d.l, open = +d.o, vol = +d.q;
+
+        tickCount++;
+        stTicks.textContent = tickCount.toLocaleString('tr-TR');
+
+        var dir = 0;
+        if(st.last != null){
+            if(price > st.last) dir = 1;
+            else if(price < st.last) dir = -1;
+        }
+        st.last = price;
+        st.hist.push(price);
+        if(st.hist.length > 60) st.hist.shift();
+
+        var cell = document.getElementById('c_'+sym);
+        if(cell){
+            cell.querySelector('[data-price]').textContent = fmtPrice(price);
+            var chg = cell.querySelector('[data-chg]');
+            chg.textContent = (pct>=0?'+':'') + pct.toFixed(2) + '%';
+            chg.className = 'kpi-chg ' + (pct>=0?'u':'d');
+            cell.querySelector('[data-vol]').textContent = 'vol ' + fmtVol(vol);
+            cell.querySelector('[data-hi]').textContent   = fmtPrice(hi);
+            cell.querySelector('[data-lo]').textContent   = fmtPrice(lo);
+            cell.querySelector('[data-open]').textContent = fmtPrice(open);
+            drawSpark(cell, st.hist);
+
+            if(dir !== 0){
+                cell.classList.remove('flash-u','flash-d');
+                void cell.offsetWidth;
+                cell.classList.add(dir>0?'flash-u':'flash-d');
+                setTimeout(function(){ cell.classList.remove('flash-u','flash-d'); }, 600);
+                pushLog(sym, price, dir);
+            }
+        }
+
+        var t = document.getElementById('t_'+sym);
+        if(t){
+            t.querySelector('.t-p').textContent = fmtPrice(price);
+            var tc = t.querySelector('.t-c');
+            tc.textContent = (pct>=0?'+':'') + pct.toFixed(2) + '%';
+            tc.className = 't-c ' + (pct>=0?'u':'d');
+        }
+    }
+
+    var ws;
+    var retry = 0;
+    function connect(){
+        var streams = SYMBOLS.map(function(x){ return x.s.toLowerCase()+'@ticker'; }).join('/');
+        var url = 'wss://stream.binance.com:9443/stream?streams='+streams;
+        stConn.textContent = 'bağlanıyor…';
+        stConn.className = 's-v';
+        var t0 = Date.now();
+        try{ ws = new WebSocket(url); }catch(e){ scheduleReconnect(); return; }
+
+        ws.onopen = function(){
+            stConn.textContent = 'canlı';
+            stConn.className = 's-v ok';
+            stLat.textContent = (Date.now()-t0)+' ms';
+            retry = 0;
+        };
+        ws.onmessage = function(ev){
+            try{
+                var msg = JSON.parse(ev.data);
+                if(msg && msg.data && msg.data.e === '24hrTicker'){
+                    handleTicker(msg.data);
+                    if(msg.data.E){
+                        var lat = Date.now() - msg.data.E;
+                        if(lat >= 0 && lat < 60000) stLat.textContent = lat+' ms';
+                    }
+                }
+            }catch(e){}
+        };
+        ws.onerror = function(){
+            stConn.textContent = 'hata';
+            stConn.className = 's-v bad';
+        };
+        ws.onclose = function(){
+            stConn.textContent = 'bağlantı koptu';
+            stConn.className = 's-v bad';
+            scheduleReconnect();
+        };
+    }
+    function scheduleReconnect(){
+        retry = Math.min(retry+1, 6);
+        var wait = Math.min(1000 * Math.pow(2, retry), 30000);
+        setTimeout(connect, wait);
+    }
+
+    document.addEventListener('visibilitychange', function(){
+        if(document.visibilityState === 'visible' && (!ws || ws.readyState !== 1)){
+            connect();
+        }
+    });
+
+    connect();
+
+    window.__term = {state:state, SYMBOLS:SYMBOLS, tickCount:function(){return tickCount;}};
+})();
+</script>
+</body>
+</html>
