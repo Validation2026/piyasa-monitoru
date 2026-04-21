@@ -88,7 +88,7 @@ class TestConfigIntegrity:
                     seen[symbol] = group["category"]
 
         # Bilinen tekrarlar — bu kasıtlıysa bu satırları güncelleyin
-        known_duplicates = {"HG=F", "ALI=F", "LBS=F", "URA"}
+        known_duplicates = {"HG=F", "ALI=F", "LBR=F", "LBS=F", "URA"}
         unexpected = [d for d in duplicates
                       if d.split(":")[0].strip() not in known_duplicates]
 
