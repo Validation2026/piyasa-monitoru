@@ -10,7 +10,7 @@ import json
 import re
 import sys
 import time
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone, timedelta, date
 from pathlib import Path
 
 import requests
@@ -235,36 +235,59 @@ def fetch_yf_download(symbol: str) -> list | None:
 # ═══════════════════════════════════════════════════════════
 
 def calculate_changes(data_points: list) -> dict:
+    """
+    Değişim yüzdelerini takvim günü bazlı lookback ile hesaplar.
+    data_points[-1] referans "güncel" noktadır (caller gerekirse canlı fiyatı
+    sentetik bugün noktası olarak ekler).
+    """
     if len(data_points) < 2:
         return {}
 
     current = data_points[-1]["value"]
 
     def pct(old, new):
-        if old and old != 0:
+        if old and old != 0 and new is not None:
             return round(((new - old) / abs(old)) * 100, 2)
         return None
 
+    parsed = []
+    for p in data_points:
+        try:
+            dd = datetime.strptime(p["date"], "%Y-%m-%d").date()
+        except Exception:
+            continue
+        if p.get("value") is None:
+            continue
+        parsed.append((dd, p["value"]))
+    if len(parsed) < 2:
+        return {}
+    parsed.sort(key=lambda x: x[0])
+    latest_date = parsed[-1][0]
+
+    def value_on_or_before(target):
+        best = None
+        for dd, v in parsed:
+            if dd <= target:
+                best = v
+            else:
+                break
+        return best
+
     changes = {}
+    # 1d: önceki işlem günü (indeks bazlı doğru)
+    changes["1d"] = pct(parsed[-2][1], current)
 
-    if len(data_points) >= 2:
-        changes["1d"] = pct(data_points[-2]["value"], current)
-    if len(data_points) >= 6:
-        changes["1w"] = pct(data_points[-6]["value"], current)
-    if len(data_points) >= 23:
-        changes["1m"] = pct(data_points[-23]["value"], current)
-    if len(data_points) >= 67:
-        changes["3m"] = pct(data_points[-67]["value"], current)
+    # Takvim günü bazlı lookbacklar
+    for key, days in [("1w", 7), ("1m", 30), ("3m", 90), ("1y", 365)]:
+        base = value_on_or_before(latest_date - timedelta(days=days))
+        if base is not None:
+            changes[key] = pct(base, current)
 
-    # YTD
-    current_year = str(datetime.now().year)
-    ytd = [p for p in data_points if p["date"].startswith(current_year)]
-    if ytd:
-        changes["ytd"] = pct(ytd[0]["value"], current)
-
-    # 1Y
-    if len(data_points) >= 200:
-        changes["1y"] = pct(data_points[0]["value"], current)
+    # YTD: önceki yılın son işlem günü (31 Aralık veya en yakın önceki)
+    prev_year_end = date(latest_date.year - 1, 12, 31)
+    base = value_on_or_before(prev_year_end)
+    if base is not None:
+        changes["ytd"] = pct(base, current)
 
     return changes
 
@@ -311,6 +334,20 @@ def fetch_group(group: dict) -> dict:
         if intraday_price is not None:
             live_price = intraday_price
             source = f"{source} + 1m"
+
+        # Birim/ölçek tutarsızlığı koruması: Yahoo bazı future'ları (ör. ZR=F)
+        # tarihsel veride USc/cwt, intraday'da USD/cwt gibi farklı ölçeklerde
+        # döndürebiliyor. Canlı fiyat son kapanıştan 5x'ten fazla sapıyorsa
+        # sessizce elenir; tarihsel veri ile devam edilir.
+        if live_price is not None and points:
+            ref = points[-1].get("value")
+            if ref and ref != 0:
+                ratio = live_price / ref
+                if ratio > 5 or ratio < 0.2:
+                    print(f"   ⚠️ {symbol}: canlı fiyat birim uyumsuz "
+                          f"(live={live_price} vs son kapanış={ref}); elenir")
+                    live_price = None
+                    source = source.replace(" + 1m", "")
 
         # Piyasa açıkken regularMarketPrice son günlük kapanışı geçebilir.
         # Değişim hesapları için canlı fiyatı bugünün bar'ı gibi ekliyoruz;
