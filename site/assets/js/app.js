@@ -863,10 +863,11 @@ else document.addEventListener('DOMContentLoaded', PM.initScrollReveal);
    GLOBAL ZAMAN FİLTRESİ (TÜM GRAFİKLERİ AYNI ANDA GÜNCELLER)
    ══════════════════════════════════════════ */
 document.addEventListener("click", function(e) {
-    if (e.target.classList.contains('tf-btn')) {
+    if (e.target.classList.contains('tf-btn') && e.target.hasAttribute('data-tf')) {
         var btn = e.target;
-        var container = btn.parentElement;
+        var container = btn.closest('.chart-timeframes');
         var tf = btn.getAttribute('data-tf');
+        if(!container || !tf) return;
         
         // Sadece tıklanan butonu aktif (mavi) yap
         container.querySelectorAll('.tf-btn').forEach(function(b) { b.classList.remove('active'); });
