@@ -324,6 +324,18 @@ CURRENCIES = {
         "EURPLN=X": {"name": "EUR/PLN", "unit": "PLN"},
         "GBPCHF=X": {"name": "GBP/CHF", "unit": "CHF"},
         "GBPAUD=X": {"name": "GBP/AUD", "unit": "AUD"},
+        "AUDCAD=X": {"name": "AUD/CAD", "unit": "CAD"},
+        "AUDCHF=X": {"name": "AUD/CHF", "unit": "CHF"},
+        "AUDNZD=X": {"name": "AUD/NZD", "unit": "NZD"},
+        "CADCHF=X": {"name": "CAD/CHF", "unit": "CHF"},
+        "CADSGD=X": {"name": "CAD/SGD", "unit": "SGD"},
+        "CHFSGD=X": {"name": "CHF/SGD", "unit": "SGD"},
+        "EURDKK=X": {"name": "EUR/DKK", "unit": "DKK"},
+        "EURHUF=X": {"name": "EUR/HUF", "unit": "HUF"},
+        "EURCZK=X": {"name": "EUR/CZK", "unit": "CZK"},
+        "EURNZD=X": {"name": "EUR/NZD", "unit": "NZD"},
+        "GBPCAD=X": {"name": "GBP/CAD", "unit": "CAD"},
+        "GBPSEK=X": {"name": "GBP/SEK", "unit": "SEK"},
     }
 }
 
@@ -364,6 +376,18 @@ BONDS = {
         "GOVT":     {"name": "GOVT (ABD Hazine Tahvilleri)", "unit": "USD"},
         "TLH":      {"name": "TLH (10-20 Yıl Hazine Tahvili)", "unit": "USD"},
         "SPTL":     {"name": "SPTL (Uzun Vadeli Hazine Tahvili)", "unit": "USD"},
+        "BNDW":     {"name": "BNDW (Global Toplam Tahvil ETF)", "unit": "USD"},
+        "SCHZ":     {"name": "SCHZ (US Aggregate Bond ETF)", "unit": "USD"},
+        "SCHR":     {"name": "SCHR (Orta Vadeli US Treasury)", "unit": "USD"},
+        "IGSB":     {"name": "IGSB (Kısa Vadeli Kurumsal Tahvil)", "unit": "USD"},
+        "IGIB":     {"name": "IGIB (Orta Vadeli Kurumsal Tahvil)", "unit": "USD"},
+        "USIG":     {"name": "USIG (iShares Broad USD Investment Grade)", "unit": "USD"},
+        "MBB":      {"name": "MBB (Mortgage-Backed Securities ETF)", "unit": "USD"},
+        "VMBS":     {"name": "VMBS (Vanguard Mortgage-Backed Securities)", "unit": "USD"},
+        "HYLB":     {"name": "HYLB (High Yield Corporate Bond ETF)", "unit": "USD"},
+        "FLOT":     {"name": "FLOT (Floating Rate Bond ETF)", "unit": "USD"},
+        "TFLO":     {"name": "TFLO (Treasury Floating Rate Bond ETF)", "unit": "USD"},
+        "GSY":      {"name": "GSY (Ultra Short Duration Bond ETF)", "unit": "USD"},
     }
 }
 
@@ -407,6 +431,18 @@ INDICES = {
         "^NYA":      {"name": "NYSE Composite", "unit": "USD"},
         "^STI":      {"name": "Straits Times", "unit": "SGD"},
         "^MXX":      {"name": "IPC Mexico", "unit": "MXN"},
+        "^AORD":     {"name": "All Ordinaries (Avustralya)", "unit": "AUD"},
+        "^NZ50":     {"name": "S&P/NZX 50", "unit": "NZD"},
+        "^FTMC":     {"name": "FTSE 250", "unit": "GBP"},
+        "^BFX":      {"name": "BEL 20", "unit": "EUR"},
+        "^ATX":      {"name": "Austrian Traded Index", "unit": "EUR"},
+        "^PSI20":    {"name": "PSI 20 (Portekiz)", "unit": "EUR"},
+        "^CASE30":   {"name": "EGX30 (Mısır)", "unit": "EGP"},
+        "^JN0U.JO":  {"name": "Top 40 (Güney Afrika)", "unit": "ZAR"},
+        "^TA35":     {"name": "TA-35 (İsrail)", "unit": "ILS"},
+        "^N225M":    {"name": "Nikkei 225 Futures Mini", "unit": "JPY"},
+        "^SET.BK":   {"name": "SET Index (Tayland)", "unit": "THB"},
+        "^SSEC":     {"name": "Shanghai Composite (SSEC)", "unit": "CNY"},
     }
 }
 
@@ -493,6 +529,18 @@ INDUSTRIAL = {
         "PKB":    {"name": "Invesco Building & Construction ETF", "unit": "USD"},
         "PHO":    {"name": "Invesco Water Resources ETF", "unit": "USD"},
         "IFRA":   {"name": "iShares U.S. Infrastructure ETF", "unit": "USD"},
+        "XAR":    {"name": "SPDR S&P Aerospace & Defense ETF", "unit": "USD"},
+        "PPA":    {"name": "Invesco Aerospace & Defense ETF", "unit": "USD"},
+        "XTN":    {"name": "SPDR S&P Transportation ETF", "unit": "USD"},
+        "JETS":   {"name": "U.S. Global Jets ETF", "unit": "USD"},
+        "SEA":    {"name": "U.S. Global Sea to Sky Cargo ETF", "unit": "USD"},
+        "IPAY":   {"name": "ETFMG Prime Mobile Payments ETF", "unit": "USD"},
+        "URAA":   {"name": "Deep Yellow Uranium & Nuclear ETF", "unit": "USD"},
+        "COPJ":   {"name": "Sprott Junior Copper Miners ETF", "unit": "USD"},
+        "LITP":   {"name": "Sprott Lithium Miners ETF", "unit": "USD"},
+        "AIRS":   {"name": "First Trust RBA American Industrial Renaissance ETF", "unit": "USD"},
+        "GRID":   {"name": "First Trust NASDAQ Clean Edge Smart Grid ETF", "unit": "USD"},
+        "MLPX":   {"name": "Global X MLP & Energy Infrastructure ETF", "unit": "USD"},
     }
 }
 
