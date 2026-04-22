@@ -8,8 +8,62 @@ var D='data/';
 var COLORS=['#3b82f6','#00d68f','#fbbf24','#ff4757','#a78bfa','#22d3ee','#ec4899','#84cc16','#f97316','#6366f1','#14b8a6','#e11d48'];
 var LOGO_CACHE={};
 var TV_LOGO_BASE='https://s3-symbol-logo.tradingview.com/';
+var DATA_CACHE_TTL_MS=120000; // 2 dk: sayfalar arası geçişte hızlı, veri güncelliği korunur
+var DATA_CACHE_KEY_PREFIX='pm:data:';
+var DATA_MEM_CACHE={};
+var DATA_INFLIGHT={};
 
-function fj(f){return fetch(D+f+'?t='+Date.now()).then(function(r){return r.json()}).catch(function(){return null})}
+function nowTs(){ return Date.now(); }
+function cacheKey(file){ return DATA_CACHE_KEY_PREFIX+file; }
+
+function readSessionCache(file){
+    try{
+        var raw=sessionStorage.getItem(cacheKey(file));
+        if(!raw) return null;
+        var parsed=JSON.parse(raw);
+        if(!parsed||!parsed.ts||parsed.data==null) return null;
+        if((nowTs()-parsed.ts)>DATA_CACHE_TTL_MS) return null;
+        return parsed.data;
+    }catch(_){ return null; }
+}
+
+function writeSessionCache(file,data){
+    try{
+        sessionStorage.setItem(cacheKey(file), JSON.stringify({ts:nowTs(), data:data}));
+    }catch(_){ }
+}
+
+function fetchJson(file){
+    return fetch(D+file, { cache:'default' }).then(function(r){
+        if(!r.ok) throw new Error('HTTP '+r.status);
+        return r.json();
+    });
+}
+
+function fj(file,opts){
+    opts=opts||{};
+    var force=opts.force===true;
+    var hit=DATA_MEM_CACHE[file];
+    if(!force&&hit&&(nowTs()-hit.ts)<=DATA_CACHE_TTL_MS) return Promise.resolve(hit.data);
+
+    var ss=force?null:readSessionCache(file);
+    if(ss){
+        DATA_MEM_CACHE[file]={ts:nowTs(),data:ss};
+        return Promise.resolve(ss);
+    }
+
+    if(DATA_INFLIGHT[file]) return DATA_INFLIGHT[file];
+
+    DATA_INFLIGHT[file]=fetchJson(file).then(function(data){
+        DATA_MEM_CACHE[file]={ts:nowTs(),data:data};
+        writeSessionCache(file,data);
+        return data;
+    }).catch(function(){ return null; }).finally(function(){
+        delete DATA_INFLIGHT[file];
+    });
+
+    return DATA_INFLIGHT[file];
+}
 function fs(d,id){if(!d||!d.series)return null;for(var i=0;i<d.series.length;i++)if(d.series[i].id===id)return d.series[i];return null}
 function fp(v,dec){if(v==null)return'—';dec=dec!=null?dec:2;return Number(v).toLocaleString('tr-TR',{minimumFractionDigits:dec,maximumFractionDigits:dec})}
 function fc(p){if(p==null)return'<span class="chg" style="color:var(--t3)">—</span>';var s=p>=0?'+':'';var c=p>=0?'u':'d';return'<span class="chg '+c+'">'+s+p.toFixed(2)+'%</span>'}
@@ -559,10 +613,26 @@ function applyOverrides(seriesList, overrides) {
     return seriesList;
 }
 
+var OVERRIDE_CACHE_TTL_MS=10000;
+var OVERRIDE_MEM_CACHE={};
+var OVERRIDE_INFLIGHT={};
+
 function loadOverrides(pageId) {
-    return fetch('/api/page-state?page=' + pageId).then(function(r) { return r.json(); }).then(function(d) {
-        return (d && d.overrides) ? d.overrides : {};
-    }).catch(function() { return {}; });
+    if(!pageId) return Promise.resolve({});
+    var c=OVERRIDE_MEM_CACHE[pageId];
+    if(c&&(nowTs()-c.ts)<=OVERRIDE_CACHE_TTL_MS) return Promise.resolve(c.data);
+    if(OVERRIDE_INFLIGHT[pageId]) return OVERRIDE_INFLIGHT[pageId];
+
+    OVERRIDE_INFLIGHT[pageId]=fetch('/api/page-state?page=' + encodeURIComponent(pageId), { cache:'no-store' })
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+            var ov=(d && d.overrides) ? d.overrides : {};
+            OVERRIDE_MEM_CACHE[pageId]={ts:nowTs(), data:ov};
+            return ov;
+        }).catch(function() { return {}; })
+        .finally(function(){ delete OVERRIDE_INFLIGHT[pageId]; });
+
+    return OVERRIDE_INFLIGHT[pageId];
 }
 
 var _lastMeta = null;
@@ -793,10 +863,11 @@ else document.addEventListener('DOMContentLoaded', PM.initScrollReveal);
    GLOBAL ZAMAN FİLTRESİ (TÜM GRAFİKLERİ AYNI ANDA GÜNCELLER)
    ══════════════════════════════════════════ */
 document.addEventListener("click", function(e) {
-    if (e.target.classList.contains('tf-btn')) {
+    if (e.target.classList.contains('tf-btn') && e.target.hasAttribute('data-tf')) {
         var btn = e.target;
-        var container = btn.parentElement;
+        var container = btn.closest('.chart-timeframes');
         var tf = btn.getAttribute('data-tf');
+        if(!container || !tf) return;
         
         // Sadece tıklanan butonu aktif (mavi) yap
         container.querySelectorAll('.tf-btn').forEach(function(b) { b.classList.remove('active'); });

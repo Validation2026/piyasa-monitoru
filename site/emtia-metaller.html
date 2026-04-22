@@ -41,7 +41,9 @@
 
     <div class="view-section active" id="viewCards">
         <div class="summary-row" id="summaryCards"></div>
-        <div class="chart-timeframes global-timeframes">
+        <div id="cardsPager" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:8px 0 12px 0;flex-wrap:wrap"></div>
+        <div style="margin:0 0 12px 0"><button class="tf-btn" id="toggleChartsBtn" type="button" aria-expanded="false">📉 Grafikleri Aç</button></div>
+        <div class="chart-timeframes global-timeframes" style="display:none">
             <button class="tf-btn" data-tf="1A">1A</button>
             <button class="tf-btn" data-tf="3A">3A</button>
             <button class="tf-btn" data-tf="6A">6A</button>
@@ -52,7 +54,7 @@
             <button class="tf-btn" data-tf="5Y">5Y</button>
             <button class="tf-btn active" data-tf="Tümü">Tümü</button>
         </div>
-        <div class="charts" id="chartsGrid"></div>
+        <div class="charts" id="chartsGrid" style="display:none"></div>
         <div class="dtable" id="dataTable"></div>
     </div>
 
@@ -89,17 +91,66 @@
 <script>
 (function(){
     var currentView='cards',allSeries=[],chartInstances=[],barCharts=[];
+    var page=1;
+    var PAGE_SIZE=24;
+    var chartsExpanded=false;
+
+    function destroyCharts(){
+        if(chartInstances.length){chartInstances.forEach(function(c){if(c&&c.destroy)c.destroy()});}
+        chartInstances=[];
+        var g=document.getElementById('chartsGrid');if(g)g.innerHTML='';
+    }
+
+    function paged(list){
+        var total=Math.max(1,Math.ceil(list.length/PAGE_SIZE));
+        if(page>total)page=total;
+        var start=(page-1)*PAGE_SIZE;
+        return list.slice(start,start+PAGE_SIZE);
+    }
+
+    function renderPager(totalItems){
+        var el=document.getElementById('cardsPager');if(!el)return;
+        var totalPages=Math.max(1,Math.ceil(totalItems/PAGE_SIZE));
+        var start=totalItems?((page-1)*PAGE_SIZE+1):0;
+        var end=Math.min(totalItems,page*PAGE_SIZE);
+        el.innerHTML=''+
+            '<div style="color:var(--muted);font-size:12px">Gösterilen: <b>'+start+'-'+end+'</b> / '+totalItems+'</div>'+
+            '<div style="display:flex;gap:8px;align-items:center">'+
+                '<button class="tf-btn" id="prevPageBtn" type="button" '+(page<=1?'disabled':'')+'>← Önceki</button>'+
+                '<span style="font-size:12px;color:var(--muted)">Sayfa '+page+' / '+totalPages+'</span>'+
+                '<button class="tf-btn" id="nextPageBtn" type="button" '+(page>=totalPages?'disabled':'')+'>Sonraki →</button>'+
+            '</div>';
+        var prev=document.getElementById('prevPageBtn');
+        var next=document.getElementById('nextPageBtn');
+        if(prev)prev.addEventListener('click',function(){if(page>1){page--;rebuildCards();}});
+        if(next)next.addEventListener('click',function(){if(page<totalPages){page++;rebuildCards();}});
+    }
+
+    function setChartsExpanded(nextState){
+        chartsExpanded=nextState===true;
+        var btn=document.getElementById('toggleChartsBtn');
+        var tf=document.querySelector('.chart-timeframes.global-timeframes');
+        var grid=document.getElementById('chartsGrid');
+        if(btn){
+            btn.setAttribute('aria-expanded', chartsExpanded ? 'true' : 'false');
+            btn.textContent=chartsExpanded ? '📉 Grafikleri Kapat' : '📉 Grafikleri Aç';
+        }
+        if(tf)tf.style.display=chartsExpanded ? '' : 'none';
+        if(grid)grid.style.display=chartsExpanded ? '' : 'none';
+    }
 
     function rebuildCards(){
-        if(chartInstances.length){chartInstances.forEach(function(c){if(c&&c.destroy)c.destroy()});} chartInstances=[];
-        var g=document.getElementById('chartsGrid');if(g)g.innerHTML='';
+        destroyCharts();
         var s=document.getElementById('summaryCards');if(s)s.innerHTML='';
         var d=document.getElementById('dataTable');if(d)d.innerHTML='';
-        if(!allSeries.length)return;
-        PM.buildSummary('summaryCards',allSeries);
-        chartInstances=PM.buildCharts('chartsGrid',allSeries,'all');
-        PM.buildTable('dataTable',allSeries);
+        if(!allSeries.length){renderPager(0);return;}
+        var visible=paged(allSeries);
+        renderPager(allSeries.length);
+        PM.buildSummary('summaryCards',visible);
+        PM.buildTable('dataTable',visible);
+        if(chartsExpanded)chartInstances=PM.buildCharts('chartsGrid',visible,'all');
     }
+
     function rebuildBar(){
         if(barCharts.length){barCharts.forEach(function(c){if(c&&c.destroy)c.destroy()});} barCharts=[];
         var c1=PM.buildBarChart('perfBarDaily',allSeries,'change_1d_pct');
@@ -114,10 +165,17 @@
     }
 
     PM.loadData('commodities_metals.json','emtia-metaller').then(function(data){
-        if(!data||!data.series||!data.series.length){document.getElementById('summaryCards').innerHTML='<div class="scard"><div class="scard-name">Veri bulunamadı.</div></div>';return}
+        if(!data||!data.series||!data.series.length){document.getElementById('summaryCards').innerHTML='<div class="scard"><div class="scard-name">Veri bulunamadı.</div></div>';renderPager(0);return}
         allSeries=data.series;
         var ui=document.getElementById('updateInfo');
         if(ui&&data.meta)ui.textContent='Son güncelleme: '+new Date(data.meta.updated_at).toLocaleString('tr-TR')+' · '+data.meta.symbol_count+' seri';
+        setChartsExpanded(false);
+        rebuildCards();
+    });
+
+    var chartsBtn=document.getElementById('toggleChartsBtn');
+    if(chartsBtn)chartsBtn.addEventListener('click',function(){
+        setChartsExpanded(!chartsExpanded);
         rebuildCards();
     });
 
