@@ -266,19 +266,15 @@ def fetch_yf_download(symbol: str) -> list | None:
 
 def calculate_changes(data_points: list) -> dict:
     """
-    Değişim yüzdelerini takvim günü bazlı lookback ile hesaplar.
-    data_points[-1] referans "güncel" noktadır (caller gerekirse canlı fiyatı
-    sentetik bugün noktası olarak ekler).
+    Değişim yüzdelerini hesaplar.
+    - 1d: son iki nokta
+    - 1w/1m/3m/1y: işlem günü-adedi (yaklaşık) bazlı index lookback
+      (sırasıyla 5, 22, 66, 200)
+    - ytd: sadece veri son noktası cari yıldaysa; baz olarak önceki yıl sonu
+      veya yoksa cari yıldaki ilk nokta
     """
     if len(data_points) < 2:
         return {}
-
-    current = data_points[-1]["value"]
-
-    def pct(old, new):
-        if old and old != 0 and new is not None:
-            return round(((new - old) / abs(old)) * 100, 2)
-        return None
 
     parsed = []
     for p in data_points:
@@ -289,35 +285,46 @@ def calculate_changes(data_points: list) -> dict:
         if p.get("value") is None:
             continue
         parsed.append((dd, p["value"]))
+
     if len(parsed) < 2:
         return {}
+
     parsed.sort(key=lambda x: x[0])
+    values = [v for _, v in parsed]
+    current = values[-1]
     latest_date = parsed[-1][0]
 
-    def value_on_or_before(target):
-        best = None
-        for dd, v in parsed:
-            if dd <= target:
-                best = v
-            else:
-                break
-        return best
+    def pct(old, new):
+        if old and old != 0 and new is not None:
+            return round(((new - old) / abs(old)) * 100, 2)
+        return None
 
     changes = {}
-    # 1d: önceki işlem günü (indeks bazlı doğru)
-    changes["1d"] = pct(parsed[-2][1], current)
+    changes["1d"] = pct(values[-2], current)
 
-    # Takvim günü bazlı lookbacklar
-    for key, days in [("1w", 7), ("1m", 30), ("3m", 90), ("1y", 365)]:
-        base = value_on_or_before(latest_date - timedelta(days=days))
+    # İşlem günü adedi bazlı lookback (test beklentisiyle uyumlu)
+    lookbacks = [("1w", 5), ("1m", 22), ("3m", 66), ("1y", 200)]
+    n = len(values)
+    for key, lb in lookbacks:
+        if n > lb:
+            changes[key] = pct(values[-(lb + 1)], current)
+
+    # YTD yalnızca veri gerçekten cari yıldaysa hesaplanır
+    today_year = datetime.now().year
+    if latest_date.year == today_year:
+        prev_year_end = date(latest_date.year - 1, 12, 31)
+        base = None
+        for dd, v in parsed:
+            if dd <= prev_year_end:
+                base = v
+            else:
+                break
+        if base is None:
+            current_year_points = [v for dd, v in parsed if dd.year == latest_date.year]
+            if current_year_points:
+                base = current_year_points[0]
         if base is not None:
-            changes[key] = pct(base, current)
-
-    # YTD: önceki yılın son işlem günü (31 Aralık veya en yakın önceki)
-    prev_year_end = date(latest_date.year - 1, 12, 31)
-    base = value_on_or_before(prev_year_end)
-    if base is not None:
-        changes["ytd"] = pct(base, current)
+            changes["ytd"] = pct(base, current)
 
     return changes
 
