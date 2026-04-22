@@ -179,6 +179,16 @@ COMMODITIES_ENERGY = {
         "ICLN":  {"name": "ICLN (Temiz Enerji ETF)",    "unit": "USD"},
         "TAN":   {"name": "TAN (Güneş Enerjisi ETF)",    "unit": "USD"},
         "NLR":   {"name": "NLR (Nükleer Enerji ETF)",   "unit": "USD"},
+        "XES":   {"name": "XES (Petrol Servisleri ETF)", "unit": "USD"},
+        "OIH":   {"name": "OIH (Oil Services ETF)",      "unit": "USD"},
+        "VDE":   {"name": "VDE (Vanguard Energy ETF)",   "unit": "USD"},
+        "PXE":   {"name": "PXE (Dinamik Enerji ETF)",    "unit": "USD"},
+        "CRAK":  {"name": "CRAK (Rafineri ETF)",         "unit": "USD"},
+        "FCG":   {"name": "FCG (Doğalgaz Üreticileri)",  "unit": "USD"},
+        "BNO":   {"name": "BNO (Brent Petrol Fonu)",     "unit": "USD"},
+        "DBO":   {"name": "DBO (Petrol Fonu)",           "unit": "USD"},
+        "UCO":   {"name": "UCO (Ham Petrol 2x)",         "unit": "USD"},
+        "BOIL":  {"name": "BOIL (Doğalgaz 2x)",          "unit": "USD"},
     }
 }
 
@@ -214,6 +224,11 @@ COMMODITIES_METALS = {
         # Endüstriyel / Baz Metal ETF'leri (Vadeli kontratlar yerine fiyatı fon üzerinden takip etmek için)
         "CPER":  {"name": "CPER (Bakır ETF)", "unit": "USD"},
         "DBB":   {"name": "DBB (Baz Metaller Fonu - Al, Zn, Cu)", "unit": "USD"},
+        "URA":   {"name": "URA (Uranyum ETF)", "unit": "USD"},
+        "IAU":   {"name": "IAU (Altın ETF)", "unit": "USD"},
+        "SGOL":  {"name": "SGOL (Fiziksel Altın ETF)", "unit": "USD"},
+        "BAR":   {"name": "BAR (GraniteShares Gold)", "unit": "USD"},
+        "DBP":   {"name": "DBP (Kıymetli Metaller Fonu)", "unit": "USD"},
     }
 }
 
@@ -239,6 +254,12 @@ COMMODITIES_AGRICULTURE = {
         "WEAT":  {"name": "WEAT (Buğday ETF)",    "unit": "USD"},
         "SOYB":  {"name": "SOYB (Soya ETF)",      "unit": "USD"},
         "MOO":   {"name": "MOO (Tarım Şirketleri ETF)", "unit": "USD"},
+        "CANE":  {"name": "CANE (Şeker ETF)",     "unit": "USD"},
+        "NIB":   {"name": "NIB (Kakao ETN)",      "unit": "USD"},
+        "COW":   {"name": "COW (Hayvancılık ETN)", "unit": "USD"},
+        "RJA":   {"name": "RJA (Tarım Endeksi ETN)", "unit": "USD"},
+        "FTGC":  {"name": "FTGC (Çeşitlendirilmiş Emtia)", "unit": "USD"},
+        "PDBA":  {"name": "PDBA (Optimum Yield Agriculture)", "unit": "USD"},
     }
 }
 
@@ -283,6 +304,17 @@ CURRENCIES = {
         "USDPLN=X": {"name": "USD/PLN (Polonya Zlotisi)", "unit": "PLN"},
         "USDHUF=X": {"name": "USD/HUF (Macar Forinti)", "unit": "HUF"},
         "USDAED=X": {"name": "USD/AED (BAE Dirhemi)", "unit": "AED"},
+        "USDHKD=X": {"name": "USD/HKD", "unit": "HKD"},
+        "USDIDR=X": {"name": "USD/IDR", "unit": "IDR"},
+        "USDPHP=X": {"name": "USD/PHP", "unit": "PHP"},
+        "USDCLP=X": {"name": "USD/CLP", "unit": "CLP"},
+        "USDCOP=X": {"name": "USD/COP", "unit": "COP"},
+        "USDKZT=X": {"name": "USD/KZT", "unit": "KZT"},
+        "USDQAR=X": {"name": "USD/QAR", "unit": "QAR"},
+        "EURJPY=X": {"name": "EUR/JPY", "unit": "JPY"},
+        "GBPJPY=X": {"name": "GBP/JPY", "unit": "JPY"},
+        "EURAUD=X": {"name": "EUR/AUD", "unit": "AUD"},
+        "EURNOK=X": {"name": "EUR/NOK", "unit": "NOK"},
     }
 }
 
@@ -305,6 +337,16 @@ BONDS = {
         "LQD":      {"name": "LQD (Yatırım Düzeyi Tahvil)", "unit": "USD"},
         "EMB":      {"name": "EMB (Gelişen Piyasa Tahvil)", "unit": "USD"},
         "BNDX":     {"name": "BNDX (Uluslararası Tahvil)", "unit": "USD"},
+        "BND":      {"name": "BND (Toplam Tahvil Piyasası)", "unit": "USD"},
+        "AGG":      {"name": "AGG (Core US Aggregate)", "unit": "USD"},
+        "TIP":      {"name": "TIP (Enflasyona Endeksli Tahvil)", "unit": "USD"},
+        "MUB":      {"name": "MUB (Belediye Tahvilleri)", "unit": "USD"},
+        "JNK":      {"name": "JNK (High Yield ETF)", "unit": "USD"},
+        "BIL":      {"name": "BIL (1-3 Ay Hazine Bonosu)", "unit": "USD"},
+        "SGOV":     {"name": "SGOV (0-3 Ay Hazine)", "unit": "USD"},
+        "VGIT":     {"name": "VGIT (Orta Vadeli Hazine)", "unit": "USD"},
+        "EDV":      {"name": "EDV (Uzun Vadeli Treasury)", "unit": "USD"},
+        "TIPS":     {"name": "PIMCO 15+ Year TIPS", "unit": "USD"},
     }
 }
 
@@ -332,6 +374,14 @@ INDICES = {
         "^AXJO":     {"name": "ASX 200",        "unit": "AUD"},
         "^IBEX":     {"name": "IBEX 35",        "unit": "EUR"},
         "^VIX":     {"name": "VIX (Korku Endeksi)",     "unit": "Puan"},
+        "^BVSP":     {"name": "Bovespa",        "unit": "BRL"},
+        "^JKSE":     {"name": "IDX Composite",  "unit": "IDR"},
+        "^TA125.TA": {"name": "TA-125",         "unit": "ILS"},
+        "^AEX":      {"name": "AEX",            "unit": "EUR"},
+        "^SSMI":     {"name": "SMI",            "unit": "CHF"},
+        "^OMX":      {"name": "OMX Stockholm 30", "unit": "SEK"},
+        "^N100":     {"name": "Euronext 100",   "unit": "EUR"},
+        "^KLSE":     {"name": "FTSE Bursa Malaysia", "unit": "MYR"},
     }
 }
 
@@ -358,6 +408,14 @@ CRYPTO = {
         "NEAR-USD": {"name": "NEAR Protocol",    "unit": "USD"},
         "APT-USD":  {"name": "APT (Aptos)",       "unit": "USD"},
         "SUI20947-USD": {"name": "SUI",           "unit": "USD"},
+        "XLM-USD": {"name": "XLM (Stellar)", "unit": "USD"},
+        "ETC-USD": {"name": "ETC (Ethereum Classic)", "unit": "USD"},
+        "FIL-USD": {"name": "FIL (Filecoin)", "unit": "USD"},
+        "OP-USD": {"name": "OP (Optimism)", "unit": "USD"},
+        "SEI-USD": {"name": "SEI", "unit": "USD"},
+        "INJ-USD": {"name": "INJ (Injective)", "unit": "USD"},
+        "RUNE-USD": {"name": "RUNE (THORChain)", "unit": "USD"},
+        "WIF-USD": {"name": "WIF (dogwifhat)", "unit": "USD"},
     }
 }
 
@@ -394,6 +452,15 @@ INDUSTRIAL = {
         
         # Taşımacılık ve Lojistik (BDRY'yi tamamlayıcı)
         "IYT":    {"name": "IYT (Taşımacılık Sektörü ETF)", "unit": "USD"},
+        "AIRR":   {"name": "AIRR (Industrial Renaissance ETF)", "unit": "USD"},
+        "MXI":    {"name": "MXI (Global Materials ETF)", "unit": "USD"},
+        "IGE":    {"name": "IGE (North American Natural Resources)", "unit": "USD"},
+        "GNR":    {"name": "GNR (Global Natural Resources)", "unit": "USD"},
+        "XME":    {"name": "XME (Metals & Mining ETF)", "unit": "USD"},
+        "DOV":    {"name": "Dover", "unit": "USD"},
+        "IR":     {"name": "Ingersoll Rand", "unit": "USD"},
+        "PCAR":   {"name": "Paccar", "unit": "USD"},
+        "WM":     {"name": "Waste Management", "unit": "USD"},
     }
 }
 
@@ -790,6 +857,48 @@ STOCKS = {
         "PKX": {"name": "POSCO", "unit": "USD"},
         "KB": {"name": "KB Financial", "unit": "USD"},
         "SHG": {"name": "Shinhan Financial", "unit": "USD"},
+        "TCEHY": {"name": "Tencent", "unit": "USD"},
+        "BBD": {"name": "Banco Bradesco", "unit": "USD"},
+        "CIB": {"name": "Bancolombia", "unit": "USD"},
+        "YPF": {"name": "YPF", "unit": "USD"},
+        "GGB": {"name": "Gerdau", "unit": "USD"},
+        "SID": {"name": "CSN", "unit": "USD"},
+        "AU": {"name": "AngloGold Ashanti", "unit": "USD"},
+        "GFI": {"name": "Gold Fields", "unit": "USD"},
+        "SBSW": {"name": "Sibanye-Stillwater", "unit": "USD"},
+        "BAP": {"name": "Credicorp", "unit": "USD"},
+        "EC": {"name": "Ecopetrol", "unit": "USD"},
+        "PAM": {"name": "Pampa Energia", "unit": "USD"},
+        "WDS": {"name": "Woodside Energy", "unit": "USD"},
+        "GOLD": {"name": "Barrick Gold", "unit": "USD"},
+        "EXK": {"name": "Endeavour Silver", "unit": "USD"},
+        "PAAS": {"name": "Pan American Silver", "unit": "USD"},
+        "SCCO": {"name": "Southern Copper", "unit": "USD"},
+        "BTI": {"name": "British American Tobacco", "unit": "USD"},
+        "MRNA": {"name": "Moderna", "unit": "USD"},
+        "REGN": {"name": "Regeneron", "unit": "USD"},
+        "VRTX": {"name": "Vertex Pharma", "unit": "USD"},
+        "GILD": {"name": "Gilead", "unit": "USD"},
+        "AMGN": {"name": "Amgen", "unit": "USD"},
+        "ADSK": {"name": "Autodesk", "unit": "USD"},
+        "WDAY": {"name": "Workday", "unit": "USD"},
+        "DOCU": {"name": "DocuSign", "unit": "USD"},
+        "OKTA": {"name": "Okta", "unit": "USD"},
+        "MSTR": {"name": "MicroStrategy", "unit": "USD"},
+        "RBLX": {"name": "Roblox", "unit": "USD"},
+        "HUBS": {"name": "HubSpot", "unit": "USD"},
+        "TTD": {"name": "Trade Desk", "unit": "USD"},
+        "SPOT": {"name": "Spotify", "unit": "USD"},
+        "ADDYY": {"name": "Adidas ADR", "unit": "USD"},
+        "SCHYY": {"name": "Schneider Electric ADR", "unit": "USD"},
+        "EADSY": {"name": "Airbus ADR", "unit": "USD"},
+        "RNLSY": {"name": "Renault ADR", "unit": "USD"},
+        "VLVLY": {"name": "Volvo ADR", "unit": "USD"},
+        "ALIZY": {"name": "Allianz ADR", "unit": "USD"},
+        "BAYRY": {"name": "Bayer ADR", "unit": "USD"},
+        "IFNNY": {"name": "Infineon ADR", "unit": "USD"},
+        "BASFY": {"name": "BASF ADR", "unit": "USD"},
+        "DHLGY": {"name": "DHL ADR", "unit": "USD"},
     }
 }
 
