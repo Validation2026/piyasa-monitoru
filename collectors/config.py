@@ -908,7 +908,7 @@ STOCKS = {
         "YUNSA.IS": {"name": "Yünsa", "unit": "TRY"},
         "YYLGD.IS": {"name": "Yayla Gıda", "unit": "TRY"},
         "ZEDUR.IS": {"name": "Zedur Enerji", "unit": "TRY"},
-        "ZRGYO.IS": {"name": "Ziraat GYO", "unit": "TRY"}
+        "ZRGYO.IS": {"name": "Ziraat GYO", "unit": "TRY"},
 
 
         # ═══════════════════════════════════════
