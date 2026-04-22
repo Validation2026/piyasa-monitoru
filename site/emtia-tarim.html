@@ -172,7 +172,7 @@
         renderPager(allSeries.length);
         PM.buildSummary('summaryCards',visible);
         PM.buildTable('dataTable',visible);
-        if(chartsExpanded){ PM.ensureChartJs().then(function(){ chartInstances=PM.buildCharts('chartsGrid',visible,'all'); }); }
+        if(chartsExpanded)chartInstances=PM.buildCharts('chartsGrid',visible,'all');
     }
 
     function rebuildBar(){
