@@ -12,6 +12,29 @@ var DATA_CACHE_TTL_MS=120000; // 2 dk: sayfalar arası geçişte hızlı, veri g
 var DATA_CACHE_KEY_PREFIX='pm:data:';
 var DATA_MEM_CACHE={};
 var DATA_INFLIGHT={};
+var CHART_JS_URL='https://cdn.jsdelivr.net/npm/chart.js@4';
+var CHART_JS_PROMISE=null;
+
+function ensureChartJs(){
+    if(window.Chart) return Promise.resolve(window.Chart);
+    if(CHART_JS_PROMISE) return CHART_JS_PROMISE;
+    CHART_JS_PROMISE=new Promise(function(resolve,reject){
+        var existing=document.querySelector('script[data-chartjs="true"]');
+        if(existing){
+            existing.addEventListener('load', function(){ resolve(window.Chart); }, { once:true });
+            existing.addEventListener('error', function(){ reject(new Error('Chart.js yüklenemedi')); }, { once:true });
+            return;
+        }
+        var sc=document.createElement('script');
+        sc.src=CHART_JS_URL;
+        sc.async=true;
+        sc.setAttribute('data-chartjs','true');
+        sc.onload=function(){ resolve(window.Chart); };
+        sc.onerror=function(){ reject(new Error('Chart.js yüklenemedi')); };
+        document.head.appendChild(sc);
+    });
+    return CHART_JS_PROMISE;
+}
 
 function nowTs(){ return Date.now(); }
 function cacheKey(file){ return DATA_CACHE_KEY_PREFIX+file; }
@@ -852,7 +875,7 @@ function downloadExcel(sheets, filename){
     var html=buildExcelHtmlDoc(sheets);
     downloadExcelFile(html, filename);
 }
-return{fj:fj,fs:fs,fp:fp,fc:fc,cc:cc,gc:gc,filterPeriod:filterPeriod,miniSpark:miniSpark,makeChart:makeChart,makeAreaChart:makeAreaChart,buildSummary:buildSummary,buildCharts:buildCharts,buildTable:buildTable,buildComparisonChart:buildComparisonChart,buildBarChart:buildBarChart,buildDonutChart:buildDonutChart,buildHeatmap:buildHeatmap,applyOverrides:applyOverrides,loadOverrides:loadOverrides,loadData:loadData,getLastMeta:getLastMeta,showStaleBanner:showStaleBanner,countUp:countUp,initScrollReveal:initScrollReveal,flashUpdate:flashUpdate,exportTableExcel:exportTableExcel,downloadExcel:downloadExcel,sparkSvg:sparkSvg,isAnomaly:isAnomaly,formatUpdatedAt:formatUpdatedAt,showAssetModal:showAssetModal,openAssetFromUrl:openAssetFromUrl};
+return{fj:fj,fs:fs,fp:fp,fc:fc,cc:cc,gc:gc,filterPeriod:filterPeriod,miniSpark:miniSpark,makeChart:makeChart,makeAreaChart:makeAreaChart,buildSummary:buildSummary,buildCharts:buildCharts,buildTable:buildTable,buildComparisonChart:buildComparisonChart,buildBarChart:buildBarChart,buildDonutChart:buildDonutChart,buildHeatmap:buildHeatmap,applyOverrides:applyOverrides,loadOverrides:loadOverrides,loadData:loadData,getLastMeta:getLastMeta,showStaleBanner:showStaleBanner,countUp:countUp,initScrollReveal:initScrollReveal,flashUpdate:flashUpdate,exportTableExcel:exportTableExcel,downloadExcel:downloadExcel,sparkSvg:sparkSvg,isAnomaly:isAnomaly,formatUpdatedAt:formatUpdatedAt,showAssetModal:showAssetModal,openAssetFromUrl:openAssetFromUrl,ensureChartJs:ensureChartJs};
 })();
 
 // Scroll reveal'ı DOM hazır olunca başlat
@@ -876,13 +899,15 @@ document.addEventListener("click", function(e) {
         // Sayfadaki TÜM Chart.js grafiklerini bul ve döngüye sok
         for (var id in Chart.instances) {
             var chartInstance = Chart.instances[id];
-            
-            if (chartInstance) {
-                // Eğer grafiğin orijinal (5 yıllık) verisini henüz yedeklemediysek, ilk tıklamada yedekle
-                if (!chartInstance.originalLabels) {
-                    chartInstance.originalLabels = [...chartInstance.data.labels];
-                    chartInstance.originalData = [...chartInstance.data.datasets[0].data];
-                }
+            if (!chartInstance || chartInstance.config.type !== 'line') continue;
+            var canvasEl = chartInstance.canvas;
+            if(!canvasEl || !canvasEl.closest || !canvasEl.closest('#chartsGrid')) continue;
+
+            // Eğer grafiğin orijinal (5 yıllık) verisini henüz yedeklemediysek, ilk tıklamada yedekle
+            if (!chartInstance.originalLabels) {
+                chartInstance.originalLabels = Array.isArray(chartInstance.data.labels) ? chartInstance.data.labels.slice() : [];
+                chartInstance.originalData = (chartInstance.data.datasets && chartInstance.data.datasets[0] && Array.isArray(chartInstance.data.datasets[0].data)) ? chartInstance.data.datasets[0].data.slice() : [];
+            }
 
                 var cutoffDate = new Date();
 
@@ -904,7 +929,7 @@ document.addEventListener("click", function(e) {
                 // Verileri filtrele
                 for (var i = 0; i < chartInstance.originalLabels.length; i++) {
                     var itemDate = new Date(chartInstance.originalLabels[i]);
-                    if (tf === 'Tümü' || itemDate >= cutoffDate) {
+                    if (tf === 'Tümü' || (!isNaN(itemDate.getTime()) && itemDate >= cutoffDate)) {
                         filteredLabels.push(chartInstance.originalLabels[i]);
                         filteredData.push(chartInstance.originalData[i]);
                     }
@@ -920,7 +945,6 @@ document.addEventListener("click", function(e) {
                 chartInstance.canvas.style.animation = 'none';
                 chartInstance.canvas.offsetHeight; /* Tarayıcıyı kandırıp animasyonu sıfırlıyoruz */
                 chartInstance.canvas.style.animation = 'fadeInUp 0.5s ease-out forwards';
-            }
         }
     }
 });
