@@ -275,9 +275,6 @@ CURRENCIES = {
         "EURTRY=X": {"name": "EUR/TRY", "unit": "TRY"},
         "GBPTRY=X": {"name": "GBP/TRY", "unit": "TRY"},
         "CHFTRY=X": {"name": "CHF/TRY", "unit": "TRY"},
-        "CNYTRY=X": {"name": "CNY/TRY", "unit": "TRY"},
-        "SARTRY=X": {"name": "SAR/TRY", "unit": "TRY"},
-        "RUBTRY=X": {"name": "RUB/TRY", "unit": "TRY"},
         # Majors
         "EURUSD=X": {"name": "EUR/USD", "unit": "USD"},
         "GBPUSD=X": {"name": "GBP/USD", "unit": "USD"},
@@ -319,6 +316,14 @@ CURRENCIES = {
         "GBPJPY=X": {"name": "GBP/JPY", "unit": "JPY"},
         "EURAUD=X": {"name": "EUR/AUD", "unit": "AUD"},
         "EURNOK=X": {"name": "EUR/NOK", "unit": "NOK"},
+        "AUDJPY=X": {"name": "AUD/JPY", "unit": "JPY"},
+        "CADJPY=X": {"name": "CAD/JPY", "unit": "JPY"},
+        "CHFJPY=X": {"name": "CHF/JPY", "unit": "JPY"},
+        "EURCAD=X": {"name": "EUR/CAD", "unit": "CAD"},
+        "EURSEK=X": {"name": "EUR/SEK", "unit": "SEK"},
+        "EURPLN=X": {"name": "EUR/PLN", "unit": "PLN"},
+        "GBPCHF=X": {"name": "GBP/CHF", "unit": "CHF"},
+        "GBPAUD=X": {"name": "GBP/AUD", "unit": "AUD"},
     }
 }
 
@@ -351,6 +356,14 @@ BONDS = {
         "VGIT":     {"name": "VGIT (Orta Vadeli Hazine)", "unit": "USD"},
         "EDV":      {"name": "EDV (Uzun Vadeli Treasury)", "unit": "USD"},
         "TIPS":     {"name": "PIMCO 15+ Year TIPS", "unit": "USD"},
+        "BSV":      {"name": "BSV (Kısa Vadeli Toplam Tahvil)", "unit": "USD"},
+        "SPSB":     {"name": "SPSB (Kısa Vadeli Şirket Tahvili)", "unit": "USD"},
+        "VCSH":     {"name": "VCSH (Kısa Vadeli Kurumsal Tahvil)", "unit": "USD"},
+        "VCIT":     {"name": "VCIT (Orta Vadeli Kurumsal Tahvil)", "unit": "USD"},
+        "SHV":      {"name": "SHV (1-12 Ay Hazine Bonosu)", "unit": "USD"},
+        "GOVT":     {"name": "GOVT (ABD Hazine Tahvilleri)", "unit": "USD"},
+        "TLH":      {"name": "TLH (10-20 Yıl Hazine Tahvili)", "unit": "USD"},
+        "SPTL":     {"name": "SPTL (Uzun Vadeli Hazine Tahvili)", "unit": "USD"},
     }
 }
 
@@ -386,8 +399,14 @@ INDICES = {
         "^SSMI":     {"name": "SMI",            "unit": "CHF"},
         "^OMX":      {"name": "OMX Stockholm 30", "unit": "SEK"},
         "^N100":     {"name": "Euronext 100",   "unit": "EUR"},
-        "^SPTSE":    {"name": "S&P/TSX",        "unit": "CAD"},
+        "^GSPTSE":   {"name": "S&P/TSX Composite", "unit": "CAD"},
         "^KLSE":     {"name": "FTSE Bursa Malaysia", "unit": "MYR"},
+        "^NDX":      {"name": "NASDAQ 100", "unit": "USD"},
+        "^MID":      {"name": "S&P MidCap 400", "unit": "USD"},
+        "^SP600":    {"name": "S&P SmallCap 600", "unit": "USD"},
+        "^NYA":      {"name": "NYSE Composite", "unit": "USD"},
+        "^STI":      {"name": "Straits Times", "unit": "SGD"},
+        "^MXX":      {"name": "IPC Mexico", "unit": "MXN"},
     }
 }
 
@@ -435,11 +454,7 @@ INDUSTRIAL = {
         "HG=F":   {"name": "HG (Bakır)",         "unit": "USD/lb"},
         "ALI=F":  {"name": "ALI (Alüminyum)",     "unit": "USD/ton"},
         "ZN=F":   {"name": "ZN (Çinko)",          "unit": "USD/ton"},
-        "NI=F":   {"name": "NI (Nikel)",           "unit": "USD/ton"},
-        "SN=F":   {"name": "SN (Kalay)",           "unit": "USD/ton"},
-        "PB=F":   {"name": "PB (Kurşun)",          "unit": "USD/ton"},
         "LBR=F":  {"name": "LBR (Kereste)",        "unit": "USD/mbf"},
-        "RR=F":   {"name": "RR (Kauçuk)",          "unit": "USc/lb"},
         "URA":    {"name": "URA (Uranyum ETF)",    "unit": "USD"},
         "LIT":    {"name": "LIT (Lityum ETF)",     "unit": "USD"},
         "COPX":   {"name": "COPX (Bakır Madenci)", "unit": "USD"},
@@ -470,6 +485,14 @@ INDUSTRIAL = {
         "IR":     {"name": "Ingersoll Rand", "unit": "USD"},
         "PCAR":   {"name": "Paccar", "unit": "USD"},
         "WM":     {"name": "Waste Management", "unit": "USD"},
+        "VIS":    {"name": "Vanguard Industrials ETF", "unit": "USD"},
+        "IYJ":    {"name": "iShares U.S. Industrials ETF", "unit": "USD"},
+        "FIDU":   {"name": "Fidelity MSCI Industrials ETF", "unit": "USD"},
+        "RTM":    {"name": "Invesco S&P 500 Equal Weight Materials", "unit": "USD"},
+        "ITA":    {"name": "iShares U.S. Aerospace & Defense ETF", "unit": "USD"},
+        "PKB":    {"name": "Invesco Building & Construction ETF", "unit": "USD"},
+        "PHO":    {"name": "Invesco Water Resources ETF", "unit": "USD"},
+        "IFRA":   {"name": "iShares U.S. Infrastructure ETF", "unit": "USD"},
     }
 }
 
