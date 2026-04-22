@@ -314,52 +314,72 @@ fj('summary.json').then(function(data){
     buildMovers(all);
     buildPulse(all);
 
-    // Kategori bazlı ID dizileri (alt gruplar ayrık)
-    var energyIds=['BZ=F','CL=F','NG=F','TTF=F','MTF=F','HO=F','RB=F','USO','UNG','XLE','XOP','ICLN','TAN','NLR','KRBN'];
-    var metalsIds=['GC=F','SI=F','PL=F','PA=F','HG=F','ALI=F','GLD','SLV','PPLT','PALL','GDX','GDXJ','SIL'];
-    var agriIds=['ZW=F','ZC=F','ZS=F','ZM=F','ZL=F','ZO=F','ZR=F','CT=F','KC=F','SB=F','CC=F','OJ=F','LBS=F','LE=F','HE=F','DBA','CORN','WEAT','SOYB','MOO'];
-    var industrialIds=['NI=F','SN=F','PB=F','RR=F','URA','LIT','COPX','SLX','BDRY','REMX','ZN=F'];
-    var commIds=energyIds.concat(metalsIds,agriIds,industrialIds);
-    var fxIds=['USDTRY=X','EURTRY=X','GBPTRY=X','CHFTRY=X','JPYTRY=X','CADTRY=X','AUDTRY=X','CNYTRY=X','SARTRY=X','RUBTRY=X','AEDTRY=X','EURUSD=X','GBPUSD=X','USDJPY=X','USDCHF=X','AUDUSD=X','USDCAD=X','NZDUSD=X','USDCNY=X','USDBRL=X','USDMXN=X','USDINR=X','USDZAR=X','USDSEK=X','USDNOK=X','DX-Y.NYB'];
-    var bondIds=['2YY=F','^FVX','^TNX','^TYX','JP2Y=RR','JP5Y=RR','JP10Y=RR','JP30Y=RR'];
-    var fxAllIds=fxIds.concat(bondIds);
-    var idxIds=['XU100.IS','XU030.IS','^GSPC','^DJI','^IXIC','^RUT','^STOXX50E','^FTSE','^GDAXI','^FCHI','^N225','^HSI','000001.SS','^BSESN','^KS11','^TWII','^MERV'];
-    var cryptoIds=['BTC-USD','ETH-USD','BNB-USD','SOL-USD','XRP-USD','ADA-USD','DOGE-USD','AVAX-USD','DOT-USD','LINK-USD'];
-
-    function filterByIds(ids){return ids.map(function(id){return findS(all,id)}).filter(Boolean)}
-    var commSeries=filterByIds(commIds);
-    var fxSeries=filterByIds(fxAllIds);
-    var idxSeries=filterByIds(idxIds);
-    var cryptoSeries=filterByIds(cryptoIds);
-    buildTable('tblComm',commSeries);
-    buildTable('tblFx',fxSeries);
-    buildTable('tblIdx',idxSeries);
-    buildTable('tblCrypto',cryptoSeries);
-
-    // Excel indirme — grup bazlı ve tüm tabloları
-    var groups = {comm:{series:commSeries,name:'Emtia'},fx:{series:fxSeries,name:'Doviz-Tahvil'},idx:{series:idxSeries,name:'Endeksler'},crypto:{series:cryptoSeries,name:'Kripto'}};
-    document.querySelectorAll('.idx-xlsx').forEach(function(btn){
-        btn.addEventListener('click', function(e){
-            e.stopPropagation();
-            var which = btn.getAttribute('data-which');
-            var g = groups[which];
-            if(g && window.PM && PM.exportTableExcel) PM.exportTableExcel(g.series, 'piyasa-' + g.name);
-        });
-    });
-    var allBtn = document.getElementById('idxExcelAll');
-    if(allBtn && window.PM && PM.exportTableExcel){
-        allBtn.addEventListener('click', function(){
-            PM.exportTableExcel(all, 'piyasa-ozet-' + new Date().toISOString().slice(0,10));
-        });
+    // Kategori listelerini artık doğrudan kategori JSON dosyalarından üret:
+    // böylece config'e yeni sembol eklendiğinde ana sayfa sayaçları da doğru kalır.
+    var categoryFiles = {
+        comm:['commodities_energy.json','commodities_metals.json','commodities_agriculture.json','industrial.json'],
+        fx:['currencies.json','bonds.json'],
+        idx:['indices.json'],
+        crypto:['crypto.json']
+    };
+    var allFiles = Array.from(new Set([].concat(categoryFiles.comm, categoryFiles.fx, categoryFiles.idx, categoryFiles.crypto)));
+    function idsFromData(d){
+        if(!d || !d.series || !Array.isArray(d.series)) return [];
+        return d.series.map(function(s){return s && s.id}).filter(Boolean);
     }
+    function uniq(arr){return Array.from(new Set(arr));}
+    function filterByIds(ids){return ids.map(function(id){return findS(all,id)}).filter(Boolean)}
 
-    // Gerçek sayıları anime ederek göster (veride bulunanları say)
-    var commCount = commSeries.length;
-    var fxCount   = filterByIds(fxIds).length;
-    animateCounter('stTotal', all.length, '+');
-    animateCounter('stComm', commCount);
-    animateCounter('stFx',   fxCount);
-    animateCounter('stCry',  cryptoSeries.length);
+    Promise.all(allFiles.map(function(file){
+        return fj(file).then(function(d){ return {file:file, ids:idsFromData(d)}; }).catch(function(){ return {file:file, ids:[]}; });
+    })).then(function(fileSets){
+        var byFile = {};
+        fileSets.forEach(function(it){ byFile[it.file]=it.ids; });
+        function idsFor(which){
+            var merged=[];
+            (categoryFiles[which]||[]).forEach(function(file){
+                merged=merged.concat(byFile[file]||[]);
+            });
+            return uniq(merged);
+        }
+
+        var commIds=idsFor('comm');
+        var fxIds=idsFor('fx');
+        var idxIds=idsFor('idx');
+        var cryptoIds=idsFor('crypto');
+
+        var commSeries=filterByIds(commIds);
+        var fxSeries=filterByIds(fxIds);
+        var idxSeries=filterByIds(idxIds);
+        var cryptoSeries=filterByIds(cryptoIds);
+        buildTable('tblComm',commSeries);
+        buildTable('tblFx',fxSeries);
+        buildTable('tblIdx',idxSeries);
+        buildTable('tblCrypto',cryptoSeries);
+
+        // Excel indirme — grup bazlı ve tüm tabloları
+        var groups = {comm:{series:commSeries,name:'Emtia'},fx:{series:fxSeries,name:'Doviz-Tahvil'},idx:{series:idxSeries,name:'Endeksler'},crypto:{series:cryptoSeries,name:'Kripto'}};
+        document.querySelectorAll('.idx-xlsx').forEach(function(btn){
+            btn.addEventListener('click', function(e){
+                e.stopPropagation();
+                var which = btn.getAttribute('data-which');
+                var g = groups[which];
+                if(g && window.PM && PM.exportTableExcel) PM.exportTableExcel(g.series, 'piyasa-' + g.name);
+            });
+        });
+        var allBtn = document.getElementById('idxExcelAll');
+        if(allBtn && window.PM && PM.exportTableExcel){
+            allBtn.addEventListener('click', function(){
+                PM.exportTableExcel(all, 'piyasa-ozet-' + new Date().toISOString().slice(0,10));
+            });
+        }
+
+        // Gerçek sayıları anime ederek göster (veride bulunanları say)
+        animateCounter('stTotal', all.length, '+');
+        animateCounter('stComm', commSeries.length);
+        animateCounter('stFx',   fxSeries.length);
+        animateCounter('stCry',  cryptoSeries.length);
+    });
 
     var su=document.getElementById('stUpdate');if(su&&data.meta){var d=new Date(data.meta.updated_at);su.textContent=String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+d.getFullYear()}
 });
