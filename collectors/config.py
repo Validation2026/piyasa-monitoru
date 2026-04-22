@@ -229,6 +229,8 @@ COMMODITIES_METALS = {
         "SGOL":  {"name": "SGOL (Fiziksel Altın ETF)", "unit": "USD"},
         "BAR":   {"name": "BAR (GraniteShares Gold)", "unit": "USD"},
         "DBP":   {"name": "DBP (Kıymetli Metaller Fonu)", "unit": "USD"},
+        "JJN":   {"name": "JJN (Nikel ETN)", "unit": "USD"},
+        "JJT":   {"name": "JJT (Kalay ETN)", "unit": "USD"},
     }
 }
 
@@ -256,6 +258,7 @@ COMMODITIES_AGRICULTURE = {
         "MOO":   {"name": "MOO (Tarım Şirketleri ETF)", "unit": "USD"},
         "CANE":  {"name": "CANE (Şeker ETF)",     "unit": "USD"},
         "NIB":   {"name": "NIB (Kakao ETN)",      "unit": "USD"},
+        "JO":    {"name": "JO (Kahve ETN)",       "unit": "USD"},
         "COW":   {"name": "COW (Hayvancılık ETN)", "unit": "USD"},
         "RJA":   {"name": "RJA (Tarım Endeksi ETN)", "unit": "USD"},
         "FTGC":  {"name": "FTGC (Çeşitlendirilmiş Emtia)", "unit": "USD"},
@@ -307,6 +310,7 @@ CURRENCIES = {
         "USDHKD=X": {"name": "USD/HKD", "unit": "HKD"},
         "USDIDR=X": {"name": "USD/IDR", "unit": "IDR"},
         "USDPHP=X": {"name": "USD/PHP", "unit": "PHP"},
+        "USDILS=X": {"name": "USD/ILS", "unit": "ILS"},
         "USDCLP=X": {"name": "USD/CLP", "unit": "CLP"},
         "USDCOP=X": {"name": "USD/COP", "unit": "COP"},
         "USDKZT=X": {"name": "USD/KZT", "unit": "KZT"},
@@ -375,12 +379,14 @@ INDICES = {
         "^IBEX":     {"name": "IBEX 35",        "unit": "EUR"},
         "^VIX":     {"name": "VIX (Korku Endeksi)",     "unit": "Puan"},
         "^BVSP":     {"name": "Bovespa",        "unit": "BRL"},
+        "^NSEI":     {"name": "Nifty 50",       "unit": "INR"},
         "^JKSE":     {"name": "IDX Composite",  "unit": "IDR"},
         "^TA125.TA": {"name": "TA-125",         "unit": "ILS"},
         "^AEX":      {"name": "AEX",            "unit": "EUR"},
         "^SSMI":     {"name": "SMI",            "unit": "CHF"},
         "^OMX":      {"name": "OMX Stockholm 30", "unit": "SEK"},
         "^N100":     {"name": "Euronext 100",   "unit": "EUR"},
+        "^SPTSE":    {"name": "S&P/TSX",        "unit": "CAD"},
         "^KLSE":     {"name": "FTSE Bursa Malaysia", "unit": "MYR"},
     }
 }
@@ -408,9 +414,12 @@ CRYPTO = {
         "NEAR-USD": {"name": "NEAR Protocol",    "unit": "USD"},
         "APT-USD":  {"name": "APT (Aptos)",       "unit": "USD"},
         "SUI20947-USD": {"name": "SUI",           "unit": "USD"},
+        "TON11419-USD": {"name": "TON (Toncoin)", "unit": "USD"},
+        "HBAR-USD": {"name": "HBAR (Hedera)", "unit": "USD"},
         "XLM-USD": {"name": "XLM (Stellar)", "unit": "USD"},
         "ETC-USD": {"name": "ETC (Ethereum Classic)", "unit": "USD"},
         "FIL-USD": {"name": "FIL (Filecoin)", "unit": "USD"},
+        "ARB11841-USD": {"name": "ARB (Arbitrum)", "unit": "USD"},
         "OP-USD": {"name": "OP (Optimism)", "unit": "USD"},
         "SEI-USD": {"name": "SEI", "unit": "USD"},
         "INJ-USD": {"name": "INJ (Injective)", "unit": "USD"},
