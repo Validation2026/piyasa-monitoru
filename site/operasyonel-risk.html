@@ -9,7 +9,15 @@
     .hero{margin-top:50px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px}
     .hero h1{margin:0 0 8px;font-size:1.2rem}
     .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-    .btn{border:1px solid var(--border);background:linear-gradient(135deg,#0f172a,#1e293b);color:#dbeafe;padding:10px 14px;border-radius:10px;font-weight:700;font-size:.78rem;cursor:pointer}
+    .btn{border:1px solid var(--border);background:linear-gradient(135deg,#0f172a,#1e293b);color:#dbeafe;padding:10px 14px;border-radius:10px;font-weight:700;font-size:.78rem;cursor:pointer;transition:opacity .15s}
+    .btn:disabled{opacity:.55;cursor:wait}
+    .btn.secondary{background:transparent;color:var(--t1);border-color:var(--border2)}
+    .stats{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .stat{font-size:.7rem;color:var(--t2);background:var(--card2,rgba(0,0,0,.04));border:1px solid var(--border2);padding:4px 10px;border-radius:999px;font-weight:600}
+    .stat strong{color:var(--t1)}
+    .themes{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+    .theme{font-size:.68rem;border:1px solid var(--border2);border-radius:6px;padding:3px 8px;color:var(--t2)}
+    .theme strong{color:#60a5fa}
     .chips{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 14px}
     .chip{border:1px solid var(--border2);background:var(--card);color:var(--t2);padding:6px 10px;border-radius:999px;font-size:.74rem;font-weight:700;cursor:pointer}
     .chip.active{border-color:#60a5fa;color:#60a5fa;background:rgba(59,130,246,.12)}
@@ -21,6 +29,15 @@
     .src img{width:24px;height:24px;border-radius:6px;border:1px solid var(--border2)}
     .title{font-size:.86rem;font-weight:700;color:var(--t1);line-height:1.45;text-decoration:none}
     .meta{font-size:.69rem;color:var(--t3);display:flex;justify-content:space-between;gap:8px}
+    .report-panel{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:14px;display:none}
+    .report-panel.show{display:block}
+    .report-panel h1{font-size:1.05rem;margin-top:0}
+    .report-panel h2{font-size:.92rem;margin-top:14px;color:var(--t1)}
+    .report-panel p,.report-panel li{font-size:.82rem;color:var(--t2);line-height:1.55}
+    .report-meta{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border2)}
+    .provider-badge{font-size:.68rem;padding:3px 8px;border-radius:6px;font-weight:700}
+    .provider-badge.ok{background:rgba(34,197,94,.12);color:#16a34a;border:1px solid rgba(34,197,94,.3)}
+    .provider-badge.fallback{background:rgba(234,179,8,.12);color:#ca8a04;border:1px solid rgba(234,179,8,.3)}
   </style>
 </head>
 <body>
@@ -29,12 +46,23 @@
 <div class="page">
   <div class="hero">
     <h1>🛡️ Operasyonel Risk Haber Merkezi</h1>
-    <p style="margin:0;color:var(--t2);font-size:.82rem">Premium görünüm: Türkiye öncelikli akış + global + makale dengesi, görselli kartlar, filtreler ve indirilebilir detaylı günlük rapor.</p>
+    <p style="margin:0;color:var(--t2);font-size:.82rem">Türkiye öncelikli akış + global + makale dengesi, görselli kartlar, filtreler ve Gemini AI ile yönetici seviyesi günlük rapor.</p>
     <div id="generatedAt" style="margin-top:8px;font-size:.72rem;color:var(--t3)">Yükleniyor...</div>
+    <div class="stats" id="stats"></div>
+    <div class="themes" id="themes"></div>
     <div class="actions">
-      <button class="btn" id="downloadReport">📄 Raporu İndir (Word)</button>
+      <button class="btn" id="generateReport">🤖 AI Raporu Üret</button>
+      <button class="btn secondary" id="downloadReport" disabled>📄 Word Olarak İndir</button>
     </div>
   </div>
+
+  <section class="report-panel" id="reportPanel" aria-live="polite">
+    <div class="report-meta">
+      <strong style="font-size:.82rem">Yönetici Raporu</strong>
+      <span id="providerBadge" class="provider-badge ok">gemini</span>
+    </div>
+    <div id="reportBody"></div>
+  </section>
 
   <div class="chips" id="chips">
     <button class="chip active" data-filter="all">Tümü</button>
@@ -50,15 +78,41 @@
   const grid = document.getElementById('newsGrid');
   const gAt = document.getElementById('generatedAt');
   const chips = document.getElementById('chips');
-  const btn = document.getElementById('downloadReport');
+  const statsEl = document.getElementById('stats');
+  const themesEl = document.getElementById('themes');
+  const genBtn = document.getElementById('generateReport');
+  const dlBtn = document.getElementById('downloadReport');
+  const reportPanel = document.getElementById('reportPanel');
+  const reportBody = document.getElementById('reportBody');
+  const providerBadge = document.getElementById('providerBadge');
   let rawNews = [];
   let aiCommentary = '';
-  let aiAvailable = false;
-  let provider = 'fallback';
+  let lastReportHtml = '';
+  let lastProvider = '';
 
   function seededPhoto(title){
     const seed = encodeURIComponent((title || 'operational-risk').slice(0,80));
     return `https://picsum.photos/seed/${seed}/900/600`;
+  }
+
+  function renderStats(){
+    const tr = rawNews.filter(n=>n.region==='Türkiye').length;
+    const gl = rawNews.filter(n=>n.region==='Global').length;
+    const art = rawNews.filter(n=>(n.kind||'').toLowerCase()==='makale').length;
+    statsEl.innerHTML = `
+      <span class="stat">Toplam: <strong>${rawNews.length}</strong></span>
+      <span class="stat">🇹🇷 Türkiye: <strong>${tr}</strong></span>
+      <span class="stat">🌍 Global: <strong>${gl}</strong></span>
+      <span class="stat">📚 Makale: <strong>${art}</strong></span>`;
+  }
+
+  function renderThemes(themes){
+    if(!Array.isArray(themes) || !themes.length){ themesEl.innerHTML = ''; return; }
+    themesEl.innerHTML = themes
+      .filter(t => t.count > 0)
+      .slice(0, 6)
+      .map(t => `<span class="theme">${t.name} <strong>${t.count}</strong></span>`)
+      .join('');
   }
 
   function render(filter){
@@ -84,10 +138,10 @@
     });
   }
 
-  async function generateWordReport(){
-    const now = new Date();
-    btn.disabled = true; btn.textContent = '⏳ AI raporu hazırlanıyor...';
-    let analysisHtml = '';
+  async function generateReport(){
+    if(!rawNews.length){ alert('Önce haberlerin yüklenmesi gerekiyor.'); return; }
+    genBtn.disabled = true; genBtn.textContent = '⏳ Gemini analiz ediyor...';
+    dlBtn.disabled = true;
     try {
       const rr = await fetch('/.netlify/functions/operational-risk-report', {
         method: 'POST',
@@ -95,29 +149,36 @@
         body: JSON.stringify({ news: rawNews })
       });
       const rd = await rr.json();
-      analysisHtml = rd.reportHtml || '';
-      provider = rd.provider || 'fallback';
-      aiAvailable = provider !== 'fallback';
-    } catch(_e) {}
+      lastReportHtml = rd.reportHtml || '';
+      lastProvider = rd.provider || 'fallback';
 
-    if(!analysisHtml){
-      analysisHtml = `<h1>Operasyonel Risk Günlük Değerlendirme</h1><p>Rapor servisi yanıt üretmedi; yedek içerik kullanıldı.</p><p>${(aiCommentary||'').replace(/\n/g,'<br>')}</p>`;
+      reportBody.innerHTML = lastReportHtml || '<p>Rapor üretilemedi.</p>';
+      const isFallback = lastProvider === 'fallback';
+      providerBadge.textContent = isFallback ? 'fallback (AI devre dışı)' : lastProvider;
+      providerBadge.className = 'provider-badge ' + (isFallback ? 'fallback' : 'ok');
+      reportPanel.classList.add('show');
+      reportPanel.scrollIntoView({behavior:'smooth', block:'start'});
+      dlBtn.disabled = !lastReportHtml;
+    } catch(e){
+      reportBody.innerHTML = `<p>Rapor servisine ulaşılamadı: ${e.message}</p>`;
+      providerBadge.textContent = 'hata';
+      providerBadge.className = 'provider-badge fallback';
+      reportPanel.classList.add('show');
+    } finally {
+      genBtn.disabled = false; genBtn.textContent = '🔄 Raporu Yenile';
     }
+  }
 
-    if(!aiAvailable){
-      analysisHtml += `<p><i>Not: AI provider devreye girmedi. Provider: ${provider}.</i></p>`;
-    } else {
-      analysisHtml += `<p><i>AI Provider: ${provider}</i></p>`;
-    }
-
-    const body = `<html><head><meta charset="utf-8"><style>body{font-family:Calibri,Arial;padding:24px;line-height:1.55}</style></head><body><p><b>Tarih:</b> ${now.toLocaleString('tr-TR')}</p>${analysisHtml}</body></html>`;
-    const blob = new Blob(['\ufeff', body], {type:'application/msword'});
+  function downloadAsWord(){
+    if(!lastReportHtml) return;
+    const now = new Date();
+    const body = `<html><head><meta charset="utf-8"><style>body{font-family:Calibri,Arial;padding:24px;line-height:1.55}</style></head><body><p><b>Tarih:</b> ${now.toLocaleString('tr-TR')}</p><p><b>AI Provider:</b> ${lastProvider}</p>${lastReportHtml}</body></html>`;
+    const blob = new Blob(['﻿', body], {type:'application/msword'});
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = `operasyonel-risk-raporu-${now.toISOString().slice(0,10)}.doc`;
     a.click();
     URL.revokeObjectURL(a.href);
-    btn.disabled = false; btn.textContent = '📄 Raporu İndir (Word)';
   }
 
   chips.addEventListener('click', (e)=>{
@@ -126,12 +187,15 @@
     t.classList.add('active');
     render(t.dataset.filter);
   });
-  btn.addEventListener('click', generateWordReport);
+  genBtn.addEventListener('click', generateReport);
+  dlBtn.addEventListener('click', downloadAsWord);
 
   fetch('/.netlify/functions/operational-risk-news').then(r=>r.json()).then((data)=>{
     rawNews = data.news || [];
     aiCommentary = data.aiCommentary || '';
     gAt.textContent='Son tarama: ' + new Date(data.generatedAt).toLocaleString('tr-TR');
+    renderStats();
+    renderThemes(data.themes);
     render('all');
   }).catch((e)=>{
     gAt.textContent='Servis hatası: '+e.message;
