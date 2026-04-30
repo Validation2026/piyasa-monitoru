@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Operasyonel Risk Haber Merkezi</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <style>
+    .hero{margin-top:50px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px}
+    .hero h1{margin:0 0 8px;font-size:1.2rem}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .btn{border:1px solid var(--border);background:linear-gradient(135deg,#0f172a,#1e293b);color:#dbeafe;padding:10px 14px;border-radius:10px;font-weight:700;font-size:.78rem;cursor:pointer}
+    .chips{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 14px}
+    .chip{border:1px solid var(--border2);background:var(--card);color:var(--t2);padding:6px 10px;border-radius:999px;font-size:.74rem;font-weight:700;cursor:pointer}
+    .chip.active{border-color:#60a5fa;color:#60a5fa;background:rgba(59,130,246,.12)}
+    .news-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+    .thumb{width:100%;height:165px;object-fit:cover;background:#111827}
+    .body{padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+    .src{display:flex;align-items:center;gap:8px;font-size:.74rem;color:var(--t3)}
+    .src img{width:24px;height:24px;border-radius:6px;border:1px solid var(--border2)}
+    .title{font-size:.86rem;font-weight:700;color:var(--t1);line-height:1.45;text-decoration:none}
+    .meta{font-size:.69rem;color:var(--t3);display:flex;justify-content:space-between;gap:8px}
+  </style>
+</head>
+<body>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/sidebar.js"></script>
+<div class="page">
+  <div class="hero">
+    <h1>🛡️ Operasyonel Risk Haber Merkezi</h1>
+    <p style="margin:0;color:var(--t2);font-size:.82rem">Premium görünüm: Türkiye öncelikli akış + global + makale dengesi, görselli kartlar, filtreler ve indirilebilir detaylı günlük rapor.</p>
+    <div id="generatedAt" style="margin-top:8px;font-size:.72rem;color:var(--t3)">Yükleniyor...</div>
+    <div class="actions">
+      <button class="btn" id="downloadReport">📄 Raporu İndir (Word)</button>
+    </div>
+  </div>
+
+  <div class="chips" id="chips">
+    <button class="chip active" data-filter="all">Tümü</button>
+    <button class="chip" data-filter="tr">Sadece Türkiye</button>
+    <button class="chip" data-filter="global">Sadece Global</button>
+    <button class="chip" data-filter="article">Makale</button>
+  </div>
+
+  <div class="news-grid" id="newsGrid"></div>
+</div>
+<script>
+(function(){
+  const grid = document.getElementById('newsGrid');
+  const gAt = document.getElementById('generatedAt');
+  const chips = document.getElementById('chips');
+  const btn = document.getElementById('downloadReport');
+  let rawNews = [];
+  let aiCommentary = '';
+
+  function seededPhoto(title){
+    const seed = encodeURIComponent((title || 'operational-risk').slice(0,80));
+    return `https://picsum.photos/seed/${seed}/900/600`;
+  }
+
+  function render(filter){
+    let list = rawNews.slice();
+    if(filter==='tr') list = list.filter(n=>n.region==='Türkiye');
+    if(filter==='global') list = list.filter(n=>n.region==='Global');
+    if(filter==='article') list = list.filter(n=>(n.kind||'').toLowerCase()==='makale');
+
+    grid.innerHTML='';
+    if(!list.length){ grid.innerHTML='<div class="card"><div class="body">Bu filtrede haber bulunamadı.</div></div>'; return; }
+
+    list.forEach((n)=>{
+      const card = document.createElement('article');
+      card.className='card';
+      card.innerHTML = `
+        <img class="thumb" loading="lazy" src="${seededPhoto(n.title)}" alt="Haber görseli">
+        <div class="body">
+          <div class="src"><img src="${n.image||''}" alt="Kaynak"> <strong>${n.source||'Kaynak'}</strong></div>
+          <a class="title" href="${n.link}" target="_blank" rel="noopener">${n.title}</a>
+          <div class="meta"><span>${n.region} • ${n.kind||'Haber'}</span><span>${n.pubDate ? new Date(n.pubDate).toLocaleString('tr-TR') : '-'}</span></div>
+        </div>`;
+      grid.appendChild(card);
+    });
+  }
+
+  function generateWordReport(){
+    const now = new Date();
+    const tr = rawNews.filter(n=>n.region==='Türkiye');
+    const gl = rawNews.filter(n=>n.region==='Global' && n.kind==='Haber');
+    const art = rawNews.filter(n=>n.kind==='Makale');
+    const body = `
+      <html><head><meta charset="utf-8"><style>body{font-family:Calibri,Arial;padding:24px;line-height:1.5}h1,h2{color:#1e3a8a}table{width:100%;border-collapse:collapse}td,th{border:1px solid #ccc;padding:8px;font-size:12px}</style></head><body>
+      <h1>Operasyonel Risk Günlük Premium Raporu</h1>
+      <p><b>Tarih:</b> ${now.toLocaleString('tr-TR')}</p>
+      <h2>1) Yönetici Özeti</h2>
+      <p>${(aiCommentary||'').replace(/\n/g,'<br>')}</p>
+      <h2>2) Dağılım</h2>
+      <ul><li>Türkiye Haberleri: ${tr.length}</li><li>Global Haberler: ${gl.length}</li><li>Makaleler: ${art.length}</li></ul>
+      <h2>3) Haber Listesi</h2>
+      <table><tr><th>Bölge</th><th>Tür</th><th>Kaynak</th><th>Başlık</th><th>Tarih</th><th>Link</th></tr>
+      ${rawNews.map(n=>`<tr><td>${n.region||''}</td><td>${n.kind||''}</td><td>${n.source||''}</td><td>${n.title||''}</td><td>${n.pubDate?new Date(n.pubDate).toLocaleString('tr-TR'):''}</td><td>${n.link||''}</td></tr>`).join('')}
+      </table>
+      <h2>4) Önerilen 24 Saatlik Aksiyonlar</h2>
+      <ol><li>Kritik süreçlerde kesinti toleransı (RTO/RPO) güncelle.</li><li>Üçüncü taraf tedarikçi risklerini yeniden puanla.</li><li>Siber olay müdahale hazır bulunuşluk testini tamamla.</li><li>Yönetim komitesine özet risk brifingi gönder.</li></ol>
+      </body></html>`;
+
+    const blob = new Blob(['\ufeff', body], {type:'application/msword'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `operasyonel-risk-raporu-${now.toISOString().slice(0,10)}.doc`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  chips.addEventListener('click', (e)=>{
+    const t = e.target.closest('.chip'); if(!t) return;
+    document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+    t.classList.add('active');
+    render(t.dataset.filter);
+  });
+  btn.addEventListener('click', generateWordReport);
+
+  fetch('/.netlify/functions/operational-risk-news').then(r=>r.json()).then((data)=>{
+    rawNews = data.news || [];
+    aiCommentary = data.aiCommentary || '';
+    gAt.textContent='Son tarama: ' + new Date(data.generatedAt).toLocaleString('tr-TR');
+    render('all');
+  }).catch((e)=>{
+    gAt.textContent='Servis hatası: '+e.message;
+    grid.innerHTML='<div class="card"><div class="body">Haberler alınamadı.</div></div>';
+  });
+})();
+</script>
+</body>
+</html>
