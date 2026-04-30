@@ -1,7 +1,7 @@
 const https = require('https');
 const { getStore, connectLambda } = require('@netlify/blobs');
 
-const FALLBACK_MODELS = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-2.5-flash-lite', 'gemini-2.5-pro'];
+const FALLBACK_MODELS = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-2.5-flash-lite'];
 const RETRYABLE = /HTTP (429|500|502|503|504)/;
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 const STORE_NAME = 'operational-risk';
