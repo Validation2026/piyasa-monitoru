@@ -20,7 +20,7 @@ function postJson(url, headers, payload, timeout = 25000) {
 async function callGemini(news) {
   const key = process.env.GEMINI_API_KEY;
   if (!key) throw new Error('GEMINI_API_KEY missing');
-  const model = process.env.GEMINI_MODEL || 'gemini-1.5-pro';
+  const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
   const prompt = [
     'Aşağıdaki operasyonel risk haberlerini analiz et.',
     'Sadece Türkçe ve yönetici seviyesi detaylı rapor üret.',
@@ -64,7 +64,7 @@ exports.handler = async function (event) {
       hasKey: Boolean(key),
       keyLength: key.length,
       keyPrefix: key ? key.slice(0, 6) : null,
-      model: process.env.GEMINI_MODEL || 'gemini-1.5-pro',
+      model: process.env.GEMINI_MODEL || 'gemini-2.5-flash',
       runtime: process.version
     }) };
   }
