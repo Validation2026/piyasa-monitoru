@@ -56,8 +56,20 @@ function fallbackReport(news, debug) {
 }
 
 exports.handler = async function (event) {
-  if (event.httpMethod !== 'POST') return { statusCode: 405, body: 'Method Not Allowed' };
   const H = { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' };
+
+  if (event.httpMethod === 'GET') {
+    const key = process.env.GEMINI_API_KEY || '';
+    return { statusCode: 200, headers: H, body: JSON.stringify({
+      hasKey: Boolean(key),
+      keyLength: key.length,
+      keyPrefix: key ? key.slice(0, 6) : null,
+      model: process.env.GEMINI_MODEL || 'gemini-1.5-pro',
+      runtime: process.version
+    }) };
+  }
+
+  if (event.httpMethod !== 'POST') return { statusCode: 405, headers: H, body: 'Method Not Allowed' };
   try {
     const body = JSON.parse(event.body || '{}');
     const news = Array.isArray(body.news) ? body.news.slice(0, 120) : [];
@@ -67,7 +79,7 @@ exports.handler = async function (event) {
       const g = await callGemini(news);
       return { statusCode: 200, headers: H, body: JSON.stringify({ reportHtml: g.html, generatedAt: new Date().toISOString(), provider: g.provider }) };
     } catch (ge) {
-      return { statusCode: 200, headers: H, body: JSON.stringify({ reportHtml: fallbackReport(news, ge.message), generatedAt: new Date().toISOString(), provider: 'fallback' }) };
+      return { statusCode: 200, headers: H, body: JSON.stringify({ reportHtml: fallbackReport(news, ge.message), generatedAt: new Date().toISOString(), provider: 'fallback', debug: ge.message }) };
     }
   } catch (e) {
     return { statusCode: 500, headers: H, body: JSON.stringify({ error: e.message }) };
