@@ -52,6 +52,7 @@
     <div class="themes" id="themes"></div>
     <div class="actions">
       <button class="btn" id="generateReport">🤖 AI Raporu Üret</button>
+      <button class="btn secondary" id="forceRegenerate" title="Cache'i atla, Gemini'yi yeniden çağır">♻️ Yeniden Üret</button>
       <button class="btn secondary" id="downloadReport" disabled>📄 Word Olarak İndir</button>
     </div>
   </div>
@@ -81,6 +82,7 @@
   const statsEl = document.getElementById('stats');
   const themesEl = document.getElementById('themes');
   const genBtn = document.getElementById('generateReport');
+  const forceBtn = document.getElementById('forceRegenerate');
   const dlBtn = document.getElementById('downloadReport');
   const reportPanel = document.getElementById('reportPanel');
   const reportBody = document.getElementById('reportBody');
@@ -138,15 +140,17 @@
     });
   }
 
-  async function generateReport(){
+  async function generateReport(force){
     if(!rawNews.length){ alert('Önce haberlerin yüklenmesi gerekiyor.'); return; }
-    genBtn.disabled = true; genBtn.textContent = '⏳ Gemini analiz ediyor...';
-    dlBtn.disabled = true;
+    const activeBtn = force ? forceBtn : genBtn;
+    const activeText = activeBtn.textContent;
+    genBtn.disabled = true; forceBtn.disabled = true; dlBtn.disabled = true;
+    activeBtn.textContent = force ? '⏳ Yeniden üretiliyor...' : '⏳ Gemini analiz ediyor...';
     try {
       const rr = await fetch('/.netlify/functions/operational-risk-report', {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ news: rawNews })
+        body: JSON.stringify({ news: rawNews, force: !!force })
       });
       const rd = await rr.json();
       lastReportHtml = rd.reportHtml || '';
@@ -154,9 +158,21 @@
 
       reportBody.innerHTML = lastReportHtml || '<p>Rapor üretilemedi.</p>';
       const isFallback = lastProvider === 'fallback';
-      providerBadge.textContent = isFallback ? 'fallback (AI devre dışı)' : lastProvider;
-      providerBadge.className = 'provider-badge ' + (isFallback ? 'fallback' : 'ok');
-      if(isFallback && rd.debug){
+      const isCache = !!rd.fromCache;
+      const isStale = !!rd.stale;
+      let badgeText = lastProvider;
+      let badgeClass = 'ok';
+      if(isFallback){ badgeText = 'fallback (AI devre dışı)'; badgeClass = 'fallback'; }
+      else if(isStale){ badgeText = `${lastProvider} (eski cache)`; badgeClass = 'fallback'; }
+      else if(isCache){
+        const ageMin = Math.round((rd.cacheAgeMs || 0) / 60000);
+        badgeText = `${lastProvider} (cache · ${ageMin} dk)`;
+        badgeClass = 'ok';
+      }
+      providerBadge.textContent = badgeText;
+      providerBadge.className = 'provider-badge ' + badgeClass;
+
+      if(rd.debug){
         const note = document.createElement('p');
         note.style.cssText = 'font-size:.72rem;color:#b45309;background:rgba(234,179,8,.08);border:1px solid rgba(234,179,8,.25);padding:8px 10px;border-radius:8px;margin-top:8px';
         note.innerHTML = `<strong>Teşhis:</strong> ${rd.debug}`;
@@ -171,7 +187,9 @@
       providerBadge.className = 'provider-badge fallback';
       reportPanel.classList.add('show');
     } finally {
-      genBtn.disabled = false; genBtn.textContent = '🔄 Raporu Yenile';
+      genBtn.disabled = false; forceBtn.disabled = false;
+      genBtn.textContent = '🔄 Raporu Yenile';
+      forceBtn.textContent = '♻️ Yeniden Üret';
     }
   }
 
@@ -193,7 +211,8 @@
     t.classList.add('active');
     render(t.dataset.filter);
   });
-  genBtn.addEventListener('click', generateReport);
+  genBtn.addEventListener('click', () => generateReport(false));
+  forceBtn.addEventListener('click', () => generateReport(true));
   dlBtn.addEventListener('click', downloadAsWord);
 
   fetch('/.netlify/functions/operational-risk-news').then(r=>r.json()).then((data)=>{
