@@ -23,7 +23,7 @@ Netlify dashboard → **Site settings → Environment variables** → şu deği�
 | Key | Value |
 | --- | --- |
 | `GEMINI_API_KEY` | (oluşturduğun anahtar) |
-| `GEMINI_MODEL` | `gemini-1.5-pro` (opsiyonel, varsayılan bu) |
+| `GEMINI_MODEL` | `gemini-2.5-flash` (opsiyonel, varsayılan bu) |
 
 Değişiklik sonrası site yeniden deploy edilmeli.
 
@@ -33,7 +33,7 @@ Kök dizinde `.env` dosyası oluştur (`.gitignore`'da, commit edilmez):
 
 ```env
 GEMINI_API_KEY=your-key-here
-GEMINI_MODEL=gemini-1.5-pro
+GEMINI_MODEL=gemini-2.5-flash
 ```
 
 Netlify CLI ile çalıştır:
