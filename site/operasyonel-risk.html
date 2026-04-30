@@ -53,6 +53,7 @@
   const btn = document.getElementById('downloadReport');
   let rawNews = [];
   let aiCommentary = '';
+  let aiAvailable = false;
 
   function seededPhoto(title){
     const seed = encodeURIComponent((title || 'operational-risk').slice(0,80));
@@ -94,10 +95,15 @@
       });
       const rd = await rr.json();
       analysisHtml = rd.reportHtml || '';
+      aiAvailable = !!rd.ai;
     } catch(_e) {}
 
     if(!analysisHtml){
-      analysisHtml = `<h1>Operasyonel Risk Günlük Değerlendirme</h1><p>AI analizi alınamadı, yedek içerik kullanıldı.</p><p>${(aiCommentary||'').replace(/\n/g,'<br>')}</p>`;
+      analysisHtml = `<h1>Operasyonel Risk Günlük Değerlendirme</h1><p>Rapor servisi yanıt üretmedi; yedek içerik kullanıldı.</p><p>${(aiCommentary||'').replace(/\n/g,'<br>')}</p>`;
+    }
+
+    if(!aiAvailable){
+      analysisHtml += `<p><i>Not: OPENAI_API_KEY veya model ayarı eksik/hatalı olabilir. Şu an yedek rapor akışı kullanıldı.</i></p>`;
     }
 
     const body = `<html><head><meta charset="utf-8"><style>body{font-family:Calibri,Arial;padding:24px;line-height:1.55}</style></head><body><p><b>Tarih:</b> ${now.toLocaleString('tr-TR')}</p>${analysisHtml}</body></html>`;

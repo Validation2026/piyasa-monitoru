@@ -44,9 +44,8 @@ exports.handler = async function (event) {
     const key = process.env.OPENAI_API_KEY;
     if (key) {
       const r = await callOpenAI(key, {
-        model: 'gpt-5-mini',
-        input: prompt,
-        text: { verbosity: 'medium' }
+        model: process.env.OPENAI_MODEL || 'gpt-4.1-mini',
+        input: prompt
       });
       reportHtml = (r.output_text || '').trim();
     }
@@ -55,7 +54,7 @@ exports.handler = async function (event) {
       reportHtml = `<h1>Operasyonel Risk Günlük Değerlendirme</h1><p>AI servisi kullanılamadı; yedek rapor üretildi.</p><h2>Yönetici Özeti</h2><p>Toplam ${news.length} başlık analiz edildi. Türkiye ve global akış birlikte operasyonel etki açısından değerlendirildi.</p><h2>Aksiyonlar</h2><ol><li>24 saat: Kritik süreç sahipleriyle hızlı risk senkronizasyonu.</li><li>72 saat: Düzeltici aksiyon planı.</li><li>7 gün: KRI izleme dashboard güncellemesi.</li></ol>`;
     }
 
-    return { statusCode: 200, headers: {'Content-Type':'application/json','Access-Control-Allow-Origin':'*'}, body: JSON.stringify({ reportHtml, generatedAt: new Date().toISOString(), ai: !!key }) };
+    return { statusCode: 200, headers: {'Content-Type':'application/json','Access-Control-Allow-Origin':'*'}, body: JSON.stringify({ reportHtml, generatedAt: new Date().toISOString(), ai: !!key, message: key ? 'AI raporu üretildi veya fallback kullanıldı.' : 'OPENAI_API_KEY eksik; fallback içerik döndü.' }) };
   } catch (e) {
     return { statusCode: 500, headers: {'Content-Type':'application/json','Access-Control-Allow-Origin':'*'}, body: JSON.stringify({ error: e.message }) };
   }
