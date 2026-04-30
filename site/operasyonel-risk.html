@@ -54,6 +54,7 @@
   let rawNews = [];
   let aiCommentary = '';
   let aiAvailable = false;
+  let provider = 'fallback';
 
   function seededPhoto(title){
     const seed = encodeURIComponent((title || 'operational-risk').slice(0,80));
@@ -95,7 +96,8 @@
       });
       const rd = await rr.json();
       analysisHtml = rd.reportHtml || '';
-      aiAvailable = !!rd.ai;
+      provider = rd.provider || 'fallback';
+      aiAvailable = provider !== 'fallback';
     } catch(_e) {}
 
     if(!analysisHtml){
@@ -103,7 +105,9 @@
     }
 
     if(!aiAvailable){
-      analysisHtml += `<p><i>Not: OPENAI_API_KEY veya model ayarı eksik/hatalı olabilir. Şu an yedek rapor akışı kullanıldı.</i></p>`;
+      analysisHtml += `<p><i>Not: AI provider devreye girmedi. Provider: ${provider}.</i></p>`;
+    } else {
+      analysisHtml += `<p><i>AI Provider: ${provider}</i></p>`;
     }
 
     const body = `<html><head><meta charset="utf-8"><style>body{font-family:Calibri,Arial;padding:24px;line-height:1.55}</style></head><body><p><b>Tarih:</b> ${now.toLocaleString('tr-TR')}</p>${analysisHtml}</body></html>`;
