@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Operasyonel Risk Haber Merkezi</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    .hero{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px}
+    .news-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px}
+    .meta{font-size:.7rem;color:var(--t3);display:flex;justify-content:space-between;gap:8px}
+    .title{font-size:.85rem;font-weight:700;color:var(--t1);line-height:1.4;text-decoration:none}
+    .src{display:flex;align-items:center;gap:8px}
+    .src img{width:24px;height:24px;border-radius:6px;border:1px solid var(--border2)}
+    .ai{white-space:pre-wrap;font-size:.82rem;line-height:1.7;color:var(--t2);background:var(--card);border:1px solid var(--border);padding:14px;border-radius:12px;margin-bottom:14px}
+  </style>
+</head>
+<body>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/sidebar.js"></script>
+<div class="page">
+  <div class="hero">
+    <h1 style="margin:0 0 8px;font-size:1.2rem">🛡️ Operasyonel Risk Haber Merkezi</h1>
+    <p style="margin:0;color:var(--t2);font-size:.82rem">Dünya + Türkiye son dakika operasyonel risk haberleri ve günlük AI yorumu. Her gün 08:30 hedefli takip için tasarlandı.</p>
+    <div id="generatedAt" style="margin-top:8px;font-size:.72rem;color:var(--t3)">Yükleniyor...</div>
+  </div>
+
+  <div class="sec-title">🤖 Günlük AI Analizi</div>
+  <div id="aiBox" class="ai">Analiz yükleniyor...</div>
+
+  <div class="sec-title">📰 Haber Akışı</div>
+  <div id="newsGrid" class="news-grid"></div>
+</div>
+<script>
+(async function(){
+  const grid = document.getElementById('newsGrid');
+  const aiBox = document.getElementById('aiBox');
+  const gAt = document.getElementById('generatedAt');
+  try {
+    const res = await fetch('/.netlify/functions/operational-risk-news');
+    const data = await res.json();
+    gAt.textContent = 'Son tarama: ' + new Date(data.generatedAt).toLocaleString('tr-TR');
+    aiBox.textContent = data.aiCommentary || 'AI yorumu üretilemedi.';
+
+    grid.innerHTML = '';
+    (data.news || []).forEach((n) => {
+      const el = document.createElement('article');
+      el.className = 'card';
+      el.innerHTML = `
+        <div class="src"><img src="${n.image || ''}" alt="${n.source || 'kaynak'}"><strong>${n.source || 'Kaynak'}</strong></div>
+        <a class="title" href="${n.link}" target="_blank" rel="noopener">${n.title}</a>
+        <div class="meta"><span>${n.region}</span><span>${n.pubDate ? new Date(n.pubDate).toLocaleString('tr-TR') : '-'}</span></div>
+      `;
+      grid.appendChild(el);
+    });
+
+    if (!data.news || !data.news.length) grid.innerHTML = '<div class="card">Bugün haber bulunamadı.</div>';
+  } catch (e) {
+    aiBox.textContent = 'Servis hatası: ' + e.message;
+    grid.innerHTML = '<div class="card">Haberler alınamadı.</div>';
+  }
+})();
+</script>
+</body>
+</html>
