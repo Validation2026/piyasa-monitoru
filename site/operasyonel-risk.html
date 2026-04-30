@@ -82,29 +82,32 @@
     });
   }
 
-  function generateWordReport(){
+  async function generateWordReport(){
     const now = new Date();
-    const tr = rawNews.filter(n=>n.region==='Türkiye');
-    const gl = rawNews.filter(n=>n.region==='Global' && n.kind==='Haber');
-    const art = rawNews.filter(n=>n.kind==='Makale');
-    const top = rawNews.slice(0,20).map(n=>`<li><b>${n.region} / ${n.kind}</b> — ${n.title}</li>`).join('');
-    const body = `
-      <html><head><meta charset="utf-8"><style>body{font-family:Calibri,Arial;padding:24px;line-height:1.55}h1,h2{color:#1e3a8a}p,li{font-size:13px}</style></head><body>
-      <h1>Operasyonel Risk Günlük Premium Değerlendirme Raporu</h1>
-      <p><b>Tarih:</b> ${now.toLocaleString('tr-TR')}</p>
-      <h2>1) Yönetici Özeti</h2><p>${(aiCommentary||'').replace(/\n/g,'<br>')}</p>
-      <h2>2) Kapsam ve Yoğunluk Yorumu</h2><p>Tarama kapsamında toplam <b>${rawNews.length}</b> başlık analiz edildi. Türkiye odaklı akış, global haberler ve makale/yorum içerikleri birlikte ele alınmıştır.</p>
-      <h2>3) Tematik Risk Değerlendirmesi</h2><p>Siber, tedarik zinciri, uyum, iş sürekliliği ve işgücü başlıkları birlikte değerlendirilerek operasyonel etki potansiyeli yorumlanmıştır. Bu rapor listeleme yerine karar destek odaklı yorum içerir.</p>
-      <h2>4) Kritik Sinyaller (Örnek Başlıklar)</h2><ul>${top}</ul>
-      <h2>5) Aksiyon Planı</h2><ol><li>24 saat: Kritik olaylar için sorumlu ekip ve eskalasyon zinciri doğrulansın.</li><li>72 saat: Yüksek etki olasılığı olan riskler için düzeltici eylem planı yayınlansın.</li><li>7 gün: Yönetim kuruluna KRI tabanlı operasyonel risk trend raporu sunulsun.</li></ol>
-      </body></html>`;
+    btn.disabled = true; btn.textContent = '⏳ AI raporu hazırlanıyor...';
+    let analysisHtml = '';
+    try {
+      const rr = await fetch('/.netlify/functions/operational-risk-report', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ news: rawNews })
+      });
+      const rd = await rr.json();
+      analysisHtml = rd.reportHtml || '';
+    } catch(_e) {}
 
+    if(!analysisHtml){
+      analysisHtml = `<h1>Operasyonel Risk Günlük Değerlendirme</h1><p>AI analizi alınamadı, yedek içerik kullanıldı.</p><p>${(aiCommentary||'').replace(/\n/g,'<br>')}</p>`;
+    }
+
+    const body = `<html><head><meta charset="utf-8"><style>body{font-family:Calibri,Arial;padding:24px;line-height:1.55}</style></head><body><p><b>Tarih:</b> ${now.toLocaleString('tr-TR')}</p>${analysisHtml}</body></html>`;
     const blob = new Blob(['\ufeff', body], {type:'application/msword'});
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = `operasyonel-risk-raporu-${now.toISOString().slice(0,10)}.doc`;
     a.click();
     URL.revokeObjectURL(a.href);
+    btn.disabled = false; btn.textContent = '📄 Raporu İndir (Word)';
   }
 
   chips.addEventListener('click', (e)=>{

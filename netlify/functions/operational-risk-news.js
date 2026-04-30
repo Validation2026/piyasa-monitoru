@@ -79,10 +79,7 @@ exports.handler = async function () {
     for (const n of all) { const k = n.title.toLowerCase(); if (seen.has(k)) continue; seen.add(k); uniq.push(n); }
     uniq.sort((a,b)=>new Date(b.pubDate||0)-new Date(a.pubDate||0));
 
-    const tr = uniq.filter(x=>x.region==='Türkiye').slice(0,45);
-    const gl = uniq.filter(x=>x.region==='Global' && x.kind==='Haber').slice(0,40);
-    const mk = uniq.filter(x=>x.kind==='Makale').slice(0,35);
-    const news = tr.concat(gl, mk);
+    const news = uniq.slice(0,120);
 
     return { statusCode:200, headers:{'Content-Type':'application/json','Access-Control-Allow-Origin':'*','Cache-Control':'public, max-age=600'}, body: JSON.stringify({generatedAt:new Date().toISOString(),news,aiCommentary:buildAiCommentary(news),themes:analyzeThemes(news)}) };
   } catch (e) {
