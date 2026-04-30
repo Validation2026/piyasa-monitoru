@@ -72,7 +72,7 @@
       const card = document.createElement('article');
       card.className='card';
       card.innerHTML = `
-        <img class="thumb" loading="lazy" src="${seededPhoto(n.title)}" alt="Haber görseli">
+        <img class="thumb" loading="lazy" src="${seededPhoto(n.title)}" onerror="this.src='${n.image||""}';this.style.objectFit='contain';this.style.padding='16px'" alt="Haber görseli">
         <div class="body">
           <div class="src"><img src="${n.image||''}" alt="Kaynak"> <strong>${n.source||'Kaynak'}</strong></div>
           <a class="title" href="${n.link}" target="_blank" rel="noopener">${n.title}</a>
@@ -87,20 +87,16 @@
     const tr = rawNews.filter(n=>n.region==='Türkiye');
     const gl = rawNews.filter(n=>n.region==='Global' && n.kind==='Haber');
     const art = rawNews.filter(n=>n.kind==='Makale');
+    const top = rawNews.slice(0,20).map(n=>`<li><b>${n.region} / ${n.kind}</b> — ${n.title}</li>`).join('');
     const body = `
-      <html><head><meta charset="utf-8"><style>body{font-family:Calibri,Arial;padding:24px;line-height:1.5}h1,h2{color:#1e3a8a}table{width:100%;border-collapse:collapse}td,th{border:1px solid #ccc;padding:8px;font-size:12px}</style></head><body>
-      <h1>Operasyonel Risk Günlük Premium Raporu</h1>
+      <html><head><meta charset="utf-8"><style>body{font-family:Calibri,Arial;padding:24px;line-height:1.55}h1,h2{color:#1e3a8a}p,li{font-size:13px}</style></head><body>
+      <h1>Operasyonel Risk Günlük Premium Değerlendirme Raporu</h1>
       <p><b>Tarih:</b> ${now.toLocaleString('tr-TR')}</p>
-      <h2>1) Yönetici Özeti</h2>
-      <p>${(aiCommentary||'').replace(/\n/g,'<br>')}</p>
-      <h2>2) Dağılım</h2>
-      <ul><li>Türkiye Haberleri: ${tr.length}</li><li>Global Haberler: ${gl.length}</li><li>Makaleler: ${art.length}</li></ul>
-      <h2>3) Haber Listesi</h2>
-      <table><tr><th>Bölge</th><th>Tür</th><th>Kaynak</th><th>Başlık</th><th>Tarih</th><th>Link</th></tr>
-      ${rawNews.map(n=>`<tr><td>${n.region||''}</td><td>${n.kind||''}</td><td>${n.source||''}</td><td>${n.title||''}</td><td>${n.pubDate?new Date(n.pubDate).toLocaleString('tr-TR'):''}</td><td>${n.link||''}</td></tr>`).join('')}
-      </table>
-      <h2>4) Önerilen 24 Saatlik Aksiyonlar</h2>
-      <ol><li>Kritik süreçlerde kesinti toleransı (RTO/RPO) güncelle.</li><li>Üçüncü taraf tedarikçi risklerini yeniden puanla.</li><li>Siber olay müdahale hazır bulunuşluk testini tamamla.</li><li>Yönetim komitesine özet risk brifingi gönder.</li></ol>
+      <h2>1) Yönetici Özeti</h2><p>${(aiCommentary||'').replace(/\n/g,'<br>')}</p>
+      <h2>2) Kapsam ve Yoğunluk Yorumu</h2><p>Tarama kapsamında toplam <b>${rawNews.length}</b> başlık analiz edildi. Türkiye odaklı akış, global haberler ve makale/yorum içerikleri birlikte ele alınmıştır.</p>
+      <h2>3) Tematik Risk Değerlendirmesi</h2><p>Siber, tedarik zinciri, uyum, iş sürekliliği ve işgücü başlıkları birlikte değerlendirilerek operasyonel etki potansiyeli yorumlanmıştır. Bu rapor listeleme yerine karar destek odaklı yorum içerir.</p>
+      <h2>4) Kritik Sinyaller (Örnek Başlıklar)</h2><ul>${top}</ul>
+      <h2>5) Aksiyon Planı</h2><ol><li>24 saat: Kritik olaylar için sorumlu ekip ve eskalasyon zinciri doğrulansın.</li><li>72 saat: Yüksek etki olasılığı olan riskler için düzeltici eylem planı yayınlansın.</li><li>7 gün: Yönetim kuruluna KRI tabanlı operasyonel risk trend raporu sunulsun.</li></ol>
       </body></html>`;
 
     const blob = new Blob(['\ufeff', body], {type:'application/msword'});
