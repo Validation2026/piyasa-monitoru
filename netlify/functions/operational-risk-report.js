@@ -40,58 +40,36 @@ async function callGemini(news) {
   return { html: text, provider: `gemini:${model}` };
 }
 
-async function callOpenAI(news) {
-  const key = process.env.OPENAI_API_KEY;
-  if (!key) throw new Error('OPENAI_API_KEY missing');
-  const model = process.env.OPENAI_MODEL || 'gpt-4.1-mini';
-  const prompt = [
-    'Aşağıdaki operasyonel risk haberlerini incele.',
-    'Sadece Türkçe, yönetici seviyesi, detaylı ama karar odaklı rapor üret.',
-    'Çıktı HTML olsun (h1,h2,p,ul,ol). Haber listesi dökme, analiz et.',
-    'Bölümler: Yönetici Özeti, Kritik Risk Temaları, Türkiye vs Global Etki, 24/72 saat aksiyon, 7 günlük izleme planı.',
-    JSON.stringify(news)
-  ].join('\n');
-  const r = await postJson('https://api.openai.com/v1/responses', {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${key}`
-  }, { model, input: prompt });
-  const text = (r.output_text || '').trim();
-  if (!text) throw new Error('OpenAI empty response');
-  return { html: text, provider: `openai:${model}` };
+function fallbackReport(news, debug) {
+  const tr = news.filter(n => n.region === 'Türkiye').length;
+  const gl = news.filter(n => n.region === 'Global').length;
+  return `<h1>Operasyonel Risk Günlük Değerlendirme</h1>
+<p><i>AI servisi şu an yanıt veremedi; yedek rapor üretildi. Ayrıntı: ${debug || 'yok'}</i></p>
+<h2>Yönetici Özeti</h2>
+<p>Toplam ${news.length} başlık tarandı (Türkiye: ${tr}, Global: ${gl}).</p>
+<h2>Önerilen Aksiyonlar</h2>
+<ol>
+<li>24 saat: Kritik süreç sahipleriyle risk komitesi mini-oturumu.</li>
+<li>72 saat: Tedarik / siber / uyum üçlüsü için düzeltici aksiyon listesi.</li>
+<li>7 gün: Erken uyarı göstergeleri (KRI) dashboard güncellemesi.</li>
+</ol>`;
 }
 
 exports.handler = async function (event) {
   if (event.httpMethod !== 'POST') return { statusCode: 405, body: 'Method Not Allowed' };
+  const H = { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' };
   try {
     const body = JSON.parse(event.body || '{}');
     const news = Array.isArray(body.news) ? body.news.slice(0, 120) : [];
-    if (!news.length) return { statusCode: 400, headers: {'Content-Type':'application/json','Access-Control-Allow-Origin':'*'}, body: JSON.stringify({ error: 'news gerekli' }) };
-
-    let reportHtml = '';
-    let provider = 'fallback';
-    let debug = '';
+    if (!news.length) return { statusCode: 400, headers: H, body: JSON.stringify({ error: 'news gerekli' }) };
 
     try {
       const g = await callGemini(news);
-      reportHtml = g.html;
-      provider = g.provider;
+      return { statusCode: 200, headers: H, body: JSON.stringify({ reportHtml: g.html, generatedAt: new Date().toISOString(), provider: g.provider }) };
     } catch (ge) {
-      debug = `gemini_fail: ${ge.message}`;
-      try {
-        const o = await callOpenAI(news);
-        reportHtml = o.html;
-        provider = o.provider;
-      } catch (oe) {
-        debug += ` | openai_fail: ${oe.message}`;
-      }
+      return { statusCode: 200, headers: H, body: JSON.stringify({ reportHtml: fallbackReport(news, ge.message), generatedAt: new Date().toISOString(), provider: 'fallback' }) };
     }
-
-    if (!reportHtml) {
-      reportHtml = `<h1>Operasyonel Risk Günlük Değerlendirme</h1><p>AI servisleri şu an yanıt veremedi; yedek rapor üretildi.</p><p><b>Debug:</b> ${debug || 'yok'}</p><h2>Yönetici Özeti</h2><p>Toplam ${news.length} başlık analiz edildi.</p><h2>Aksiyonlar</h2><ol><li>24 saat: kritik süreç senkronizasyonu.</li><li>72 saat: düzeltici aksiyon planı.</li><li>7 gün: KRI dashboard güncellemesi.</li></ol>`;
-    }
-
-    return { statusCode: 200, headers: {'Content-Type':'application/json','Access-Control-Allow-Origin':'*'}, body: JSON.stringify({ reportHtml, generatedAt: new Date().toISOString(), provider }) };
   } catch (e) {
-    return { statusCode: 500, headers: {'Content-Type':'application/json','Access-Control-Allow-Origin':'*'}, body: JSON.stringify({ error: e.message }) };
+    return { statusCode: 500, headers: H, body: JSON.stringify({ error: e.message }) };
   }
 };
