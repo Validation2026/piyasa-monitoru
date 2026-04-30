@@ -51,10 +51,10 @@
     <div class="stats" id="stats"></div>
     <div class="themes" id="themes"></div>
     <div class="actions">
-      <button class="btn" id="generateReport">🤖 AI Raporu Üret</button>
-      <button class="btn secondary" id="forceRegenerate" title="Cache'i atla, Gemini'yi yeniden çağır">♻️ Yeniden Üret</button>
+      <button class="btn" id="generateReport">🤖 Günün AI Raporunu Üret</button>
       <button class="btn secondary" id="downloadReport" disabled>📄 Word Olarak İndir</button>
     </div>
+    <div id="lockNotice" style="margin-top:8px;font-size:.72rem;color:var(--t3);display:none"></div>
   </div>
 
   <section class="report-panel" id="reportPanel" aria-live="polite">
@@ -82,15 +82,17 @@
   const statsEl = document.getElementById('stats');
   const themesEl = document.getElementById('themes');
   const genBtn = document.getElementById('generateReport');
-  const forceBtn = document.getElementById('forceRegenerate');
   const dlBtn = document.getElementById('downloadReport');
   const reportPanel = document.getElementById('reportPanel');
   const reportBody = document.getElementById('reportBody');
   const providerBadge = document.getElementById('providerBadge');
+  const lockNotice = document.getElementById('lockNotice');
   let rawNews = [];
   let aiCommentary = '';
   let lastReportHtml = '';
   let lastProvider = '';
+  let lockExpiresAt = null;
+  let lockTimer = null;
 
   function seededPhoto(title){
     const seed = encodeURIComponent((title || 'operational-risk').slice(0,80));
@@ -140,26 +142,80 @@
     });
   }
 
-  async function generateReport(force){
+  function formatRemaining(ms){
+    if(ms <= 0) return '0 sa 0 dk';
+    const totalMin = Math.ceil(ms / 60000);
+    const h = Math.floor(totalMin / 60);
+    const m = totalMin % 60;
+    return `${h} sa ${m} dk`;
+  }
+
+  function startLockCountdown(){
+    if(lockTimer) clearInterval(lockTimer);
+    if(!lockExpiresAt){ lockNotice.style.display='none'; return; }
+    const tick = () => {
+      const remaining = new Date(lockExpiresAt).getTime() - Date.now();
+      if(remaining <= 0){
+        clearInterval(lockTimer);
+        lockTimer = null;
+        lockExpiresAt = null;
+        lockNotice.style.display='none';
+        genBtn.disabled = false;
+        genBtn.textContent = '🤖 Günün AI Raporunu Üret';
+        return;
+      }
+      lockNotice.style.display = 'block';
+      lockNotice.textContent = `🔒 Bugünün raporu üretildi. Yeni rapor: ${new Date(lockExpiresAt).toLocaleString('tr-TR')} (${formatRemaining(remaining)} sonra)`;
+    };
+    tick();
+    lockTimer = setInterval(tick, 30000);
+  }
+
+  function applyLock(report, provider, generatedAt, expiresAt){
+    lastReportHtml = report || '';
+    lastProvider = provider || '';
+    lockExpiresAt = expiresAt || null;
+
+    reportBody.innerHTML = lastReportHtml;
+    const generatedDate = generatedAt ? new Date(generatedAt) : null;
+    const stamp = generatedDate ? generatedDate.toLocaleString('tr-TR') : '';
+    providerBadge.textContent = stamp ? `${lastProvider} · ${stamp}` : lastProvider;
+    providerBadge.className = 'provider-badge ok';
+    reportPanel.classList.add('show');
+
+    genBtn.disabled = true;
+    genBtn.textContent = '✅ Bugünün raporu hazır';
+    dlBtn.disabled = !lastReportHtml;
+    startLockCountdown();
+  }
+
+  async function generateReport(){
     if(!rawNews.length){ alert('Önce haberlerin yüklenmesi gerekiyor.'); return; }
-    const activeBtn = force ? forceBtn : genBtn;
-    const activeText = activeBtn.textContent;
-    genBtn.disabled = true; forceBtn.disabled = true; dlBtn.disabled = true;
-    activeBtn.textContent = force ? '⏳ Yeniden üretiliyor...' : '⏳ Gemini analiz ediyor...';
+    if(lockExpiresAt && new Date(lockExpiresAt).getTime() > Date.now()) return;
+
+    genBtn.disabled = true; dlBtn.disabled = true;
+    genBtn.textContent = '⏳ Gemini analiz ediyor...';
     try {
       const rr = await fetch('/.netlify/functions/operational-risk-report', {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ news: rawNews, force: !!force })
+        body: JSON.stringify({ news: rawNews })
       });
       const rd = await rr.json();
       lastReportHtml = rd.reportHtml || '';
       lastProvider = rd.provider || 'fallback';
 
-      reportBody.innerHTML = lastReportHtml || '<p>Rapor üretilemedi.</p>';
       const isFallback = lastProvider === 'fallback';
       const isCache = !!rd.fromCache;
       const isStale = !!rd.stale;
+
+      reportBody.innerHTML = lastReportHtml || '<p>Rapor üretilemedi.</p>';
+
+      if(rd.locked && rd.expiresAt){
+        applyLock(rd.reportHtml, rd.provider, rd.generatedAt, rd.expiresAt);
+        return;
+      }
+
       let badgeText = lastProvider;
       let badgeClass = 'ok';
       if(isFallback){ badgeText = 'fallback (AI devre dışı)'; badgeClass = 'fallback'; }
@@ -167,7 +223,6 @@
       else if(isCache){
         const ageMin = Math.round((rd.cacheAgeMs || 0) / 60000);
         badgeText = `${lastProvider} (cache · ${ageMin} dk)`;
-        badgeClass = 'ok';
       }
       providerBadge.textContent = badgeText;
       providerBadge.className = 'provider-badge ' + badgeClass;
@@ -181,16 +236,32 @@
       reportPanel.classList.add('show');
       reportPanel.scrollIntoView({behavior:'smooth', block:'start'});
       dlBtn.disabled = !lastReportHtml;
+
+      if(!isFallback && !isStale && rd.generatedAt){
+        const expires = new Date(new Date(rd.generatedAt).getTime() + 24*60*60*1000).toISOString();
+        applyLock(rd.reportHtml, rd.provider, rd.generatedAt, expires);
+      } else {
+        genBtn.disabled = false;
+        genBtn.textContent = '🔄 Tekrar Dene';
+      }
     } catch(e){
       reportBody.innerHTML = `<p>Rapor servisine ulaşılamadı: ${e.message}</p>`;
       providerBadge.textContent = 'hata';
       providerBadge.className = 'provider-badge fallback';
       reportPanel.classList.add('show');
-    } finally {
-      genBtn.disabled = false; forceBtn.disabled = false;
-      genBtn.textContent = '🔄 Raporu Yenile';
-      forceBtn.textContent = '♻️ Yeniden Üret';
+      genBtn.disabled = false;
+      genBtn.textContent = '🔄 Tekrar Dene';
     }
+  }
+
+  async function checkExistingReport(){
+    try {
+      const r = await fetch('/.netlify/functions/operational-risk-report');
+      const d = await r.json();
+      if(d.cache && d.cache.fresh && d.cache.reportHtml){
+        applyLock(d.cache.reportHtml, d.cache.provider, d.cache.generatedAt, d.cache.expiresAt);
+      }
+    } catch(_e) {}
   }
 
   function downloadAsWord(){
@@ -211,8 +282,7 @@
     t.classList.add('active');
     render(t.dataset.filter);
   });
-  genBtn.addEventListener('click', () => generateReport(false));
-  forceBtn.addEventListener('click', () => generateReport(true));
+  genBtn.addEventListener('click', generateReport);
   dlBtn.addEventListener('click', downloadAsWord);
 
   fetch('/.netlify/functions/operational-risk-news').then(r=>r.json()).then((data)=>{
@@ -226,6 +296,8 @@
     gAt.textContent='Servis hatası: '+e.message;
     grid.innerHTML='<div class="card"><div class="body">Haberler alınamadı.</div></div>';
   });
+
+  checkExistingReport();
 })();
 </script>
 </body>

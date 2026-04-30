@@ -3,7 +3,7 @@ const { getStore, connectLambda } = require('@netlify/blobs');
 
 const FALLBACK_MODELS = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-2.5-flash-lite', 'gemini-2.5-pro'];
 const RETRYABLE = /HTTP (429|500|502|503|504)/;
-const CACHE_TTL_MS = 60 * 60 * 1000;
+const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 const STORE_NAME = 'operational-risk';
 const CACHE_KEY = 'last-report';
 
@@ -116,6 +116,21 @@ exports.handler = async function (event) {
   if (event.httpMethod === 'GET') {
     const key = process.env.GEMINI_API_KEY || '';
     const cached = await readCache(store);
+    const now = Date.now();
+    let cacheState = null;
+    if (cached) {
+      const generatedMs = new Date(cached.generatedAt).getTime();
+      const ageMs = now - generatedMs;
+      const fresh = ageMs < CACHE_TTL_MS;
+      cacheState = {
+        provider: cached.provider,
+        generatedAt: cached.generatedAt,
+        ageMs,
+        expiresAt: new Date(generatedMs + CACHE_TTL_MS).toISOString(),
+        fresh,
+        reportHtml: fresh ? cached.reportHtml : null
+      };
+    }
     return { statusCode: 200, headers: H, body: JSON.stringify({
       hasKey: Boolean(key),
       keyLength: key.length,
@@ -124,7 +139,8 @@ exports.handler = async function (event) {
       modelChain: process.env.GEMINI_MODEL
         ? [process.env.GEMINI_MODEL, ...FALLBACK_MODELS.filter(m => m !== process.env.GEMINI_MODEL)]
         : FALLBACK_MODELS,
-      cache: cached ? { provider: cached.provider, generatedAt: cached.generatedAt, ageMs: Date.now() - new Date(cached.generatedAt).getTime() } : null,
+      cache: cacheState,
+      ttlMs: CACHE_TTL_MS,
       runtime: process.version
     }) };
   }
@@ -133,18 +149,20 @@ exports.handler = async function (event) {
   try {
     const body = JSON.parse(event.body || '{}');
     const news = Array.isArray(body.news) ? body.news.slice(0, 120) : [];
-    const force = body.force === true || event.queryStringParameters?.force === '1';
     if (!news.length) return { statusCode: 400, headers: H, body: JSON.stringify({ error: 'news gerekli' }) };
 
-    if (!force) {
-      const cached = await readCache(store);
-      if (cached && Date.now() - new Date(cached.generatedAt).getTime() < CACHE_TTL_MS) {
+    const cached = await readCache(store);
+    if (cached) {
+      const ageMs = Date.now() - new Date(cached.generatedAt).getTime();
+      if (ageMs < CACHE_TTL_MS) {
         return { statusCode: 200, headers: H, body: JSON.stringify({
           reportHtml: cached.reportHtml,
           generatedAt: cached.generatedAt,
           provider: cached.provider,
           fromCache: true,
-          cacheAgeMs: Date.now() - new Date(cached.generatedAt).getTime()
+          locked: true,
+          cacheAgeMs: ageMs,
+          expiresAt: new Date(new Date(cached.generatedAt).getTime() + CACHE_TTL_MS).toISOString()
         }) };
       }
     }
