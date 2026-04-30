@@ -1,7 +1,11 @@
 const https = require('https');
+const { getStore, connectLambda } = require('@netlify/blobs');
 
 const FALLBACK_MODELS = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-2.5-flash-lite', 'gemini-2.5-pro'];
 const RETRYABLE = /HTTP (429|500|502|503|504)/;
+const CACHE_TTL_MS = 60 * 60 * 1000;
+const STORE_NAME = 'operational-risk';
+const CACHE_KEY = 'last-report';
 
 function postJson(url, headers, payload, timeout = 8000) {
   return new Promise((resolve, reject) => {
@@ -9,7 +13,7 @@ function postJson(url, headers, payload, timeout = 8000) {
       let data = '';
       res.on('data', (c) => { data += c; });
       res.on('end', () => {
-        if (res.statusCode < 200 || res.statusCode >= 300) return reject(new Error(`HTTP ${res.statusCode}: ${data.slice(0, 300)}`));
+        if (res.statusCode < 200 || res.statusCode >= 300) return reject(new Error(`HTTP ${res.statusCode}: ${data.slice(0, 500)}`));
         try { resolve(JSON.parse(data)); } catch (e) { reject(e); }
       });
     });
@@ -22,13 +26,23 @@ function postJson(url, headers, payload, timeout = 8000) {
 
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
+function trimNewsForPrompt(news) {
+  return news.slice(0, 80).map(n => ({
+    t: n.title,
+    s: n.source,
+    r: n.region,
+    k: n.kind,
+    d: n.pubDate
+  }));
+}
+
 function buildPrompt(news) {
   return [
     'Aşağıdaki operasyonel risk haberlerini analiz et.',
     'Sadece Türkçe ve yönetici seviyesi detaylı rapor üret.',
     'HTML formatı kullan (h1,h2,p,ul,ol). Haber listesi dökme, analiz et.',
     'Bölümler: Yönetici Özeti, Kritik Temalar, Türkiye-Global Etki, 24/72 saat aksiyon, 7 günlük izleme.',
-    JSON.stringify(news)
+    JSON.stringify(trimNewsForPrompt(news))
   ].join('\n');
 }
 
@@ -36,7 +50,7 @@ async function callModel(model, key, prompt) {
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(key)}`;
   const payload = {
     contents: [{ parts: [{ text: prompt }] }],
-    generationConfig: { temperature: 0.2, maxOutputTokens: 2000 }
+    generationConfig: { temperature: 0.2, maxOutputTokens: 1500 }
   };
   const r = await postJson(url, { 'Content-Type': 'application/json' }, payload, 8000);
   const text = r?.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('\n').trim();
@@ -81,11 +95,27 @@ function fallbackReport(news, debug) {
 </ol>`;
 }
 
+async function readCache(store) {
+  if (!store) return null;
+  try { return await store.get(CACHE_KEY, { type: 'json' }); } catch (_) { return null; }
+}
+
+async function writeCache(store, entry) {
+  if (!store) return;
+  try { await store.setJSON(CACHE_KEY, entry); } catch (_) {}
+}
+
+function safeStore(event) {
+  try { connectLambda(event); return getStore(STORE_NAME); } catch (_) { return null; }
+}
+
 exports.handler = async function (event) {
   const H = { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' };
+  const store = safeStore(event);
 
   if (event.httpMethod === 'GET') {
     const key = process.env.GEMINI_API_KEY || '';
+    const cached = await readCache(store);
     return { statusCode: 200, headers: H, body: JSON.stringify({
       hasKey: Boolean(key),
       keyLength: key.length,
@@ -94,6 +124,7 @@ exports.handler = async function (event) {
       modelChain: process.env.GEMINI_MODEL
         ? [process.env.GEMINI_MODEL, ...FALLBACK_MODELS.filter(m => m !== process.env.GEMINI_MODEL)]
         : FALLBACK_MODELS,
+      cache: cached ? { provider: cached.provider, generatedAt: cached.generatedAt, ageMs: Date.now() - new Date(cached.generatedAt).getTime() } : null,
       runtime: process.version
     }) };
   }
@@ -102,12 +133,40 @@ exports.handler = async function (event) {
   try {
     const body = JSON.parse(event.body || '{}');
     const news = Array.isArray(body.news) ? body.news.slice(0, 120) : [];
+    const force = body.force === true || event.queryStringParameters?.force === '1';
     if (!news.length) return { statusCode: 400, headers: H, body: JSON.stringify({ error: 'news gerekli' }) };
+
+    if (!force) {
+      const cached = await readCache(store);
+      if (cached && Date.now() - new Date(cached.generatedAt).getTime() < CACHE_TTL_MS) {
+        return { statusCode: 200, headers: H, body: JSON.stringify({
+          reportHtml: cached.reportHtml,
+          generatedAt: cached.generatedAt,
+          provider: cached.provider,
+          fromCache: true,
+          cacheAgeMs: Date.now() - new Date(cached.generatedAt).getTime()
+        }) };
+      }
+    }
 
     try {
       const g = await callGeminiWithFallback(news);
-      return { statusCode: 200, headers: H, body: JSON.stringify({ reportHtml: g.html, generatedAt: new Date().toISOString(), provider: g.provider, attempts: g.attempts }) };
+      const entry = { reportHtml: g.html, generatedAt: new Date().toISOString(), provider: g.provider };
+      await writeCache(store, entry);
+      return { statusCode: 200, headers: H, body: JSON.stringify({ ...entry, attempts: g.attempts, fromCache: false }) };
     } catch (ge) {
+      const stale = await readCache(store);
+      if (stale) {
+        return { statusCode: 200, headers: H, body: JSON.stringify({
+          reportHtml: stale.reportHtml,
+          generatedAt: stale.generatedAt,
+          provider: stale.provider,
+          fromCache: true,
+          stale: true,
+          cacheAgeMs: Date.now() - new Date(stale.generatedAt).getTime(),
+          debug: `Yeni rapor üretilemedi, eski cache servis edildi. ${ge.message}`
+        }) };
+      }
       return { statusCode: 200, headers: H, body: JSON.stringify({ reportHtml: fallbackReport(news, ge.message), generatedAt: new Date().toISOString(), provider: 'fallback', debug: ge.message }) };
     }
   } catch (e) {
