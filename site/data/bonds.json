@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Tahvil Faizleri",
-    "updated_at": "2026-05-08T01:03:29Z",
+    "updated_at": "2026-05-08T03:03:17Z",
     "symbol_count": 43,
     "errors": []
   },
@@ -5065,7 +5065,7 @@
       ],
       "current": 3.8,
       "change_1d_pct": 0.0,
-      "change_1w_pct": -2.14,
+      "change_1w_pct": -0.42,
       "change_1m_pct": -0.16,
       "change_3m_pct": 10.21,
       "change_ytd_pct": 9.89,
@@ -9823,6 +9823,10 @@
         },
         {
           "date": "2026-05-06",
+          "value": 3.8
+        },
+        {
+          "date": "2026-05-07",
           "value": 3.8
         }
       ]
