@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Tahvil Faizleri",
-    "updated_at": "2026-05-23T02:03:18Z",
+    "updated_at": "2026-05-23T07:03:16Z",
     "symbol_count": 43,
     "errors": []
   },
@@ -9867,6 +9867,10 @@
         },
         {
           "date": "2026-05-21",
+          "value": 3.82
+        },
+        {
+          "date": "2026-05-22",
           "value": 3.82
         }
       ]
@@ -110801,13 +110805,13 @@
         "https://s3-symbol-logo.tradingview.com/tips.svg",
         "https://s3-symbol-logo.tradingview.com/tips--big.svg"
       ],
-      "current": 0.0005,
+      "current": 0.0004,
       "change_1d_pct": 0.0,
-      "change_1w_pct": -16.67,
-      "change_1m_pct": -77.27,
-      "change_3m_pct": -83.33,
-      "change_ytd_pct": -96.67,
-      "change_1y_pct": -97.21,
+      "change_1w_pct": -33.33,
+      "change_1m_pct": -81.82,
+      "change_3m_pct": -86.67,
+      "change_ytd_pct": -97.33,
+      "change_1y_pct": -97.77,
       "high_52w": 0.41,
       "low_52w": 0.0003,
       "data": [
@@ -115821,7 +115825,7 @@
         },
         {
           "date": "2026-05-22",
-          "value": 0.0005
+          "value": 0.0004
         }
       ]
     },
