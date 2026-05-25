@@ -489,7 +489,31 @@ body{font-family:var(--fm);background:var(--bg);color:var(--t1);line-height:1.6;
 .ai-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
 .ai-header span{font-size:.82rem;font-weight:700}
 .ai-badge{font-size:.58rem;font-family:var(--mono);font-weight:700;background:rgba(167,139,250,.15);color:var(--purple);padding:2px 8px;border-radius:4px}
-.ai-body{font-size:.82rem;color:var(--t2);line-height:1.7;white-space:pre-wrap}
+.ai-body {
+    padding: 14px 18px !important;
+    line-height: 1.55 !important;
+    display: block !important;
+    height: auto !important;
+    min-height: auto !important;
+    justify-content: flex-start !important;
+    align-items: flex-start !important;
+}
+
+.ai-body > div {
+    display: block !important;
+}
+
+.ai-body .ai-section {
+    margin-bottom: 12px !important;
+}
+
+.ai-body .ai-section:last-child {
+    margin-bottom: 0 !important;
+}
+
+.ai-body strong {
+    display: inline !important;
+}
 .ai-loading{color:var(--t3);font-style:italic}
 
 /* ══════════════════════════════
