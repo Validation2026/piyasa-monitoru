@@ -16,12 +16,9 @@ var links = [
     ['endeksler','📈','Endeksler'],
     ['hisseler','💹','Hisseler'],
     ['kripto','₿','Kripto'],
-    ['canli-terminal','🔴','Canlı Terminal'],
     ['faiz-enflasyon','🌡️','Faiz & Enflasyon'],
-    ['kure','🌐','3D Küre'],
     ['karsilastirma','📊','Karşılaştır'],
     ['iran-risk','🔴','İran Risk'],
-    ['tedarik-zinciri','🚢','Tedarik Zinciri'],
     ['ekonomik-takvim','📅','Takvim'],
     ['merkez-bankalari','🏛️','Merkez Bank.'],
     ['ulke-risk','🌐','Ülke Risk'],
@@ -164,7 +161,7 @@ setInterval(tick,1000);tick();
         ['ABD 10Y Tahvil','📜','tahviller.html'],['Türkiye 10Y Tahvil','📜','tahviller.html'],['Almanya 10Y Bund','📜','tahviller.html'],
         ['THYAO','✈️','hisseler.html'],['ASELS','🔧','hisseler.html'],['KCHOL','🏢','hisseler.html'],['GARAN','🏦','hisseler.html'],['NVDA','💻','hisseler.html'],['AAPL','🍎','hisseler.html'],['TSLA','🚗','hisseler.html'],
         ['Fed','🏛️','merkez-bankalari.html'],['ECB','🏛️','merkez-bankalari.html'],['TCMB','🏛️','merkez-bankalari.html'],['BoJ','🏛️','merkez-bankalari.html'],
-        ['Türkiye','🇹🇷','faiz-enflasyon.html'],['ABD','🇺🇸','faiz-enflasyon.html'],['Çin','🇨🇳','faiz-enflasyon.html'],['Japonya','🇯🇵','faiz-enflasyon.html'],['İran','🇮🇷','faiz-enflasyon.html'],['Rusya','🇷🇺','faiz-enflasyon.html'],
+        ['Türkiye','🇹🇷','turkiye.html'],['ABD','🇺🇸','faiz-enflasyon.html'],['Çin','🇨🇳','faiz-enflasyon.html'],['Japonya','🇯🇵','faiz-enflasyon.html'],['İran','🇮🇷','faiz-enflasyon.html'],['Rusya','🇷🇺','faiz-enflasyon.html'],
         ['Hürmüz Boğazı','🌊','kure.html'],['Süveyş Kanalı','🌊','kure.html'],['Malakka Boğazı','🌊','kure.html']
     ];
     QUICK.forEach(function(q){ SEARCH_INDEX.push({type:'Varlık', icon:q[1], label:q[0], href:q[2]}); });
