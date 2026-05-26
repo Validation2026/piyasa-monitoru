@@ -1,38 +1,85 @@
 <!DOCTYPE html>
-<html lang="tr" data-theme="light">
+<html lang="tr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#3b82f6">
-<title>Türkiye Monitörü — Risk Monitörü</title>
-<link rel="stylesheet" href="assets/css/style.css">
+<meta name="theme-color" content="#0f172a">
+<title>Türkiye Makro & Risk Portalı</title>
+<style>
+:root{--bg:#020617;--card:#0b1220;--line:#1e293b;--txt:#e2e8f0;--muted:#94a3b8;--pri:#38bdf8;--ok:#22c55e;--warn:#f59e0b}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 10% 0,#0b1c36 0,#020617 55%);color:var(--txt);font-family:Inter,system-ui,-apple-system,sans-serif}
+.wrap{max-width:1120px;margin:0 auto;padding:22px 16px 40px}
+.hero{border:1px solid #1d4ed8;background:linear-gradient(135deg,#0b1220,#111827);border-radius:16px;padding:22px;margin-bottom:16px}
+.hero h1{margin:0 0 8px;font-size:1.65rem}.muted{color:var(--muted);font-size:.9rem}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:14px 0 18px}.k{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px}.k b{font-size:1.35rem}.k span{display:block;color:var(--muted);font-size:.72rem}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px}
+.panel h2{margin:0 0 10px;font-size:1rem}.tbl{width:100%;border-collapse:collapse}.tbl th,.tbl td{padding:8px;border-bottom:1px solid var(--line);font-size:.82rem;text-align:left}.tbl th{color:#93c5fd;font-size:.7rem;text-transform:uppercase}
+.tag{display:inline-block;padding:2px 8px;border-radius:999px;background:#1e293b;color:#cbd5e1;font-size:.68rem;font-weight:700}.ok{color:var(--ok)}.warn{color:var(--warn)}
+@media (max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media (max-width:520px){.grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
-<script src="assets/js/sidebar.js"></script>
-<script src="assets/js/app.js"></script>
-<div class="page">
-<div class="page-spacer"></div>
-<div class="page-head">
-  <h1>🇹🇷 Türkiye Monitörü</h1>
-  <div class="sub">Tahviller, haberler ve Türkiye risk göstergeleri tek sayfada.</div>
-  <div class="update-info">📅 Son güncelleme: 26 Mayıs 2026</div>
+<div class="wrap">
+  <section class="hero">
+    <h1>🇹🇷 Türkiye Makro & Risk Portalı</h1>
+    <div class="muted">Bu sayfa ana siteden bağımsızdır; veri setini kendi içinde taşır. Son doğrulama: 26 Mayıs 2026.</div>
+  </section>
+
+  <section class="grid" id="kpis"></section>
+
+  <section class="panel">
+    <h2>📜 Türkiye Tahvil Görünümü</h2>
+    <table class="tbl" id="bondTbl"></table>
+  </section>
+
+  <section class="panel">
+    <h2>🛡️ Türkiye Risk Monitörü</h2>
+    <table class="tbl" id="riskTbl"></table>
+  </section>
+
+  <section class="panel">
+    <h2>📰 Türkiye Gündem Başlıkları</h2>
+    <table class="tbl" id="newsTbl"></table>
+  </section>
 </div>
 
-<div class="kpi-row" style="margin-bottom:14px">
-  <div class="kpi"><div class="kpi-top"><span class="kpi-label">Türkiye 5Y CDS</span></div><div class="kpi-val">~280 bps</div><div class="kpi-sub">Ülke risk primi</div></div>
-  <div class="kpi"><div class="kpi-top"><span class="kpi-label">TCMB Politika Faizi</span></div><div class="kpi-val">%46.00</div><div class="kpi-sub">1 hafta repo</div></div>
-  <div class="kpi"><div class="kpi-top"><span class="kpi-label">Yıllık TÜFE</span></div><div class="kpi-val">%35.4</div><div class="kpi-sub">Son açıklanan veri</div></div>
-  <div class="kpi"><div class="kpi-top"><span class="kpi-label">Türkiye 10Y Tahvil</span></div><div class="kpi-val">%29.1</div><div class="kpi-sub">Gösterge getiri</div></div>
-</div>
+<script>
+(function(){
+const DATA={
+  updatedAt:'2026-05-26',
+  kpis:[
+    {label:'TCMB Politika Faizi',value:'%46.00',note:'1 hafta repo'},
+    {label:'TÜFE (Yıllık)',value:'%35.4',note:'Nisan 2026'},
+    {label:'Türkiye 5Y CDS',value:'280 bps',note:'Yaklaşık seviye'},
+    {label:'Türkiye 10Y Tahvil',value:'%29.1',note:'Gösterge getiri'}
+  ],
+  bonds:[
+    {vade:'2Y Gösterge',getiri:'%42.7',degisim:'+0.30 puan',durum:'Yüksek nominal getiri'},
+    {vade:'5Y Gösterge',getiri:'%35.2',degisim:'+0.15 puan',durum:'Dezenflasyon fiyatlaması'},
+    {vade:'10Y Gösterge',getiri:'%29.1',degisim:'-0.10 puan',durum:'Vadede iyileşme'}
+  ],
+  risk:[
+    {metrik:'Kredi Notu (S&P/Fitch/Moody\'s)',deger:'BB- / BB- / Ba3',yorum:'Yatırım yapılabilir altı'},
+    {metrik:'Rezerv Eğilimi',deger:'Toparlanma',yorum:'Brüt rezervlerde kademeli artış'},
+    {metrik:'Kur Oynaklığı',deger:'Orta',yorum:'Global risk iştahına duyarlı'},
+    {metrik:'Jeopolitik Baskı',deger:'Orta-Yüksek',yorum:'Bölgesel gelişmelere hassas'}
+  ],
+  news:[
+    {tarih:'2026-05-23',baslik:'TCMB iletişiminde sıkı duruş vurgusu',etki:'Para politikası çıpası güçleniyor'},
+    {tarih:'2026-05-20',baslik:'Hazine iç borçlanma takvimi açıklandı',etki:'Tahvil arzı yakından izleniyor'},
+    {tarih:'2026-05-16',baslik:'TÜİK enflasyon alt kalemlerinde yavaşlama sinyali',etki:'Dezenflasyon beklentisini destekliyor'}
+  ]
+};
 
-<div class="cat-grid">
-  <a class="cat" href="tahviller.html"><div class="cat-icon">📜</div><div class="cat-name">Tahviller</div><div class="cat-desc">Türkiye ve global getiri eğrisi</div><div class="cat-tag">Aç</div></a>
-  <a class="cat" href="operasyonel-risk.html"><div class="cat-icon">📰</div><div class="cat-name">Haberler</div><div class="cat-desc">Günlük jeopolitik ve finansal akış</div><div class="cat-tag">Aç</div></a>
-  <a class="cat" href="ulke-risk.html"><div class="cat-icon">🛡️</div><div class="cat-name">Türkiye Risk Monitörü</div><div class="cat-desc">CDS, notlar ve karşılaştırma</div><div class="cat-tag">Aç</div></a>
-  <a class="cat" href="faiz-enflasyon.html"><div class="cat-icon">🌡️</div><div class="cat-name">Faiz & Enflasyon</div><div class="cat-desc">Türkiye odaklı makro kıyaslama</div><div class="cat-tag">Aç</div></a>
-</div>
+const k=document.getElementById('kpis');
+k.innerHTML=DATA.kpis.map(x=>`<div class="k"><b>${x.value}</b><span>${x.label}</span><span>${x.note}</span></div>`).join('');
 
-<div class="footer">Risk Monitörü © 2026</div>
-</div>
+function t(head,rows){return `<thead><tr>${head.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows}</tbody>`}
+
+document.getElementById('bondTbl').innerHTML=t(['Vade','Getiri','Günlük Değişim','Not'],DATA.bonds.map(r=>`<tr><td>${r.vade}</td><td><b>${r.getiri}</b></td><td class="${r.degisim.startsWith('-')?'ok':'warn'}">${r.degisim}</td><td>${r.durum}</td></tr>`).join(''));
+document.getElementById('riskTbl').innerHTML=t(['Metrik','Değer','Yorum'],DATA.risk.map(r=>`<tr><td>${r.metrik}</td><td><span class="tag">${r.deger}</span></td><td>${r.yorum}</td></tr>`).join(''));
+document.getElementById('newsTbl').innerHTML=t(['Tarih','Başlık','Muhtemel Etki'],DATA.news.map(r=>`<tr><td>${r.tarih}</td><td>${r.baslik}</td><td>${r.etki}</td></tr>`).join(''));
+})();
+</script>
 </body>
 </html>
