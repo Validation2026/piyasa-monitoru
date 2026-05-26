@@ -45,32 +45,78 @@
 
 <script>
 (function(){
-const DATA={
-  updatedAt:'2026-05-26',
-  kpis:[
-    {label:'TCMB Politika Faizi',value:'%46.00',note:'1 hafta repo'},
-    {label:'TÜFE (Yıllık)',value:'%35.4',note:'Nisan 2026'},
-    {label:'Türkiye 5Y CDS',value:'280 bps',note:'Yaklaşık seviye'},
-    {label:'Türkiye 10Y Tahvil',value:'%29.1',note:'Gösterge getiri'}
+const turkeyFixedIncomeData = {
+  updatedAt: '2026-05-26',
+
+  kpis: [
+    { label: 'TCMB Politika Faizi', value: '%37.00', note: '1 hafta repo' },
+    { label: 'TÜFE (Yıllık)', value: '%32.37', note: 'Nisan 2026' },
+    { label: 'Türkiye 5Y CDS', value: '≈255 bps', note: '22-25 Mayıs 2026 yaklaşık seviye' },
+    { label: 'Türkiye 10Y Tahvil', value: '%35.72', note: '25 Mayıs 2026 gösterge getiri' }
   ],
-  bonds:[
-    {vade:'2Y Gösterge',getiri:'%42.7',degisim:'+0.30 puan',durum:'Yüksek nominal getiri'},
-    {vade:'5Y Gösterge',getiri:'%35.2',degisim:'+0.15 puan',durum:'Dezenflasyon fiyatlaması'},
-    {vade:'10Y Gösterge',getiri:'%29.1',degisim:'-0.10 puan',durum:'Vadede iyileşme'}
+
+  bonds: [
+    {
+      vade: '2Y Gösterge',
+      getiri: '%44.27',
+      degisim: '+3.85 puan',
+      durum: 'Kısa vadede sıkı para politikası ve risk primi etkisi güçlü'
+    },
+    {
+      vade: '5Y Gösterge',
+      getiri: '≈%36.08',
+      degisim: 'Yaklaşık yatay',
+      durum: 'Orta vadede dezenflasyon beklentisi ile risk primi birlikte fiyatlanıyor'
+    },
+    {
+      vade: '10Y Gösterge',
+      getiri: '%35.72',
+      degisim: '+2.36 puan',
+      durum: 'Uzun vadede tahvil faizleri yeniden yükselmiş durumda'
+    }
   ],
-  risk:[
-    {metrik:'Kredi Notu (S&P/Fitch/Moody\'s)',deger:'BB- / BB- / Ba3',yorum:'Yatırım yapılabilir altı'},
-    {metrik:'Rezerv Eğilimi',deger:'Toparlanma',yorum:'Brüt rezervlerde kademeli artış'},
-    {metrik:'Kur Oynaklığı',deger:'Orta',yorum:'Global risk iştahına duyarlı'},
-    {metrik:'Jeopolitik Baskı',deger:'Orta-Yüksek',yorum:'Bölgesel gelişmelere hassas'}
+
+  risk: [
+    {
+      metrik: 'Kredi Notu (S&P/Fitch/Moody’s)',
+      deger: 'BB- / BB- / Ba3',
+      yorum: 'Yatırım yapılabilir seviyenin altında'
+    },
+    {
+      metrik: 'Rezerv Eğilimi',
+      deger: 'Kırılgan toparlanma',
+      yorum: 'Rezervlerde önceki toparlanmaya rağmen kur ve siyasi gelişmeler hassasiyet yaratıyor'
+    },
+    {
+      metrik: 'Kur Oynaklığı',
+      deger: 'Orta-Yüksek',
+      yorum: 'TL rekor düşük seviyelere yakın; global risk iştahı ve iç siyasi haber akışı önemli'
+    },
+    {
+      metrik: 'Jeopolitik / Politik Baskı',
+      deger: 'Yüksek',
+      yorum: 'Bölgesel gerilimler ve iç siyasi gelişmeler Türkiye varlıklarında risk primini etkiliyor'
+    }
   ],
-  news:[
-    {tarih:'2026-05-23',baslik:'TCMB iletişiminde sıkı duruş vurgusu',etki:'Para politikası çıpası güçleniyor'},
-    {tarih:'2026-05-20',baslik:'Hazine iç borçlanma takvimi açıklandı',etki:'Tahvil arzı yakından izleniyor'},
-    {tarih:'2026-05-16',baslik:'TÜİK enflasyon alt kalemlerinde yavaşlama sinyali',etki:'Dezenflasyon beklentisini destekliyor'}
+
+  news: [
+    {
+      tarih: '2026-05-25',
+      baslik: 'Türk varlıkları siyasi gerilim sonrası sınırlı toparlandı',
+      etki: 'CDS yaklaşık 253 bps civarında izlenirken piyasa kırılganlığı devam ediyor'
+    },
+    {
+      tarih: '2026-05-04',
+      baslik: 'Nisan TÜFE yıllık %32.37, aylık %4.18 açıklandı',
+      etki: 'Enflasyonda yukarı sürpriz, tahvil faizleri ve sıkı duruş beklentisi açısından negatif'
+    },
+    {
+      tarih: '2026-04-17',
+      baslik: 'S&P Türkiye notunu BB- / durağan görünümde teyit etti',
+      etki: 'Kredi notu yatırım yapılabilir seviyenin altında kalmaya devam ediyor'
+    }
   ]
 };
-
 const k=document.getElementById('kpis');
 k.innerHTML=DATA.kpis.map(x=>`<div class="k"><b>${x.value}</b><span>${x.label}</span><span>${x.note}</span></div>`).join('');
 
