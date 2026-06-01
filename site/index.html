@@ -395,12 +395,19 @@ fj('stocks.json').then(function(sd){
 
 
 function loadIndexIranBanner(){
-    fetch('/api/iran-brief').then(function(r){return r.json()}).then(function(d){
-        var h=document.getElementById('indexIranHeadline');
-        var s=document.getElementById('indexIranSummary');
-        if(h)h.textContent=d.headline||'İran risk özeti';
-        if(s)s.textContent=d.summary||'';
-    }).catch(function(){});
+    var h=document.getElementById('indexIranHeadline');
+    var s=document.getElementById('indexIranSummary');
+    function paint(d){
+        var bb=(d&&d.bannerBrief)?d.bannerBrief:d;
+        if(h)h.textContent=(bb&&bb.headline)||'İran risk özeti';
+        if(s)s.textContent=(bb&&bb.summary)||'';
+    }
+    fetch('/api/iran-state?t='+Date.now()).then(function(r){return r.json()}).then(function(d){
+        if(d && d.bannerBrief && (d.bannerBrief.headline || d.bannerBrief.summary)){paint(d);return}
+        return fetch('/api/iran-brief?t='+Date.now()).then(function(r){return r.json()}).then(paint);
+    }).catch(function(){
+        fetch('/api/iran-brief?t='+Date.now()).then(function(r){return r.json()}).then(paint).catch(function(){});
+    });
 }
 loadIndexIranBanner();
 

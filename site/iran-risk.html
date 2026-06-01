@@ -373,9 +373,12 @@ function normalizeBrief(apiBrief){
 }
 
 function paintRiskBrief(rawBrief, datasets){
-    // Bu bölüm artık hiçbir API/AI cevabı denemez.
-    // Her zaman aşağıdaki CURRENT_IRAN_BRIEF içindeki hazır metni basar.
-    var brief = normalizeBrief(CURRENT_IRAN_BRIEF);
+    // AI cevabı denenmez; banner başlığı/açıklaması admin state üzerinden gelir.
+    var stateBrief=(window._iranState && window._iranState.bannerBrief) ? window._iranState.bannerBrief : {};
+    var brief = normalizeBrief(Object.assign({}, CURRENT_IRAN_BRIEF, {
+        headline: stateBrief.headline || CURRENT_IRAN_BRIEF.headline,
+        summary: stateBrief.summary || CURRENT_IRAN_BRIEF.summary
+    }));
     var metrics={
         brent:metricText(getSeriesFromDatasets(datasets,'BZ=F')),
         gold:metricText(getSeriesFromDatasets(datasets,'GC=F')),
@@ -406,8 +409,7 @@ function paintRiskBrief(rawBrief, datasets){
 }
 
 function loadRiskBrief(datasets){
-    // /api/iran-brief çağrısı tamamen kaldırıldı.
-    // Hazır yazı direkt gelsin diye sabit brief basılıyor.
+    // Hazır analiz metni sabit kalır; sadece üst banner admin state'ten güncellenir.
     paintRiskBrief(CURRENT_IRAN_BRIEF, datasets);
 }
 
