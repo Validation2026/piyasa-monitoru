@@ -3,7 +3,7 @@ const { getStore, connectLambda } = require('@netlify/blobs');
 
 const STORE_NAME = 'iran-risk';
 const CACHE_PREFIX = 'daily-brief';
-const FALLBACK_MODELS = ['gemini-1.5-flash', 'gemini-1.5-flash-latest', 'gemini-1.5-pro'];
+const FALLBACK_MODELS = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-2.0-flash', 'gemini-1.5-flash'];
 const FALLBACK = {
   headline: 'İran hattında Hürmüz ve enerji güvenliği başlıkları izleniyor',
   summary: 'İran, İsrail, ABD ve Körfez hattından gelen haber akışı Hürmüz Boğazı, petrol arz güvenliği, Kızıldeniz rotaları ve güvenli liman talebi üzerinden piyasalar için güncel risk başlığı olmaya devam ediyor.',
@@ -22,6 +22,19 @@ function todayKey() {
 }
 function stripTags(v) {
   return String(v || '').replace(/<[^>]+>/g, ' ').replace(/&[^;]+;/g, ' ').replace(/\s+/g, ' ').trim();
+}
+function cleanNewsTitle(v) {
+  return stripTags(v)
+    .replace(/\s+[-–—]\s+[^-–—|:]{2,80}$/u, '')
+    .replace(/\s+\|\s+[^|]{2,80}$/u, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+function cleanBannerText(v) {
+  return cleanNewsTitle(v)
+    .replace(/\b(Reuters|Bloomberg|Associated Press|AP News|CNBC|CNN|BBC|Al Jazeera|TRT Haber|Anadolu Ajansı|AA|Habertürk|Hürriyet|Milliyet|Sözcü|Dünya|Ekonomim)\b\s*:?/giu, '')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
 }
 function googleRssUrl(query) {
   return 'https://news.google.com/rss/search?q=' + encodeURIComponent(query + ' when:1d') + '&hl=tr&gl=TR&ceid=TR:tr';
@@ -42,7 +55,7 @@ function parseItems(xml) {
   const items = [];
   const blocks = String(xml || '').match(/<item>[\s\S]*?<\/item>/g) || [];
   for (const block of blocks.slice(0, 8)) {
-    const title = stripTags((block.match(/<title><!\[CDATA\[([\s\S]*?)\]\]><\/title>/) || block.match(/<title>([\s\S]*?)<\/title>/) || [])[1]);
+    const title = cleanNewsTitle((block.match(/<title><!\[CDATA\[([\s\S]*?)\]\]><\/title>/) || block.match(/<title>([\s\S]*?)<\/title>/) || [])[1]);
     const link = stripTags((block.match(/<link>([\s\S]*?)<\/link>/) || [])[1]);
     const date = stripTags((block.match(/<pubDate>([\s\S]*?)<\/pubDate>/) || [])[1]);
     if (title) items.push({ title, link, date });
@@ -67,7 +80,7 @@ async function fetchIranNews() {
   }).slice(0, 12);
 }
 function buildPrompt(news) {
-  return `Türkçe haber diliyle yaz. İran risk monitörü için günün en güncel başlıklarına göre geçerli JSON üret. Alanlar: headline, summary, sections.status, sections.ecopolitical, sections.geopolitical. Headline en fazla 12 kelime, summary 1 cümle, her section 1 kısa cümle olsun. Uydurma tarih, fiyat veya saldırı yazma; sadece başlıklardan çıkarım yap.\n\nHaberler:\n${news.map((n, i) => `${i + 1}. ${n.title}`).join('\n')}`;
+  return `Türkçe haber diliyle yaz. İran risk monitörü için günün en güncel başlıklarına göre geçerli JSON üret. Alanlar: headline, summary, sections.status, sections.ecopolitical, sections.geopolitical. Headline en fazla 12 kelime, summary 1 cümle, her section 1 kısa cümle olsun. Uydurma tarih, fiyat veya saldırı yazma; sadece başlıklardan çıkarım yap; haber sitesi/kaynak adı yazma.\n\nHaberler:\n${news.map((n, i) => `${i + 1}. ${n.title}`).join('\n')}`;
 }
 async function postJson(url, payload, timeoutMs = 8000) {
   const ctrl = new AbortController();
@@ -94,7 +107,7 @@ async function callGemini(news) {
   for (const model of chain) {
     try {
       const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(key)}`;
-      const payload = { contents: [{ parts: [{ text: buildPrompt(news) }] }], generationConfig: { temperature: 0.2, maxOutputTokens: 650 } };
+      const payload = { contents: [{ parts: [{ text: buildPrompt(news) }] }], generationConfig: { temperature: 0.2, maxOutputTokens: 650, responseMimeType: 'application/json' } };
       const data = await postJson(url, payload);
       const text = data?.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('\n');
       return { value: parseJsonText(text), provider: `gemini:${model}` };
@@ -108,15 +121,15 @@ function normalize(value, news, provider, debug) {
   const v = value || {};
   const sections = v.sections || {};
   const firstNews = news[0]?.title;
-  const summary = stripTags(v.summary) || (firstNews ? `Günün haber akışı ${firstNews} başlığı etrafında izlenirken enerji, diplomasi ve güvenlik kanalları piyasalar için kritik kalıyor.` : FALLBACK.summary);
+  const summary = cleanBannerText(v.summary) || (firstNews ? `Günün haber akışı ${firstNews} başlığı etrafında izlenirken enerji, diplomasi ve güvenlik kanalları piyasalar için kritik kalıyor.` : FALLBACK.summary);
   return {
     updated_at: new Date().toISOString(),
-    headline: stripTags(v.headline) || FALLBACK.headline,
+    headline: cleanBannerText(v.headline) || FALLBACK.headline,
     summary,
     sections: {
-      status: stripTags(sections.status) || FALLBACK.sections.status,
-      ecopolitical: stripTags(sections.ecopolitical) || FALLBACK.sections.ecopolitical,
-      geopolitical: stripTags(sections.geopolitical) || FALLBACK.sections.geopolitical
+      status: cleanBannerText(sections.status) || FALLBACK.sections.status,
+      ecopolitical: cleanBannerText(sections.ecopolitical) || FALLBACK.sections.ecopolitical,
+      geopolitical: cleanBannerText(sections.geopolitical) || FALLBACK.sections.geopolitical
     },
     news: news.slice(0, 8),
     provider: provider || 'fallback',

@@ -2,7 +2,7 @@ const https = require('https');
 const { getStore, connectLambda } = require('@netlify/blobs');
 
 const STORE_NAME = 'daily-ai-analysis';
-const FALLBACK_MODELS = ['gemini-1.5-flash', 'gemini-1.5-flash-latest', 'gemini-1.5-pro'];
+const FALLBACK_MODELS = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-2.0-flash', 'gemini-1.5-flash'];
 const SECTION_TITLES = ['Durum analizi', 'Ekopolitik risk', 'Jeopolitik risk'];
 const CATEGORY_LABELS = {
   'genel': 'genel piyasa',
@@ -68,18 +68,31 @@ function safeCategory(cat) {
 function stripTags(v) {
   return String(v || '').replace(/<[^>]+>/g, ' ').replace(/&[^;]+;/g, ' ').replace(/\s+/g, ' ').trim();
 }
+function cleanNewsTitle(v) {
+  return stripTags(v)
+    .replace(/\s+[-–—]\s+[^-–—|:]{2,80}$/u, '')
+    .replace(/\s+\|\s+[^|]{2,80}$/u, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+function cleanBannerText(v) {
+  return cleanNewsTitle(v)
+    .replace(/\b(Reuters|Bloomberg|Associated Press|AP News|CNBC|CNN|BBC|Al Jazeera|TRT Haber|Anadolu Ajansı|AA|Habertürk|Hürriyet|Milliyet|Sözcü|Dünya|Ekonomim)\b\s*:?/giu, '')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+}
 function sectionText(sections) {
   return SECTION_TITLES.map((title, i) => `${title}\n${sections[['status', 'ecopolitical', 'geopolitical'][i]] || ''}`).join('\n\n') + '\n\n⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.';
 }
 function normalizeSections(value, cat, news, provider, debug) {
   const fallback = STATIC_FALLBACK[cat] || STATIC_FALLBACK.genel;
   const sections = {
-    status: stripTags(value?.status) || fallback.status,
-    ecopolitical: stripTags(value?.ecopolitical) || fallback.ecopolitical,
-    geopolitical: stripTags(value?.geopolitical) || fallback.geopolitical
+    status: cleanBannerText(value?.status) || fallback.status,
+    ecopolitical: cleanBannerText(value?.ecopolitical) || fallback.ecopolitical,
+    geopolitical: cleanBannerText(value?.geopolitical) || fallback.geopolitical
   };
   if (!value && news.length) {
-    sections.status += ` Günün öne çıkan başlıkları: ${news.slice(0, 2).map(n => n.title).join(' | ')}.`;
+    sections.status += ` Günün öne çıkan başlıkları: ${news.slice(0, 2).map(n => cleanNewsTitle(n.title)).join(' | ')}.`;
   }
   return {
     category: cat,
@@ -112,7 +125,7 @@ function parseItems(xml) {
   const items = [];
   const blocks = String(xml || '').match(/<item>[\s\S]*?<\/item>/g) || [];
   for (const block of blocks.slice(0, 8)) {
-    const title = stripTags((block.match(/<title><!\[CDATA\[([\s\S]*?)\]\]><\/title>/) || block.match(/<title>([\s\S]*?)<\/title>/) || [])[1]);
+    const title = cleanNewsTitle((block.match(/<title><!\[CDATA\[([\s\S]*?)\]\]><\/title>/) || block.match(/<title>([\s\S]*?)<\/title>/) || [])[1]);
     const link = stripTags((block.match(/<link>([\s\S]*?)<\/link>/) || [])[1]);
     const date = stripTags((block.match(/<pubDate>([\s\S]*?)<\/pubDate>/) || [])[1]);
     if (title) items.push({ title, link, date });
@@ -137,7 +150,7 @@ async function fetchNews(cat) {
   }).slice(0, 10);
 }
 function buildPrompt(cat, news) {
-  return `Türkçe yaz. Konu: ${CATEGORY_LABELS[cat]}. Aşağıdaki güncel haber başlıklarını ve genel makro/politik bağlamı kullanarak sadece geçerli JSON üret. Üç alan zorunlu: status, ecopolitical, geopolitical. Alan adlarını değiştirme. Her alan 1-2 kısa cümle olsun, haber dili kullan, yatırım tavsiyesi verme, uydurma fiyat/rakam yazma.\n\nHaberler:\n${news.map((n, i) => `${i + 1}. ${n.title}`).join('\n')}`;
+  return `Türkçe yaz. Konu: ${CATEGORY_LABELS[cat]}. Aşağıdaki güncel haber başlıklarını ve genel makro/politik bağlamı kullanarak sadece geçerli JSON üret. Haber sitesi/kaynak adı yazma. Üç alan zorunlu: status, ecopolitical, geopolitical. Alan adlarını değiştirme. Her alan 1-2 kısa cümle olsun, haber dili kullan, yatırım tavsiyesi verme, uydurma fiyat/rakam yazma.\n\nHaberler:\n${news.map((n, i) => `${i + 1}. ${n.title}`).join('\n')}`;
 }
 async function postJson(url, payload, timeoutMs = 8000) {
   const ctrl = new AbortController();
@@ -164,7 +177,7 @@ async function callGemini(cat, news) {
   for (const model of chain) {
     try {
       const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(key)}`;
-      const payload = { contents: [{ parts: [{ text: buildPrompt(cat, news) }] }], generationConfig: { temperature: 0.2, maxOutputTokens: 700 } };
+      const payload = { contents: [{ parts: [{ text: buildPrompt(cat, news) }] }], generationConfig: { temperature: 0.2, maxOutputTokens: 700, responseMimeType: 'application/json' } };
       const data = await postJson(url, payload);
       const text = data?.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('\n');
       const sections = parseJsonText(text);
