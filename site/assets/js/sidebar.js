@@ -59,7 +59,8 @@ sidebarLinks +
 '<span class="topbar-clock" id="clock" aria-live="off"></span>' +
 '</div>' +
 '<nav class="mobile-nav" id="mobileNav" aria-label="Sayfa gezinme">' + mobileLinks + '</nav>' +
-// Floating search FAB — her sayfada her zaman görünür
+// Floating FAB'ler — tablet/mobilde kolay erişim
+'<button type="button" class="menu-fab" id="menuFab" aria-label="Menüyü aç" aria-expanded="false" aria-controls="sidebar" title="Menü"><span aria-hidden="true">☰</span></button>' +
 '<button type="button" class="search-fab" id="searchFab" aria-label="Arama (Ctrl+K)" title="Ara (Ctrl+K)"><span aria-hidden="true">🔍</span></button>' +
 // Command palette modal
 '<div class="cmdk-overlay" id="cmdkOverlay" aria-hidden="true">' +
@@ -109,19 +110,25 @@ setTimeout(function(){
 var sb = document.getElementById('sidebar');
 var ov = document.getElementById('sbOverlay');
 var hb = document.getElementById('hamburger');
-hb.addEventListener('click',function(){
-    var isOpen = sb.classList.toggle('open'); ov.classList.toggle('open');
-    hb.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-});
+var menuFab = document.getElementById('menuFab');
+function setSidebarOpen(isOpen){
+    sb.classList.toggle('open', isOpen);
+    ov.classList.toggle('open', isOpen);
+    if(hb) hb.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    if(menuFab) menuFab.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+}
+function toggleSidebar(){
+    setSidebarOpen(!sb.classList.contains('open'));
+}
+if(hb) hb.addEventListener('click', toggleSidebar);
+if(menuFab) menuFab.addEventListener('click', toggleSidebar);
 ov.addEventListener('click',function(){
-    sb.classList.remove('open'); ov.classList.remove('open');
-    hb.setAttribute('aria-expanded','false');
+    setSidebarOpen(false);
 });
 // ESC ile sidebar kapansın
 document.addEventListener('keydown', function(e){
     if(e.key === 'Escape' && sb.classList.contains('open')){
-        sb.classList.remove('open'); ov.classList.remove('open');
-        hb.setAttribute('aria-expanded','false');
+        setSidebarOpen(false);
     }
 });
 
