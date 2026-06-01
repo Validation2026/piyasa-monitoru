@@ -524,7 +524,6 @@ INDUSTRIAL = {
         "VIS":    {"name": "Vanguard Industrials ETF", "unit": "USD"},
         "IYJ":    {"name": "iShares U.S. Industrials ETF", "unit": "USD"},
         "FIDU":   {"name": "Fidelity MSCI Industrials ETF", "unit": "USD"},
-        "RTM":    {"name": "Invesco S&P 500 Equal Weight Materials", "unit": "USD"},
         "ITA":    {"name": "iShares U.S. Aerospace & Defense ETF", "unit": "USD"},
         "PKB":    {"name": "Invesco Building & Construction ETF", "unit": "USD"},
         "PHO":    {"name": "Invesco Water Resources ETF", "unit": "USD"},
