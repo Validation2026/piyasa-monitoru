@@ -23,6 +23,8 @@
         .country-tab{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:.75rem;font-weight:700;cursor:pointer;transition:.2s;color:var(--t2)}
         .country-tab:hover{border-color:var(--blue)}
         .country-tab.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+        .universe-tools{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:-4px 0 14px 0;flex-wrap:wrap}
+        .universe-note{color:var(--muted);font-size:.75rem}
     </style>
 </head>
 <body>
@@ -31,7 +33,7 @@
 <div class="page-spacer"></div>
     <div class="page-head">
         <h1>💹 Hisse Senetleri</h1>
-        <div class="sub">BIST · ABD Mega-Cap · Küresel — 900+ hisse senedi</div>
+        <div class="sub">BIST · ABD Mega-Cap · Küresel — <span id="stockUniverseLabel">seçili görünür evren</span></div>
         <div class="update-info" id="updateInfo"></div>
     </div>
     <div class="ai-box"><div class="ai-header"><span>🤖 AI Hisse Analizi</span><span class="ai-badge">AI</span></div><div class="ai-body" id="aiAnalysis"><span class="ai-loading">Analiz yükleniyor...</span></div></div>
@@ -47,6 +49,10 @@
         <button class="view-btn on" data-view="cards">📋 Kartlar</button>
         <button class="view-btn" data-view="bar">📊 Performans</button>
         <button class="view-btn" data-view="heatmap">🔥 Isı Haritası</button>
+    </div>
+    <div class="universe-tools">
+        <div class="universe-note" id="universeNote">Varsayılan görünüm: bankalar, BIST liderleri ve ana likit küresel hisseler.</div>
+        <button class="tf-btn" id="toggleUniverseBtn" type="button" aria-pressed="false">Gizlenenleri göster</button>
     </div>
 
     <div class="view-section active" id="viewCards">
@@ -71,12 +77,12 @@
     <div class="view-section" id="viewBar">
         <div class="bar-chart-card">
             <div class="chart-title">Günlük Performans Sıralaması</div>
-            <div class="chart-subtitle">Tüm hisseler — günlük % değişim</div>
+            <div class="chart-subtitle">Görünür evren — günlük % değişim</div>
             <canvas id="barChartDaily"></canvas>
         </div>
         <div class="bar-chart-card">
             <div class="chart-title">Aylık Performans Sıralaması</div>
-            <div class="chart-subtitle">Tüm hisseler — 1 aylık % değişim</div>
+            <div class="chart-subtitle">Görünür evren — 1 aylık % değişim</div>
             <canvas id="barChartMonthly"></canvas>
         </div>
     </div>
@@ -92,14 +98,45 @@
 <script src="assets/js/app.js"></script>
 <script>
 (function(){
-    var cat='all', currentView='cards', allSeries=[], chartInstances=[], barCharts=[];
+    var cat='all', currentView='cards', fullSeries=[], allSeries=[], chartInstances=[], barCharts=[];
     var page = 1;
     var PAGE_SIZE = 24;
     var chartsExpanded = false;
 
+    var showFullUniverse = false;
+    var VISIBLE_STOCK_IDS = ['GARAN.IS','AKBNK.IS','YKBNK.IS','ISCTR.IS','VAKBN.IS','HALKB.IS','TSKB.IS','ALBRK.IS','SKBNK.IS','KCHOL.IS','SAHOL.IS','DOHOL.IS','AGHOL.IS','TKFEN.IS','TAVHL.IS','GSRAY.IS','EREGL.IS','TUPRS.IS','ASELS.IS','FROTO.IS','TOASO.IS','SISE.IS','ARCLK.IS','VESTL.IS','OTKAR.IS','KRDMD.IS','TTRAK.IS','BRISA.IS','PETKM.IS','KOZAL.IS','ENKAI.IS','CIMSA.IS','OYAKC.IS','SASA.IS','EGEEN.IS','CEMTS.IS','KLMSN.IS','THYAO.IS','PGSUS.IS','DOAS.IS','BIMAS.IS','MGROS.IS','SOKM.IS','ULKER.IS','AEFES.IS','CCOLA.IS','TCELL.IS','TTKOM.IS','LOGO.IS','AKSEN.IS','AKSA.IS','GUBRF.IS','HEKTS.IS','EKGYO.IS','ISGYO.IS','TURSG.IS','KONTR.IS','ASTOR.IS','SMRTG.IS','CWENE.IS','GESAN.IS','ODAS.IS','ZOREN.IS','ENJSA.IS','ALFAS.IS','MIATK.IS','KCAER.IS','BORLS.IS','REEDR.IS','TABGD.IS','MAVI.IS','KONYA.IS','MPARK.IS','GENIL.IS','ECILC.IS','SELEC.IS','FENER.IS','BJKAS.IS','TRGYO.IS','AKFGY.IS','VAKKO.IS','AAPL','MSFT','GOOGL','AMZN','NVDA','META','TSLA','AVGO','AMD','INTC','CRM','ORCL','ADBE','NFLX','CSCO','QCOM','TXN','IBM','NOW','PANW','MU','PLTR','SHOP','UBER','SNOW','CRWD','ARM','ADP','INTU','JPM','V','MA','JNJ','UNH','LLY','PG','KO','PEP','WMT','COST','HD','DIS','BAC','WFC','GS','MS','BLK','PFE','MRK','ABBV','TMO','ABT','NKE','MCD','SBUX','CMCSA','T','XOM','CVX','BA','CAT','GE','RTX','LMT','NOC','ASML','NVO','SAP','SHEL','AZN','UL','TTE','NVS','ROG','BP','RIO','HSBC','UBS','SAN','ING','GSK','DTEGY','VWAGY','NSRGY','LRLCY','MC','TSM','005930.KS','BABA','PDD','TM','SONY','BHP','HMC','NTDOY','MUFG','SMFG','MELI','INFY','HDB','IBN'];
+    var VISIBLE_STOCK_ID_SET = VISIBLE_STOCK_IDS.reduce(function(acc,id){ acc[id]=true; return acc; }, {});
+
+    function visibleUniverse(list){
+        return (list||[]).filter(function(s){ return s && VISIBLE_STOCK_ID_SET[s.id]; });
+    }
+
+    function syncUniverseUi(){
+        var total = fullSeries.length || allSeries.length;
+        var visibleCount = visibleUniverse(fullSeries.length ? fullSeries : allSeries).length;
+        var activeCount = allSeries.length;
+        var label = document.getElementById('stockUniverseLabel');
+        if(label) label.textContent = showFullUniverse ? (total+' hisse senedi') : (visibleCount+' seçili hisse');
+        var note = document.getElementById('universeNote');
+        if(note) note.textContent = showFullUniverse ? ('Tam liste açık: '+activeCount+' / '+total+' hisse gösteriliyor.') : ('Temiz görünüm: '+activeCount+' / '+total+' hisse gösteriliyor. Bankalar, BIST liderleri ve ana likit küresel hisseler görünür.');
+        var btn = document.getElementById('toggleUniverseBtn');
+        if(btn){
+            btn.textContent = showFullUniverse ? 'Temiz görünüme dön' : 'Gizlenenleri göster';
+            btn.setAttribute('aria-pressed', showFullUniverse ? 'true' : 'false');
+            btn.style.display = total && total === visibleCount ? 'none' : '';
+        }
+    }
+
+    function setUniverse(showFull){
+        showFullUniverse = showFull === true;
+        allSeries = showFullUniverse ? fullSeries.slice() : visibleUniverse(fullSeries);
+        page = 1;
+        syncUniverseUi();
+    }
+
     // BIST ticker'ları .IS ile biter; ABD = belirli semboller; geri kalan = küresel
-    var US_TICKERS = ['AAPL','MSFT','GOOGL','AMZN','NVDA','META','TSLA','AVGO','AMD','INTC','CRM','ORCL','ADBE','NFLX','JPM','V','MA','JNJ','UNH','LLY','PG','KO','PEP','WMT','COST','HD','DIS','XOM','CVX','BA','CAT'];
-    var GLOBAL_TICKERS = ['ASML','TSM','NVO','005930.KS','SAP','SHEL','AZN','UL','TTE','BABA','PDD','TM','SONY','BHP'];
+    var US_TICKERS = ['AAPL','MSFT','GOOGL','AMZN','NVDA','META','TSLA','AVGO','AMD','INTC','CRM','ORCL','ADBE','NFLX','CSCO','QCOM','TXN','IBM','NOW','PANW','MU','PLTR','SHOP','UBER','SNOW','CRWD','ARM','ADP','INTU','JPM','V','MA','JNJ','UNH','LLY','PG','KO','PEP','WMT','COST','HD','DIS','BAC','WFC','GS','MS','BLK','PFE','MRK','ABBV','TMO','ABT','NKE','MCD','SBUX','CMCSA','T','XOM','CVX','BA','CAT','GE','RTX','LMT','NOC'];
+    var GLOBAL_TICKERS = ['ASML','NVO','SAP','SHEL','AZN','UL','TTE','NVS','ROG','BP','RIO','HSBC','UBS','SAN','ING','GSK','DTEGY','VWAGY','NSRGY','LRLCY','MC','TSM','005930.KS','BABA','PDD','TM','SONY','BHP','HMC','NTDOY','MUFG','SMFG','MELI','INFY','HDB','IBN'];
     function classifySeries(s){
         if(!s) return 'global';
         if(s.id && s.id.indexOf('.IS') !== -1) return 'bist';
@@ -232,17 +269,28 @@
             document.getElementById('summaryCards').innerHTML='<div class="scard"><div class="scard-name">Veri bulunamadı. Collector henüz çalışmamış olabilir.</div></div>';
             return;
         }
-        allSeries = data.series;
+        fullSeries = data.series;
+        setUniverse(false);
         var ui = document.getElementById('updateInfo');
         if(ui && data.meta){
-            ui.textContent = 'Son güncelleme: '+new Date(data.meta.updated_at).toLocaleString('tr-TR')+' · '+data.meta.symbol_count+' hisse';
+            ui.textContent = 'Son güncelleme: '+new Date(data.meta.updated_at).toLocaleString('tr-TR')+' · '+allSeries.length+' görünür / '+data.meta.symbol_count+' toplam hisse';
         }
         syncCategoryUi();
         writeUrlState();
+        syncUniverseUi();
         setChartsExpanded(false);
         rebuildCards();
     });
 
+
+    var universeBtn = document.getElementById('toggleUniverseBtn');
+    if(universeBtn) universeBtn.addEventListener('click', function(){
+        setUniverse(!showFullUniverse);
+        writeUrlState();
+        rebuildCurrent();
+        var ui = document.getElementById('updateInfo');
+        if(ui && fullSeries.length) ui.textContent = ui.textContent.replace(/· .*$/, '· '+allSeries.length+' görünür / '+fullSeries.length+' toplam hisse');
+    });
 
     var chartsBtn = document.getElementById('toggleChartsBtn');
     if(chartsBtn) chartsBtn.addEventListener('click', function(){
