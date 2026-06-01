@@ -349,46 +349,89 @@ function fmtDate(iso){
     if(isNaN(d.getTime()))return 'tarih yok';
     return d.toLocaleString('tr-TR',{dateStyle:'short',timeStyle:'short'});
 }
+const CURRENT_IRAN_BRIEF = {
+    headline: 'Ateşkes kırılgan, Hürmüz riski yüksek, piyasa stresi yeniden artıyor',
+    summary: '1 Haziran 2026 itibarıyla İran-ABD-İsrail hattında diplomasi tamamen kopmuş değil; ancak ABD saldırıları, İran’ın karşı hamleleri ve İsrail-Hizbullah cephesindeki tırmanma ateşkes zeminini zayıflatıyor. Hürmüz Boğazı’ndaki kısıtlı geçiş ve enerji arzı belirsizliği petrol, gaz, navlun ve güvenli liman varlıklarında risk primini canlı tutuyor.',
+    updated_at: '2026-06-01T14:00:00+03:00',
+    sections: {
+        status: 'İran-ABD-İsrail krizinde görünüm kontrollü fakat kırılgan tırmanma aşamasındadır. İran tarafı, ABD’nin çelişkili tutumlarının ve İsrail’in Lübnan’daki operasyonlarının diplomatik ilerlemeyi geciktirdiğini belirtirken; ABD’nin İran’daki askeri hedefleri vurması ve İran’ın Körfez’deki ABD unsurlarına karşı hamleleri ateşkes zemininin zayıf kaldığını göstermektedir. Bu nedenle mevcut tablo tam ölçekli bölgesel savaştan ziyade, diplomasi ile askeri baskının aynı anda sürdüğü yüksek riskli bir dengeye işaret ediyor.',
+        ecopolitical: 'Ekopolitik riskin ana kanalı enerji arzı, taşımacılık ve enflasyon beklentileridir. Hürmüz Boğazı trafiğinin savaş öncesi seviyenin altında kalması petrol, LNG, navlun ve sigorta maliyetlerinde risk primini canlı tutmaktadır. Çin ve Asya enerji ithalatçıları açısından rota güvenliği ve tedarik süreleri daha kritik hale gelirken, Avrupa tarafında gaz ve elektrik maliyetleri yeniden hassaslaşmaktadır. Enerji ve hammadde maliyetlerindeki oynaklık, şirketlerin fiyatlama davranışlarını bozarak küresel dezenflasyon sürecini kırılgan hale getirmektedir.',
+        geopolitical: 'Jeopolitik risk yüksek seviyede kalmaktadır. Krizin merkezinde Hürmüz Boğazı, İran’ın nükleer programı, ABD askeri varlığı ve İsrail-Hizbullah/Lübnan hattı yer alıyor. Ateşkesi uzatma, Hürmüz geçişini rahatlatma ve yaptırımları kısmen gevşetme yönünde diplomatik temaslar bulunsa da henüz kesinleşmiş bir anlaşma zemini yoktur. İsrail’in Lübnan hattındaki operasyonları ve İran’ın ABD/İsrail eylemlerini tek güvenlik cephesi olarak görmesi, krizin tek dosyadan çıkıp çok cepheli bir bölgesel güvenlik krizine dönüşme riskini artırıyor.'
+    },
+    sources: [
+        {title:'Reuters — İran diplomasiyi geciktiren unsurları açıkladı', link:'https://www.reuters.com/world/middle-east/'},
+        {title:'Reuters — Petrol ve Hürmüz risk primi', link:'https://www.reuters.com/business/energy/'},
+        {title:'AP News — ABD-İran-İsrail ateşkes ve saldırı gelişmeleri', link:'https://apnews.com/hub/iran'}
+    ]
+};
+
+function normalizeBrief(apiBrief){
+    var brief = Object.assign({}, CURRENT_IRAN_BRIEF, apiBrief || {});
+    brief.sections = Object.assign({}, CURRENT_IRAN_BRIEF.sections, (apiBrief && apiBrief.sections) ? apiBrief.sections : {});
+    if(!brief.updated_at) brief.updated_at = CURRENT_IRAN_BRIEF.updated_at;
+    return brief;
+}
+
+function paintRiskBrief(rawBrief, datasets){
+    var brief = normalizeBrief(rawBrief);
+    var metrics={
+        brent:metricText(getSeriesFromDatasets(datasets,'BZ=F')),
+        gold:metricText(getSeriesFromDatasets(datasets,'GC=F')),
+        freight:metricText(getSeriesFromDatasets(datasets,'BDRY'))
+    };
+
+    document.getElementById('briefHeadline').textContent = brief.headline || CURRENT_IRAN_BRIEF.headline;
+    document.getElementById('briefSummary').textContent = brief.summary || CURRENT_IRAN_BRIEF.summary;
+
+    var updated = new Date(brief.updated_at);
+    var stale = isNaN(updated.getTime()) || Date.now() - updated.getTime() > 24*60*60*1000;
+    document.getElementById('briefWarning').style.display = stale ? 'block' : 'none';
+
+    var sections = brief.sections || CURRENT_IRAN_BRIEF.sections;
+
+    if(window.PM && PM.renderAiAnalysis){
+        PM.renderAiAnalysis(document.getElementById('aiBox'), {
+            sections: {
+                status: renderTemplate(sections.status || CURRENT_IRAN_BRIEF.sections.status, metrics).replace(/<[^>]+>/g,''),
+                ecopolitical: renderTemplate(sections.ecopolitical || CURRENT_IRAN_BRIEF.sections.ecopolitical, metrics).replace(/<[^>]+>/g,''),
+                geopolitical: renderTemplate(sections.geopolitical || CURRENT_IRAN_BRIEF.sections.geopolitical, metrics).replace(/<[^>]+>/g,'')
+            },
+            updated_at: brief.updated_at,
+            fromCache: brief.fromCache
+        });
+    }else{
+        document.getElementById('aiBox').innerHTML =
+            '<div class="ai-section"><strong style="color: var(--t1);">📌 Durum Analizi:</strong> ' + renderTemplate(sections.status || CURRENT_IRAN_BRIEF.sections.status, metrics) + '</div>' +
+            '<div class="ai-section"><strong style="color: var(--t1);">🌍 Ekopolitik Risk:</strong> ' + renderTemplate(sections.ecopolitical || CURRENT_IRAN_BRIEF.sections.ecopolitical, metrics) + '</div>' +
+            '<div class="ai-section"><strong style="color: var(--t1);">🛡️ Jeopolitik Risk:</strong> ' + renderTemplate(sections.geopolitical || CURRENT_IRAN_BRIEF.sections.geopolitical, metrics) + '</div>';
+    }
+
+    var sources = (brief.news || brief.sources || CURRENT_IRAN_BRIEF.sources || []).map(function(src){
+        var label = esc(src.title || src.name || src.url || 'Kaynak');
+        var date = src.date ? ' <span>(' + esc(src.date) + ')</span>' : '';
+        return src.link
+            ? '<a href="' + esc(src.link) + '" target="_blank" rel="noopener">' + label + '</a>' + date
+            : (src.url ? '<a href="' + esc(src.url) + '" target="_blank" rel="noopener">' + label + '</a>' + date : label + date);
+    }).join(' · ');
+
+    if(sources){
+        var box = document.getElementById('aiBox');
+        box.insertAdjacentHTML('beforeend','<div class="brief-sources">Kaynaklar: ' + sources + '</div>');
+    }
+}
+
 function loadRiskBrief(datasets){
-    fetch('/api/iran-brief').then(function(r){return r.json()}).then(function(brief){
-        if(!brief)return;
-        var metrics={
-            brent:metricText(getSeriesFromDatasets(datasets,'BZ=F')),
-            gold:metricText(getSeriesFromDatasets(datasets,'GC=F')),
-            freight:metricText(getSeriesFromDatasets(datasets,'BDRY'))
-        };
-        document.getElementById('briefHeadline').textContent=brief.headline||'Jeopolitik özet';
-        document.getElementById('briefSummary').textContent=brief.summary||'';
-        var updated=new Date(brief.updated_at);
-        var stale=isNaN(updated.getTime())||Date.now()-updated.getTime()>24*60*60*1000;
-        document.getElementById('briefWarning').style.display=stale?'block':'none';
-        var sections=brief.sections||{};
-        if(window.PM&&PM.renderAiAnalysis){
-            PM.renderAiAnalysis(document.getElementById('aiBox'), {
-                sections: {
-                    status: renderTemplate(sections.status||brief.summary||'',metrics).replace(/<[^>]+>/g,''),
-                    ecopolitical: renderTemplate(sections.ecopolitical||brief.energy_impact||'',metrics).replace(/<[^>]+>/g,''),
-                    geopolitical: renderTemplate(sections.geopolitical||brief.safe_haven_impact||'',metrics).replace(/<[^>]+>/g,'')
-                },
-                updated_at: brief.updated_at,
-                fromCache: brief.fromCache
-            });
-        }else{
-            document.getElementById('aiBox').innerHTML=
-                '<div class="ai-section"><strong>Durum analizi</strong> '+renderTemplate(sections.status||brief.summary||'',metrics)+'</div>'+
-                '<div class="ai-section"><strong>Ekopolitik risk</strong> '+renderTemplate(sections.ecopolitical||brief.energy_impact||'',metrics)+'</div>'+
-                '<div class="ai-section"><strong>Jeopolitik risk</strong> '+renderTemplate(sections.geopolitical||brief.safe_haven_impact||'',metrics)+'</div>';
-        }
-        var sources=(brief.news||brief.sources||[]).map(function(src){
-            var label=esc(src.title||src.name||src.url||'Kaynak');
-            var date=src.date?' <span>('+esc(src.date)+')</span>':'';
-            return src.link?'<a href="'+esc(src.link)+'" target="_blank" rel="noopener">'+label+'</a>'+date:(src.url?'<a href="'+esc(src.url)+'" target="_blank" rel="noopener">'+label+'</a>'+date:label+date);
-        }).join(' · ');
-        if(sources){
-            var box=document.getElementById('aiBox');
-            box.insertAdjacentHTML('beforeend','<div class="brief-sources">Kaynaklar: '+sources+'</div>');
-        }
-    });
+    fetch('/api/iran-brief?t=' + Date.now())
+        .then(function(r){
+            if(!r.ok) throw new Error('iran-brief API yanıt vermedi');
+            return r.json();
+        })
+        .then(function(apiBrief){
+            paintRiskBrief(apiBrief, datasets);
+        })
+        .catch(function(){
+            paintRiskBrief(CURRENT_IRAN_BRIEF, datasets);
+        });
 }
 
 // MAP
@@ -534,3 +577,5 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').then
 </script>
 </body>
 </html>
+
+güncel haberlere göre durum analizini ekopolitik ve jeopolitik riskleri güncelle. 
