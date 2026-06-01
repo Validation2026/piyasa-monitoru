@@ -1,3 +1,4 @@
+require('./env').loadEnv();
 const https = require('https');
 const { getStore, connectLambda } = require('@netlify/blobs');
 
@@ -169,6 +170,7 @@ function parseJsonText(text) {
   return JSON.parse(match ? match[0] : raw);
 }
 async function callGemini(cat, news) {
+  if (process.env.NODE_ENV === 'test') throw new Error('Gemini disabled during tests');
   const key = process.env.GEMINI_API_KEY;
   if (!key) throw new Error('GEMINI_API_KEY missing');
   const preferred = process.env.GEMINI_MODEL;
