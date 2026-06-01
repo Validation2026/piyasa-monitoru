@@ -181,7 +181,7 @@ fetch('/api/iran-state').then(function(r){return r.json()}).then(function(s){
 }).catch(function(){});
 
 fetch('/api/ai-analysis?cat=genel').then(function(r){return r.json()}).then(function(d){
-    if(d.analysis)document.getElementById('aiBox').textContent=d.analysis;
+    var el=document.getElementById('aiBox');if(el&&window.PM&&PM.renderAiAnalysis)PM.renderAiAnalysis(el,d);else if(el&&d.analysis)el.textContent=d.analysis;
 }).catch(function(){});
 
 // Excel indirme

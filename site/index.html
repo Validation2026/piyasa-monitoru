@@ -123,13 +123,13 @@
     <div class="stat"><div class="stat-v" id="stUpdate">—</div><div class="stat-l">Son Güncelleme</div></div>
 </div>
 
-<a href="iran-risk.html" style="display:block;background:linear-gradient(135deg,#b45309,#c2410c);border:2px solid #fdba74;border-radius:12px;padding:14px 20px;margin-bottom:14px;text-decoration:none;transition:.2s" onmouseover="this.style.borderColor='#fb923c'" onmouseout="this.style.borderColor='#fdba74'">
+<a href="iran-risk.html" id="indexIranBanner" style="display:block;background:linear-gradient(135deg,#b45309,#c2410c);border:2px solid #fdba74;border-radius:12px;padding:14px 20px;margin-bottom:14px;text-decoration:none;transition:.2s" onmouseover="this.style.borderColor='#fb923c'" onmouseout="this.style.borderColor='#fdba74'">
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
         <div style="display:flex;align-items:center;gap:10px">
-            <span style="font-size:1.3rem" class="icon-pulse">⏸️</span>
+            <span style="font-size:1.3rem" class="icon-pulse">🟠</span>
             <div>
-                <div style="font-size:.82rem;font-weight:800;color:#ffedd5">ABD Hürmüz'ü vurdu, İran'dan jet misilleme geldi. </div>
-                <div style="font-size:.68rem;color:#fed7aa">ABD ile İran arasındaki temaslar sürerken bölgedeki askeri gerilim de tırmanıyor.</div>
+                <div id="indexIranHeadline" style="font-size:.82rem;font-weight:800;color:#ffedd5">İran risk özeti yükleniyor...</div>
+                <div id="indexIranSummary" style="font-size:.68rem;color:#fed7aa">Güncel haber akışına göre risk notu hazırlanıyor.</div>
             </div>
         </div>
         <div style="font-size:.65rem;color:#fdba74;font-weight:600">DETAYLAR →</div>
@@ -155,7 +155,7 @@
 <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:20px;position:relative;overflow:hidden">
     <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#a78bfa,#3b82f6,#22d3ee)"></div>
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="font-size:.85rem;font-weight:700">🤖 Günlük Piyasa Özeti</span><span class="ai-breath" style="font-size:.58rem;font-family:'JetBrains Mono',monospace;font-weight:700;background:rgba(167,139,250,.15);color:#a78bfa;padding:2px 8px;border-radius:4px">AI</span></div>
-    <div id="indexAiAnalysis" style="font-size:.82rem;color:var(--t2);line-height:1.7;white-space:pre-wrap"><span style="color:var(--t3);font-style:italic">Günlük piyasa özeti yükleniyor...</span></div>
+    <div id="indexAiAnalysis" class="ai-body" style="font-size:.82rem;color:var(--t2);line-height:1.7;white-space:pre-wrap"><span style="color:var(--t3);font-style:italic">Günlük piyasa özeti yükleniyor...</span></div>
 </div>
 
 <div class="mini-strip" id="miniStrip" aria-live="polite" aria-label="Hızlı piyasa özeti">
@@ -393,8 +393,19 @@ fj('stocks.json').then(function(sd){
     if(sd && sd.series) animateCounter('stHisse', sd.series.length);
 }).catch(function(){});
 
+
+function loadIndexIranBanner(){
+    fetch('/api/iran-brief').then(function(r){return r.json()}).then(function(d){
+        var h=document.getElementById('indexIranHeadline');
+        var s=document.getElementById('indexIranSummary');
+        if(h)h.textContent=d.headline||'İran risk özeti';
+        if(s)s.textContent=d.summary||'';
+    }).catch(function(){});
+}
+loadIndexIranBanner();
+
 // AI
-fetch('/api/ai-analysis?cat=genel').then(function(r){return r.json()}).then(function(d){var el=document.getElementById('indexAiAnalysis');if(el&&d.analysis)el.textContent=d.analysis}).catch(function(){var el=document.getElementById('indexAiAnalysis');if(el)el.innerHTML='<span style="color:var(--t3);font-style:italic">Piyasa özeti şu an yüklenemiyor.</span>'});
+fetch('/api/ai-analysis?cat=genel').then(function(r){return r.json()}).then(function(d){var el=document.getElementById('indexAiAnalysis');if(el&&window.PM&&PM.renderAiAnalysis)PM.renderAiAnalysis(el,d);else if(el&&d.analysis)el.textContent=d.analysis}).catch(function(){var el=document.getElementById('indexAiAnalysis');if(el)el.innerHTML='<span style="color:var(--t3);font-style:italic">Piyasa özeti şu an yüklenemiyor.</span>'});
 })();
 if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').then(function(reg){reg.update()});}
 </script>

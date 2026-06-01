@@ -374,6 +374,31 @@ function downloadExcelFile(html, filename){
     setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(url)},100);
 }
 
+
+function renderAiAnalysis(container, payload){
+    var el=typeof container==='string'?document.getElementById(container):container;
+    if(!el)return;
+    function escHtml(v){return String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+    var sections=payload&&payload.sections;
+    if(sections){
+        var meta=payload.generatedAt||payload.updated_at;
+        var metaHtml='';
+        if(meta){
+            var d=new Date(meta);
+            if(!isNaN(d.getTime()))metaHtml='<div class="ai-meta">Güncelleme: '+escHtml(d.toLocaleString('tr-TR'))+(payload.fromCache?' · günlük cache':'')+'</div>';
+        }
+        el.innerHTML=''+
+            '<div class="ai-section"><strong>Durum analizi</strong><span>'+escHtml(sections.status||'—')+'</span></div>'+
+            '<div class="ai-section"><strong>Ekopolitik risk</strong><span>'+escHtml(sections.ecopolitical||'—')+'</span></div>'+
+            '<div class="ai-section"><strong>Jeopolitik risk</strong><span>'+escHtml(sections.geopolitical||'—')+'</span></div>'+
+            metaHtml;
+        return;
+    }
+    if(payload&&payload.analysis){
+        el.textContent=payload.analysis;
+    }
+}
+
 function exportTableExcel(seriesList,filename){
     // Sheet 1: Özet — anlık görüntü
     var summaryHeader=['Varlık','Birim','Fiyat','1G %','1H %','1A %','YTD %','52H Düşük','52H Yüksek'];
@@ -900,7 +925,7 @@ function downloadExcel(sheets, filename){
     var html=buildExcelHtmlDoc(sheets);
     downloadExcelFile(html, filename);
 }
-return{fj:fj,fs:fs,fp:fp,fc:fc,cc:cc,gc:gc,filterPeriod:filterPeriod,miniSpark:miniSpark,makeChart:makeChart,makeAreaChart:makeAreaChart,buildSummary:buildSummary,buildCharts:buildCharts,buildTable:buildTable,buildComparisonChart:buildComparisonChart,buildBarChart:buildBarChart,buildDonutChart:buildDonutChart,buildHeatmap:buildHeatmap,applyOverrides:applyOverrides,loadOverrides:loadOverrides,loadData:loadData,getLastMeta:getLastMeta,showStaleBanner:showStaleBanner,countUp:countUp,initScrollReveal:initScrollReveal,flashUpdate:flashUpdate,exportTableExcel:exportTableExcel,downloadExcel:downloadExcel,sparkSvg:sparkSvg,isAnomaly:isAnomaly,formatUpdatedAt:formatUpdatedAt,showAssetModal:showAssetModal,openAssetFromUrl:openAssetFromUrl,ensureChartJs:ensureChartJs};
+return{fj:fj,fs:fs,fp:fp,fc:fc,cc:cc,gc:gc,filterPeriod:filterPeriod,miniSpark:miniSpark,makeChart:makeChart,makeAreaChart:makeAreaChart,buildSummary:buildSummary,buildCharts:buildCharts,buildTable:buildTable,buildComparisonChart:buildComparisonChart,buildBarChart:buildBarChart,buildDonutChart:buildDonutChart,buildHeatmap:buildHeatmap,applyOverrides:applyOverrides,loadOverrides:loadOverrides,loadData:loadData,getLastMeta:getLastMeta,showStaleBanner:showStaleBanner,countUp:countUp,initScrollReveal:initScrollReveal,flashUpdate:flashUpdate,exportTableExcel:exportTableExcel,downloadExcel:downloadExcel,sparkSvg:sparkSvg,isAnomaly:isAnomaly,formatUpdatedAt:formatUpdatedAt,showAssetModal:showAssetModal,openAssetFromUrl:openAssetFromUrl,ensureChartJs:ensureChartJs,renderAiAnalysis:renderAiAnalysis};
 })();
 
 // Scroll reveal'ı DOM hazır olunca başlat
