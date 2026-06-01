@@ -165,8 +165,8 @@ fetch('/api/iran-state').then(function(r){return r.json()}).then(function(s){
     document.getElementById('risk').value=s.riskScore||50;
     document.getElementById('hurmuz').value=s.hurmuzStatus||'AÇIK / GÜVENLİ';
     var bb=s.bannerBrief||{};
-    document.getElementById('bannerHeadline').value=bb.headline||s.briefHeadline||s.headline||'';
-    document.getElementById('bannerSummary').value=bb.summary||s.briefSummary||s.summary||'';
+    document.getElementById('bannerHeadline').value=(bb.headline||'');
+    document.getElementById('bannerSummary').value=(bb.summary||'');
     if(s.manualCommodities){
         COMMS.forEach(function(c){
             var id=c[0].replace(/[^a-zA-Z0-9]/g,'_');

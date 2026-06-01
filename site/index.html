@@ -123,13 +123,13 @@
     <div class="stat"><div class="stat-v" id="stUpdate">—</div><div class="stat-l">Son Güncelleme</div></div>
 </div>
 
-<a href="iran-risk.html" id="indexIranBanner" style="display:block;background:linear-gradient(135deg,#b45309,#c2410c);border:2px solid #fdba74;border-radius:12px;padding:14px 20px;margin-bottom:14px;text-decoration:none;transition:.2s" onmouseover="this.style.borderColor='#fb923c'" onmouseout="this.style.borderColor='#fdba74'">
+<a href="iran-risk.html" id="indexIranBanner" style="display:none;background:linear-gradient(135deg,#b45309,#c2410c);border:2px solid #fdba74;border-radius:12px;padding:14px 20px;margin-bottom:14px;text-decoration:none;transition:.2s" onmouseover="this.style.borderColor='#fb923c'" onmouseout="this.style.borderColor='#fdba74'">
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
         <div style="display:flex;align-items:center;gap:10px">
             <span style="font-size:1.3rem" class="icon-pulse">🟠</span>
             <div>
-                <div id="indexIranHeadline" style="font-size:.82rem;font-weight:800;color:#ffedd5">İran risk özeti yükleniyor...</div>
-                <div id="indexIranSummary" style="font-size:.68rem;color:#fed7aa">Güncel haber akışına göre risk notu hazırlanıyor.</div>
+                <div id="indexIranHeadline" style="font-size:.82rem;font-weight:800;color:#ffedd5"></div>
+                <div id="indexIranSummary" style="font-size:.68rem;color:#fed7aa"></div>
             </div>
         </div>
         <div style="font-size:.65rem;color:#fdba74;font-weight:600">DETAYLAR →</div>
@@ -395,19 +395,35 @@ fj('stocks.json').then(function(sd){
 
 
 function loadIndexIranBanner(){
+    var box=document.getElementById('indexIranBanner');
     var h=document.getElementById('indexIranHeadline');
     var s=document.getElementById('indexIranSummary');
-    function paint(d){
-        var bb=(d&&d.bannerBrief)?d.bannerBrief:d;
-        if(h)h.textContent=(bb&&bb.headline)||'İran risk özeti';
-        if(s)s.textContent=(bb&&bb.summary)||'';
+
+    function applyAdminBanner(state){
+        var bb=(state && state.bannerBrief) ? state.bannerBrief : null;
+        var headline=bb && typeof bb.headline==='string' ? bb.headline.trim() : '';
+        var summary=bb && typeof bb.summary==='string' ? bb.summary.trim() : '';
+
+        // TEK KAYNAK: Admin panelindeki bannerBrief.
+        // /api/iran-brief, sabit metin veya başka fallback kullanılmaz.
+        if(headline || summary){
+            if(h) h.textContent=headline;
+            if(s) s.textContent=summary;
+            if(box) box.style.display='block';
+        }else{
+            if(h) h.textContent='';
+            if(s) s.textContent='';
+            if(box) box.style.display='none';
+        }
     }
-    fetch('/api/iran-state?t='+Date.now()).then(function(r){return r.json()}).then(function(d){
-        if(d && d.bannerBrief && (d.bannerBrief.headline || d.bannerBrief.summary)){paint(d);return}
-        return fetch('/api/iran-brief?t='+Date.now()).then(function(r){return r.json()}).then(paint);
-    }).catch(function(){
-        fetch('/api/iran-brief?t='+Date.now()).then(function(r){return r.json()}).then(paint).catch(function(){});
-    });
+
+    fetch('/api/iran-state?t='+Date.now())
+        .then(function(r){return r.json()})
+        .then(applyAdminBanner)
+        .catch(function(){
+            // Admin verisi gelmezse banner yazısı başka yerden doldurulmaz.
+            applyAdminBanner(null);
+        });
 }
 loadIndexIranBanner();
 
