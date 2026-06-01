@@ -272,7 +272,7 @@
     });
 
     fetch('/api/ai-analysis?cat=kripto').then(function(r){return r.json()}).then(function(d){
-        var el=document.getElementById('aiAnalysis');if(el&&d.analysis)el.textContent=d.analysis;
+        var el=document.getElementById('aiAnalysis');if(el&&window.PM&&PM.renderAiAnalysis)PM.renderAiAnalysis(el,d);else if(el&&d.analysis)el.textContent=d.analysis;
     }).catch(function(){var el=document.getElementById('aiAnalysis');if(el)el.innerHTML='<span class="ai-loading">Analiz yüklenemiyor.</span>'});
 })();
 </script>

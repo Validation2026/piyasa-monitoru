@@ -527,6 +527,17 @@ body{font-family:var(--fm);background:var(--bg);color:var(--t1);line-height:1.6;
     margin-bottom: 0 !important;
 }
 
+.ai-body .ai-section strong {
+    display:block !important;
+    color:var(--t1);
+    margin-bottom:3px;
+}
+.ai-body .ai-section span {
+    display:block;
+    color:var(--t2);
+}
+.ai-meta{font-size:.68rem;color:var(--t3);font-family:var(--mono);margin-top:8px}
+
 .ai-body strong {
     display: inline !important;
 }

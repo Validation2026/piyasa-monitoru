@@ -324,7 +324,7 @@
 
     fetch('/api/ai-analysis?cat=hisseler').then(function(r){return r.json()}).then(function(d){
         var el=document.getElementById('aiAnalysis');
-        if(el && d && d.analysis) el.textContent=d.analysis;
+        if(el&&window.PM&&PM.renderAiAnalysis)PM.renderAiAnalysis(el,d);else if(el && d && d.analysis) el.textContent=d.analysis;
     }).catch(function(){
         var el=document.getElementById('aiAnalysis');
         if(el) el.innerHTML='<span class="ai-loading">Analiz yüklenemiyor.</span>';
