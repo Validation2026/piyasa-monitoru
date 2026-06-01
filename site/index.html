@@ -128,8 +128,8 @@
         <div style="display:flex;align-items:center;gap:10px">
             <span style="font-size:1.3rem" class="icon-pulse">🟠</span>
             <div>
-                <div id="indexIranHeadline" style="font-size:.82rem;font-weight:800;color:#ffedd5">Ateşkes kırılgan, Hürmüz riski yüksek, piyasa stresi yeniden artıyor</div>
-                <div id="indexIranSummary" style="font-size:.68rem;color:#fed7aa">1 Haziran 2026 itibarıyla İran-ABD-İsrail hattında diplomasi tamamen kopmuş değil; Hürmüz Boğazı ve enerji arzı kaynaklı risk primi piyasalarda canlı kalıyor.</div>
+                <div id="indexIranHeadline" style="font-size:.82rem;font-weight:800;color:#ffedd5">İran risk bannerı yükleniyor...</div>
+                <div id="indexIranSummary" style="font-size:.68rem;color:#fed7aa">Admin panelindeki banner yazısı bekleniyor.</div>
             </div>
         </div>
         <div style="font-size:.65rem;color:#fdba74;font-weight:600">DETAYLAR →</div>
@@ -398,20 +398,19 @@ function loadIndexIranBanner(){
     var box=document.getElementById('indexIranBanner');
     var h=document.getElementById('indexIranHeadline');
     var s=document.getElementById('indexIranSummary');
-    var DEFAULT_BANNER={headline:'Ateşkes kırılgan, Hürmüz riski yüksek, piyasa stresi yeniden artıyor',summary:'1 Haziran 2026 itibarıyla İran-ABD-İsrail hattında diplomasi tamamen kopmuş değil; Hürmüz Boğazı ve enerji arzı kaynaklı risk primi piyasalarda canlı kalıyor.'};
     function clean(v){return String(v==null?'':v).trim();}
     function readCachedAdminBanner(){try{return JSON.parse(localStorage.getItem('iranAdminBannerBrief')||'{}')||{}}catch(e){return {}}}
     function getAdminBannerFromState(state){
         state=state||{};
         var bb=state.bannerBrief||state.iranBanner||state.adminBanner||{};
-        return {headline:clean(bb.headline||bb.title||state.bannerHeadline||state.briefHeadline),summary:clean(bb.summary||bb.text||state.bannerSummary||state.briefSummary)};
+        return {headline:clean(bb.headline||bb.title||state.bannerHeadline),summary:clean(bb.summary||bb.text||state.bannerSummary)};
     }
     function paint(bb){
         bb=bb||{};
-        var headline=clean(bb.headline)||DEFAULT_BANNER.headline;
-        var summary=clean(bb.summary)||DEFAULT_BANNER.summary;
-        if(h) h.textContent=headline;
-        if(s) s.textContent=summary;
+        var headline=clean(bb.headline);
+        var summary=clean(bb.summary);
+        if(headline && h) h.textContent=headline;
+        if(summary && s) s.textContent=summary;
         if(box) box.style.display='block';
     }
     paint(readCachedAdminBanner());

@@ -161,17 +161,16 @@ function renderCREditors(data){
 }
 
 
-var DEFAULT_ADMIN_BANNER={
-    headline:'Ateşkes kırılgan, Hürmüz riski yüksek, piyasa stresi yeniden artıyor',
-    summary:'1 Haziran 2026 itibarıyla İran-ABD-İsrail hattında diplomasi tamamen kopmuş değil; Hürmüz Boğazı ve enerji arzı kaynaklı risk primi piyasalarda canlı kalıyor.'
-};
+var LAST_LOADED_BANNER={headline:'',summary:''};
+// Banner için kesin kural: Hazır analiz / CURRENT_IRAN_BRIEF / briefHeadline alanları kullanılmaz.
+// Tek kaynak admin tarafından kaydedilen bannerBrief / iranBanner / adminBanner / bannerHeadline / bannerSummary alanlarıdır.
 function cleanBannerText(v){return String(v==null?'':v).trim();}
 function getAdminBannerFromState(s){
     s=s||{};
     var bb=s.bannerBrief||s.iranBanner||s.adminBanner||{};
     return {
-        headline: cleanBannerText(bb.headline || bb.title || s.bannerHeadline || s.briefHeadline),
-        summary: cleanBannerText(bb.summary || bb.text || s.bannerSummary || s.briefSummary)
+        headline: cleanBannerText(bb.headline || bb.title || s.bannerHeadline),
+        summary: cleanBannerText(bb.summary || bb.text || s.bannerSummary)
     };
 }
 function readCachedAdminBanner(){
@@ -182,8 +181,8 @@ function writeCachedAdminBanner(bb){
 }
 function fillBannerInputs(bb){
     bb=bb||{};
-    document.getElementById('bannerHeadline').value=cleanBannerText(bb.headline)||DEFAULT_ADMIN_BANNER.headline;
-    document.getElementById('bannerSummary').value=cleanBannerText(bb.summary)||DEFAULT_ADMIN_BANNER.summary;
+    document.getElementById('bannerHeadline').value=cleanBannerText(bb.headline);
+    document.getElementById('bannerSummary').value=cleanBannerText(bb.summary);
 }
 var bannerTouched=false;
 ['bannerHeadline','bannerSummary'].forEach(function(id){
@@ -199,8 +198,11 @@ fetch('/api/iran-state?t='+Date.now(), {cache:'no-store'}).then(function(r){retu
     var bb=getAdminBannerFromState(s);
     var cached=readCachedAdminBanner();
     if(!bb.headline && !bb.summary) bb={headline:cleanBannerText(cached.headline),summary:cleanBannerText(cached.summary)};
-    if(!bb.headline && !bb.summary) bb=DEFAULT_ADMIN_BANNER;
-    if(!bannerTouched) fillBannerInputs(bb);
+    if(bb.headline || bb.summary){
+        LAST_LOADED_BANNER={headline:bb.headline,summary:bb.summary};
+        writeCachedAdminBanner(LAST_LOADED_BANNER);
+    }
+    if(!bannerTouched && (bb.headline || bb.summary)) fillBannerInputs(bb);
     if(s.manualCommodities){
         COMMS.forEach(function(c){
             var id=c[0].replace(/[^a-zA-Z0-9]/g,'_');
@@ -260,12 +262,17 @@ document.getElementById('saveBtn').onclick=function(){
     document.querySelectorAll('#crEditors > div').forEach(function(r){
         cr.push({id:r.querySelector('.cr-id').value,flag:r.querySelector('.cr-flag').value,name:r.querySelector('.cr-name').value,sp:r.querySelector('.cr-sp').value,fitch:r.querySelector('.cr-fitch').value,moodys:r.querySelector('.cr-moodys').value,cds:r.querySelector('.cr-cds').value,inflation:r.querySelector('.cr-inf').value,interest:r.querySelector('.cr-int').value,debt:r.querySelector('.cr-debt').value,growth:r.querySelector('.cr-grow').value,risk:r.querySelector('.cr-risk').value,note:r.querySelector('.cr-note').value});
     });
+    var typedBanner={
+        headline:cleanBannerText(document.getElementById('bannerHeadline').value),
+        summary:cleanBannerText(document.getElementById('bannerSummary').value)
+    };
+    var cachedBanner=readCachedAdminBanner();
     var bannerBrief={
-        headline:cleanBannerText(document.getElementById('bannerHeadline').value) || DEFAULT_ADMIN_BANNER.headline,
-        summary:cleanBannerText(document.getElementById('bannerSummary').value) || DEFAULT_ADMIN_BANNER.summary
+        headline:typedBanner.headline || LAST_LOADED_BANNER.headline || cleanBannerText(cachedBanner.headline),
+        summary:typedBanner.summary || LAST_LOADED_BANNER.summary || cleanBannerText(cachedBanner.summary)
     };
     fillBannerInputs(bannerBrief);
-    writeCachedAdminBanner(bannerBrief);
+    if(bannerBrief.headline || bannerBrief.summary) writeCachedAdminBanner(bannerBrief);
     var data={
         riskScore:parseInt(document.getElementById('risk').value)||50,
         hurmuzStatus:document.getElementById('hurmuz').value,
@@ -275,8 +282,6 @@ document.getElementById('saveBtn').onclick=function(){
         adminBanner:bannerBrief,
         bannerHeadline:bannerBrief.headline,
         bannerSummary:bannerBrief.summary,
-        briefHeadline:bannerBrief.headline,
-        briefSummary:bannerBrief.summary,
         manualCommodities:mc,customMetrics:cm,timeline:tl,countryRisk:cr
     };
     var payload={pin:pin,data:data};
