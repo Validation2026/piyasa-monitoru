@@ -174,8 +174,8 @@
 
 <div class="ai-box">
     <div class="ai-header">
-        <span>🤖 AI Piyasa Analizi</span>
-        <span class="ai-badge ai-breath">AI</span>
+        <span>📌 Piyasa Analizi</span>
+        <span class="ai-badge ai-breath">SABİT</span>
     </div>
     
     <div class="brief-warning" id="briefWarning">⚠️ Jeopolitik özet güncel olmayabilir</div>
@@ -373,40 +373,26 @@ function normalizeBrief(apiBrief){
 }
 
 function paintRiskBrief(rawBrief, datasets){
-    var brief = normalizeBrief(rawBrief);
+    // Bu bölüm artık hiçbir API/AI cevabı denemez.
+    // Her zaman aşağıdaki CURRENT_IRAN_BRIEF içindeki hazır metni basar.
+    var brief = normalizeBrief(CURRENT_IRAN_BRIEF);
     var metrics={
         brent:metricText(getSeriesFromDatasets(datasets,'BZ=F')),
         gold:metricText(getSeriesFromDatasets(datasets,'GC=F')),
         freight:metricText(getSeriesFromDatasets(datasets,'BDRY'))
     };
 
-    document.getElementById('briefHeadline').textContent = brief.headline || CURRENT_IRAN_BRIEF.headline;
-    document.getElementById('briefSummary').textContent = brief.summary || CURRENT_IRAN_BRIEF.summary;
+    document.getElementById('briefHeadline').textContent = brief.headline;
+    document.getElementById('briefSummary').textContent = brief.summary;
+    document.getElementById('briefWarning').style.display = 'none';
 
-    var updated = new Date(brief.updated_at);
-    var stale = isNaN(updated.getTime()) || Date.now() - updated.getTime() > 24*60*60*1000;
-    document.getElementById('briefWarning').style.display = stale ? 'block' : 'none';
+    var sections = brief.sections;
+    document.getElementById('aiBox').innerHTML =
+        '<div class="ai-section"><strong style="color: var(--t1);">📌 Durum Analizi:</strong> ' + renderTemplate(sections.status, metrics) + '</div>' +
+        '<div class="ai-section"><strong style="color: var(--t1);">🌍 Ekopolitik Risk:</strong> ' + renderTemplate(sections.ecopolitical, metrics) + '</div>' +
+        '<div class="ai-section"><strong style="color: var(--t1);">🛡️ Jeopolitik Risk:</strong> ' + renderTemplate(sections.geopolitical, metrics) + '</div>';
 
-    var sections = brief.sections || CURRENT_IRAN_BRIEF.sections;
-
-    if(window.PM && PM.renderAiAnalysis){
-        PM.renderAiAnalysis(document.getElementById('aiBox'), {
-            sections: {
-                status: renderTemplate(sections.status || CURRENT_IRAN_BRIEF.sections.status, metrics).replace(/<[^>]+>/g,''),
-                ecopolitical: renderTemplate(sections.ecopolitical || CURRENT_IRAN_BRIEF.sections.ecopolitical, metrics).replace(/<[^>]+>/g,''),
-                geopolitical: renderTemplate(sections.geopolitical || CURRENT_IRAN_BRIEF.sections.geopolitical, metrics).replace(/<[^>]+>/g,'')
-            },
-            updated_at: brief.updated_at,
-            fromCache: brief.fromCache
-        });
-    }else{
-        document.getElementById('aiBox').innerHTML =
-            '<div class="ai-section"><strong style="color: var(--t1);">📌 Durum Analizi:</strong> ' + renderTemplate(sections.status || CURRENT_IRAN_BRIEF.sections.status, metrics) + '</div>' +
-            '<div class="ai-section"><strong style="color: var(--t1);">🌍 Ekopolitik Risk:</strong> ' + renderTemplate(sections.ecopolitical || CURRENT_IRAN_BRIEF.sections.ecopolitical, metrics) + '</div>' +
-            '<div class="ai-section"><strong style="color: var(--t1);">🛡️ Jeopolitik Risk:</strong> ' + renderTemplate(sections.geopolitical || CURRENT_IRAN_BRIEF.sections.geopolitical, metrics) + '</div>';
-    }
-
-    var sources = (brief.news || brief.sources || CURRENT_IRAN_BRIEF.sources || []).map(function(src){
+    var sources = (brief.sources || []).map(function(src){
         var label = esc(src.title || src.name || src.url || 'Kaynak');
         var date = src.date ? ' <span>(' + esc(src.date) + ')</span>' : '';
         return src.link
@@ -415,23 +401,14 @@ function paintRiskBrief(rawBrief, datasets){
     }).join(' · ');
 
     if(sources){
-        var box = document.getElementById('aiBox');
-        box.insertAdjacentHTML('beforeend','<div class="brief-sources">Kaynaklar: ' + sources + '</div>');
+        document.getElementById('aiBox').insertAdjacentHTML('beforeend','<div class="brief-sources">Kaynaklar: ' + sources + '</div>');
     }
 }
 
 function loadRiskBrief(datasets){
-    fetch('/api/iran-brief?t=' + Date.now())
-        .then(function(r){
-            if(!r.ok) throw new Error('iran-brief API yanıt vermedi');
-            return r.json();
-        })
-        .then(function(apiBrief){
-            paintRiskBrief(apiBrief, datasets);
-        })
-        .catch(function(){
-            paintRiskBrief(CURRENT_IRAN_BRIEF, datasets);
-        });
+    // /api/iran-brief çağrısı tamamen kaldırıldı.
+    // Hazır yazı direkt gelsin diye sabit brief basılıyor.
+    paintRiskBrief(CURRENT_IRAN_BRIEF, datasets);
 }
 
 // MAP
