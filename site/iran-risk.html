@@ -247,11 +247,11 @@ fetch('/api/iran-state').then(function(r){return r.json()}).then(function(S){
     document.getElementById('hTxt').textContent=hurmuz;
 
     window._iranState = S;
-    paintAdminWarBanner();
+    applyTopAdminBanner(window._iranState);
     loadCommodities();
 }).catch(function(){
     window._iranState = {};
-    paintAdminWarBanner();
+    applyTopAdminBanner(window._iranState);
     loadCommodities();
 });
 
@@ -406,10 +406,11 @@ function normalizeBrief(apiBrief){
 }
 
 function paintRiskBrief(rawBrief, datasets){
-    paintAdminWarBanner();
+    applyTopAdminBanner(window._iranState);
 
     // Alttaki Piyasa Analizi kutusu sabit analiz metnini kullanabilir; bu metin üst banner değildir.
     var brief = normalizeBrief(rawBrief || CURRENT_IRAN_BRIEF);
+    datasets = datasets || [];
     var metrics={
         brent:metricText(getSeriesFromDatasets(datasets,'BZ=F')),
         gold:metricText(getSeriesFromDatasets(datasets,'GC=F')),
