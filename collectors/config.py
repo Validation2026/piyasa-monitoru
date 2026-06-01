@@ -244,7 +244,6 @@ COMMODITIES_AGRICULTURE = {
         "ZM=F":  {"name": "ZM (Soya Küspesi)",  "unit": "USD/ton"},
         "ZL=F":  {"name": "ZL (Soya Yağı)",    "unit": "USc/lb"},
         "ZO=F":  {"name": "ZO (Yulaf)",         "unit": "USc/bu"},
-        "ZR=F":  {"name": "ZR (Pirinç)",        "unit": "USD/cwt"},
         "CT=F":  {"name": "CT (Pamuk)",         "unit": "USc/lb"},
         "KC=F":  {"name": "KC (Kahve)",         "unit": "USc/lb"},
         "SB=F":  {"name": "SB (Şeker)",         "unit": "USc/lb"},
