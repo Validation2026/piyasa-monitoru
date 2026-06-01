@@ -59,6 +59,8 @@ sidebarLinks +
 '<span class="topbar-clock" id="clock" aria-live="off"></span>' +
 '</div>' +
 '<nav class="mobile-nav" id="mobileNav" aria-label="Sayfa gezinme">' + mobileLinks + '</nav>' +
+// Floating mobile/tablet menu FAB — topbar mobilde gizlendiği için dışarıda görünür
+'<button type="button" class="menu-fab" id="mobileMenuBtn" aria-label="Menüyü aç" aria-expanded="false" aria-controls="sidebar" title="Menüyü aç"><span aria-hidden="true">☰</span></button>' +
 // Floating search FAB — her sayfada her zaman görünür
 '<button type="button" class="search-fab" id="searchFab" aria-label="Arama (Ctrl+K)" title="Ara (Ctrl+K)"><span aria-hidden="true">🔍</span></button>' +
 // Command palette modal
@@ -108,20 +110,29 @@ setTimeout(function(){
 
 var sb = document.getElementById('sidebar');
 var ov = document.getElementById('sbOverlay');
-var hb = document.getElementById('hamburger');
-hb.addEventListener('click',function(){
-    var isOpen = sb.classList.toggle('open'); ov.classList.toggle('open');
-    hb.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+var menuButtons = Array.prototype.slice.call(document.querySelectorAll('#hamburger, #mobileMenuBtn'));
+function setSidebarOpen(isOpen){
+    sb.classList.toggle('open', isOpen);
+    ov.classList.toggle('open', isOpen);
+    menuButtons.forEach(function(btn){
+        btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        btn.setAttribute('aria-controls', 'sidebar');
+        btn.setAttribute('aria-label', isOpen ? 'Menüyü kapat' : 'Menüyü aç');
+        btn.setAttribute('title', isOpen ? 'Menüyü kapat' : 'Menüyü aç');
+    });
+}
+menuButtons.forEach(function(btn){
+    btn.addEventListener('click',function(){
+        setSidebarOpen(!sb.classList.contains('open'));
+    });
 });
 ov.addEventListener('click',function(){
-    sb.classList.remove('open'); ov.classList.remove('open');
-    hb.setAttribute('aria-expanded','false');
+    setSidebarOpen(false);
 });
 // ESC ile sidebar kapansın
 document.addEventListener('keydown', function(e){
     if(e.key === 'Escape' && sb.classList.contains('open')){
-        sb.classList.remove('open'); ov.classList.remove('open');
-        hb.setAttribute('aria-expanded','false');
+        setSidebarOpen(false);
     }
 });
 
