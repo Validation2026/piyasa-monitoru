@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#3b82f6">
     <title>Kripto Paralar — Risk Monitörü</title>
-    <meta name="description" content="Bitcoin, Ethereum, Solana ve 10 kripto para — anlık fiyatlar, grafikler ve Bitcoin ETF durumu">
+    <meta name="description" content="Bitcoin, Ethereum, Solana ve majör kripto paralar — anlık fiyatlar, grafikler ve Bitcoin ETF durumu">
     <meta property="og:title" content="Kripto Paralar — Risk Monitörü">
-    <meta property="og:description" content="Bitcoin, Ethereum, Solana ve 10 kripto para — anlık fiyatlar, grafikler ve Bitcoin ETF durumu">
+    <meta property="og:description" content="Bitcoin, Ethereum, Solana ve majör kripto paralar — anlık fiyatlar, grafikler ve Bitcoin ETF durumu">
     <meta property="og:type" content="website">
     <meta property="og:locale" content="tr_TR">
     <link rel="manifest" href="manifest.json">
@@ -34,6 +34,10 @@
         <button class="view-btn" data-view="bar">📊 Performans</button>
         <button class="view-btn" data-view="heatmap">🔥 Isı Haritası</button>
     </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 14px 0;flex-wrap:wrap">
+        <div id="cryptoFilterInfo" style="color:var(--muted);font-size:12px">Majör kripto paralar gösteriliyor.</div>
+        <button class="tf-btn" id="toggleAllCryptoBtn" type="button" aria-pressed="false">Tüm kriptoları göster</button>
+    </div>
 
     <div class="view-section active" id="viewCards">
         <div class="summary-row" id="summaryCards"></div>
@@ -57,12 +61,12 @@
     <div class="view-section" id="viewBar">
         <div class="bar-chart-card">
             <div class="chart-title">📊 Günlük Performans Sıralaması</div>
-            <div class="chart-subtitle">Tüm kripto paralar — günlük % değişim</div>
+            <div class="chart-subtitle" id="dailyBarSubtitle">Görünen kripto paralar — günlük % değişim</div>
             <canvas id="perfBarDaily"></canvas>
         </div>
         <div class="bar-chart-card">
             <div class="chart-title">📊 Aylık Performans Sıralaması</div>
-            <div class="chart-subtitle">Tüm kripto paralar — 1 aylık % değişim</div>
+            <div class="chart-subtitle" id="monthlyBarSubtitle">Görünen kripto paralar — 1 aylık % değişim</div>
             <canvas id="perfBarMonthly"></canvas>
         </div>
     </div>
@@ -88,10 +92,13 @@
 <script src="assets/js/app.js"></script>
 <script>
 (function(){
-    var currentView='cards',allSeries=[],chartInstances=[],barCharts=[];
+    var currentView='cards',sourceSeries=[],allSeries=[],chartInstances=[],barCharts=[];
     var page=1;
     var PAGE_SIZE=24;
     var chartsExpanded=false;
+    var showAllCrypto=false;
+    var VISIBLE_CRYPTO_IDS=['BTC-USD','ETH-USD','BNB-USD','SOL-USD','XRP-USD','ADA-USD','DOGE-USD','AVAX-USD','TRX-USD','LINK-USD','DOT-USD','BCH-USD','LTC-USD','TON11419-USD','SUI20947-USD','XLM-USD','HBAR-USD'];
+    var VISIBLE_CRYPTO_ID_SET=VISIBLE_CRYPTO_IDS.reduce(function(acc,id){acc[id]=true;return acc;},{});
 
     function destroyCharts(){
         if(chartInstances.length){chartInstances.forEach(function(c){if(c&&c.destroy)c.destroy()});}
@@ -104,6 +111,39 @@
         if(page>total)page=total;
         var start=(page-1)*PAGE_SIZE;
         return list.slice(start,start+PAGE_SIZE);
+    }
+
+
+    function setMetaDescription(text){
+        var desc=document.querySelector('meta[name="description"]');
+        var ogDesc=document.querySelector('meta[property="og:description"]');
+        if(desc)desc.setAttribute('content',text);
+        if(ogDesc)ogDesc.setAttribute('content',text);
+    }
+
+    function refreshCryptoFilter(){
+        allSeries=showAllCrypto ? sourceSeries.slice() : sourceSeries.filter(function(item){return VISIBLE_CRYPTO_ID_SET[item.id];});
+        page=1;
+        var visibleCount=allSeries.length;
+        var totalCount=sourceSeries.length;
+        var hiddenCount=Math.max(0,totalCount-visibleCount);
+        var info=document.getElementById('cryptoFilterInfo');
+        var sub=document.querySelector('.page-head .sub');
+        var toggle=document.getElementById('toggleAllCryptoBtn');
+        var label=showAllCrypto ? 'Tüm kripto paralar' : 'Majör kripto paralar';
+        var infoText=label+' gösteriliyor: '+visibleCount+' / '+totalCount+' seri';
+        if(info)info.textContent=infoText+(hiddenCount&&!showAllCrypto?' · '+hiddenCount+' kripto gizli':'');
+        if(sub)sub.textContent=infoText;
+        setMetaDescription('Bitcoin, Ethereum, Solana ve '+visibleCount+' görünür kripto para — anlık fiyatlar, grafikler ve Bitcoin ETF durumu');
+        if(toggle){
+            toggle.textContent=showAllCrypto ? 'Sadece majörleri göster' : 'Tüm kriptoları göster';
+            toggle.setAttribute('aria-pressed', showAllCrypto ? 'true' : 'false');
+            toggle.style.display=hiddenCount ? '' : 'none';
+        }
+        var daily=document.getElementById('dailyBarSubtitle');
+        var monthly=document.getElementById('monthlyBarSubtitle');
+        if(daily)daily.textContent=label+' — günlük % değişim';
+        if(monthly)monthly.textContent=label+' — 1 aylık % değişim';
     }
 
     function renderPager(totalItems){
@@ -166,11 +206,19 @@
 
     PM.loadData('crypto.json','kripto').then(function(data){
         if(!data||!data.series||!data.series.length){document.getElementById('summaryCards').innerHTML='<div class="scard"><div class="scard-name">Veri bulunamadı.</div></div>';renderPager(0);return}
-        allSeries=data.series;
+        sourceSeries=data.series;
+        refreshCryptoFilter();
         var ui=document.getElementById('updateInfo');
         if(ui&&data.meta)ui.textContent='Son güncelleme: '+new Date(data.meta.updated_at).toLocaleString('tr-TR')+' · '+data.meta.symbol_count+' seri';
         setChartsExpanded(false);
         rebuildCards();
+    });
+
+    var toggleAllCryptoBtn=document.getElementById('toggleAllCryptoBtn');
+    if(toggleAllCryptoBtn)toggleAllCryptoBtn.addEventListener('click',function(){
+        showAllCrypto=!showAllCrypto;
+        refreshCryptoFilter();
+        rebuildCurrent();
     });
 
     var chartsBtn=document.getElementById('toggleChartsBtn');
