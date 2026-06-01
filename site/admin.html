@@ -161,12 +161,17 @@ function renderCREditors(data){
 }
 
 
+var DEFAULT_ADMIN_BANNER={
+    headline:'Ateşkes kırılgan, Hürmüz riski yüksek, piyasa stresi yeniden artıyor',
+    summary:'1 Haziran 2026 itibarıyla İran-ABD-İsrail hattında diplomasi tamamen kopmuş değil; Hürmüz Boğazı ve enerji arzı kaynaklı risk primi piyasalarda canlı kalıyor.'
+};
+function cleanBannerText(v){return String(v==null?'':v).trim();}
 function getAdminBannerFromState(s){
     s=s||{};
     var bb=s.bannerBrief||s.iranBanner||s.adminBanner||{};
     return {
-        headline: String(bb.headline || bb.title || s.bannerHeadline || s.briefHeadline || '').trim(),
-        summary: String(bb.summary || bb.text || s.bannerSummary || s.briefSummary || '').trim()
+        headline: cleanBannerText(bb.headline || bb.title || s.bannerHeadline || s.briefHeadline),
+        summary: cleanBannerText(bb.summary || bb.text || s.bannerSummary || s.briefSummary)
     };
 }
 function readCachedAdminBanner(){
@@ -175,31 +180,32 @@ function readCachedAdminBanner(){
 function writeCachedAdminBanner(bb){
     try{localStorage.setItem('iranAdminBannerBrief', JSON.stringify(bb||{}))}catch(e){}
 }
+function fillBannerInputs(bb){
+    bb=bb||{};
+    document.getElementById('bannerHeadline').value=cleanBannerText(bb.headline)||DEFAULT_ADMIN_BANNER.headline;
+    document.getElementById('bannerSummary').value=cleanBannerText(bb.summary)||DEFAULT_ADMIN_BANNER.summary;
+}
 var bannerTouched=false;
 ['bannerHeadline','bannerSummary'].forEach(function(id){
     var el=document.getElementById(id);
     if(el){el.addEventListener('input',function(){bannerTouched=true;});}
 });
+fillBannerInputs(readCachedAdminBanner());
 
-// Load from API
-fetch('/api/iran-state').then(function(r){return r.json()}).then(function(s){
+// Load from API — admin alanını ASLA boşaltma
+fetch('/api/iran-state?t='+Date.now(), {cache:'no-store'}).then(function(r){return r.json()}).then(function(s){
     document.getElementById('risk').value=s.riskScore||50;
     document.getElementById('hurmuz').value=s.hurmuzStatus||'AÇIK / GÜVENLİ';
     var bb=getAdminBannerFromState(s);
     var cached=readCachedAdminBanner();
-    if(!bb.headline && !bb.summary){
-        bb={headline:String(cached.headline||'').trim(),summary:String(cached.summary||'').trim()};
-    }
-    if(!bannerTouched){
-        document.getElementById('bannerHeadline').value=bb.headline||'';
-        document.getElementById('bannerSummary').value=bb.summary||'';
-    }
+    if(!bb.headline && !bb.summary) bb={headline:cleanBannerText(cached.headline),summary:cleanBannerText(cached.summary)};
+    if(!bb.headline && !bb.summary) bb=DEFAULT_ADMIN_BANNER;
+    if(!bannerTouched) fillBannerInputs(bb);
     if(s.manualCommodities){
         COMMS.forEach(function(c){
             var id=c[0].replace(/[^a-zA-Z0-9]/g,'_');
             if(s.manualCommodities[c[0]]){
                 document.getElementById('cv_'+id).value=s.manualCommodities[c[0]].value||'';
-                // Sadece Savaş Öncesi ve YTD
                 if(s.manualCommodities[c[0]].past_prewar != null) document.getElementById('cpre_'+id).value=s.manualCommodities[c[0]].past_prewar;
                 if(s.manualCommodities[c[0]].past_ytd != null) document.getElementById('cytd_'+id).value=s.manualCommodities[c[0]].past_ytd;
             }
@@ -209,11 +215,7 @@ fetch('/api/iran-state').then(function(r){return r.json()}).then(function(s){
     (s.timeline||[]).forEach(function(e){addTlRow(e.date,e.title,e.desc,e.tag)});
     renderCREditors(s.countryRisk||CR_DEFAULTS);
 }).catch(function(){
-    var cached=readCachedAdminBanner();
-    if(cached.headline || cached.summary){
-        document.getElementById('bannerHeadline').value=cached.headline||'';
-        document.getElementById('bannerSummary').value=cached.summary||'';
-    }
+    fillBannerInputs(readCachedAdminBanner());
     renderCREditors(CR_DEFAULTS)
 });
 
@@ -259,9 +261,10 @@ document.getElementById('saveBtn').onclick=function(){
         cr.push({id:r.querySelector('.cr-id').value,flag:r.querySelector('.cr-flag').value,name:r.querySelector('.cr-name').value,sp:r.querySelector('.cr-sp').value,fitch:r.querySelector('.cr-fitch').value,moodys:r.querySelector('.cr-moodys').value,cds:r.querySelector('.cr-cds').value,inflation:r.querySelector('.cr-inf').value,interest:r.querySelector('.cr-int').value,debt:r.querySelector('.cr-debt').value,growth:r.querySelector('.cr-grow').value,risk:r.querySelector('.cr-risk').value,note:r.querySelector('.cr-note').value});
     });
     var bannerBrief={
-        headline:document.getElementById('bannerHeadline').value.trim(),
-        summary:document.getElementById('bannerSummary').value.trim()
+        headline:cleanBannerText(document.getElementById('bannerHeadline').value) || DEFAULT_ADMIN_BANNER.headline,
+        summary:cleanBannerText(document.getElementById('bannerSummary').value) || DEFAULT_ADMIN_BANNER.summary
     };
+    fillBannerInputs(bannerBrief);
     writeCachedAdminBanner(bannerBrief);
     var data={
         riskScore:parseInt(document.getElementById('risk').value)||50,

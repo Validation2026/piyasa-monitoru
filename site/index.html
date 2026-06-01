@@ -123,13 +123,13 @@
     <div class="stat"><div class="stat-v" id="stUpdate">—</div><div class="stat-l">Son Güncelleme</div></div>
 </div>
 
-<a href="iran-risk.html" id="indexIranBanner" style="display:none;background:linear-gradient(135deg,#b45309,#c2410c);border:2px solid #fdba74;border-radius:12px;padding:14px 20px;margin-bottom:14px;text-decoration:none;transition:.2s" onmouseover="this.style.borderColor='#fb923c'" onmouseout="this.style.borderColor='#fdba74'">
+<a href="iran-risk.html" id="indexIranBanner" style="display:block;background:linear-gradient(135deg,#b45309,#c2410c);border:2px solid #fdba74;border-radius:12px;padding:14px 20px;margin-bottom:14px;text-decoration:none;transition:.2s" onmouseover="this.style.borderColor='#fb923c'" onmouseout="this.style.borderColor='#fdba74'">
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
         <div style="display:flex;align-items:center;gap:10px">
             <span style="font-size:1.3rem" class="icon-pulse">🟠</span>
             <div>
-                <div id="indexIranHeadline" style="font-size:.82rem;font-weight:800;color:#ffedd5"></div>
-                <div id="indexIranSummary" style="font-size:.68rem;color:#fed7aa"></div>
+                <div id="indexIranHeadline" style="font-size:.82rem;font-weight:800;color:#ffedd5">Ateşkes kırılgan, Hürmüz riski yüksek, piyasa stresi yeniden artıyor</div>
+                <div id="indexIranSummary" style="font-size:.68rem;color:#fed7aa">1 Haziran 2026 itibarıyla İran-ABD-İsrail hattında diplomasi tamamen kopmuş değil; Hürmüz Boğazı ve enerji arzı kaynaklı risk primi piyasalarda canlı kalıyor.</div>
             </div>
         </div>
         <div style="font-size:.65rem;color:#fdba74;font-weight:600">DETAYLAR →</div>
@@ -398,42 +398,35 @@ function loadIndexIranBanner(){
     var box=document.getElementById('indexIranBanner');
     var h=document.getElementById('indexIranHeadline');
     var s=document.getElementById('indexIranSummary');
-
-    function readCachedAdminBanner(){
-        try{return JSON.parse(localStorage.getItem('iranAdminBannerBrief')||'{}')||{}}catch(e){return {}}
-    }
+    var DEFAULT_BANNER={headline:'Ateşkes kırılgan, Hürmüz riski yüksek, piyasa stresi yeniden artıyor',summary:'1 Haziran 2026 itibarıyla İran-ABD-İsrail hattında diplomasi tamamen kopmuş değil; Hürmüz Boğazı ve enerji arzı kaynaklı risk primi piyasalarda canlı kalıyor.'};
+    function clean(v){return String(v==null?'':v).trim();}
+    function readCachedAdminBanner(){try{return JSON.parse(localStorage.getItem('iranAdminBannerBrief')||'{}')||{}}catch(e){return {}}}
     function getAdminBannerFromState(state){
         state=state||{};
         var bb=state.bannerBrief||state.iranBanner||state.adminBanner||{};
-        return {
-            headline:String(bb.headline||bb.title||state.bannerHeadline||state.briefHeadline||'').trim(),
-            summary:String(bb.summary||bb.text||state.bannerSummary||state.briefSummary||'').trim()
-        };
+        return {headline:clean(bb.headline||bb.title||state.bannerHeadline||state.briefHeadline),summary:clean(bb.summary||bb.text||state.bannerSummary||state.briefSummary)};
     }
-    function applyAdminBanner(state){
-        var bb=getAdminBannerFromState(state);
-        if(!bb.headline && !bb.summary){
-            var cached=readCachedAdminBanner();
-            bb={headline:String(cached.headline||'').trim(),summary:String(cached.summary||'').trim()};
-        }
-
-        // TEK KAYNAK: admin panelinde kaydedilen banner verisi.
-        // /api/iran-brief, AI özeti, CURRENT_IRAN_BRIEF veya sabit fallback kullanılmaz.
-        if(bb.headline || bb.summary){
-            if(h) h.textContent=bb.headline;
-            if(s) s.textContent=bb.summary;
-            if(box) box.style.display='block';
-        }else{
-            if(h) h.textContent='';
-            if(s) s.textContent='';
-            if(box) box.style.display='none';
-        }
+    function paint(bb){
+        bb=bb||{};
+        var headline=clean(bb.headline)||DEFAULT_BANNER.headline;
+        var summary=clean(bb.summary)||DEFAULT_BANNER.summary;
+        if(h) h.textContent=headline;
+        if(s) s.textContent=summary;
+        if(box) box.style.display='block';
     }
-
+    paint(readCachedAdminBanner());
     fetch('/api/iran-state?t='+Date.now(), {cache:'no-store'})
         .then(function(r){return r.json()})
-        .then(applyAdminBanner)
-        .catch(function(){applyAdminBanner(null)});
+        .then(function(state){
+            var bb=getAdminBannerFromState(state);
+            if(bb.headline || bb.summary){
+                try{localStorage.setItem('iranAdminBannerBrief', JSON.stringify(bb))}catch(e){}
+                paint(bb);
+            } else {
+                paint(readCachedAdminBanner());
+            }
+        })
+        .catch(function(){paint(readCachedAdminBanner())});
 }
 loadIndexIranBanner();
 

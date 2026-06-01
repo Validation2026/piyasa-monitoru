@@ -162,9 +162,9 @@
 <div class="page-head"><h1>🔴 İran Risk Monitörü</h1>
 </div>
 
-<div class="war-banner" id="adminWarBanner" style="display:none;background:linear-gradient(135deg,#b45309,#c2410c); border-color:#fdba74;">
-<div id="briefHeadline" style="color:#fb923c;font-size:1.5rem;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1.2;margin-bottom:8px"></div>
-<div id="briefSummary" style="font-size:.85rem;color:#fed7aa;font-weight:500;"></div>
+<div class="war-banner" id="adminWarBanner" style="display:block;background:linear-gradient(135deg,#b45309,#c2410c); border-color:#fdba74;">
+<div id="briefHeadline" style="color:#fb923c;font-size:1.5rem;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1.2;margin-bottom:8px">Ateşkes kırılgan, Hürmüz riski yüksek, piyasa stresi yeniden artıyor</div>
+<div id="briefSummary" style="font-size:.85rem;color:#fed7aa;font-weight:500;">1 Haziran 2026 itibarıyla İran-ABD-İsrail hattında diplomasi tamamen kopmuş değil; Hürmüz Boğazı ve enerji arzı kaynaklı risk primi piyasalarda canlı kalıyor.</div>
 </div>
 
 <div class="top-row">
@@ -352,6 +352,8 @@ function fmtDate(iso){
     return d.toLocaleString('tr-TR',{dateStyle:'short',timeStyle:'short'});
 }
 
+var DEFAULT_ADMIN_BANNER={headline:'Ateşkes kırılgan, Hürmüz riski yüksek, piyasa stresi yeniden artıyor',summary:'1 Haziran 2026 itibarıyla İran-ABD-İsrail hattında diplomasi tamamen kopmuş değil; Hürmüz Boğazı ve enerji arzı kaynaklı risk primi piyasalarda canlı kalıyor.'};
+function cleanBannerText(v){return String(v==null?'':v).trim();}
 function readCachedAdminBanner(){
     try{return JSON.parse(localStorage.getItem('iranAdminBannerBrief')||'{}')||{}}catch(e){return {}}
 }
@@ -359,33 +361,27 @@ function getAdminBannerFromState(state){
     state=state||{};
     var bb=state.bannerBrief||state.iranBanner||state.adminBanner||{};
     return {
-        headline:String(bb.headline||bb.title||state.bannerHeadline||state.briefHeadline||'').trim(),
-        summary:String(bb.summary||bb.text||state.bannerSummary||state.briefSummary||'').trim()
+        headline:cleanBannerText(bb.headline||bb.title||state.bannerHeadline||state.briefHeadline),
+        summary:cleanBannerText(bb.summary||bb.text||state.bannerSummary||state.briefSummary)
     };
 }
-function paintAdminWarBanner(){
-    var bb=getAdminBannerFromState(window._iranState||{});
+function applyTopAdminBanner(state){
+    var bb=getAdminBannerFromState(state);
     if(!bb.headline && !bb.summary){
         var cached=readCachedAdminBanner();
-        bb={headline:String(cached.headline||'').trim(),summary:String(cached.summary||'').trim()};
+        bb={headline:cleanBannerText(cached.headline),summary:cleanBannerText(cached.summary)};
     }
     var banner=document.getElementById('adminWarBanner');
     var h=document.getElementById('briefHeadline');
     var s=document.getElementById('briefSummary');
-
-    // TEK KAYNAK: admin panelinde kaydedilen banner verisi.
-    // CURRENT_IRAN_BRIEF, /api/iran-brief veya sabit analiz metni bu üst bannera yazılmaz.
-    if(bb.headline || bb.summary){
-        if(h) h.textContent=bb.headline;
-        if(s) s.textContent=bb.summary;
-        if(banner) banner.style.display='block';
-    }else{
-        if(h) h.textContent='';
-        if(s) s.textContent='';
-        if(banner) banner.style.display='none';
-    }
+    var headline=cleanBannerText(bb.headline)||DEFAULT_ADMIN_BANNER.headline;
+    var summary=cleanBannerText(bb.summary)||DEFAULT_ADMIN_BANNER.summary;
+    if(h) h.textContent=headline;
+    if(s) s.textContent=summary;
+    if(banner) banner.style.display='block';
 }
 
+applyTopAdminBanner(null);
 const CURRENT_IRAN_BRIEF = {
     headline: 'Ateşkes kırılgan, Hürmüz riski yüksek, piyasa stresi yeniden artıyor',
     summary: '1 Haziran 2026 itibarıyla İran-ABD-İsrail hattında diplomasi tamamen kopmuş değil; ancak ABD saldırıları, İran’ın karşı hamleleri ve İsrail-Hizbullah cephesindeki tırmanma ateşkes zeminini zayıflatıyor. Hürmüz Boğazı’ndaki kısıtlı geçiş ve enerji arzı belirsizliği petrol, gaz, navlun ve güvenli liman varlıklarında risk primini canlı tutuyor.',
