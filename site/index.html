@@ -399,16 +399,29 @@ function loadIndexIranBanner(){
     var h=document.getElementById('indexIranHeadline');
     var s=document.getElementById('indexIranSummary');
 
+    function readCachedAdminBanner(){
+        try{return JSON.parse(localStorage.getItem('iranAdminBannerBrief')||'{}')||{}}catch(e){return {}}
+    }
+    function getAdminBannerFromState(state){
+        state=state||{};
+        var bb=state.bannerBrief||state.iranBanner||state.adminBanner||{};
+        return {
+            headline:String(bb.headline||bb.title||state.bannerHeadline||state.briefHeadline||'').trim(),
+            summary:String(bb.summary||bb.text||state.bannerSummary||state.briefSummary||'').trim()
+        };
+    }
     function applyAdminBanner(state){
-        var bb=(state && state.bannerBrief) ? state.bannerBrief : null;
-        var headline=bb && typeof bb.headline==='string' ? bb.headline.trim() : '';
-        var summary=bb && typeof bb.summary==='string' ? bb.summary.trim() : '';
+        var bb=getAdminBannerFromState(state);
+        if(!bb.headline && !bb.summary){
+            var cached=readCachedAdminBanner();
+            bb={headline:String(cached.headline||'').trim(),summary:String(cached.summary||'').trim()};
+        }
 
-        // TEK KAYNAK: Admin panelindeki bannerBrief.
-        // /api/iran-brief, sabit metin veya başka fallback kullanılmaz.
-        if(headline || summary){
-            if(h) h.textContent=headline;
-            if(s) s.textContent=summary;
+        // TEK KAYNAK: admin panelinde kaydedilen banner verisi.
+        // /api/iran-brief, AI özeti, CURRENT_IRAN_BRIEF veya sabit fallback kullanılmaz.
+        if(bb.headline || bb.summary){
+            if(h) h.textContent=bb.headline;
+            if(s) s.textContent=bb.summary;
             if(box) box.style.display='block';
         }else{
             if(h) h.textContent='';
@@ -417,13 +430,10 @@ function loadIndexIranBanner(){
         }
     }
 
-    fetch('/api/iran-state?t='+Date.now())
+    fetch('/api/iran-state?t='+Date.now(), {cache:'no-store'})
         .then(function(r){return r.json()})
         .then(applyAdminBanner)
-        .catch(function(){
-            // Admin verisi gelmezse banner yazısı başka yerden doldurulmaz.
-            applyAdminBanner(null);
-        });
+        .catch(function(){applyAdminBanner(null)});
 }
 loadIndexIranBanner();
 

@@ -160,13 +160,40 @@ function renderCREditors(data){
     }).join('');
 }
 
+
+function getAdminBannerFromState(s){
+    s=s||{};
+    var bb=s.bannerBrief||s.iranBanner||s.adminBanner||{};
+    return {
+        headline: String(bb.headline || bb.title || s.bannerHeadline || s.briefHeadline || '').trim(),
+        summary: String(bb.summary || bb.text || s.bannerSummary || s.briefSummary || '').trim()
+    };
+}
+function readCachedAdminBanner(){
+    try{return JSON.parse(localStorage.getItem('iranAdminBannerBrief')||'{}')||{}}catch(e){return {}}
+}
+function writeCachedAdminBanner(bb){
+    try{localStorage.setItem('iranAdminBannerBrief', JSON.stringify(bb||{}))}catch(e){}
+}
+var bannerTouched=false;
+['bannerHeadline','bannerSummary'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el){el.addEventListener('input',function(){bannerTouched=true;});}
+});
+
 // Load from API
 fetch('/api/iran-state').then(function(r){return r.json()}).then(function(s){
     document.getElementById('risk').value=s.riskScore||50;
     document.getElementById('hurmuz').value=s.hurmuzStatus||'AÇIK / GÜVENLİ';
-    var bb=s.bannerBrief||{};
-    document.getElementById('bannerHeadline').value=(bb.headline||'');
-    document.getElementById('bannerSummary').value=(bb.summary||'');
+    var bb=getAdminBannerFromState(s);
+    var cached=readCachedAdminBanner();
+    if(!bb.headline && !bb.summary){
+        bb={headline:String(cached.headline||'').trim(),summary:String(cached.summary||'').trim()};
+    }
+    if(!bannerTouched){
+        document.getElementById('bannerHeadline').value=bb.headline||'';
+        document.getElementById('bannerSummary').value=bb.summary||'';
+    }
     if(s.manualCommodities){
         COMMS.forEach(function(c){
             var id=c[0].replace(/[^a-zA-Z0-9]/g,'_');
@@ -181,7 +208,14 @@ fetch('/api/iran-state').then(function(r){return r.json()}).then(function(s){
     (s.customMetrics||[]).forEach(function(m){addRow(m.name,m.unit,m.value,m.past_prewar,m.past_ytd)});
     (s.timeline||[]).forEach(function(e){addTlRow(e.date,e.title,e.desc,e.tag)});
     renderCREditors(s.countryRisk||CR_DEFAULTS);
-}).catch(function(){renderCREditors(CR_DEFAULTS)});
+}).catch(function(){
+    var cached=readCachedAdminBanner();
+    if(cached.headline || cached.summary){
+        document.getElementById('bannerHeadline').value=cached.headline||'';
+        document.getElementById('bannerSummary').value=cached.summary||'';
+    }
+    renderCREditors(CR_DEFAULTS)
+});
 
 // Save to API
 document.getElementById('saveBtn').onclick=function(){
@@ -228,13 +262,24 @@ document.getElementById('saveBtn').onclick=function(){
         headline:document.getElementById('bannerHeadline').value.trim(),
         summary:document.getElementById('bannerSummary').value.trim()
     };
-    var payload={
-        pin:pin,
-        data:{riskScore:parseInt(document.getElementById('risk').value)||50,hurmuzStatus:document.getElementById('hurmuz').value,bannerBrief:bannerBrief,manualCommodities:mc,customMetrics:cm,timeline:tl,countryRisk:cr}
+    writeCachedAdminBanner(bannerBrief);
+    var data={
+        riskScore:parseInt(document.getElementById('risk').value)||50,
+        hurmuzStatus:document.getElementById('hurmuz').value,
+        bannerBrief:bannerBrief,
+        // Aynı admin yazısını farklı anahtarlarla da gönderiyoruz; backend eski/katı şema kullanıyorsa bile kaybolmasın.
+        iranBanner:bannerBrief,
+        adminBanner:bannerBrief,
+        bannerHeadline:bannerBrief.headline,
+        bannerSummary:bannerBrief.summary,
+        briefHeadline:bannerBrief.headline,
+        briefSummary:bannerBrief.summary,
+        manualCommodities:mc,customMetrics:cm,timeline:tl,countryRisk:cr
     };
+    var payload={pin:pin,data:data};
     document.getElementById('status').textContent='Kaydediliyor...';
     fetch('/api/iran-state',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).then(function(r){return r.json()}).then(function(d){
-        if(d.success)document.getElementById('status').textContent='✅ Kaydedildi! Tüm cihazlarda güncellenecek.';
+        if(d.success){writeCachedAdminBanner(bannerBrief);document.getElementById('bannerHeadline').value=bannerBrief.headline;document.getElementById('bannerSummary').value=bannerBrief.summary;document.getElementById('status').textContent='✅ Kaydedildi! Banner artık admin yazısından okunacak.';}
         else document.getElementById('status').textContent='❌ Hata: '+(d.error||'Bilinmeyen');
     }).catch(function(e){document.getElementById('status').textContent='❌ Bağlantı hatası: '+e.message});
 };

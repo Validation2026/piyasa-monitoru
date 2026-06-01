@@ -247,9 +247,11 @@ fetch('/api/iran-state').then(function(r){return r.json()}).then(function(S){
     document.getElementById('hTxt').textContent=hurmuz;
 
     window._iranState = S;
+    paintAdminWarBanner();
     loadCommodities();
 }).catch(function(){
     window._iranState = {};
+    paintAdminWarBanner();
     loadCommodities();
 });
 
@@ -349,6 +351,41 @@ function fmtDate(iso){
     if(isNaN(d.getTime()))return 'tarih yok';
     return d.toLocaleString('tr-TR',{dateStyle:'short',timeStyle:'short'});
 }
+
+function readCachedAdminBanner(){
+    try{return JSON.parse(localStorage.getItem('iranAdminBannerBrief')||'{}')||{}}catch(e){return {}}
+}
+function getAdminBannerFromState(state){
+    state=state||{};
+    var bb=state.bannerBrief||state.iranBanner||state.adminBanner||{};
+    return {
+        headline:String(bb.headline||bb.title||state.bannerHeadline||state.briefHeadline||'').trim(),
+        summary:String(bb.summary||bb.text||state.bannerSummary||state.briefSummary||'').trim()
+    };
+}
+function paintAdminWarBanner(){
+    var bb=getAdminBannerFromState(window._iranState||{});
+    if(!bb.headline && !bb.summary){
+        var cached=readCachedAdminBanner();
+        bb={headline:String(cached.headline||'').trim(),summary:String(cached.summary||'').trim()};
+    }
+    var banner=document.getElementById('adminWarBanner');
+    var h=document.getElementById('briefHeadline');
+    var s=document.getElementById('briefSummary');
+
+    // TEK KAYNAK: admin panelinde kaydedilen banner verisi.
+    // CURRENT_IRAN_BRIEF, /api/iran-brief veya sabit analiz metni bu üst bannera yazılmaz.
+    if(bb.headline || bb.summary){
+        if(h) h.textContent=bb.headline;
+        if(s) s.textContent=bb.summary;
+        if(banner) banner.style.display='block';
+    }else{
+        if(h) h.textContent='';
+        if(s) s.textContent='';
+        if(banner) banner.style.display='none';
+    }
+}
+
 const CURRENT_IRAN_BRIEF = {
     headline: 'Ateşkes kırılgan, Hürmüz riski yüksek, piyasa stresi yeniden artıyor',
     summary: '1 Haziran 2026 itibarıyla İran-ABD-İsrail hattında diplomasi tamamen kopmuş değil; ancak ABD saldırıları, İran’ın karşı hamleleri ve İsrail-Hizbullah cephesindeki tırmanma ateşkes zeminini zayıflatıyor. Hürmüz Boğazı’ndaki kısıtlı geçiş ve enerji arzı belirsizliği petrol, gaz, navlun ve güvenli liman varlıklarında risk primini canlı tutuyor.',
@@ -373,25 +410,9 @@ function normalizeBrief(apiBrief){
 }
 
 function paintRiskBrief(rawBrief, datasets){
-    // Üst bannerın TEK KAYNAĞI: admin panelinde kaydedilen window._iranState.bannerBrief.
-    // /api/iran-brief, CURRENT_IRAN_BRIEF veya başka sabit metin banner alanına basılmaz.
-    var stateBrief=(window._iranState && window._iranState.bannerBrief) ? window._iranState.bannerBrief : null;
-    var bannerHeadline=stateBrief && typeof stateBrief.headline==='string' ? stateBrief.headline.trim() : '';
-    var bannerSummary=stateBrief && typeof stateBrief.summary==='string' ? stateBrief.summary.trim() : '';
-    var banner=document.getElementById('adminWarBanner');
+    paintAdminWarBanner();
 
-    if(bannerHeadline || bannerSummary){
-        document.getElementById('briefHeadline').textContent = bannerHeadline;
-        document.getElementById('briefSummary').textContent = bannerSummary;
-        if(banner) banner.style.display='block';
-    }else{
-        document.getElementById('briefHeadline').textContent = '';
-        document.getElementById('briefSummary').textContent = '';
-        if(banner) banner.style.display='none';
-    }
-
-    // Alttaki Piyasa Analizi kutusu sabit analiz metnini kullanmaya devam eder;
-    // bu metin banner yerine geçmez ve üst bannera yazılmaz.
+    // Alttaki Piyasa Analizi kutusu sabit analiz metnini kullanabilir; bu metin üst banner değildir.
     var brief = normalizeBrief(rawBrief || CURRENT_IRAN_BRIEF);
     var metrics={
         brent:metricText(getSeriesFromDatasets(datasets,'BZ=F')),
