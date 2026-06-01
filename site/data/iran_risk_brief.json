@@ -1,0 +1,24 @@
+{
+  "updated_at": "2026-06-01T08:52:36Z",
+  "headline": "Hürmüz merkezli jeopolitik risk piyasaları veriyle izleniyor",
+  "summary": "İran-İsrail-ABD hattındaki gerilim Hürmüz Boğazı, Kızıldeniz ve Basra Körfezi rotaları üzerinden enerji arzı ve finansal oynaklık kanallarını açık tutuyor. Diplomatik temaslar sınırlı iyimserlik yaratsa da kalıcı anlaşma zemini kırılgan görülüyor.",
+  "energy_impact": "Enerji tarafında Brent {{brent}} seviyesinde izlenirken, deniz taşımacılığı baskısı için navlun göstergesi {{freight}} olarak takip ediliyor. Bu görünüm, Hürmüz geçiş güvenliği ve rota değişikliklerine duyarlı risk priminin devam ettiğini gösteriyor.",
+  "safe_haven_impact": "Güvenli liman talebinde altın {{gold}} seviyesinde izleniyor. Risk iştahı, dolar ve tahvil faizleriyle birlikte jeopolitik haber akışına hassas kalmayı sürdürüyor.",
+  "sources": [
+    {
+      "title": "Piyasa Monitörü enerji emtia verisi",
+      "url": "data/commodities_energy.json",
+      "date": "2026-06-01"
+    },
+    {
+      "title": "Piyasa Monitörü kıymetli metal verisi",
+      "url": "data/commodities_metals.json",
+      "date": "2026-06-01"
+    },
+    {
+      "title": "Piyasa Monitörü sanayi/navlun verisi",
+      "url": "data/industrial.json",
+      "date": "2026-06-01"
+    }
+  ]
+}

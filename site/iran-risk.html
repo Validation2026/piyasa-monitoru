@@ -46,6 +46,10 @@
 .ai-body {font-size:.74rem; color:var(--t2); line-height:1.25 !important; word-wrap:break-word}
 .ai-body > div {margin-bottom: 5px !important; text-align:justify}
 .ai-body > div:last-child {margin-bottom: 0 !important;}
+    .brief-warning{display:none;margin:0 0 8px;padding:7px 9px;border-radius:8px;background:#fff7ed;border:1px solid #fdba74;color:#c2410c;font-size:.68rem;font-weight:700}
+    .brief-meta{font-size:.62rem;color:#94a3b8;margin-top:2px;font-family:var(--mono)}
+    .brief-sources{margin-top:6px;padding-top:5px;border-top:1px solid var(--border);font-size:.62rem;color:#94a3b8}
+    .brief-sources a{color:#3b82f6;text-decoration:none;font-weight:700}
 
 .cm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:7px;margin-bottom:16px}
 .cm{background:#fff;border:1px solid #dde4ed;border-radius:8px;padding:9px;text-align:center}
@@ -159,8 +163,8 @@
 </div>
 
 <div class="war-banner" style="background:linear-gradient(135deg,#b45309,#c2410c); border-color:#fdba74;">
-<div style="color:#fb923c;font-size:1.5rem;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1.2;margin-bottom:8px">ABD Hürmüz'ü vurdu, İran'dan jet misilleme geldi.</div>
-<div style="font-size:.85rem;color:#fed7aa;font-weight:500;"> ABD ile İran arasındaki temaslar sürerken bölgedeki askeri gerilim de tırmanıyor.</div>
+<div id="briefHeadline" style="color:#fb923c;font-size:1.5rem;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1.2;margin-bottom:8px">Jeopolitik özet yükleniyor...</div>
+<div id="briefSummary" style="font-size:.85rem;color:#fed7aa;font-weight:500;"> Piyasa verileriyle birlikte güncel risk notu hazırlanıyor.</div>
 </div>
 
 <div class="top-row">
@@ -174,21 +178,9 @@
         <span class="ai-badge ai-breath">AI</span>
     </div>
     
+    <div class="brief-warning" id="briefWarning">⚠️ Jeopolitik özet güncel olmayabilir</div>
     <div class="ai-body" id="aiBox">
-        <div class="ai-section">
-            <strong style="color: var(--t1);">📌 Durum Analizi:</strong>
-            Şubat sonunda İsrail ve ABD’nin İran’ın nükleer ve askeri altyapısına yönelik saldırılarıyla başlayan doğrudan çatışma, 25 Mayıs 2026 itibarıyla hâlen tam anlamıyla çözülmüş değildir; ancak kriz, Nisan ortasındaki sert tırmanma evresinden sonra daha karmaşık bir “müzakere – askeri baskı – piyasa dalgalanması” döngüsüne girmiştir. Hürmüz Boğazı’nın statüsü krizin merkezinde kalmaya devam ederken, son günlerde ABD ile İran arasında yürütülen dolaylı temaslar ve geçici ateşkes zemini piyasada sınırlı bir iyimserlik yaratmıştır. Buna rağmen İran’ın boğaz üzerindeki kontrol iddiasını sürdürmesi, ABD’nin bölgedeki askeri varlığını azaltmaması ve İsrail’in güvenlik kaygılarının devam etmesi nedeniyle kalıcı barış senaryosu henüz güçlü biçimde fiyatlanmamaktadır.
-        </div>
-    
-        <div class="ai-section">
-            <strong style="color: var(--t1);">🌍 Jeopolitik:</strong>
-            Kriz, yalnızca İran-İsrail hattında sınırlı bir askeri çatışma olmaktan çıkarak Basra Körfezi, Hürmüz Boğazı, Kızıldeniz ve Doğu Akdeniz’i kapsayan geniş ölçekli bir deniz güvenliği sorununa dönüşmüştür. ABD 5. Filosu’nun bölgedeki caydırıcı varlığı, İran’ın füze kapasitesi, İsrail’in hava operasyonları ve Husilerin Bab el-Mandeb çevresindeki tanker trafiğini hedef alan hamleleri, enerji ticaret yollarını kırılgan hale getirmiştir. 25 Mayıs itibarıyla diplomatik kanalda Pakistan, Körfez ülkeleri ve bazı Asya aktörlerinin aracılık girişimleri öne çıkarken; gündemde Hürmüz’den geçişin yeniden güvence altına alınması, İran petrol satışlarına ilişkin kısmi serbestlik ve nükleer program konusunda geçici müzakere takvimi bulunmaktadır. Ancak anlaşma zemini henüz kırılgan olup, tarafların temel güvenlik talepleri arasında ciddi mesafe korunmaktadır.
-        </div>
-    
-        <div class="ai-section">
-            <strong style="color: var(--t1);">📈 Ekopolitik:</strong>
-            Savaşın küresel ekonomiye etkisi, enerji fiyatları, güvenli liman talebi, navlun maliyetleri ve enflasyon beklentileri üzerinden hissedilmeye devam etmektedir. Nisan ayında IMF, çatışmanın uzaması ve enerji arz kesintilerinin derinleşmesi halinde küresel büyümenin belirgin şekilde zayıflayabileceği ve dünya ekonomisinin resesyon sınırına yaklaşabileceği uyarısında bulunmuştur. Mayıs sonuna gelindiğinde ise müzakere ihtimalinin güçlenmesiyle Brent petrol iki haftanın en düşük seviyelerine gerileyerek 99 dolar civarına inse de, fiyatlar hâlâ savaş öncesi dengelere kıyasla yüksek risk primi taşımaktadır. Altın tarafında ise güvenli liman talebi ve zayıflayan doların etkisiyle ons fiyatı 4.500 doların üzerinde kalmayı sürdürmektedir. Bu tablo, piyasanın savaşı bitmiş bir kriz olarak değil; enerji arzı, jeopolitik risk ve finansal oynaklık kanalları üzerinden hâlâ küresel ekonomi üzerinde baskı oluşturan açık bir tehdit olarak fiyatladığını göstermektedir.
-        </div>
+        <div class="ai-section">Jeopolitik özet ve piyasa etkileri yükleniyor...</div>
     </div>
 </div>
 
@@ -285,7 +277,7 @@ function fj(f){return fetch(D+f+'?t='+Date.now()).then(function(r){return r.json
 
 function loadCommodities(){
 var S=window._iranState||{};
-Promise.all([fj('commodities_energy.json'),fj('commodities_metals.json'),fj('indices.json'),fj('commodities_agriculture.json')]).then(function(r){
+Promise.all([fj('commodities_energy.json'),fj('commodities_metals.json'),fj('indices.json'),fj('commodities_agriculture.json'),fj('industrial.json')]).then(function(r){
     var datasets=r;
     var g=document.getElementById('cmGrid');
     var mc=S.manualCommodities||{};
@@ -333,7 +325,55 @@ Promise.all([fj('commodities_energy.json'),fj('commodities_metals.json'),fj('ind
         html+='<div class="cm" style="border-color:#a78bfa; animation-delay:'+delay+'s"><div class="cm-n">'+m.name+(m.unit?' ('+m.unit+')':'')+'</div><div class="cm-v" style="margin-bottom:6px">'+fp(m.value)+'</div>'+extra+'</div>';
     });
     g.innerHTML=html;
+    loadRiskBrief(datasets);
 });
+}
+
+function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]})}
+function getSeriesFromDatasets(datasets,id){
+    for(var i=0;i<datasets.length;i++){var s=fs(datasets[i],id);if(s)return s}
+    return null;
+}
+function metricText(s){
+    if(!s||s.current==null)return 'veri yok';
+    var unit=s.unit?' '+s.unit:'';
+    var txt=fp(s.current)+unit;
+    if(s.change_1d_pct!=null){txt+=' ('+(s.change_1d_pct>=0?'+':'')+s.change_1d_pct.toFixed(2)+'% günlük)'}
+    return txt;
+}
+function renderTemplate(text,metrics){
+    return esc(text).replace(/\{\{(brent|gold|freight)\}\}/g,function(_,key){return '<strong>'+esc(metrics[key]||'veri yok')+'</strong>'});
+}
+function fmtDate(iso){
+    var d=new Date(iso);
+    if(isNaN(d.getTime()))return 'tarih yok';
+    return d.toLocaleString('tr-TR',{dateStyle:'short',timeStyle:'short'});
+}
+function loadRiskBrief(datasets){
+    fj('iran_risk_brief.json').then(function(brief){
+        if(!brief)return;
+        var metrics={
+            brent:metricText(getSeriesFromDatasets(datasets,'BZ=F')),
+            gold:metricText(getSeriesFromDatasets(datasets,'GC=F')),
+            freight:metricText(getSeriesFromDatasets(datasets,'BDRY'))
+        };
+        document.getElementById('briefHeadline').textContent=brief.headline||'Jeopolitik özet';
+        document.getElementById('briefSummary').textContent=brief.summary||'';
+        var updated=new Date(brief.updated_at);
+        var stale=isNaN(updated.getTime())||Date.now()-updated.getTime()>24*60*60*1000;
+        document.getElementById('briefWarning').style.display=stale?'block':'none';
+        var sources=(brief.sources||[]).map(function(src){
+            var label=esc(src.title||src.name||src.url||'Kaynak');
+            var date=src.date?' <span>('+esc(src.date)+')</span>':'';
+            return src.url?'<a href="'+esc(src.url)+'" target="_blank" rel="noopener">'+label+'</a>'+date:label+date;
+        }).join(' · ');
+        document.getElementById('aiBox').innerHTML=
+            '<div class="ai-section"><strong style="color: var(--t1);">📌 Durum Analizi:</strong> '+renderTemplate(brief.summary||'',metrics)+'</div>'+
+            '<div class="ai-section"><strong style="color: var(--t1);">⛽ Enerji ve Navlun Etkisi:</strong> '+renderTemplate(brief.energy_impact||'',metrics)+'</div>'+
+            '<div class="ai-section"><strong style="color: var(--t1);">🟡 Güvenli Liman Etkisi:</strong> '+renderTemplate(brief.safe_haven_impact||'',metrics)+'</div>'+
+            '<div class="brief-meta">Veri tarihi: '+esc(fmtDate(brief.updated_at))+'</div>'+
+            (sources?'<div class="brief-sources">Kaynaklar: '+sources+'</div>':'');
+    });
 }
 
 // MAP
@@ -420,14 +460,14 @@ function renderAll(){
 var STATIC_TLE=[
 {d:'28.02',t:'İran-İsrail doğrudan çatışma başladı',ds:'İsrail nükleer tesislere hava operasyonu, İran balistik füze karşılığı',tag:'mil',dot:'red'},
 {d:'28.02',t:'BMGK acil toplantı',ds:'ABD ve Rusya veto kullandı',tag:'dip',dot:'blue'},
-{d:'01.03',t:'Brent %12 sıçradı',ds:'Hürmüz riski ile Brent 106$, Altın 4500$+',tag:'eco',dot:'orange'},
+{d:'01.03',t:'Enerji risk primi yükseldi',ds:'Kaynak notu (01.03.2026): Hürmüz riski enerji ve güvenli liman varlıklarında oynaklığı artırdı.',tag:'eco',dot:'orange'},
 {d:'02.03',t:'Natanz tesisi vuruldu',ds:'İsrail F-35 operasyonu, IAEA acil açıklama',tag:'nuk',dot:'purple'},
-{d:'03.03',t:'Hürmüz trafiği aksadı',ds:'İran donanması tatbikat, sigorta primleri 10x',tag:'eco',dot:'orange'},
+{d:'03.03',t:'Hürmüz trafiği aksadı',ds:'Kaynak notu (03.03.2026): tatbikat haberleri deniz sigortası ve navlun stresini artırdı.',tag:'eco',dot:'orange'},
 {d:'05.03',t:'ABD 5. Filo tam konuşlanma',ds:'İki uçak gemisi grubu Basra Körfezi\'nde',tag:'mil',dot:'red'},
 {d:'07.03',t:'Hizbullah kuzey İsrail\'i vurdu',ds:'200+ roket, İsrail Beyrut\'u bombaladı',tag:'mil',dot:'red'},
 {d:'08.03',t:'Isfahan ikinci kez vuruldu',ds:'İran orantısız yanıt sözü verdi',tag:'nuk',dot:'purple'},
 {d:'10.03',t:'Çin-Hindistan arabuluculuk',ds:'Diplomatik temas turları başladı',tag:'dip',dot:'blue'},
-{d:'12.03',t:'Husiler Kızıldeniz\'de tanker vurdu',ds:'Bab el-Mandeb, navlun %40 arttı',tag:'mil',dot:'red'},
+{d:'12.03',t:'Husiler Kızıldeniz\'de tanker vurdu',ds:'Kaynak notu (12.03.2026): Bab el-Mandeb güvenlik riski rota ve navlun baskısını artırdı.',tag:'mil',dot:'red'},
 {d:'14.03',t:'OPEC+ acil üretim artışı',ds:'Günlük 500K varil ek üretim kararı',tag:'eco',dot:'orange'},
 {d:'16.03',t:'Buşehr reaktörü kapatıldı',ds:'Güvenlik gerekçesiyle geçici devre dışı',tag:'nuk',dot:'purple'},
 {d:'18.03',t:'İsrail kara harekatı sinyali',ds:'Lübnan sınırında 50.000 yedek asker',tag:'mil',dot:'red'},
