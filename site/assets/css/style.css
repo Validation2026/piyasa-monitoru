@@ -473,6 +473,66 @@ body{font-family:var(--fm);background:var(--bg);color:var(--t1);line-height:1.6;
     .tbl-csv-btn{padding:7px 10px}
 }
 
+
+/* ══════════════════════════════
+   SHARED INLINE-CARD HELPERS
+   ══════════════════════════════ */
+.pager{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    margin:8px 0 12px;flex-wrap:wrap;
+}
+.pager-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pager-count{color:var(--t3);font-size:.75rem}
+
+.crypto-halving-card{
+    background:linear-gradient(135deg,var(--card),color-mix(in srgb,var(--purple) 18%,var(--card)));
+    border:2px solid var(--purple);border-radius:var(--r);padding:16px;
+    text-align:center;margin-bottom:18px;box-shadow:0 10px 28px -22px var(--purple);
+}
+.crypto-halving-label{
+    font-size:.65rem;color:var(--purple);text-transform:uppercase;letter-spacing:2px;
+    font-weight:800;
+}
+.crypto-halving-count{
+    font-size:2rem;font-weight:900;font-family:var(--mono);color:var(--gold);line-height:1.25;
+}
+.crypto-halving-note{font-size:.65rem;color:var(--t2);font-weight:700}
+
+.info-table-card{
+    background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+    overflow-x:auto;margin-bottom:18px;-webkit-overflow-scrolling:touch;
+}
+.info-table{width:100%;border-collapse:collapse;min-width:400px;font-size:.78rem}
+.info-table th{
+    padding:8px 12px;text-align:left;font-size:.65rem;color:var(--t3);
+    text-transform:uppercase;border-bottom:1px solid var(--border);background:var(--bg2);
+    font-weight:800;letter-spacing:.04em;white-space:nowrap;
+}
+.info-table td{padding:7px 12px;border-bottom:1px solid var(--border2);white-space:nowrap}
+.info-table tr:last-child td{border-bottom:none}
+.info-table .r{text-align:right}
+.info-table .mono{font-family:var(--mono);font-weight:700}
+.info-table .strong{font-weight:800}
+.info-table-status{font-weight:700}
+.info-table-status.is-positive{color:var(--green)}
+.info-table-status.is-warning{color:var(--gold)}
+
+@media(max-width:1024px){
+    .crypto-halving-card{padding:15px;margin-bottom:16px}
+    .crypto-halving-count{font-size:1.8rem}
+    .info-table{min-width:360px}
+}
+@media(max-width:640px){
+    .pager{align-items:flex-start;gap:8px}
+    .pager-actions{width:100%;justify-content:space-between}
+    .crypto-halving-card{padding:14px;border-width:1px}
+    .crypto-halving-label{font-size:.6rem;letter-spacing:1.5px}
+    .crypto-halving-count{font-size:1.55rem}
+    .crypto-halving-note{font-size:.62rem}
+    .info-table{min-width:340px;font-size:.72rem}
+    .info-table th,.info-table td{padding:7px 10px}
+}
+
 /* ══════════════════════════════
    ACTIVITY
    ══════════════════════════════ */
