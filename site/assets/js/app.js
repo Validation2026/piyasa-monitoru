@@ -753,13 +753,38 @@ function flashUpdate(el, direction){
 /* ══════════════════════════════════════════
    BAR CHART — Performans sıralaması (yatay bar)
    ══════════════════════════════════════════ */
-function buildBarChart(canvasId, seriesList, changeKey){
+function buildBarChart(canvasId, seriesList, changeKey, limit){
     var c = document.getElementById(canvasId); if(!c) return null;
     changeKey = changeKey || 'change_1d_pct';
+    limit = parseInt(limit, 10);
+    if(!isFinite(limit) || limit <= 0) limit = 0;
     var items = seriesList.filter(function(s){ return s && s[changeKey] != null; })
         .map(function(s){ return { name: s.name, val: s[changeKey] }; })
         .sort(function(a,b){ return b.val - a.val; });
     if(!items.length) return null;
+
+    if(limit && items.length > limit * 2){
+        items = items.slice(0, limit).concat(items.slice(-limit));
+    }
+
+    var titleText = limit ? 'En iyi / en kötü ' + limit : '';
+    var titleEl = c.closest && c.closest('.bar-chart-card') ? c.closest('.bar-chart-card').querySelector('.chart-title') : null;
+    if(titleEl){
+        var baseTitle = titleEl.getAttribute('data-base-title') || titleEl.textContent.replace(/\s+—\s+En iyi \/ en kötü \d+.*/, '');
+        titleEl.setAttribute('data-base-title', baseTitle);
+        titleEl.textContent = titleText ? baseTitle + ' — ' + titleText : baseTitle;
+    }
+
+    var isMobileOrTablet = window.matchMedia && window.matchMedia('(max-width: 1024px)').matches;
+    if(isMobileOrTablet){
+        var dynamicHeight = Math.max(260, Math.min(720, 96 + (items.length * 24)));
+        c.style.height = dynamicHeight + 'px';
+        c.style.maxHeight = 'none';
+    }else{
+        c.style.height = '';
+        c.style.maxHeight = '';
+    }
+
     var labels = items.map(function(d){ return d.name; });
     var vals = items.map(function(d){ return d.val; });
     var colors = vals.map(function(v){ return v >= 0 ? '#00d68f' : '#ff4757'; });
@@ -769,7 +794,7 @@ function buildBarChart(canvasId, seriesList, changeKey){
         data: { labels: labels, datasets: [{ data: vals, backgroundColor: colors, borderRadius: 4, barPercentage: 0.7 }] },
         options: {
             indexAxis: 'y', responsive: true, maintainAspectRatio: false, animation: { duration: 600 },
-            plugins: { legend: { display: false }, tooltip: {
+            plugins: { legend: { display: false }, title: { display: !!titleText, text: titleText, color: txt, font: { size: 12, family: "'Outfit'", weight: '600' }, padding: { bottom: 8 } }, tooltip: {
                 callbacks: { label: function(ctx){ return (ctx.raw >= 0 ? '+' : '') + ctx.raw.toFixed(2) + '%'; } }
             }},
             scales: {
@@ -811,7 +836,7 @@ function buildHeatmap(containerId, seriesList){
         { key: 'change_1m_pct', label: '1A' },
         { key: 'change_3m_pct', label: '3A' },
         { key: 'change_ytd_pct', label: 'YTD' },
-        { key: 'change_1y_pct', label: '5Y' }
+        { key: 'change_1y_pct', label: '1Y' }
     ];
     function heatColor(v){
         if(v == null) return 'background:transparent;color:var(--t3)';

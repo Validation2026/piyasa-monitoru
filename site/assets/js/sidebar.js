@@ -59,7 +59,8 @@ sidebarLinks +
 '<span class="topbar-clock" id="clock" aria-live="off"></span>' +
 '</div>' +
 '<nav class="mobile-nav" id="mobileNav" aria-label="Sayfa gezinme">' + mobileLinks + '</nav>' +
-// Floating search FAB — her sayfada her zaman görünür
+// Floating FAB'ler — tablet/mobilde kolay erişim
+'<button type="button" class="menu-fab" id="menuFab" aria-label="Menüyü aç" aria-expanded="false" aria-controls="sidebar" title="Menü"><span aria-hidden="true">☰</span></button>' +
 '<button type="button" class="search-fab" id="searchFab" aria-label="Arama (Ctrl+K)" title="Ara (Ctrl+K)"><span aria-hidden="true">🔍</span></button>' +
 // Command palette modal
 '<div class="cmdk-overlay" id="cmdkOverlay" aria-hidden="true">' +
@@ -109,19 +110,25 @@ setTimeout(function(){
 var sb = document.getElementById('sidebar');
 var ov = document.getElementById('sbOverlay');
 var hb = document.getElementById('hamburger');
-hb.addEventListener('click',function(){
-    var isOpen = sb.classList.toggle('open'); ov.classList.toggle('open');
-    hb.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-});
+var menuFab = document.getElementById('menuFab');
+function setSidebarOpen(isOpen){
+    sb.classList.toggle('open', isOpen);
+    ov.classList.toggle('open', isOpen);
+    if(hb) hb.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    if(menuFab) menuFab.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+}
+function toggleSidebar(){
+    setSidebarOpen(!sb.classList.contains('open'));
+}
+if(hb) hb.addEventListener('click', toggleSidebar);
+if(menuFab) menuFab.addEventListener('click', toggleSidebar);
 ov.addEventListener('click',function(){
-    sb.classList.remove('open'); ov.classList.remove('open');
-    hb.setAttribute('aria-expanded','false');
+    setSidebarOpen(false);
 });
 // ESC ile sidebar kapansın
 document.addEventListener('keydown', function(e){
     if(e.key === 'Escape' && sb.classList.contains('open')){
-        sb.classList.remove('open'); ov.classList.remove('open');
-        hb.setAttribute('aria-expanded','false');
+        setSidebarOpen(false);
     }
 });
 
@@ -167,6 +174,9 @@ setInterval(tick,1000);tick();
     QUICK.forEach(function(q){ SEARCH_INDEX.push({type:'Varlık', icon:q[1], label:q[0], href:q[2]}); });
 
     // Tüm data dosyaları → sayfalar eşlemesi — arama tüm site verilerini kapsasın
+    var VISIBLE_STOCK_IDS = ['GARAN.IS','AKBNK.IS','YKBNK.IS','ISCTR.IS','VAKBN.IS','HALKB.IS','TSKB.IS','ALBRK.IS','SKBNK.IS','KCHOL.IS','SAHOL.IS','DOHOL.IS','AGHOL.IS','TKFEN.IS','TAVHL.IS','GSRAY.IS','EREGL.IS','TUPRS.IS','ASELS.IS','FROTO.IS','TOASO.IS','SISE.IS','ARCLK.IS','VESTL.IS','OTKAR.IS','KRDMD.IS','TTRAK.IS','BRISA.IS','PETKM.IS','KOZAL.IS','ENKAI.IS','CIMSA.IS','OYAKC.IS','SASA.IS','EGEEN.IS','CEMTS.IS','KLMSN.IS','THYAO.IS','PGSUS.IS','DOAS.IS','BIMAS.IS','MGROS.IS','SOKM.IS','ULKER.IS','AEFES.IS','CCOLA.IS','TCELL.IS','TTKOM.IS','LOGO.IS','AKSEN.IS','AKSA.IS','GUBRF.IS','HEKTS.IS','EKGYO.IS','ISGYO.IS','TURSG.IS','KONTR.IS','ASTOR.IS','SMRTG.IS','CWENE.IS','GESAN.IS','ODAS.IS','ZOREN.IS','ENJSA.IS','ALFAS.IS','MIATK.IS','KCAER.IS','BORLS.IS','REEDR.IS','TABGD.IS','MAVI.IS','KONYA.IS','MPARK.IS','GENIL.IS','ECILC.IS','SELEC.IS','FENER.IS','BJKAS.IS','TRGYO.IS','AKFGY.IS','VAKKO.IS','AAPL','MSFT','GOOGL','AMZN','NVDA','META','TSLA','AVGO','AMD','INTC','CRM','ORCL','ADBE','NFLX','CSCO','QCOM','TXN','IBM','NOW','PANW','MU','PLTR','SHOP','UBER','SNOW','CRWD','ARM','ADP','INTU','JPM','V','MA','JNJ','UNH','LLY','PG','KO','PEP','WMT','COST','HD','DIS','BAC','WFC','GS','MS','BLK','PFE','MRK','ABBV','TMO','ABT','NKE','MCD','SBUX','CMCSA','T','XOM','CVX','BA','CAT','GE','RTX','LMT','NOC','ASML','NVO','SAP','SHEL','AZN','UL','TTE','NVS','ROG','BP','RIO','HSBC','UBS','SAN','ING','GSK','DTEGY','VWAGY','NSRGY','LRLCY','MC','TSM','005930.KS','BABA','PDD','TM','SONY','BHP','HMC','NTDOY','MUFG','SMFG','MELI','INFY','HDB','IBN'];
+    var VISIBLE_STOCK_ID_SET = VISIBLE_STOCK_IDS.reduce(function(acc,id){ acc[id]=true; return acc; }, {});
+
     var DATA_FILES = [
         {file:'commodities_energy.json', page:'emtia-enerji.html', icon:'⛽'},
         {file:'commodities_metals.json', page:'emtia-metaller.html', icon:'🥇'},
@@ -189,6 +199,7 @@ setInterval(tick,1000);tick();
                     if(!json || !json.series) return;
                     json.series.forEach(function(s){
                         if(!s || !s.name) return;
+                        if(d.file === 'stocks.json' && !VISIBLE_STOCK_ID_SET[s.id]) return;
                         SEARCH_INDEX.push({
                             type:'Varlık', icon:d.icon, label:s.name,
                             href: d.page + '?asset=' + encodeURIComponent(s.id || s.name),
