@@ -350,7 +350,7 @@ function fmtDate(iso){
     return d.toLocaleString('tr-TR',{dateStyle:'short',timeStyle:'short'});
 }
 function loadRiskBrief(datasets){
-    fj('iran_risk_brief.json').then(function(brief){
+    fetch('/api/iran-brief').then(function(r){return r.json()}).then(function(brief){
         if(!brief)return;
         var metrics={
             brent:metricText(getSeriesFromDatasets(datasets,'BZ=F')),
@@ -362,17 +362,32 @@ function loadRiskBrief(datasets){
         var updated=new Date(brief.updated_at);
         var stale=isNaN(updated.getTime())||Date.now()-updated.getTime()>24*60*60*1000;
         document.getElementById('briefWarning').style.display=stale?'block':'none';
-        var sources=(brief.sources||[]).map(function(src){
+        var sections=brief.sections||{};
+        if(window.PM&&PM.renderAiAnalysis){
+            PM.renderAiAnalysis(document.getElementById('aiBox'), {
+                sections: {
+                    status: renderTemplate(sections.status||brief.summary||'',metrics).replace(/<[^>]+>/g,''),
+                    ecopolitical: renderTemplate(sections.ecopolitical||brief.energy_impact||'',metrics).replace(/<[^>]+>/g,''),
+                    geopolitical: renderTemplate(sections.geopolitical||brief.safe_haven_impact||'',metrics).replace(/<[^>]+>/g,'')
+                },
+                updated_at: brief.updated_at,
+                fromCache: brief.fromCache
+            });
+        }else{
+            document.getElementById('aiBox').innerHTML=
+                '<div class="ai-section"><strong>Durum analizi</strong> '+renderTemplate(sections.status||brief.summary||'',metrics)+'</div>'+
+                '<div class="ai-section"><strong>Ekopolitik risk</strong> '+renderTemplate(sections.ecopolitical||brief.energy_impact||'',metrics)+'</div>'+
+                '<div class="ai-section"><strong>Jeopolitik risk</strong> '+renderTemplate(sections.geopolitical||brief.safe_haven_impact||'',metrics)+'</div>';
+        }
+        var sources=(brief.news||brief.sources||[]).map(function(src){
             var label=esc(src.title||src.name||src.url||'Kaynak');
             var date=src.date?' <span>('+esc(src.date)+')</span>':'';
-            return src.url?'<a href="'+esc(src.url)+'" target="_blank" rel="noopener">'+label+'</a>'+date:label+date;
+            return src.link?'<a href="'+esc(src.link)+'" target="_blank" rel="noopener">'+label+'</a>'+date:(src.url?'<a href="'+esc(src.url)+'" target="_blank" rel="noopener">'+label+'</a>'+date:label+date);
         }).join(' · ');
-        document.getElementById('aiBox').innerHTML=
-            '<div class="ai-section"><strong style="color: var(--t1);">📌 Durum Analizi:</strong> '+renderTemplate(brief.summary||'',metrics)+'</div>'+
-            '<div class="ai-section"><strong style="color: var(--t1);">⛽ Enerji ve Navlun Etkisi:</strong> '+renderTemplate(brief.energy_impact||'',metrics)+'</div>'+
-            '<div class="ai-section"><strong style="color: var(--t1);">🟡 Güvenli Liman Etkisi:</strong> '+renderTemplate(brief.safe_haven_impact||'',metrics)+'</div>'+
-            '<div class="brief-meta">Veri tarihi: '+esc(fmtDate(brief.updated_at))+'</div>'+
-            (sources?'<div class="brief-sources">Kaynaklar: '+sources+'</div>':'');
+        if(sources){
+            var box=document.getElementById('aiBox');
+            box.insertAdjacentHTML('beforeend','<div class="brief-sources">Kaynaklar: '+sources+'</div>');
+        }
     });
 }
 

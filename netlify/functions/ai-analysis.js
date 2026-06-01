@@ -1,157 +1,222 @@
+const https = require('https');
+const { getStore, connectLambda } = require('@netlify/blobs');
+
+const STORE_NAME = 'daily-ai-analysis';
+const FALLBACK_MODELS = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-2.0-flash', 'gemini-1.5-flash'];
+const SECTION_TITLES = ['Durum analizi', 'Ekopolitik risk', 'Jeopolitik risk'];
+const CATEGORY_LABELS = {
+  'genel': 'genel piyasa',
+  'iran-risk': 'İran ve Orta Doğu riski',
+  'emtia-enerji': 'enerji emtiaları',
+  'emtia-metaller': 'kıymetli ve endüstriyel metaller',
+  'emtia-tarim': 'tarım emtiaları',
+  'kurlar': 'döviz piyasaları',
+  'tahviller': 'tahvil ve faiz piyasaları',
+  'endeksler': 'küresel endeksler',
+  'kripto': 'kripto piyasası',
+  'hisseler': 'hisse senetleri',
+  'sanayi': 'sanayi ve hammadde göstergeleri',
+  'navlun': 'navlun ve tedarik zinciri',
+  'ekonomik-takvim': 'ekonomik takvim'
+};
+const QUERY_MAP = {
+  'genel': ['küresel ekonomi piyasalar Fed ECB TCMB petrol altın borsa', 'Türkiye ekonomi enflasyon faiz kur borsa'],
+  'iran-risk': ['İran İsrail Hürmüz petrol son dakika', 'Iran Israel Strait of Hormuz oil latest'],
+  'emtia-enerji': ['petrol doğalgaz enerji piyasası OPEC Hürmüz', 'oil natural gas OPEC energy market latest'],
+  'emtia-metaller': ['altın gümüş bakır piyasa Fed Çin', 'gold copper metals market latest'],
+  'emtia-tarim': ['buğday mısır soya kahve kakao emtia hava arz', 'wheat corn soy coffee cocoa commodities latest'],
+  'kurlar': ['döviz dolar euro TL Fed TCMB son', 'FX dollar euro emerging markets latest'],
+  'tahviller': ['tahvil faiz Fed ECB getiri eğrisi son', 'bond yields Fed ECB latest'],
+  'endeksler': ['borsa endeksleri S&P Nasdaq BIST Avrupa Asya son', 'stock market indexes S&P Nasdaq latest'],
+  'kripto': ['bitcoin ethereum kripto ETF regülasyon son', 'bitcoin ethereum crypto ETF regulation latest'],
+  'hisseler': ['BIST hisseler bankacılık holding sanayi borsa son', 'stocks earnings banking technology market latest'],
+  'sanayi': ['sanayi üretim hammadde bakır navlun PMI son', 'industrial metals freight PMI latest'],
+  'navlun': ['navlun konteyner kuru yük Kızıldeniz Süveyş son', 'freight shipping Red Sea Suez latest']
+};
+const STATIC_FALLBACK = {
+  'genel': {
+    status: 'Piyasa odağı Fed, ECB ve TCMB faiz patikası; enerji, altın, döviz ve hisse tarafındaki oynaklık başlıklarında yoğunlaşıyor.',
+    ecopolitical: 'Enflasyon, büyüme ve kamu maliyesi haberleri risk iştahını belirlerken Türkiye varlıklarında kur-faiz dengesi ve sermaye akımı başlıkları izleniyor.',
+    geopolitical: 'Orta Doğu, Kızıldeniz ve Hürmüz kaynaklı haber akışı petrol, altın ve navlun üzerinden piyasa fiyatlamasına hızlı yansıyabilir.'
+  },
+  'kripto': {
+    status: 'Kripto piyasasında Bitcoin ve Ethereum yön tayini için spot ETF akımları, risk iştahı ve dolar likiditesi takip ediliyor.',
+    ecopolitical: 'ABD regülasyon gündemi, kurumsal saklama kararları ve faiz beklentileri kripto varlıkların sermaye giriş çıkışını etkiliyor.',
+    geopolitical: 'Jeopolitik stres dönemlerinde kripto kısa vadede riskli varlık gibi dalgalanabilir; sermaye kontrolleri ve yaptırım haberleri ayrıca izlenmeli.'
+  },
+  'hisseler': {
+    status: 'Hisse piyasalarında bankacılık, holding, havacılık, savunma ve büyük teknoloji liderleri ana yön göstergesi olmaya devam ediyor.',
+    ecopolitical: 'Faiz, kredi koşulları, enflasyon muhasebesi, bilanço beklentileri ve kamu düzenlemeleri sektör ayrışmasını belirliyor.',
+    geopolitical: 'Enerji ve savunma başlıkları jeopolitik haberlerle desteklenirken küresel riskten kaçış dönemleri banka ve sanayi hisselerinde baskı yaratabilir.'
+  },
+  'iran-risk': {
+    status: 'İran hattında haber akışı Hürmüz Boğazı, enerji arz güvenliği ve bölgesel askeri temaslar üzerinden izleniyor.',
+    ecopolitical: 'Petrol ve navlun risk primi enflasyon beklentileri, cari denge ve merkez bankası iletişimi üzerinde baskı oluşturabilir.',
+    geopolitical: 'İsrail, ABD, Körfez ülkeleri ve İran kaynaklı açıklamalar; füze, deniz güvenliği ve yaptırım haberleri açısından yüksek öncelikli.'
+  }
+};
+
+function headers() {
+  return { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'public, max-age=3600' };
+}
+function todayKey() {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Istanbul' }).format(new Date());
+}
+function safeCategory(cat) {
+  return CATEGORY_LABELS[cat] ? cat : 'genel';
+}
+function stripTags(v) {
+  return String(v || '').replace(/<[^>]+>/g, ' ').replace(/&[^;]+;/g, ' ').replace(/\s+/g, ' ').trim();
+}
+function cleanNewsTitle(v) {
+  return stripTags(v)
+    .replace(/\s+[-–—]\s+[^-–—|:]{2,80}$/u, '')
+    .replace(/\s+\|\s+[^|]{2,80}$/u, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+function cleanBannerText(v) {
+  return cleanNewsTitle(v)
+    .replace(/\b(Reuters|Bloomberg|Associated Press|AP News|CNBC|CNN|BBC|Al Jazeera|TRT Haber|Anadolu Ajansı|AA|Habertürk|Hürriyet|Milliyet|Sözcü|Dünya|Ekonomim)\b\s*:?/giu, '')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+}
+function sectionText(sections) {
+  return SECTION_TITLES.map((title, i) => `${title}\n${sections[['status', 'ecopolitical', 'geopolitical'][i]] || ''}`).join('\n\n') + '\n\n⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.';
+}
+function normalizeSections(value, cat, news, provider, debug) {
+  const fallback = STATIC_FALLBACK[cat] || STATIC_FALLBACK.genel;
+  const sections = {
+    status: cleanBannerText(value?.status) || fallback.status,
+    ecopolitical: cleanBannerText(value?.ecopolitical) || fallback.ecopolitical,
+    geopolitical: cleanBannerText(value?.geopolitical) || fallback.geopolitical
+  };
+  if (!value && news.length) {
+    sections.status += ` Günün öne çıkan başlıkları: ${news.slice(0, 2).map(n => cleanNewsTitle(n.title)).join(' | ')}.`;
+  }
+  return {
+    category: cat,
+    categoryLabel: CATEGORY_LABELS[cat],
+    sections,
+    analysis: sectionText(sections),
+    generatedAt: new Date().toISOString(),
+    news: news.slice(0, 8),
+    provider: provider || 'fallback',
+    fromCache: false,
+    debug: debug || null
+  };
+}
+function googleRssUrl(query) {
+  return 'https://news.google.com/rss/search?q=' + encodeURIComponent(query + ' when:1d') + '&hl=tr&gl=TR&ceid=TR:tr';
+}
+function fetchText(url, timeoutMs = 3500) {
+  return new Promise((resolve, reject) => {
+    const req = https.get(url, { headers: { 'User-Agent': 'Mozilla/5.0 PiyasaMonitoru/1.0' }, timeout: timeoutMs }, (res) => {
+      let body = '';
+      res.setEncoding('utf8');
+      res.on('data', chunk => { body += chunk; });
+      res.on('end', () => resolve(body));
+    });
+    req.on('timeout', () => { req.destroy(new Error('timeout')); });
+    req.on('error', reject);
+  });
+}
+function parseItems(xml) {
+  const items = [];
+  const blocks = String(xml || '').match(/<item>[\s\S]*?<\/item>/g) || [];
+  for (const block of blocks.slice(0, 8)) {
+    const title = cleanNewsTitle((block.match(/<title><!\[CDATA\[([\s\S]*?)\]\]><\/title>/) || block.match(/<title>([\s\S]*?)<\/title>/) || [])[1]);
+    const link = stripTags((block.match(/<link>([\s\S]*?)<\/link>/) || [])[1]);
+    const date = stripTags((block.match(/<pubDate>([\s\S]*?)<\/pubDate>/) || [])[1]);
+    if (title) items.push({ title, link, date });
+  }
+  return items;
+}
+async function fetchNews(cat) {
+  if (process.env.NODE_ENV === 'test') return [];
+  const queries = QUERY_MAP[cat] || QUERY_MAP.genel;
+  const all = [];
+  for (const q of queries.slice(0, 2)) {
+    try {
+      all.push(...parseItems(await fetchText(googleRssUrl(q))));
+    } catch (_) {}
+  }
+  const seen = new Set();
+  return all.filter(n => {
+    const k = n.title.toLocaleLowerCase('tr');
+    if (seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  }).slice(0, 10);
+}
+function buildPrompt(cat, news) {
+  return `Türkçe yaz. Konu: ${CATEGORY_LABELS[cat]}. Aşağıdaki güncel haber başlıklarını ve genel makro/politik bağlamı kullanarak sadece geçerli JSON üret. Haber sitesi/kaynak adı yazma. Üç alan zorunlu: status, ecopolitical, geopolitical. Alan adlarını değiştirme. Her alan 1-2 kısa cümle olsun, haber dili kullan, yatırım tavsiyesi verme, uydurma fiyat/rakam yazma.\n\nHaberler:\n${news.map((n, i) => `${i + 1}. ${n.title}`).join('\n')}`;
+}
+async function postJson(url, payload, timeoutMs = 8000) {
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), timeoutMs);
+  try {
+    const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), signal: ctrl.signal });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return await r.json();
+  } finally {
+    clearTimeout(t);
+  }
+}
+function parseJsonText(text) {
+  const raw = String(text || '').trim().replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```$/i, '').trim();
+  const match = raw.match(/\{[\s\S]*\}/);
+  return JSON.parse(match ? match[0] : raw);
+}
+async function callGemini(cat, news) {
+  const key = process.env.GEMINI_API_KEY;
+  if (!key) throw new Error('GEMINI_API_KEY missing');
+  const preferred = process.env.GEMINI_MODEL;
+  const chain = preferred ? [preferred, ...FALLBACK_MODELS.filter(m => m !== preferred)] : FALLBACK_MODELS;
+  const errors = [];
+  for (const model of chain) {
+    try {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(key)}`;
+      const payload = { contents: [{ parts: [{ text: buildPrompt(cat, news) }] }], generationConfig: { temperature: 0.2, maxOutputTokens: 700, responseMimeType: 'application/json' } };
+      const data = await postJson(url, payload);
+      const text = data?.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('\n');
+      const sections = parseJsonText(text);
+      return { sections, provider: `gemini:${model}` };
+    } catch (e) {
+      errors.push(`${model}: ${e.message}`);
+    }
+  }
+  throw new Error(errors.join(' | '));
+}
+function safeStore(event) {
+  try { connectLambda(event); return getStore(STORE_NAME); } catch (_) { return null; }
+}
+async function readCache(store, key) {
+  if (!store) return null;
+  try { return await store.get(key, { type: 'json' }); } catch (_) { return null; }
+}
+async function writeCache(store, key, entry) {
+  if (!store) return;
+  try { await store.setJSON(key, entry); } catch (_) {}
+}
+
 exports.handler = async function(event) {
-    const cat = event.queryStringParameters?.cat || 'genel';
-    const H = {'Content-Type':'application/json','Access-Control-Allow-Origin':'*','Cache-Control':'public, max-age=3600'};
-    const A = {
-'iran-risk': `📊 GENEL DURUM
-İran-İsrail savaşı 28 Şubat 2026'da İsrail'in İran nükleer tesislerine düzenlediği kapsamlı hava operasyonuyla başladı. İran aynı gün balistik füzelerle karşılık verdi. Çatışma o günden bu yana karşılıklı saldırılarla devam ediyor. Bölgedeki tüm aktörler — ABD, Hizbullah, Husiler — çatışmaya doğrudan ya da dolaylı olarak dahil olmuş durumda.
-
-⚔️ ASKERİ VE JEOPOLİTİK GELİŞMELER
-• İsrail F-35'leri İsfahan ve Natanz nükleer tesislerini birden fazla kez vurdu; İran'ın uranyum zenginleştirme kapasitesinin büyük bölümü devre dışı kaldı
-• İran hipersonik balistik füzelerle Demir Kubbe savunma sistemini en az bir kez aştı; Tel Aviv yakınlarına isabet kaydedildi
-• Hizbullah kuzey İsrail'e 200'ü aşkın roket saldırısı düzenledi; İsrail karşılığında Beyrut'un güney banliyölerini bombaladı
-• Husi güçleri Kızıldeniz'de ticari gemilere saldırılarını sürdürüyor; Bab el-Mandeb Boğazı yüksek risk altında
-• ABD 5. Filo Basra Körfezi'nde iki uçak gemisi grubuyla tam konuşlanma halinde; bölgeye ek kuvvet sevkiyatı devam ediyor
-• Diplomatik alanda Çin ve Hindistan arabuluculuk girişimleri başlattı ancak somut ilerleme sağlanamadı
-
-💰 EKONOMİK ETKİLER
-• Brent petrol savaş öncesindeki 85 dolardan 108 dolara fırladı — varil başına %27 artış; OPEC+ günlük 500 bin varil acil üretim artışı kararı aldı
-• Hürmüz Boğazı'ndan dünya petrolünün yaklaşık %20'si geçiyor; olası bir kapanma küresel enerji arzını doğrudan tehdit ediyor
-• Basra Körfezi deniz sigorta primleri savaş öncesine göre 10 katına çıktı; navlun maliyetlerinde %40 artış yaşandı
-• Süveyş Kanalı trafiği %30 düştü; gemiler Ümit Burnu rotasına yöneldi, transit süreler 10-14 gün uzadı
-• Altın güvenli liman talebiyle 4.500 doların üzerine çıktı; küresel risk iştahı belirgin şekilde zayıfladı
-
-🔮 İZLENMESİ GEREKENLER
-• Hürmüz Boğazı'ndaki tanker trafiği ve İran donanma hareketleri
-• IAEA nükleer denetim raporları ve olası yeni yaptırım kararları
-• Kızıldeniz'deki Husi saldırılarının sıklığı ve kapsamı
-• OPEC+ acil toplantıları ve üretim politikası değişiklikleri
-• ABD-İran arasında olası doğrudan askeri temas riski
-
-⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
-
-'emtia-enerji': `Enerji piyasalarında İran-İsrail gerginliği kaynaklı jeopolitik risk primi fiyatlanmaya devam ediyor. Hürmüz Boğazı'ndaki olası bir aksaklık küresel ham petrol arzını doğrudan tehdit etmektedir. OPEC+'ın üretim politikaları ve ABD stratejik stok kararları piyasadaki dengeleyici unsurlar arasında yer alıyor.
-
-Doğalgaz cephesinde LNG rotalarındaki jeopolitik riskler Avrupa TTF fiyatlarını desteklemeye devam ediyor. ABD Henry Hub fiyatları artan ihracat kapasitesiyle yeni denge noktası arıyor. Mevsimsel talep azalması kısmen baskılayıcı etki yaratıyor.
-
-⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
-
-'emtia-metaller': `Kıymetli madenlerde güvenli liman talebi güçlü seyrini koruyor. Merkez bankalarının altın alımları rekor seviyelere ulaşırken, reel faiz oranları ve dolar endeksi fiyatlamada temel belirleyiciler arasında öne çıkıyor.
-
-Endüstriyel metallerde Çin'in ekonomik toparlanma hızı ve küresel imalat PMI verileri yön belirliyor. Bakır, yeşil enerji dönüşümü ve elektrikli araç talebiyle uzun vadeli yapısal destekten faydalanıyor.
-
-⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
-
-'emtia-tarim': `Tarım emtialarında iklim koşulları ve küresel arz güvenliği endişeleri gündemin ön sıralarında yer alıyor. Buğday ve mısır piyasalarında Karadeniz bölgesi ticaret rotaları ile Güney Amerika hasat beklentileri yakından takip ediliyor.
-
-Kahve ve kakao fiyatlarında üretici ülkelerdeki arz kısıtları belirleyici olmaya devam ediyor. Navlun maliyetlerindeki artış ve Kızıldeniz rota değişiklikleri tüm tarım emtialarının maliyet yapısını etkiliyor.
-
-⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
-
-'kurlar': `Döviz piyasalarında Fed ve ECB'nin faiz politikaları temel fiyatlama dinamiğini oluşturuyor. USD/TRY paritesinde TCMB'nin sıkı para politikası duruşu ve cari dengedeki iyileşme önemli takip kalemleri arasında bulunuyor.
-
-Gelişmekte olan ülke para birimlerinde jeopolitik riskler ve carry trade dinamikleri belirleyici olmaya devam ediyor. Japon yeninde BoJ'un politika normalleşme adımları volatiliteyi artırıyor. Dolar endeksi ABD makroekonomik verileri ve küresel risk iştahıyla yönleniyor.
-
-⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
-
-'tahviller': `ABD tahvil piyasasında Fed'in faiz patikası beklentileri getiri eğrisini şekillendiren temel unsur olmaya devam ediyor. 10 yıllık getiri, enflasyon beklentileri ve güvenli liman talebinin kesişim noktasında seyrediyor.
-
-Getiri eğrisinin eğimi olası resesyon sinyalleri açısından yakından izleniyor. Küresel merkez bankalarının farklılaşan para politikaları tahvil piyasalarındaki volatiliteyi artırıyor. Japonya Merkez Bankası'nın normalleşme adımları JGB getirilerinde yukarı yönlü baskı oluşturuyor.
-
-⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
-
-'endeksler': `Küresel hisse senedi piyasalarında şirket kazanç sezonu beklentileri ve makroekonomik veriler yön belirlemeye devam ediyor. S&P 500 endeksinde yapay zekâ yatırımlarının büyümeye katkısı fiyatlamaların merkezinde yer alıyor.
-
-BIST 100 endeksinde yabancı sermaye akışları ve Türk lirasındaki reel değerlenme belirleyici faktörler arasında öne çıkıyor. Asya piyasalarında Çin'in ekonomi politikaları ve yen hareketleri bölgesel endeksleri etkiliyor.
-
-⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
-
-'kripto': `Kripto para piyasasında kurumsal benimseme süreci ve spot ETF akışları gündemin merkezinde yer alıyor. Bitcoin'in halving sonrası arz dinamikleri ve makroekonomik korelasyonlar fiyat hareketlerini belirliyor.
-
-Ethereum ekosisteminde katman 2 ölçeklendirme çözümleri yatırımcı ilgisini çekmeye devam ediyor. Küresel düzenleme çerçevelerindeki gelişmeler tüm kripto para piyasasını doğrudan etkiliyor.
-
-⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
-
-'sanayi': `Sanayi hammaddelerinde küresel imalat PMI verileri ve Çin'in talebi temel belirleyiciler arasında yer alıyor. Bakır ve alüminyum, elektrikli araç üretimi ve yenilenebilir enerji yatırımlarıyla yapısal talep artışı yaşıyor.
-
-Çelik sektöründe Çin'in aşırı kapasite sorunu ve ihracat baskısı küresel fiyatları etkilemeye devam ediyor. Nadir toprak elementlerinde arz güvenliği endişeleri ve Çin'in ihracat kısıtlamaları fiyatları destekliyor. Lityum ve uranyum, enerji dönüşümünün stratejik hammaddeleri olarak önemini artırıyor.
-
-Kuru yük navlun endeksi küresel ticaret hacminin öncü göstergesi olarak izleniyor. Kızıldeniz rota değişiklikleri navlun maliyetlerini yukarı çekiyor.
-
-⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
-
-'hisseler': `BIST hisselerinde yabancı yatırımcı akışları ve şirket kârlılık beklentileri fiyatlamaların merkezinde yer alıyor. Bankacılık sektörü yüksek faiz ortamında net faiz marjı avantajını koruyor.
-
-ABD mega-cap teknoloji hisselerinde yapay zekâ yatırımları ve bulut bilişim büyümesi değerlemeleri destekliyor. NVIDIA, Microsoft ve Alphabet yapay zekâ altyapısında öne çıkarken, Tesla elektrikli araç rekabetinde baskı altında.
-
-Küresel hisse piyasalarında ticaret gerginlikleri ve merkez bankası politikaları belirleyici olmaya devam ediyor. Gelişen piyasa hisselerinde dolar endeksindeki hareketler ve emtia fiyatları önemli değişkenler arasında.
-
-⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
-
-'genel': `Küresel piyasalarda İran-İsrail gerginliği başta olmak üzere jeopolitik riskler fiyatlamaların temel belirleyicisi olmaya devam ediyor. Enerji fiyatlarındaki risk primi emtia genelinde yayılım etkisi gösteriyor.
-
-Merkez bankaları enflasyon ile büyüme arasındaki hassas dengeyi gözetirken, faiz beklentileri döviz ve tahvil piyasalarını doğrudan şekillendiriyor. Risk iştahı jeopolitik gelişmelere karşı yüksek duyarlılık sergiliyor.
-
-⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
-
-'navlun': `Küresel deniz taşımacılığında Kızıldeniz ve Hürmüz Boğazı rotalarındaki güvenlik riskleri navlun maliyetlerini artırmaya devam ediyor. Konteyner hatları Ümit Burnu rotasına yönelirken transit süreleri 10-14 gün uzadı.
-
-Kuru yük navlun endeksi demir cevheri, kömür ve tahıl taşımacılığının barometresi olarak küresel ticaret hacmini yansıtıyor. Çin'in ithalat talebi endeksin başlıca belirleyicisi olmaya devam ediyor.
-
-Konteyner piyasasında Şangay-Avrupa rotası fiyatları jeopolitik risklerin etkisiyle normalin üzerinde seyrediyor. Sigorta primleri Basra Körfezi ve Kızıldeniz geçişlerinde belirgin şekilde yükseldi.
-
-⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
-
-'merkez-bankalari': `Küresel merkez bankaları enflasyon ve büyüme arasındaki dengeyi gözetirken birbirinden farklılaşan politika yolları izliyor. Fed temkinli bir faiz indirim döngüsü sürdürürken, ECB daha kararlı gevşeme sinyalleri veriyor.
-
-TCMB sıkı para politikasını korumaya devam ediyor. Politika faizi yüksek seviyede tutulurken enflasyonda düşüş eğilimi izleniyor. Reel faizin pozitif bölgede kalması yabancı yatırımcı ilgisini canlı tutuyor.
-
-Japonya Merkez Bankası negatif faiz döneminden çıkarak normalleşme sürecini başlattı ancak adımları son derece temkinli atıyor. Yendeki zayıflık piyasa müdahalesi riskini gündemde tutuyor.
-
-⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
-
-'kuresel-risk': `Küresel risk haritasında İran-İsrail savaşı ve Rusya-Ukrayna çatışması iki temel jeopolitik odak noktası olmayı sürdürüyor. VIX endeksi belirsizlik dönemlerinde belirgin yükselişler gösteriyor.
-
-Enerji güvenliği, gıda arzı ve tedarik zinciri kesintileri küresel risk algısını şekillendiren başlıca faktörler arasında yer alıyor. Gelişmekte olan ülkelerde sermaye çıkışları ve kur baskısı yakından takip ediliyor.
-
-Küresel büyüme tahminleri IMF ve Dünya Bankası projeksiyonları doğrultusunda güncelleniyor. ABD-Çin arasındaki ticari gerilimler ve teknoloji rekabeti ilave risk unsurları oluşturuyor.
-
-⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
-
-'ulke-risk': `Ülke risk profillerinde kredi derecelendirme kuruluşlarının not değişiklikleri ve CDS spreadleri öncü göstergeler olarak izleniyor.
-
-Türkiye'de TCMB'nin sıkı para politikası ve enflasyonla mücadele programı kredi notu görünümünü olumlu yönde etkiliyor. Cari açığın daralması ve döviz rezervlerindeki artış güven artırıcı sinyaller veriyor.
-
-İran-İsrail savaşı bölge ülkelerinin risk primlerini yükseltirken, enerji ihracatçıları artan petrol gelirlerinden faydalanıyor. Rusya uluslararası finansal izolasyonunu sürdürmeye devam ediyor.
-
-⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
-
-'kure': `Küre genelinde para akışları 24 saat boyunca üç büyük zaman diliminde el değiştiriyor: Asya (Tokyo-Şanghay-Hong Kong), Avrupa (Londra-Frankfurt) ve Amerika (New York-Toronto). Günlük ~7 trilyon USD FX hacmi, yaklaşık 100 trilyon USD küresel piyasa değeri bu ağda dolaşıyor.
-
-Stratejik darboğazlar kritik: Hürmüz'den günde 20 milyon varil petrol, Malakka'dan küresel ticaretin %25'i, Süveyş'ten konteyner trafiğinin %30'u geçiyor. Bab el-Mandeb Husi saldırıları nedeniyle yüksek sigorta primiyle işliyor; Kerç aktif çatışma hattında.
-
-Enerji altyapısı: TürkStream, TANAP ve BTC Türkiye'yi enerji hub'ı haline getiriyor. Nord Stream devre dışı; Druzhba yaptırım baskısı altında. ABD Körfez LNG ihracatı Avrupa'ya yönelirken Katar LNG Asya'nın bel kemiği.
-
-Deniz kabloları: 2Africa, MAREA, JUPITER gibi mega kablolar küresel internetin %95'ini taşıyor. Kızıldeniz'de kablo kesintileri veri trafiğinde şok yaratabilir.
-
-⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
-
-'faiz-enflasyon': `Küresel para politikası döngüsü çok kutuplu: Fed/BoE temkinli duraklama, ECB/BoC/Riksbank/SNB aktif indirim patikasında, BoJ ise normalleşme adımlarıyla ters yönde. Türkiye yüksek faiz - yüksek enflasyon ikileminde dezenflasyon patikasına geçiş denemesinde.
-
-Reel faiz haritası: Brezilya, Meksika ve Kolombiya yüksek pozitif reel faizle öne çıkarken, Çin ve bazı EM'ler düşük/negatif reel faizle büyümeye ağırlık veriyor. Rusya savaş ekonomisinde yüksek faize rağmen enflasyon baskısı sürüyor. Arjantin ve Türkiye yüksek nominal faiz ama enflasyonu aşan reel patika yakalamaya çalışıyor.
-
-10Y tahvil cephesinde: ABD 4.4% bandı küresel risksiz faiz referansı, Euro bölgesi 2.5% civarında, EM'lerde 6-15% aralığında geniş bir spektrum. Japonya 10Y'nin 1.4% üzerine çıkması yen-taşıma ticareti üzerinde risk unsuru.
-
-Takip: Fed nokta grafiği, ECB ileri yönlendirme, TCMB adım büyüklüğü, BoJ tahvil alım programının sonlandırılması.
-
-⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`,
-
-'ekonomik-takvim': `Önümüzdeki dönemde Fed, ECB ve TCMB faiz kararları piyasaların başlıca odak noktası olmaya devam edecek. ABD enflasyon verileri ve istihdam rakamları Fed'in faiz patikasını doğrudan belirleyecek.
-
-Türkiye'de TÜİK enflasyon verileri ve TCMB politika kararları TL varlıklar için kritik önem taşıyor. Dezenflasyon sürecinin hızı yatırımcı güvenini doğrudan etkiliyor.
-
-Euro Bölgesi büyüme ve PMI verileri ECB'nin faiz indirim hızını şekillendirecek. Çin büyüme verileri emtia ve gelişmekte olan ülke piyasaları için yön verici nitelik taşıyor.
-
-⚠️ Bu analiz bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.`
-    };
-    return {statusCode:200, headers:H, body:JSON.stringify({analysis: A[cat]||A['genel']})};
+  const cat = safeCategory(event?.queryStringParameters?.cat || 'genel');
+  const store = safeStore(event);
+  const cacheKey = `${cat}:${todayKey()}`;
+  const cached = await readCache(store, cacheKey);
+  if (cached) {
+    return { statusCode: 200, headers: headers(), body: JSON.stringify({ ...cached, fromCache: true }) };
+  }
+
+  const news = await fetchNews(cat);
+  let entry;
+  try {
+    const g = await callGemini(cat, news);
+    entry = normalizeSections(g.sections, cat, news, g.provider);
+  } catch (e) {
+    entry = normalizeSections(null, cat, news, 'fallback', e.message);
+  }
+  await writeCache(store, cacheKey, entry);
+  return { statusCode: 200, headers: headers(), body: JSON.stringify(entry) };
 };
