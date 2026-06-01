@@ -81,12 +81,9 @@
 <script>var hd=new Date("2028-04-15");var hDiff=Math.floor((hd-new Date())/864e5);var hEl=document.getElementById("halvCount");if(hEl)hEl.textContent=hDiff+" GÜN";</script>
 
 <div class="sec-title">📊 Bitcoin ETF Durumu</div>
-<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow-x:auto;margin-bottom:18px"><table style="width:100%;border-collapse:collapse;min-width:400px;font-size:.78rem"><thead><tr style="background:var(--bg2)"><th style="padding:8px 12px;text-align:left;font-size:.65rem;color:var(--t3);text-transform:uppercase;border-bottom:1px solid var(--border)">ETF</th><th style="padding:8px 12px;text-align:right;font-size:.65rem;color:var(--t3);border-bottom:1px solid var(--border)">AUM</th><th style="padding:8px 12px;text-align:right;font-size:.65rem;color:var(--t3);border-bottom:1px solid var(--border)">Durum</th></tr></thead><tbody>
-<tr><td style="padding:7px 12px;border-bottom:1px solid var(--border2)">iShares Bitcoin Trust (IBIT)</td><td style="padding:7px 12px;text-align:right;font-family:var(--mono);font-weight:700;border-bottom:1px solid var(--border2)">~55B$</td><td style="padding:7px 12px;text-align:right;color:#00d68f;font-weight:700;border-bottom:1px solid var(--border2)">Aktif</td></tr>
-<tr><td style="padding:7px 12px;border-bottom:1px solid var(--border2)">Fidelity FBTC</td><td style="padding:7px 12px;text-align:right;font-family:var(--mono);font-weight:700;border-bottom:1px solid var(--border2)">~18B$</td><td style="padding:7px 12px;text-align:right;color:#00d68f;font-weight:700;border-bottom:1px solid var(--border2)">Aktif</td></tr>
-<tr><td style="padding:7px 12px;border-bottom:1px solid var(--border2)">Grayscale GBTC</td><td style="padding:7px 12px;text-align:right;font-family:var(--mono);font-weight:700;border-bottom:1px solid var(--border2)">~15B$</td><td style="padding:7px 12px;text-align:right;color:#f59e0b;font-weight:700;border-bottom:1px solid var(--border2)">Çıkış devam</td></tr>
-<tr><td style="padding:7px 12px"><b>Toplam Spot BTC ETF</b></td><td style="padding:7px 12px;text-align:right;font-family:var(--mono);font-weight:800">~110B$+</td><td style="padding:7px 12px;text-align:right;color:#00d68f;font-weight:700">Net giriş pozitif</td></tr>
-</tbody></table></div>
+<div id="btcEtfStatus" style="margin-bottom:18px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;color:var(--t3);font-size:.78rem">ETF verisi yükleniyor...</div>
+</div>
     <div class="footer">Risk Monitörü © 2026</div>
 </div>
 <script src="assets/js/app.js"></script>
@@ -203,6 +200,48 @@
         else if(currentView==='bar')rebuildBar();
         else if(currentView==='heatmap')rebuildHeatmap();
     }
+
+    function escapeHtml(value){
+        return String(value==null?'':value).replace(/[&<>"']/g,function(ch){
+            return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];
+        });
+    }
+
+    function formatEtfValue(value){
+        if(value==null||value==='')return 'Kaynakta kontrol edin';
+        return escapeHtml(value);
+    }
+
+    function renderBtcEtfStatus(data, isStale){
+        var el=document.getElementById('btcEtfStatus');if(!el)return;
+        var checked=data&&data.updated_at?escapeHtml(data.updated_at):'bilinmiyor';
+        var source=data&&data.source_url?String(data.source_url):'';
+        var sourceLink=source?'<a href="'+escapeHtml(source)+'" target="_blank" rel="noopener noreferrer" style="color:var(--accent);font-weight:700">Kaynak</a>':'Kaynak belirtilmedi';
+        var warn=isStale?'<div style="padding:8px 12px;background:rgba(245,158,11,.12);border-bottom:1px solid var(--border);color:#f59e0b;font-size:.74rem;font-weight:700">⚠️ ETF verisi güncel olmayabilir.</div>':'';
+        el.innerHTML='<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden">'+warn+
+            '<div style="padding:9px 12px;color:var(--t3);font-size:.72rem;border-bottom:1px solid var(--border)">Manuel veri — son kontrol: '+checked+' · '+sourceLink+'</div>'+
+            '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;min-width:400px;font-size:.78rem"><thead><tr style="background:var(--bg2)">'+
+            '<th style="padding:8px 12px;text-align:left;font-size:.65rem;color:var(--t3);text-transform:uppercase;border-bottom:1px solid var(--border)">Gösterge</th>'+
+            '<th style="padding:8px 12px;text-align:right;font-size:.65rem;color:var(--t3);text-transform:uppercase;border-bottom:1px solid var(--border)">Değer</th>'+
+            '</tr></thead><tbody>'+
+            '<tr><td style="padding:7px 12px;border-bottom:1px solid var(--border2)">Toplam Spot BTC ETF AUM</td><td style="padding:7px 12px;text-align:right;font-family:var(--mono);font-weight:700;border-bottom:1px solid var(--border2)">'+formatEtfValue(data&&data.total_aum)+'</td></tr>'+
+            '<tr><td style="padding:7px 12px;border-bottom:1px solid var(--border2)">Günlük net akış</td><td style="padding:7px 12px;text-align:right;font-family:var(--mono);font-weight:700;border-bottom:1px solid var(--border2)">'+formatEtfValue(data&&data.daily_flow)+'</td></tr>'+
+            '<tr><td style="padding:7px 12px">Durum</td><td style="padding:7px 12px;text-align:right;font-weight:700">'+formatEtfValue(data&&data.status_label)+'</td></tr>'+
+            '</tbody></table></div></div>';
+    }
+
+    function loadBtcEtfStatus(){
+        fetch('data/btc_etf_status.json?t='+Date.now(),{cache:'no-store'}).then(function(r){
+            if(!r.ok)throw new Error('HTTP '+r.status);
+            return r.json();
+        }).then(function(data){
+            renderBtcEtfStatus(data,false);
+        }).catch(function(){
+            renderBtcEtfStatus({updated_at:null,total_aum:null,daily_flow:null,status_label:'ETF verisi güncel olmayabilir',source_url:''},true);
+        });
+    }
+
+    loadBtcEtfStatus();
 
     PM.loadData('crypto.json','kripto').then(function(data){
         if(!data||!data.series||!data.series.length){document.getElementById('summaryCards').innerHTML='<div class="scard"><div class="scard-name">Veri bulunamadı.</div></div>';renderPager(0);return}
