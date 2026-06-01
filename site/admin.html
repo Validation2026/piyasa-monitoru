@@ -13,10 +13,9 @@ h1{font-size:1.2rem;font-weight:800;margin-bottom:14px}
 .card{background:#fff;border:1px solid #dde4ed;border-radius:10px;padding:14px;margin-bottom:12px}
 .ct{font-size:.65rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
 label{font-size:.68rem;font-weight:600;color:#64748b;display:block;margin-bottom:3px}
-input,select,textarea{width:100%;border:1px solid #dde4ed;border-radius:6px;padding:7px 9px;font-size:.82rem;outline:none;background:#f8fafc;margin-bottom:6px;font-family:inherit}
-input:focus,select:focus,textarea:focus{border-color:#3b82f6}
+input,select{width:100%;border:1px solid #dde4ed;border-radius:6px;padding:7px 9px;font-size:.82rem;outline:none;background:#f8fafc;margin-bottom:6px}
+input:focus,select:focus{border-color:#3b82f6}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-textarea{min-height:74px;resize:vertical;line-height:1.35}
 .btn{background:#ff4757;color:#fff;border:none;border-radius:8px;padding:11px;font-weight:800;font-size:.82rem;cursor:pointer;width:100%;margin-top:6px}
 .btn:hover{background:#e83e4e}
 .btn-sm{background:#64748b;color:#fff;border:none;border-radius:4px;padding:4px 8px;font-size:.62rem;font-weight:700;cursor:pointer}
@@ -45,15 +44,6 @@ textarea{min-height:74px;resize:vertical;line-height:1.35}
 <div><label>Risk Skoru (0-100)</label><input type="number" id="risk" min="0" max="100" value="50"></div>
 <div><label>Hürmüz Durumu</label><select id="hurmuz"><option value="AÇIK / GÜVENLİ">🟢 AÇIK</option><option value="RİSKLİ">🟡 RİSKLİ</option><option value="KISMEN KAPALI">🟠 KISMEN KAPALI</option><option value="KAPALI">🔴 KAPALI</option></select></div>
 </div>
-</div>
-
-<div class="card">
-<div class="ct">🟠 Ortak İran Banner Yazısı</div>
-<div style="font-size:.65rem;color:#64748b;margin-bottom:8px">Buraya yazdığın başlık ve açıklama hem index sayfasındaki İran bannerında hem de İran sayfasının en üstündeki war bannerda aynı şekilde görünür.</div>
-<label>Banner Başlığı</label>
-<input type="text" id="bannerHeadline" placeholder="Örn: Ateşkes kırılgan, Hürmüz riski yüksek">
-<label>Banner Alt Yazısı</label>
-<textarea id="bannerSummary" placeholder="Örn: Güncel risk notu ve piyasa etkisi kısa açıklaması"></textarea>
 </div>
 
 <div class="card">
@@ -160,54 +150,16 @@ function renderCREditors(data){
     }).join('');
 }
 
-
-var LAST_LOADED_BANNER={headline:'',summary:''};
-// Banner için kesin kural: Hazır analiz / CURRENT_IRAN_BRIEF / briefHeadline alanları kullanılmaz.
-// Tek kaynak admin tarafından kaydedilen bannerBrief / iranBanner / adminBanner / bannerHeadline / bannerSummary alanlarıdır.
-function cleanBannerText(v){return String(v==null?'':v).trim();}
-function getAdminBannerFromState(s){
-    s=s||{};
-    var bb=s.bannerBrief||s.iranBanner||s.adminBanner||{};
-    return {
-        headline: cleanBannerText(bb.headline || bb.title || s.bannerHeadline),
-        summary: cleanBannerText(bb.summary || bb.text || s.bannerSummary)
-    };
-}
-function readCachedAdminBanner(){
-    try{return JSON.parse(localStorage.getItem('iranAdminBannerBrief')||'{}')||{}}catch(e){return {}}
-}
-function writeCachedAdminBanner(bb){
-    try{localStorage.setItem('iranAdminBannerBrief', JSON.stringify(bb||{}))}catch(e){}
-}
-function fillBannerInputs(bb){
-    bb=bb||{};
-    document.getElementById('bannerHeadline').value=cleanBannerText(bb.headline);
-    document.getElementById('bannerSummary').value=cleanBannerText(bb.summary);
-}
-var bannerTouched=false;
-['bannerHeadline','bannerSummary'].forEach(function(id){
-    var el=document.getElementById(id);
-    if(el){el.addEventListener('input',function(){bannerTouched=true;});}
-});
-fillBannerInputs(readCachedAdminBanner());
-
-// Load from API — admin alanını ASLA boşaltma
-fetch('/api/iran-state?t='+Date.now(), {cache:'no-store'}).then(function(r){return r.json()}).then(function(s){
+// Load from API
+fetch('/api/iran-state').then(function(r){return r.json()}).then(function(s){
     document.getElementById('risk').value=s.riskScore||50;
     document.getElementById('hurmuz').value=s.hurmuzStatus||'AÇIK / GÜVENLİ';
-    var bb=getAdminBannerFromState(s);
-    var cached=readCachedAdminBanner();
-    if(!bb.headline && !bb.summary) bb={headline:cleanBannerText(cached.headline),summary:cleanBannerText(cached.summary)};
-    if(bb.headline || bb.summary){
-        LAST_LOADED_BANNER={headline:bb.headline,summary:bb.summary};
-        writeCachedAdminBanner(LAST_LOADED_BANNER);
-    }
-    if(!bannerTouched && (bb.headline || bb.summary)) fillBannerInputs(bb);
     if(s.manualCommodities){
         COMMS.forEach(function(c){
             var id=c[0].replace(/[^a-zA-Z0-9]/g,'_');
             if(s.manualCommodities[c[0]]){
                 document.getElementById('cv_'+id).value=s.manualCommodities[c[0]].value||'';
+                // Sadece Savaş Öncesi ve YTD
                 if(s.manualCommodities[c[0]].past_prewar != null) document.getElementById('cpre_'+id).value=s.manualCommodities[c[0]].past_prewar;
                 if(s.manualCommodities[c[0]].past_ytd != null) document.getElementById('cytd_'+id).value=s.manualCommodities[c[0]].past_ytd;
             }
@@ -216,10 +168,7 @@ fetch('/api/iran-state?t='+Date.now(), {cache:'no-store'}).then(function(r){retu
     (s.customMetrics||[]).forEach(function(m){addRow(m.name,m.unit,m.value,m.past_prewar,m.past_ytd)});
     (s.timeline||[]).forEach(function(e){addTlRow(e.date,e.title,e.desc,e.tag)});
     renderCREditors(s.countryRisk||CR_DEFAULTS);
-}).catch(function(){
-    fillBannerInputs(readCachedAdminBanner());
-    renderCREditors(CR_DEFAULTS)
-});
+}).catch(function(){renderCREditors(CR_DEFAULTS)});
 
 // Save to API
 document.getElementById('saveBtn').onclick=function(){
@@ -262,32 +211,13 @@ document.getElementById('saveBtn').onclick=function(){
     document.querySelectorAll('#crEditors > div').forEach(function(r){
         cr.push({id:r.querySelector('.cr-id').value,flag:r.querySelector('.cr-flag').value,name:r.querySelector('.cr-name').value,sp:r.querySelector('.cr-sp').value,fitch:r.querySelector('.cr-fitch').value,moodys:r.querySelector('.cr-moodys').value,cds:r.querySelector('.cr-cds').value,inflation:r.querySelector('.cr-inf').value,interest:r.querySelector('.cr-int').value,debt:r.querySelector('.cr-debt').value,growth:r.querySelector('.cr-grow').value,risk:r.querySelector('.cr-risk').value,note:r.querySelector('.cr-note').value});
     });
-    var typedBanner={
-        headline:cleanBannerText(document.getElementById('bannerHeadline').value),
-        summary:cleanBannerText(document.getElementById('bannerSummary').value)
+    var payload={
+        pin:pin,
+        data:{riskScore:parseInt(document.getElementById('risk').value)||50,hurmuzStatus:document.getElementById('hurmuz').value,manualCommodities:mc,customMetrics:cm,timeline:tl,countryRisk:cr}
     };
-    var cachedBanner=readCachedAdminBanner();
-    var bannerBrief={
-        headline:typedBanner.headline || LAST_LOADED_BANNER.headline || cleanBannerText(cachedBanner.headline),
-        summary:typedBanner.summary || LAST_LOADED_BANNER.summary || cleanBannerText(cachedBanner.summary)
-    };
-    fillBannerInputs(bannerBrief);
-    if(bannerBrief.headline || bannerBrief.summary) writeCachedAdminBanner(bannerBrief);
-    var data={
-        riskScore:parseInt(document.getElementById('risk').value)||50,
-        hurmuzStatus:document.getElementById('hurmuz').value,
-        bannerBrief:bannerBrief,
-        // Aynı admin yazısını farklı anahtarlarla da gönderiyoruz; backend eski/katı şema kullanıyorsa bile kaybolmasın.
-        iranBanner:bannerBrief,
-        adminBanner:bannerBrief,
-        bannerHeadline:bannerBrief.headline,
-        bannerSummary:bannerBrief.summary,
-        manualCommodities:mc,customMetrics:cm,timeline:tl,countryRisk:cr
-    };
-    var payload={pin:pin,data:data};
     document.getElementById('status').textContent='Kaydediliyor...';
     fetch('/api/iran-state',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).then(function(r){return r.json()}).then(function(d){
-        if(d.success){writeCachedAdminBanner(bannerBrief);document.getElementById('bannerHeadline').value=bannerBrief.headline;document.getElementById('bannerSummary').value=bannerBrief.summary;document.getElementById('status').textContent='✅ Kaydedildi! Banner artık admin yazısından okunacak.';}
+        if(d.success)document.getElementById('status').textContent='✅ Kaydedildi! Tüm cihazlarda güncellenecek.';
         else document.getElementById('status').textContent='❌ Hata: '+(d.error||'Bilinmeyen');
     }).catch(function(e){document.getElementById('status').textContent='❌ Bağlantı hatası: '+e.message});
 };
