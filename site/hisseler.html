@@ -245,8 +245,8 @@
         barCharts = [];
         var active = applyFilter();
         PM.ensureChartJs().then(function(){
-            var c1 = PM.buildBarChart('barChartDaily', active, 'change_1d_pct');
-            var c2 = PM.buildBarChart('barChartMonthly', active, 'change_1m_pct');
+            var c1 = PM.buildBarChart('barChartDaily', active, 'change_1d_pct', 15);
+            var c2 = PM.buildBarChart('barChartMonthly', active, 'change_1m_pct', 15);
             if(c1) barCharts.push(c1);
             if(c2) barCharts.push(c2);
         });

@@ -178,8 +178,8 @@
     function rebuildBar(){
         if(barCharts.length){barCharts.forEach(function(c){if(c&&c.destroy)c.destroy()});} barCharts=[];
         PM.ensureChartJs().then(function(){
-            var c1=PM.buildBarChart('perfBarDaily',allSeries,'change_1d_pct');
-            var c2=PM.buildBarChart('perfBarMonthly',allSeries,'change_1m_pct');
+            var c1=PM.buildBarChart('perfBarDaily',allSeries,'change_1d_pct',15);
+            var c2=PM.buildBarChart('perfBarMonthly',allSeries,'change_1m_pct',15);
             if(c1)barCharts.push(c1);if(c2)barCharts.push(c2);
         });
     }
