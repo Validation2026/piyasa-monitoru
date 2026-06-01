@@ -1,3 +1,4 @@
+require('./env').loadEnv();
 const https = require('https');
 const { getStore, connectLambda } = require('@netlify/blobs');
 

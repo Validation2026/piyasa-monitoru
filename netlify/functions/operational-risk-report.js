@@ -1,3 +1,4 @@
+const envInfo = require('./env').loadEnv();
 const https = require('https');
 const { getStore, connectLambda } = require('@netlify/blobs');
 
@@ -141,7 +142,8 @@ exports.handler = async function (event) {
         : FALLBACK_MODELS,
       cache: cacheState,
       ttlMs: CACHE_TTL_MS,
-      runtime: process.version
+      runtime: process.version,
+      envFileLoaded: Boolean(envInfo.source)
     }) };
   }
 
