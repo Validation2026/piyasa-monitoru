@@ -29,7 +29,7 @@ var COUNTRIES = [
     {n:'Macaristan',   flag:'🇭🇺', lat:47.50, lng:19.04,  rate:6.25, infl:4.8,  m2y:6.15, m10y:6.95, cb:'MNB',        move:'hold'},
     {n:'Romanya',      flag:'🇷🇴', lat:44.43, lng:26.10,  rate:6.50, infl:9.3,  m2y:6.85, m10y:7.55, cb:'BNR',        move:'hold'},
     {n:'Rusya',        flag:'🇷🇺', lat:55.75, lng:37.62,  rate:15.00,infl:7.8,  m2y:15.50,m10y:13.80,cb:'CBR',        move:'cut'},
-    {n:'Türkiye',      flag:'🇹🇷', lat:39.92, lng:32.85,  rate:37.00,infl:30.87,m2y:39.50,m10y:30.20,cb:'TCMB',       move:'hold'},
+    {n:'Türkiye',      flag:'🇹🇷', lat:39.92, lng:32.85, rate:37.00, infl:32.37, m2y:43.83, m10y:35.32, cb:'TCMB', move:'hold'},
     {n:'İzlanda',      flag:'🇮🇸', lat:64.13, lng:-21.89, rate:7.50, infl:4.0,  m2y:7.25, m10y:6.95, cb:'Sedlabanki', move:'hike'},
 
     // Asya-Pasifik
