@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Sanayi & Hammadde",
-    "updated_at": "2026-06-02T04:02:22Z",
+    "updated_at": "2026-06-02T05:02:11Z",
     "symbol_count": 46,
     "errors": []
   },
@@ -17,13 +17,13 @@
         "https://s3-symbol-logo.tradingview.com/hg.svg",
         "https://s3-symbol-logo.tradingview.com/hg--big.svg"
       ],
-      "current": 6.5655,
-      "change_1d_pct": 0.64,
-      "change_1w_pct": 3.21,
-      "change_1m_pct": 10.79,
-      "change_3m_pct": 10.4,
-      "change_ytd_pct": 16.62,
-      "change_1y_pct": 47.06,
+      "current": 6.5725,
+      "change_1d_pct": 0.74,
+      "change_1w_pct": 3.32,
+      "change_1m_pct": 10.91,
+      "change_3m_pct": 10.52,
+      "change_ytd_pct": 16.74,
+      "change_1y_pct": 47.22,
       "high_52w": 6.6355,
       "low_52w": 3.2105,
       "data": [
@@ -5058,6 +5058,10 @@
         {
           "date": "2026-06-01",
           "value": 6.524
+        },
+        {
+          "date": "2026-06-02",
+          "value": 6.5725
         }
       ]
     },
@@ -10117,13 +10121,13 @@
         "https://s3-symbol-logo.tradingview.com/znc.svg",
         "https://s3-symbol-logo.tradingview.com/znc--big.svg"
       ],
-      "current": 109.8125,
-      "change_1d_pct": -0.04,
-      "change_1w_pct": -0.01,
-      "change_1m_pct": -0.71,
-      "change_3m_pct": -3.18,
-      "change_ytd_pct": -2.33,
-      "change_1y_pct": -1.78,
+      "current": 109.8281,
+      "change_1d_pct": -0.03,
+      "change_1w_pct": 0.0,
+      "change_1m_pct": -0.69,
+      "change_3m_pct": -3.17,
+      "change_ytd_pct": -2.32,
+      "change_1y_pct": -1.76,
       "high_52w": 135.0,
       "low_52w": 105.4219,
       "data": [
@@ -15158,6 +15162,10 @@
         {
           "date": "2026-06-01",
           "value": 109.8594
+        },
+        {
+          "date": "2026-06-02",
+          "value": 109.8281
         }
       ]
     },
