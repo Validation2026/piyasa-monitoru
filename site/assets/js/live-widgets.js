@@ -30,7 +30,11 @@ function escapeHtml(s){
 function byId(list, id){ for(var i=0;i<list.length;i++){ if(list[i].id === id) return list[i]; } return null; }
 function cacheBustedFetch(path){
     return fetch(path + (path.indexOf('?')<0?'?':'&') + 't=' + Date.now(), {cache:'no-store'})
-        .then(function(r){ return r.json(); }).catch(function(){ return null; });
+        .then(function(r){ return r.json(); })
+        .then(function(data){
+            var file = path.split('/').pop().split('?')[0];
+            return window.PMFilterActiveData ? PMFilterActiveData(file, data) : data;
+        }).catch(function(){ return null; });
 }
 
 // ======================================================

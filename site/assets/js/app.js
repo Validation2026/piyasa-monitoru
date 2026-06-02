@@ -56,11 +56,15 @@ function writeSessionCache(file,data){
     }catch(_){ }
 }
 
+function filterActiveData(file,data){
+    if(window.PMFilterActiveData) return window.PMFilterActiveData(file,data);
+    return data;
+}
 function fetchJson(file){
     return fetch(D+file, { cache:'default' }).then(function(r){
         if(!r.ok) throw new Error('HTTP '+r.status);
         return r.json();
-    });
+    }).then(function(data){ return filterActiveData(file,data); });
 }
 
 function fj(file,opts){
