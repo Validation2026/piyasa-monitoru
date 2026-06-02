@@ -56,11 +56,15 @@ function writeSessionCache(file,data){
     }catch(_){ }
 }
 
+function filterActiveData(file,data){
+    if(window.PMFilterActiveData) return window.PMFilterActiveData(file,data);
+    return data;
+}
 function fetchJson(file){
     return fetch(D+file, { cache:'default' }).then(function(r){
         if(!r.ok) throw new Error('HTTP '+r.status);
         return r.json();
-    });
+    }).then(function(data){ return filterActiveData(file,data); });
 }
 
 function fj(file,opts){
@@ -245,6 +249,7 @@ function makeChart(canvasId,series,opts){
     var c=document.getElementById(canvasId);if(!c||!series||!series.data||!series.data.length)return null;
     opts=opts||{};var color=opts.color||COLORS[0];
     var filtered=filterPeriod(series.data,opts.period||'all');
+    if(!filtered || filtered.length < 2) filtered = series.data;
     filtered=downsample(filtered,300);
     var labels=filtered.map(function(d){return d.date});var vals=filtered.map(function(d){return d.value});
     var dark=document.documentElement.getAttribute('data-theme')!=='light';
@@ -260,6 +265,7 @@ function buildSummary(containerId,seriesList){
         if(s.change_1d_pct!=null)chgs+=fc(s.change_1d_pct)+'<span class="chg-label">1G</span> ';
         if(s.change_1w_pct!=null)chgs+=fc(s.change_1w_pct)+'<span class="chg-label">1H</span> ';
         if(s.change_1m_pct!=null)chgs+=fc(s.change_1m_pct)+'<span class="chg-label">1A</span> ';
+        if(s.change_3m_pct!=null)chgs+=fc(s.change_3m_pct)+'<span class="chg-label">3A</span> ';
         if(s.change_ytd_pct!=null)chgs+=fc(s.change_ytd_pct)+'<span class="chg-label">YTD</span> ';
         var range=s.low_52w!=null?'52H: '+fp(s.low_52w)+' — '+fp(s.high_52w):'';
         var sid='mini-spark-'+i;
@@ -329,7 +335,7 @@ function xlsCellHtml(v){
 function xlsRowHtml(cells, isHeader){
     var tag=isHeader?'th':'td';
     if(!isHeader)return '<tr>'+cells.map(xlsCellHtml).join('')+'</tr>';
-    return '<tr>'+cells.map(function(v){return '<'+tag+' style="background:#e5e7eb;font-weight:bold">'+xmlEscape(v)+'</'+tag+'></tr>'}).join('')+'</tr>';
+    return '<tr>'+cells.map(function(v){return '<'+tag+' style="background:#e5e7eb;font-weight:bold">'+xmlEscape(v)+'</'+tag+'>';}).join('')+'</tr>';
 }
 
 // Tek bir HTML tablosunu (başlıklı satır[0], diğer satırlar veri) Excel sayfası olarak üret
@@ -401,7 +407,7 @@ function renderAiAnalysis(container, payload){
 
 function exportTableExcel(seriesList,filename){
     // Sheet 1: Özet — anlık görüntü
-    var summaryHeader=['Varlık','Birim','Fiyat','1G %','1H %','1A %','YTD %','52H Düşük','52H Yüksek'];
+    var summaryHeader=['Varlık','Birim','Fiyat','1G %','1H %','1A %','3A %','YTD %','52H Düşük','52H Yüksek'];
     var summaryData=[];
     seriesList.forEach(function(s){if(!s)return;
         summaryData.push([
@@ -410,6 +416,7 @@ function exportTableExcel(seriesList,filename){
             s.change_1d_pct!=null?Number(s.change_1d_pct.toFixed(4)):'',
             s.change_1w_pct!=null?Number(s.change_1w_pct.toFixed(4)):'',
             s.change_1m_pct!=null?Number(s.change_1m_pct.toFixed(4)):'',
+            s.change_3m_pct!=null?Number(s.change_3m_pct.toFixed(4)):'',
             s.change_ytd_pct!=null?Number(s.change_ytd_pct.toFixed(4)):'',
             s.low_52w!=null?Number(s.low_52w):'',
             s.high_52w!=null?Number(s.high_52w):''
@@ -476,7 +483,7 @@ function buildTable(containerId,seriesList,opts){
         '<button type="button" class="tbl-csv-btn" id="'+containerId+'_csv" aria-label="Excel olarak indir" title="Özet + tarihsel verileri Excel\'e indir">⬇ Excel</button>'+
         (updatedAt?'<span class="tbl-updated">📅 Son güncellenme: '+updatedAt+'</span>':'')+
     '</div>';
-    var h=toolbar+'<div class="tbl-wrap"><table><thead><tr><th>İsim</th><th class="r">Fiyat</th><th class="r">1 Gün</th><th class="r">1 Hafta</th><th class="r">1 Ay</th><th class="r">YTD</th><th class="r">Trend</th><th class="r">52H Aralık</th></tr></thead><tbody>';
+    var h=toolbar+'<div class="tbl-wrap"><table><thead><tr><th>İsim</th><th class="r">Fiyat</th><th class="r">1 Gün</th><th class="r">1 Hafta</th><th class="r">1 Ay</th><th class="r">3 Ay</th><th class="r">YTD</th><th class="r">Trend</th><th class="r">52H Aralık</th></tr></thead><tbody>';
     seriesList.forEach(function(s){if(!s)return;
         function cv(p){if(p==null)return'<td class="mono r dim">—</td>';return'<td class="mono r '+cc(p)+'">'+(p>=0?'+':'')+p.toFixed(2)+'%</td>'}
         var anom=isAnomaly(s);
@@ -485,7 +492,7 @@ function buildTable(containerId,seriesList,opts){
         h+='<tr class="'+(anom?'tbl-anomaly':'')+'" data-search="'+nameKey.replace(/"/g,'')+'"'+anomTitle+'>'+
             '<td class="asset-name-cell">'+logoImg(s,18)+'<span>'+s.name+'</span>'+(anom?'<span class="tbl-anom-badge" aria-label="Olağandışı">⚠</span>':'')+'</td>'+
             '<td class="mono r">'+fp(s.current)+' <span class="dim">'+(s.unit||'')+'</span></td>'+
-            cv(s.change_1d_pct)+cv(s.change_1w_pct)+cv(s.change_1m_pct)+cv(s.change_ytd_pct)+
+            cv(s.change_1d_pct)+cv(s.change_1w_pct)+cv(s.change_1m_pct)+cv(s.change_3m_pct)+cv(s.change_ytd_pct)+
             '<td class="r">'+sparkSvg(s.data)+'</td>'+
             '<td class="mono r dim" style="font-size:.7rem">'+(s.low_52w!=null?fp(s.low_52w)+' — '+fp(s.high_52w):'—')+'</td>'+
         '</tr>';
@@ -582,6 +589,7 @@ function showAssetModal(series, opts){
     if(series.change_1d_pct!=null) chgs += fc(series.change_1d_pct)+'<span class="chg-label">1G</span> ';
     if(series.change_1w_pct!=null) chgs += fc(series.change_1w_pct)+'<span class="chg-label">1H</span> ';
     if(series.change_1m_pct!=null) chgs += fc(series.change_1m_pct)+'<span class="chg-label">1A</span> ';
+    if(series.change_3m_pct!=null) chgs += fc(series.change_3m_pct)+'<span class="chg-label">3A</span> ';
     if(series.change_ytd_pct!=null) chgs += fc(series.change_ytd_pct)+'<span class="chg-label">YTD</span>';
     chgsEl.innerHTML = chgs;
     var rangeEl = document.getElementById('assetModalRange');
@@ -592,14 +600,41 @@ function showAssetModal(series, opts){
 
     el.classList.add('show');
     el.setAttribute('aria-hidden','false');
-    // Mini chart
-    setTimeout(function(){
-        if(_assetModalChart){try{_assetModalChart.destroy()}catch(e){}}
-        if(series.data && series.data.length){
-            _assetModalChart = makeChart('assetModalChart', series, {color:'#3b82f6', period:'1y'});
-        }
-    }, 30);
+    renderAssetModalChart(series);
 }
+
+function renderAssetModalChart(series){
+    var wrap = document.querySelector('.asset-modal-chart');
+    if(!wrap) return;
+    if(_assetModalChart){try{_assetModalChart.destroy()}catch(e){} _assetModalChart=null}
+
+    var chartData = (series && series.data && series.data.length) ? series.data : ((series && series.spark && series.spark.length) ? series.spark : []);
+    if(!chartData || chartData.length < 2){
+        wrap.innerHTML = '<div class="asset-modal-chart-empty">Grafik için yeterli veri yok.</div>';
+        return;
+    }
+
+    // Chart.js canvas state can stick to a previous modal render; recreate it every time.
+    wrap.innerHTML = '<canvas id="assetModalChart" aria-label="Varlık fiyat grafiği" role="img"></canvas><div class="asset-modal-chart-status">Grafik yükleniyor…</div>';
+    var status = wrap.querySelector('.asset-modal-chart-status');
+    var chartSeries = Object.assign({}, series, { data: chartData });
+
+    ensureChartJs().then(function(){
+        requestAnimationFrame(function(){
+            if(!_assetModalEl || !_assetModalEl.classList.contains('show')) return;
+            if(status) status.remove();
+            _assetModalChart = makeChart('assetModalChart', chartSeries, {color:'#3b82f6', period:'1y'});
+            if(!_assetModalChart){
+                wrap.innerHTML = '<div class="asset-modal-chart-empty">Grafik oluşturulamadı.</div>';
+            } else if(_assetModalChart.resize) {
+                _assetModalChart.resize();
+            }
+        });
+    }).catch(function(){
+        wrap.innerHTML = '<div class="asset-modal-chart-empty">Grafik kütüphanesi yüklenemedi.</div>';
+    });
+}
+
 function openAssetFromUrl(data){
     if(!data || !data.series) return false;
     try{
