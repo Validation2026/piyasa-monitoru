@@ -1,13 +1,21 @@
 require('./env').loadEnv();
 const https = require('https');
 
-const SHEET_API_URL = process.env.TURKIYE_SHEET_API_URL || 'https://script.google.com/macros/s/AKfycbzobSe-roajA6d1wBhS21kCT_sRZrP7do9xl56qFHFipux8ED2oWF94DEZyrYbvgBs3xw/exec';
+const YAHOO_SYMBOLS = {
+  usdtry: { symbol: 'USDTRY=X', label: 'USD/TRY', unit: '₺', digits: 4 },
+  eurtry: { symbol: 'EURTRY=X', label: 'EUR/TRY', unit: '₺', digits: 4 },
+  bist100: { symbol: 'XU100.IS', label: 'BIST 100', unit: '', digits: 0 },
+  brent: { symbol: 'BZ=F', label: 'Brent Petrol', unit: '$', digits: 2 },
+  gold: { symbol: 'GC=F', label: 'Ons Altın', unit: '$', digits: 2 },
+  silver: { symbol: 'SI=F', label: 'Ons Gümüş', unit: '$', digits: 2 },
+  dxy: { symbol: 'DX-Y.NYB', label: 'DXY', unit: '', digits: 2 }
+};
 
 function headers() {
   return {
     'Content-Type': 'application/json; charset=utf-8',
     'Access-Control-Allow-Origin': '*',
-    'Cache-Control': 'public, max-age=900'
+    'Cache-Control': 'no-store, max-age=0'
   };
 }
 
@@ -23,13 +31,22 @@ function cleanTitle(v) {
   return strip(v).replace(/\s+[-–—]\s+[^-–—|:]{2,90}$/u, '').replace(/\s+\|\s+[^|]{2,90}$/u, '').trim();
 }
 
-function fetchText(url, timeoutMs = 5200) {
+function fetchText(url, timeoutMs = 6500) {
   return new Promise((resolve, reject) => {
-    const req = https.get(url, { headers: { 'User-Agent': 'Mozilla/5.0 PiyasaMonitoru/1.0' }, timeout: timeoutMs }, res => {
+    const req = https.get(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 PiyasaMonitoru/1.0',
+        'Accept': 'application/json,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+      },
+      timeout: timeoutMs
+    }, res => {
       let body = '';
       res.setEncoding('utf8');
       res.on('data', c => { body += c; });
-      res.on('end', () => resolve(body));
+      res.on('end', () => {
+        if (res.statusCode >= 400) reject(new Error(`HTTP ${res.statusCode}`));
+        else resolve(body);
+      });
     });
     req.on('timeout', () => req.destroy(new Error('timeout')));
     req.on('error', reject);
@@ -63,38 +80,105 @@ async function fetchNews() {
   const queries = ['Türkiye ekonomi enflasyon TCMB faiz kur CDS tahvil', 'Turkey economy inflation central bank lira bonds CDS', 'BIST banka tahvil faiz Türkiye piyasa'];
   const out = [];
   for (const q of queries) {
-    try { out.push(...parseRss(await fetchText(rssUrl(q)))); } catch (_) {}
+    try { out.push(...parseRss(await fetchText(rssUrl(q), 5200))); } catch (_) {}
   }
   const seen = new Set();
   return out.filter(n => { const key = n.title.toLocaleLowerCase('tr'); if (seen.has(key)) return false; seen.add(key); return true; }).slice(0, 10);
 }
 
-async function fetchSheetData() {
-  if (!SHEET_API_URL) return { ok: false, data: {}, history: {}, source: 'missing' };
-  try {
-    const payload = await fetchJson(SHEET_API_URL + (SHEET_API_URL.includes('?') ? '&' : '?') + 'ts=' + Date.now(), 8000);
-    if (!payload || payload.ok === false) return { ok: false, data: {}, history: {}, source: 'sheet-error' };
-    return { ok: true, data: payload.data || {}, history: payload.history || {}, generatedAt: payload.generatedAt, source: 'google-sheets' };
-  } catch (error) {
-    return { ok: false, data: {}, history: {}, source: 'sheet-fetch-failed', error: error.message };
+function num(v) {
+  const n = Number(v);
+  return Number.isFinite(n) ? n : null;
+}
+
+function lastNumber(arr) {
+  if (!Array.isArray(arr)) return null;
+  for (let i = arr.length - 1; i >= 0; i--) {
+    const n = num(arr[i]);
+    if (n !== null) return n;
   }
+  return null;
 }
 
-function cell(sheet, key, fallback) {
-  const item = sheet?.data?.[key];
-  const raw = item && item.value !== undefined ? item.value : fallback;
-  const n = Number(String(raw ?? '').replace(',', '.').replace(/[^0-9.\-]/g, ''));
-  return Number.isFinite(n) ? n : fallback;
+function fmtNumber(value, digits = 2) {
+  if (value === null || value === undefined || !Number.isFinite(Number(value))) return 'Veri yok';
+  return Number(value).toLocaleString('tr-TR', { minimumFractionDigits: digits, maximumFractionDigits: digits });
 }
 
-function cellSource(sheet, key, fallbackLabel) {
-  return sheet?.data?.[key]?.source || fallbackLabel;
+function fmtPrice(value, unit = '', digits = 2) {
+  if (value === null || value === undefined || !Number.isFinite(Number(value))) return 'Veri yok';
+  const v = fmtNumber(value, digits);
+  if (unit === '₺') return `${v} ₺`;
+  if (unit === '$') return `$${v}`;
+  return v;
 }
 
-function pct(n, digits = 2) { return '%' + Number(n).toFixed(digits).replace('.', ','); }
-function bps(n) { return Math.round(Number(n)) + ' bps'; }
-function levelFromScore(score) { return score >= 75 ? 'bad' : score >= 60 ? 'warn' : score >= 42 ? 'neutral' : 'ok'; }
-function regimeFromScore(score) { return score >= 75 ? 'Yüksek Risk' : score >= 60 ? 'Orta-Yüksek Risk' : score >= 42 ? 'Orta Risk' : 'Düşük-Orta Risk'; }
+function pct(n, digits = 2) {
+  if (n === null || n === undefined || !Number.isFinite(Number(n))) return 'Veri yok';
+  return '%' + Number(n).toFixed(digits).replace('.', ',');
+}
+
+function bps(n) {
+  if (n === null || n === undefined || !Number.isFinite(Number(n))) return 'Veri yok';
+  return Math.round(Number(n)) + ' bps';
+}
+
+function changeText(chg) {
+  if (chg === null || chg === undefined || !Number.isFinite(Number(chg))) return 'Değişim yok';
+  const sign = chg > 0 ? '+' : '';
+  return `${sign}${Number(chg).toFixed(2).replace('.', ',')}%`;
+}
+
+async function fetchYahooChart(key, cfg) {
+  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(cfg.symbol)}?range=1mo&interval=1d&includePrePost=false`;
+  const payload = await fetchJson(url, 7500);
+  const result = payload?.chart?.result?.[0];
+  if (!result) throw new Error('Yahoo result empty');
+  const meta = result.meta || {};
+  const quote = result.indicators?.quote?.[0] || {};
+  const closes = (quote.close || []).map(num).filter(v => v !== null).slice(-12);
+  const price = num(meta.regularMarketPrice) ?? lastNumber(closes);
+  const prev = num(meta.chartPreviousClose) ?? (closes.length > 1 ? closes[closes.length - 2] : null);
+  const changePct = price !== null && prev !== null && prev !== 0 ? ((price - prev) / prev) * 100 : null;
+  const currency = meta.currency || null;
+  return {
+    key,
+    symbol: cfg.symbol,
+    label: cfg.label,
+    value: price,
+    display: fmtPrice(price, cfg.unit, cfg.digits),
+    changePct,
+    changeText: changeText(changePct),
+    currency,
+    unit: cfg.unit,
+    source: 'Yahoo Finance',
+    history: closes,
+    status: price !== null ? 'ok' : 'error'
+  };
+}
+
+async function fetchYahooMarkets() {
+  const entries = Object.entries(YAHOO_SYMBOLS);
+  const settled = await Promise.allSettled(entries.map(([key, cfg]) => fetchYahooChart(key, cfg)));
+  const markets = {};
+  const errors = [];
+  settled.forEach((res, i) => {
+    const [key, cfg] = entries[i];
+    if (res.status === 'fulfilled') markets[key] = res.value;
+    else {
+      errors.push({ key, symbol: cfg.symbol, error: res.reason?.message || 'fetch failed' });
+      markets[key] = { key, symbol: cfg.symbol, label: cfg.label, value: null, display: 'Veri yok', changePct: null, changeText: 'Değişim yok', unit: cfg.unit, source: 'Yahoo Finance', history: [], status: 'error' };
+    }
+  });
+  const usd = markets.usdtry?.value;
+  const goldOz = markets.gold?.value;
+  const silverOz = markets.silver?.value;
+  const goldGram = usd && goldOz ? (goldOz * usd / 31.1034768) : null;
+  const silverGram = usd && silverOz ? (silverOz * usd / 31.1034768) : null;
+  markets.goldGram = { key: 'goldGram', symbol: 'GC=F × USDTRY / 31.1035', label: 'Gram Altın', value: goldGram, display: fmtPrice(goldGram, '₺', 2), changePct: null, changeText: 'Hesaplanan değer', unit: '₺', source: 'Yahoo Finance hesaplama', history: [], status: goldGram !== null ? 'ok' : 'error' };
+  markets.silverGram = { key: 'silverGram', symbol: 'SI=F × USDTRY / 31.1035', label: 'Gram Gümüş', value: silverGram, display: fmtPrice(silverGram, '₺', 2), changePct: null, changeText: 'Hesaplanan değer', unit: '₺', source: 'Yahoo Finance hesaplama', history: [], status: silverGram !== null ? 'ok' : 'error' };
+  return { markets, errors };
+}
 
 function sentimentFromNews(news) {
   const badWords = ['risk','gerilim','baskı','kayıp','enflasyon','savaş','yaptırım','kriz','sert','zayıf','arttı','yükseldi'];
@@ -121,119 +205,119 @@ function sentimentFromNews(news) {
   return { score, label, level, tags: tagList, summary: `Haber akışında ${tagList.slice(0, 3).join(', ') || 'makro/piyasa'} başlıkları öne çıkıyor.` };
 }
 
-function historyValues(sheet, key, fallbackValues) {
-  const arr = sheet?.history?.[key];
-  if (!Array.isArray(arr) || !arr.length) return fallbackValues;
-  const nums = arr.map(x => Number(String(x.value ?? '').replace(',', '.'))).filter(Number.isFinite);
-  return nums.length ? nums.slice(-12) : fallbackValues;
+function riskScoreFromMarkets(markets, sentiment) {
+  const usd = markets.usdtry?.value;
+  const dxy = markets.dxy?.value;
+  const brent = markets.brent?.value;
+  const bistChange = markets.bist100?.changePct;
+  const vals = [usd, dxy, brent, bistChange].filter(v => v !== null && v !== undefined && Number.isFinite(Number(v)));
+  if (!vals.length) return { score: null, regime: 'Veri yok', level: 'neutral', drivers: [] };
+  let score = 40;
+  if (usd !== null && usd !== undefined) score += Math.min(22, Math.max(0, (usd - 30) * 0.55));
+  if (dxy !== null && dxy !== undefined) score += Math.min(12, Math.max(0, (dxy - 102) * 1.3));
+  if (brent !== null && brent !== undefined) score += Math.min(14, Math.max(0, (brent - 75) * 0.65));
+  if (bistChange !== null && bistChange !== undefined && bistChange < 0) score += Math.min(10, Math.abs(bistChange) * 2.4);
+  if (sentiment.level === 'bad') score += 6;
+  if (sentiment.level === 'warn') score += 3;
+  score = Math.round(Math.max(0, Math.min(100, score)));
+  const level = score >= 75 ? 'bad' : score >= 60 ? 'warn' : score >= 42 ? 'neutral' : 'ok';
+  const regime = score >= 75 ? 'Yüksek Risk' : score >= 60 ? 'Orta-Yüksek Risk' : score >= 42 ? 'Orta Risk' : 'Düşük-Orta Risk';
+  return { score, regime, level, drivers: ['USDTRY', 'DXY', 'Brent', 'BIST', 'Haber Akışı'] };
 }
 
-function buildHistory(current, fallback, step) {
-  const base = Number.isFinite(current) ? current : fallback;
-  return Array.from({ length: 10 }, (_, i) => +(base + Math.sin(i * 1.2) * step + (i - 5) * step * 0.12).toFixed(2));
+function historyOrEmpty(market) {
+  return Array.isArray(market?.history) ? market.history : [];
 }
 
-function buildData(news, sheet) {
+function buildData(news, yahoo) {
   const updatedAt = todayTR();
-  const policyRate = cell(sheet, 'TR_POLICY_RATE', 37);
-  const inflation = cell(sheet, 'TR_INFLATION_YOY', 32.84);
-  const y2 = cell(sheet, 'TR_2Y_YIELD', 39.5);
-  const y5 = cell(sheet, 'TR_5Y_YIELD', 34.8);
-  const y10 = cell(sheet, 'TR_10Y_YIELD', 30.2);
-  const cds5y = cell(sheet, 'TR_CDS_5Y', 260);
-  const usdtry = cell(sheet, 'TR_USDTRY', 39.1);
-  const eurtry = cell(sheet, 'TR_EURTRY', 42.5);
-  const bist = cell(sheet, 'TR_BIST100', 10500);
-  const brent = cell(sheet, 'TR_BRENT', 82);
-  const gold = cell(sheet, 'TR_GOLD', 2350);
-  const dxy = cell(sheet, 'TR_DXY', 105);
-  const spread2y10 = +(y10 - y2).toFixed(2);
+  const markets = yahoo.markets || {};
   const sentiment = sentimentFromNews(news);
-  let riskScoreValue = 42 + Math.min(28, Math.max(0, (cds5y - 180) / 8)) + Math.min(18, Math.max(0, (y10 - 22) * 0.8)) + Math.min(16, Math.max(0, (inflation - 20) * 0.45)) - Math.min(10, Math.max(0, (policyRate - inflation) * 0.35)) + 6;
-  if (sentiment.level === 'bad') riskScoreValue += 6;
-  if (sentiment.level === 'warn') riskScoreValue += 3;
-  riskScoreValue = Math.round(Math.max(0, Math.min(100, riskScoreValue)));
-  const riskScore = { score: riskScoreValue, regime: regimeFromScore(riskScoreValue), level: levelFromScore(riskScoreValue), drivers: ['CDS', '10Y Tahvil', 'Enflasyon', 'Haber Akışı'] };
+  const riskScore = riskScoreFromMarkets(markets, sentiment);
   const sourceStatus = [
-    { name: 'Google Sheets API', status: sheet.ok ? 'ok' : 'fallback', note: sheet.ok ? 'data ve history sayfaları okundu' : (sheet.error || 'sheet verisi alınamadı') },
-    { name: 'Yahoo Finance via Sheets', status: cellSource(sheet, 'TR_USDTRY', '').startsWith('yahoo') ? 'ok' : 'fallback', note: 'USDTRY/EURTRY/Brent/Altın/BIST/DXY Apps Script ile güncellenir' },
-    { name: 'Google News RSS', status: news.length ? 'ok' : 'fallback', note: news.length ? `${news.length} başlık alındı` : 'haber fallback kullanıldı' },
-    { name: 'Fallback model', status: 'ok', note: 'Veri kesilirse sayfa boş kalmaz' }
+    { name: 'Yahoo Finance', status: yahoo.errors?.length ? 'partial' : 'ok', note: yahoo.errors?.length ? `${yahoo.errors.length} sembol alınamadı` : 'Piyasa göstergeleri Yahoo Finance chart API üzerinden alındı' },
+    { name: 'Google News RSS', status: news.length ? 'ok' : 'error', note: news.length ? `${news.length} başlık alındı` : 'Haber akışı alınamadı' },
+    { name: 'Google Sheets', status: 'disabled', note: 'Kullanıcı isteğiyle kaldırıldı' },
+    { name: 'Fallback', status: 'disabled', note: 'Sahte/yedek değer kullanılmıyor' }
   ];
   return {
     updatedAt,
     generatedAt: new Date().toISOString(),
-    source: sheet.ok ? 'google-sheets + yahoo + news' : 'fallback + news',
+    source: 'yahoo-finance + news-rss',
     sourceStatus,
+    yahooErrors: yahoo.errors || [],
+    markets,
     kpis: [
-      { label: 'TCMB Politika Faizi', value: pct(policyRate), raw: policyRate, note: 'Google Sheets data satırından okunur', icon: '🏦', source: cellSource(sheet, 'TR_POLICY_RATE', 'Fallback') },
-      { label: 'TÜFE Yıllık', value: pct(inflation), raw: inflation, note: 'Google Sheets data satırından okunur', icon: '🧾', source: cellSource(sheet, 'TR_INFLATION_YOY', 'Fallback') },
-      { label: 'Türkiye 5Y CDS', value: bps(cds5y), raw: cds5y, note: 'Sheets üzerinden manuel/API/TE değeri bağlanabilir', icon: '🛡️', source: cellSource(sheet, 'TR_CDS_5Y', 'Fallback') },
-      { label: '10Y Tahvil', value: pct(y10), raw: y10, note: 'Sheets üzerinden manuel/API/TE değeri bağlanabilir', icon: '📜', source: cellSource(sheet, 'TR_10Y_YIELD', 'Fallback') }
+      { label: 'USD/TRY', value: markets.usdtry?.display || 'Veri yok', raw: markets.usdtry?.value ?? null, note: markets.usdtry?.changeText || 'Yahoo Finance', icon: '💵', source: 'Yahoo Finance' },
+      { label: 'EUR/TRY', value: markets.eurtry?.display || 'Veri yok', raw: markets.eurtry?.value ?? null, note: markets.eurtry?.changeText || 'Yahoo Finance', icon: '💶', source: 'Yahoo Finance' },
+      { label: 'BIST 100', value: markets.bist100?.display || 'Veri yok', raw: markets.bist100?.value ?? null, note: markets.bist100?.changeText || 'Yahoo Finance', icon: '📊', source: 'Yahoo Finance' },
+      { label: 'Brent Petrol', value: markets.brent?.display || 'Veri yok', raw: markets.brent?.value ?? null, note: markets.brent?.changeText || 'Yahoo Finance', icon: '🛢️', source: 'Yahoo Finance' }
     ],
     marketStrip: [
-      { label: 'Risk Skoru', value: `${riskScore.score}/100`, note: riskScore.regime },
-      { label: 'USDTRY / EURTRY', value: `${usdtry.toFixed(2)} / ${eurtry.toFixed(2)}`, note: 'Yahoo via Sheets' },
-      { label: '2Y-10Y Spread', value: `${spread2y10 > 0 ? '+' : ''}${spread2y10.toFixed(2)} puan`, note: spread2y10 < 0 ? 'Ters/yatay eğri baskısı' : 'Pozitif eğri' },
-      { label: 'BIST / Brent', value: `${Math.round(bist)} / ${brent.toFixed(1)}`, note: 'Risk iştahı ve enerji' }
+      { label: 'Risk Skoru', value: riskScore.score === null ? 'Veri yok' : `${riskScore.score}/100`, note: riskScore.regime },
+      { label: 'USDTRY / EURTRY', value: `${markets.usdtry?.display || 'Veri yok'} / ${markets.eurtry?.display || 'Veri yok'}`, note: 'Yahoo Finance' },
+      { label: 'Altın / Gümüş', value: `${markets.goldGram?.display || 'Veri yok'} / ${markets.silverGram?.display || 'Veri yok'}`, note: 'Gram değerler hesaplanır' },
+      { label: 'BIST / Brent', value: `${markets.bist100?.display || 'Veri yok'} / ${markets.brent?.display || 'Veri yok'}`, note: 'Yahoo Finance' }
     ],
     riskScore,
     sentiment,
     macroBrief: [
-      `Türkiye görünümünde ana çerçeve sıkı para politikası, dezenflasyon patikası, rezerv birikimi ve TL’ye güven dengesidir. Risk skoru ${riskScore.score}/100 ile ${riskScore.regime} bölgesinde çalışıyor.`,
-      `10Y tahvil ${pct(y10)}, 5Y CDS ${bps(cds5y)} ve 2Y-10Y spread ${spread2y10 > 0 ? '+' : ''}${spread2y10.toFixed(2)} puan seviyesinde izleniyor. USDTRY ${usdtry.toFixed(2)}, BIST100 ${Math.round(bist)} ve Brent ${brent.toFixed(1)} ekranın piyasa tarafını tamamlıyor.`,
-      news.length ? `Otomatik haber akışında öne çıkan başlık: ${news[0].title}` : 'Haber kaynağına erişim olmazsa ekran yedek makro senaryo ile çalışmaya devam eder.'
+      `Google Sheets ve fallback değerler kaldırıldı. Bu ekran artık piyasa göstergelerinde Yahoo Finance verisini kullanıyor; veri gelmeyen metriklerde sayı uydurulmuyor.`,
+      `USDTRY ${markets.usdtry?.display || 'Veri yok'}, EURTRY ${markets.eurtry?.display || 'Veri yok'}, BIST100 ${markets.bist100?.display || 'Veri yok'}, Brent ${markets.brent?.display || 'Veri yok'} seviyesinde izleniyor.`,
+      `Ons altın ${markets.gold?.display || 'Veri yok'}, gram altın ${markets.goldGram?.display || 'Veri yok'}, ons gümüş ${markets.silver?.display || 'Veri yok'}, gram gümüş ${markets.silverGram?.display || 'Veri yok'} olarak hesaplanıyor.`,
+      news.length ? `Otomatik haber akışında öne çıkan başlık: ${news[0].title}` : 'Haber kaynağına erişim olmadığında haber bölümü boş/uyarı mantığıyla çalışır.'
     ],
     bonds: [
-      { vade: '2Y Gösterge', getiri: pct(y2), numeric: y2, degisim: cellSource(sheet, 'TR_2Y_YIELD', 'Fallback'), durum: 'Kısa vadede politika faizi, likidite koşulları ve enflasyon beklentisi belirleyici.', risk: 'warn' },
-      { vade: '5Y Gösterge', getiri: pct(y5), numeric: y5, degisim: cellSource(sheet, 'TR_5Y_YIELD', 'Fallback'), durum: 'Orta vadede dezenflasyon güveni, yabancı talebi ve risk primi birlikte fiyatlanıyor.', risk: 'neutral' },
-      { vade: '10Y Gösterge', getiri: pct(y10), numeric: y10, degisim: cellSource(sheet, 'TR_10Y_YIELD', 'Fallback'), durum: 'Uzun vadede mali disiplin, rezerv kalitesi ve küresel faizler ana değişkenler.', risk: y10 > 32 ? 'bad' : 'warn' }
+      { vade: '2Y Gösterge', getiri: 'Veri yok', numeric: null, degisim: 'Yahoo Finance üzerinde güvenilir sembol tanımlı değil', durum: 'Google Sheets/fallback kaldırıldığı için yalnızca kaynak bağlanırsa dolar.', risk: 'neutral' },
+      { vade: '5Y Gösterge', getiri: 'Veri yok', numeric: null, degisim: 'Yahoo Finance üzerinde güvenilir sembol tanımlı değil', durum: 'Kaynak eklenmeden tahvil getirisi uydurulmaz.', risk: 'neutral' },
+      { vade: '10Y Gösterge', getiri: 'Veri yok', numeric: null, degisim: 'Yahoo Finance üzerinde güvenilir sembol tanımlı değil', durum: 'Tahvil/CDS için ayrıca güvenilir veri endpointi bağlanmalı.', risk: 'neutral' }
     ],
     spreads: [
-      { metrik: '2Y - 10Y Spread', deger: `${spread2y10 > 0 ? '+' : ''}${spread2y10.toFixed(2)} puan`, yorum: spread2y10 < 0 ? 'Kısa vadeli faizlerin uzun vadeyi aşması sıkı para politikası ve büyüme baskısı sinyali verir.' : 'Pozitif spread normalleşme sinyali üretir; ancak seviye hâlâ yüksek faiz ortamını gösterir.', seviye: spread2y10 < 0 ? 'warn' : 'neutral' },
-      { metrik: 'CDS Bandı', deger: cds5y > 300 ? 'Stres' : cds5y > 250 ? 'İzleme' : 'Rahatlama', yorum: 'CDS bandı eurobond spreadleri, bankacılık dış finansmanı ve yabancı iştahı açısından izlenir.', seviye: cds5y > 300 ? 'bad' : cds5y > 250 ? 'warn' : 'neutral' }
+      { metrik: '2Y - 10Y Spread', deger: 'Veri yok', yorum: 'Tahvil verisi için güvenilir kaynak bağlanmadı.', seviye: 'neutral' },
+      { metrik: 'CDS Bandı', deger: 'Veri yok', yorum: 'CDS Yahoo Finance üzerinden sağlıklı alınamadığı için sahte değer kullanılmıyor.', seviye: 'neutral' }
     ],
     stressMap: [
-      { name: 'Para Politikası', score: 68, level: 'warn', note: `Politika faizi ${pct(policyRate)}; reel faiz algısı kritik.` },
-      { name: 'Enflasyon', score: inflation > 30 ? 78 : 62, level: inflation > 30 ? 'bad' : 'warn', note: `Yıllık TÜFE ${pct(inflation)}; hizmet/çekirdek katılık önemli.` },
-      { name: 'Kur', score: 66, level: 'warn', note: `USDTRY ${usdtry.toFixed(2)}; sermaye akımı ve rezerv görünümü izlenmeli.` },
-      { name: 'Tahvil', score: y10 > 32 ? 76 : 60, level: y10 > 32 ? 'bad' : 'warn', note: `10Y ${pct(y10)}; eğri ve yabancı talebi takip edilmeli.` },
-      { name: 'CDS', score: cds5y > 300 ? 82 : cds5y > 250 ? 68 : 54, level: cds5y > 300 ? 'bad' : cds5y > 250 ? 'warn' : 'neutral', note: `5Y CDS ${bps(cds5y)}; eurobond spreadleri için ana gösterge.` },
-      { name: 'Jeopolitik', score: sentiment.tags.includes('Jeopolitik') ? 78 : 64, level: sentiment.tags.includes('Jeopolitik') ? 'bad' : 'warn', note: 'Bölgesel riskler enerji, cari denge ve risk primi üzerinden etkili.' },
-      { name: 'Bankacılık', score: 58, level: 'neutral', note: 'Marj, aktif kalitesi ve kredi büyümesi ayrışması izlenmeli.' }
+      { name: 'Kur', score: markets.usdtry?.value ? Math.round(Math.min(100, Math.max(30, (markets.usdtry.value - 25) * 2.2))) : 0, level: 'warn', note: `USDTRY ${markets.usdtry?.display || 'Veri yok'}` },
+      { name: 'Borsa', score: markets.bist100?.changePct !== null && markets.bist100?.changePct < 0 ? Math.round(Math.min(100, 45 + Math.abs(markets.bist100.changePct) * 8)) : 35, level: 'neutral', note: `BIST 100 değişim: ${markets.bist100?.changeText || 'Veri yok'}` },
+      { name: 'Enerji', score: markets.brent?.value ? Math.round(Math.min(100, Math.max(25, (markets.brent.value - 55) * 1.2))) : 0, level: 'warn', note: `Brent ${markets.brent?.display || 'Veri yok'}` },
+      { name: 'Dolar Endeksi', score: markets.dxy?.value ? Math.round(Math.min(100, Math.max(25, (markets.dxy.value - 95) * 4))) : 0, level: 'neutral', note: `DXY ${markets.dxy?.display || 'Veri yok'}` },
+      { name: 'Haber Akışı', score: sentiment.level === 'bad' ? 78 : sentiment.level === 'warn' ? 62 : 45, level: sentiment.level, note: sentiment.summary },
+      { name: 'Tahvil/CDS', score: 0, level: 'neutral', note: 'Kaynak bağlanmadı; değer uydurulmuyor.' }
     ],
     risk: [
-      { metrik: 'Kredi Notu', deger: 'BB- / BB- / Ba3', yorum: 'Yatırım yapılabilir seviyenin altında; dış finansman maliyeti ve eurobond spreadleri açısından kritik.', seviye: 'warn' },
-      { metrik: 'Rezerv Eğilimi', deger: 'Kırılgan toparlanma', yorum: 'Brüt rezervden çok net rezerv ve swap hariç görünüm TL güveni açısından belirleyici.', seviye: 'neutral' },
-      { metrik: 'Kur Oynaklığı', deger: 'Orta-Yüksek', yorum: 'TL; faiz beklentisi, sermaye akımı, enerji fiyatları ve iç haber akışına duyarlı.', seviye: 'warn' },
-      { metrik: 'Jeopolitik / Politik Baskı', deger: 'Yüksek', yorum: 'Bölgesel gerilimler petrol, CDS, BIST ve tahvil kanalıyla hızlı fiyatlanabilir.', seviye: 'bad' }
+      { metrik: 'CDS', deger: 'Veri yok', yorum: 'Yahoo Finance ile güvenilir CDS sembolü bağlanmadı; fallback kapalı.', seviye: 'neutral' },
+      { metrik: 'Tahvil Getirileri', deger: 'Veri yok', yorum: '2Y/5Y/10Y için güvenilir canlı kaynak bağlanmalı.', seviye: 'neutral' },
+      { metrik: 'Kur Oynaklığı', deger: markets.usdtry?.changeText || 'Veri yok', yorum: 'USDTRY Yahoo Finance üzerinden izleniyor.', seviye: 'warn' },
+      { metrik: 'Emtia / Enerji', deger: markets.brent?.display || 'Veri yok', yorum: 'Brent petrol enerji ve cari denge kanalı için izleniyor.', seviye: 'warn' }
     ],
     credit: [
-      { metrik: 'Kredi Büyümesi', deger: 'Seçici', yorum: 'Sıkı finansal koşullar kredi genişlemesini sınırlarken ticari ve tüketici kredi ayrışması izlenmeli.', seviye: 'neutral' },
-      { metrik: 'Bankacılık Marjı', deger: 'Baskılı', yorum: 'Mevduat maliyeti, regülasyonlar ve kredi fiyatlaması net faiz marjı üzerinde belirleyici.', seviye: 'warn' },
-      { metrik: 'Aktif Kalitesi', deger: 'İzlemede', yorum: 'Reel sektör nakit akışı, gecikme oranları ve yapılandırma eğilimi takip edilmeli.', seviye: 'warn' },
-      { metrik: 'Mevduat Kompozisyonu', deger: 'TL lehine hassas', yorum: 'TL mevduat payı ve kur korumalı ürünlerden çıkışın hızı önemini koruyor.', seviye: 'neutral' }
+      { metrik: 'Kredi Büyümesi', deger: 'Veri yok', yorum: 'Bu metrik Yahoo Finance kapsamında değildir; kaynak bağlanmadan değer gösterilmez.', seviye: 'neutral' },
+      { metrik: 'Bankacılık Endeksi', deger: 'Kaynak bağlanabilir', yorum: 'İstenirse XBANK.IS gibi sembol ayrı eklenebilir.', seviye: 'neutral' },
+      { metrik: 'Aktif Kalitesi', deger: 'Veri yok', yorum: 'BDDK/kurumsal kaynak bağlanmadan değer üretilmez.', seviye: 'neutral' },
+      { metrik: 'Mevduat Kompozisyonu', deger: 'Veri yok', yorum: 'TCMB/BDDK kaynağı bağlanmadan değer gösterilmez.', seviye: 'neutral' }
     ],
-    todayWatch: ['TCMB iletişimi ve faiz indirimi beklentileri', 'Çekirdek/hizmet enflasyonu sinyalleri', 'CDS 250-300 bps bandındaki kalıcılık', '10Y tahvil ve 2Y-10Y spread yönü', 'USDTRY oynaklığı ve rezerv haberleri', 'ABD 10Y, DXY ve petrol fiyatları'],
+    todayWatch: ['USDTRY ve EURTRY yönü', 'BIST100 günlük değişimi', 'Brent petrol fiyatı', 'Ons ve gram altın/gümüş', 'DXY ve küresel dolar görünümü', 'Türkiye ekonomi haber akışı'],
     miniHistory: {
-      cds5y: historyValues(sheet, 'TR_CDS_5Y', buildHistory(cds5y, 260, 4.8)),
-      y10: historyValues(sheet, 'TR_10Y_YIELD', buildHistory(y10, 30.2, 0.35)),
-      riskScore: buildHistory(riskScore.score, 65, 2.1),
-      bist100: historyValues(sheet, 'TR_BIST100', buildHistory(bist, 10500, 110)),
-      brent: historyValues(sheet, 'TR_BRENT', buildHistory(brent, 82, 1.2))
+      riskScore: riskScore.score === null ? [] : [riskScore.score],
+      cds5y: [],
+      y10: [],
+      bist100: historyOrEmpty(markets.bist100),
+      brent: historyOrEmpty(markets.brent),
+      usdtry: historyOrEmpty(markets.usdtry),
+      gold: historyOrEmpty(markets.gold)
     },
-    news: news.length ? news : [{ tarih: updatedAt, baslik: 'Türkiye piyasalarında enflasyon, faiz patikası ve rezerv görünümü izleniyor', etki: 'Veri akışı tahvil faizi, CDS ve TL fiyatlaması üzerinde belirleyici olmaya devam ediyor.' }]
+    news
   };
 }
 
 exports.handler = async function(event) {
   if (event.httpMethod === 'OPTIONS') return { statusCode: 204, headers: headers(), body: '' };
   try {
-    const [newsResult, sheetResult] = await Promise.allSettled([fetchNews(), fetchSheetData()]);
+    const [newsResult, yahooResult] = await Promise.allSettled([fetchNews(), fetchYahooMarkets()]);
     const news = newsResult.status === 'fulfilled' ? newsResult.value : [];
-    const sheet = sheetResult.status === 'fulfilled' ? sheetResult.value : { ok: false, data: {}, history: {}, error: 'sheet request failed' };
-    return { statusCode: 200, headers: headers(), body: JSON.stringify(buildData(news, sheet)) };
+    const yahoo = yahooResult.status === 'fulfilled' ? yahooResult.value : { markets: {}, errors: [{ key: 'all', error: yahooResult.reason?.message || 'Yahoo request failed' }] };
+    return { statusCode: 200, headers: headers(), body: JSON.stringify(buildData(news, yahoo)) };
   } catch (error) {
-    return { statusCode: 200, headers: headers(), body: JSON.stringify(buildData([], { ok: false, data: {}, history: {}, error: error.message })) };
+    return { statusCode: 200, headers: headers(), body: JSON.stringify({ updatedAt: todayTR(), generatedAt: new Date().toISOString(), source: 'error', error: error.message, markets: {}, kpis: [], marketStrip: [], news: [] }) };
   }
 };
