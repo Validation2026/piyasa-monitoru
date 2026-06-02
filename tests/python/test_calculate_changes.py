@@ -10,6 +10,7 @@ from datetime import datetime
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent / "collectors"))
 
 from yahoo_finance import calculate_changes as yf_calculate_changes
+from yahoo_finance import calculate_52w_range
 from fred_macro import calculate_changes as fred_calculate_changes
 
 
@@ -112,6 +113,31 @@ class TestYFCalculateChanges:
         pts = make_points([100, 133.33])
         result = yf_calculate_changes(pts)
         assert result["1d"] == 33.33
+
+
+class TestYFCalculate52wRange:
+
+    def test_uses_only_last_365_days(self):
+        pts = [
+            {"date": "2024-01-01", "value": 999},
+            {"date": "2024-12-31", "value": 100},
+            {"date": "2025-06-01", "value": 120},
+            {"date": "2025-12-31", "value": 80},
+        ]
+        result = calculate_52w_range(pts)
+        assert result == {"high_52w": 120.0, "low_52w": 80.0}
+
+    def test_ignores_invalid_and_empty_values(self):
+        pts = [
+            {"date": "bad", "value": 999},
+            {"date": "2025-01-01", "value": None},
+            {"date": "2025-01-02", "value": "101.25"},
+        ]
+        result = calculate_52w_range(pts)
+        assert result == {"high_52w": 101.25, "low_52w": 101.25}
+
+    def test_empty_returns_none_range(self):
+        assert calculate_52w_range([]) == {"high_52w": None, "low_52w": None}
 
 
 # ═══════════════════════════════════════════

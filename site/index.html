@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Risk Monitörü — Canlı Piyasa Verileri</title>
-    <meta name="description" content="900+ varlık, 9 kategori, otomatik güncellenen piyasa verileri">
+    <meta name="description" content="325 varlık, 9 kategori, otomatik güncellenen piyasa verileri">
     <meta property="og:title" content="Risk Monitörü — Canlı Piyasa Verileri">
-    <meta property="og:description" content="Emtia, döviz, kripto, tahvil ve borsa endeksleri — 80+ varlık, anlık veriler">
+    <meta property="og:description" content="Emtia, döviz, kripto, tahvil ve borsa endeksleri — 325 varlık, anlık veriler">
     <meta property="og:type" content="website">
     <meta property="og:locale" content="tr_TR">
     <meta name="theme-color" content="#3b82f6">
@@ -101,6 +101,7 @@
 </head>
 <body>
 
+<script src="assets/js/active-assets.js"></script>
 <script src="assets/js/app.js"></script>
 <script src="assets/js/sidebar.js"></script>
 
@@ -152,7 +153,7 @@
 </a>
 
 
-<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:20px;position:relative;overflow:hidden">
+<div class="ai-compact index-ai-box" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:20px;position:relative;overflow:hidden">
     <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#a78bfa,#3b82f6,#22d3ee)"></div>
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="font-size:.85rem;font-weight:700">🤖 Günlük Piyasa Özeti</span><span class="ai-breath" style="font-size:.58rem;font-family:'JetBrains Mono',monospace;font-weight:700;background:rgba(167,139,250,.15);color:#a78bfa;padding:2px 8px;border-radius:4px">AI</span></div>
     <div id="indexAiAnalysis" class="ai-body" style="font-size:.82rem;color:var(--t2);line-height:1.7;white-space:pre-wrap"><span style="color:var(--t3);font-style:italic">Günlük piyasa özeti yükleniyor...</span></div>
@@ -181,15 +182,15 @@
 
 <div class="sec-title">📦 Kategoriler</div>
 <div class="cat-grid">
-    <a class="cat" href="emtia-enerji.html"><div class="cat-icon">⛽</div><div class="cat-name">Enerji</div><div class="cat-desc">Brent, WTI, Doğalgaz, Benzin</div><div class="cat-tag">6 seri</div></a>
-    <a class="cat" href="emtia-metaller.html"><div class="cat-icon">🥇</div><div class="cat-name">Kıymetli Madenler</div><div class="cat-desc">Altın, Gümüş, Platin, Bakır</div><div class="cat-tag">6 seri</div></a>
-    <a class="cat" href="emtia-tarim.html"><div class="cat-icon">🌾</div><div class="cat-name">Tarım</div><div class="cat-desc">Buğday, Kahve, Kakao +10</div><div class="cat-tag">13 seri</div></a>
-    <a class="cat" href="sanayi.html"><div class="cat-icon">🏭</div><div class="cat-name">Sanayi & Hammadde</div><div class="cat-desc">Bakır, Çelik, Lityum, Navlun +10</div><div class="cat-tag">14 seri</div></a>
-    <a class="cat" href="kurlar.html"><div class="cat-icon">💱</div><div class="cat-name">Döviz Kurları</div><div class="cat-desc">29 parite + DXY</div><div class="cat-tag">29 seri</div></a>
-    <a class="cat" href="tahviller.html"><div class="cat-icon">📜</div><div class="cat-name">Tahviller</div><div class="cat-desc">ABD getiri eğrisi + tahvil ETF'leri</div><div class="cat-tag">13 seri</div></a>
-    <a class="cat" href="endeksler.html"><div class="cat-icon">📈</div><div class="cat-name">Endeksler</div><div class="cat-desc">BIST, S&P, DAX, Nikkei +14</div><div class="cat-tag">20 seri</div></a>
+    <a class="cat" href="emtia-enerji.html"><div class="cat-icon">⛽</div><div class="cat-name">Enerji</div><div class="cat-desc">Brent, WTI, Doğalgaz, Benzin</div><div class="cat-tag">13 seri</div></a>
+    <a class="cat" href="emtia-metaller.html"><div class="cat-icon">🥇</div><div class="cat-name">Kıymetli Madenler</div><div class="cat-desc">Altın, Gümüş, Platin, Bakır</div><div class="cat-tag">17 seri</div></a>
+    <a class="cat" href="emtia-tarim.html"><div class="cat-icon">🌾</div><div class="cat-name">Tarım</div><div class="cat-desc">Buğday, Kahve, Kakao +9</div><div class="cat-tag">12 seri</div></a>
+    <a class="cat" href="sanayi.html"><div class="cat-icon">🏭</div><div class="cat-name">Sanayi & Hammadde</div><div class="cat-desc">Bakır, Çelik, Lityum, Navlun +17</div><div class="cat-tag">21 seri</div></a>
+    <a class="cat" href="kurlar.html"><div class="cat-icon">💱</div><div class="cat-name">Döviz Kurları</div><div class="cat-desc">23 parite + DXY</div><div class="cat-tag">24 seri</div></a>
+    <a class="cat" href="tahviller.html"><div class="cat-icon">📜</div><div class="cat-name">Tahviller</div><div class="cat-desc">ABD getiri eğrisi + tahvil ETF'leri</div><div class="cat-tag">16 seri</div></a>
+    <a class="cat" href="endeksler.html"><div class="cat-icon">📈</div><div class="cat-name">Endeksler</div><div class="cat-desc">BIST, S&P, DAX, Nikkei +21</div><div class="cat-tag">25 seri</div></a>
     <a class="cat" href="kripto.html"><div class="cat-icon">₿</div><div class="cat-name">Kripto Paralar</div><div class="cat-desc">BTC, ETH, SOL, XRP +12</div><div class="cat-tag">16 seri</div></a>
-    <a class="cat" href="karsilastirma.html"><div class="cat-icon">📊</div><div class="cat-name">Karşılaştırma</div><div class="cat-desc">Varlık karşılaştırma & korelasyon</div><div class="cat-tag">84+ seri</div></a>
+    <a class="cat" href="karsilastirma.html"><div class="cat-icon">📊</div><div class="cat-name">Karşılaştırma</div><div class="cat-desc">Varlık karşılaştırma & korelasyon</div><div class="cat-tag">325 seri</div></a>
     
     <a class="cat" href="operasyonel-risk.html"><div class="cat-icon">🛡️</div><div class="cat-name">Operasyonel Risk Merkezi</div><div class="cat-desc">Dünya + Türkiye haberleri, AI günlük yorum</div><div class="cat-tag">08:30</div></a>
     <a class="cat" href="iran-risk.html"><div class="cat-icon">🔴</div><div class="cat-name">İran Risk Monitörü</div><div class="cat-desc">Savaş takibi, harita, haberler</div><div class="cat-tag">Canlı</div></a>
@@ -197,7 +198,7 @@
     <a class="cat" href="merkez-bankalari.html"><div class="cat-icon">🏛️</div><div class="cat-name">Merkez Bankaları</div><div class="cat-desc">Fed, ECB, TCMB faiz politikaları</div><div class="cat-tag">Analiz</div></a>
     <a class="cat" href="ulke-risk.html"><div class="cat-icon">🌐</div><div class="cat-name">Ülke Risk Profilleri</div><div class="cat-desc">CDS, kredi notları, 10 ülke</div><div class="cat-tag">Doğrulanmış</div></a>
     <a class="cat" href="turkiye.html"><div class="cat-icon">🇹🇷</div><div class="cat-name">Türkiye Monitörü</div><div class="cat-desc">Tahviller, haberler, makro ve risk özeti</div><div class="cat-tag">Yeni</div></a>
-    <a class="cat" href="hisseler.html"><div class="cat-icon">💹</div><div class="cat-name">Hisse Senetleri</div><div class="cat-desc">BIST, ABD mega-cap, küresel hisseler</div><div class="cat-tag">100+ hisse</div></a>
+    <a class="cat" href="hisseler.html"><div class="cat-icon">💹</div><div class="cat-name">Hisse Senetleri</div><div class="cat-desc">BIST, ABD mega-cap, küresel hisseler</div><div class="cat-tag">181 hisse</div></a>
 </div>
 
 <div class="sec-title">💹 Tüm Fiyatlar <button type="button" id="idxExcelAll" class="tbl-csv-btn" style="margin-left:10px;vertical-align:middle" title="Tüm tablo verilerini Excel'e indir">⬇ Excel</button></div>
@@ -238,7 +239,7 @@ function animateCounter(id, endVal, suffix = '') {
 // Kategori sayısı sabit (sidebar'daki veri sayfası sayısı)
 animateCounter('stCat', 9);
 
-function fj(f){return fetch(D+f+'?t='+Date.now()).then(function(r){return r.json()}).catch(function(){return null})}
+function fj(f){return fetch(D+f+'?t='+Date.now()).then(function(r){return r.json()}).then(function(d){return window.PMFilterActiveData?PMFilterActiveData(f,d):d}).catch(function(){return null})}
 function fp(v,d){if(v==null)return'—';d=d!=null?d:2;return Number(v).toLocaleString('tr-TR',{minimumFractionDigits:d,maximumFractionDigits:d})}
 function fs(d,id){if(!d||!d.series)return null;for(var i=0;i<d.series.length;i++)if(d.series[i].id===id)return d.series[i];return null}
 function cc(p){return p>=0?'u':'d'}
@@ -379,7 +380,7 @@ fj('summary.json').then(function(data){
         }
 
         // Gerçek sayıları anime ederek göster (veride bulunanları say)
-        animateCounter('stTotal', all.length, '+');
+        animateCounter('stTotal', all.length);
         animateCounter('stComm', commSeries.length);
         animateCounter('stFx',   fxSeries.length);
         animateCounter('stCry',  cryptoSeries.length);
