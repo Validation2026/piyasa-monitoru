@@ -329,6 +329,41 @@ def calculate_changes(data_points: list) -> dict:
     return changes
 
 
+def calculate_52w_range(data_points: list) -> dict:
+    """Son 52 hafta içindeki en yüksek ve en düşük değeri hesaplar.
+
+    Collector 5 yıllık tarihsel veri tutar; fakat JSON alan adları
+    high_52w/low_52w olduğu için aralık yalnızca son 365 günü kapsamalıdır.
+    """
+    parsed = []
+    for p in data_points or []:
+        try:
+            dd = datetime.strptime(p["date"], "%Y-%m-%d").date()
+        except Exception:
+            continue
+        value = p.get("value")
+        if value is None:
+            continue
+        try:
+            parsed.append((dd, float(value)))
+        except (TypeError, ValueError):
+            continue
+
+    if not parsed:
+        return {"high_52w": None, "low_52w": None}
+
+    parsed.sort(key=lambda x: x[0])
+    latest_date = parsed[-1][0]
+    cutoff = latest_date - timedelta(days=365)
+    values_52w = [v for dd, v in parsed if dd >= cutoff]
+    if not values_52w:
+        values_52w = [parsed[-1][1]]
+
+    return {
+        "high_52w": round(max(values_52w), 4),
+        "low_52w": round(min(values_52w), 4),
+    }
+
 # ═══════════════════════════════════════════════════════════
 #  Grup Fetch — Her sembol: önce API, sonra yfinance
 # ═══════════════════════════════════════════════════════════
@@ -408,7 +443,7 @@ def fetch_group(group: dict) -> dict:
             points_for_calc = points
 
         changes = calculate_changes(points_for_calc)
-        values = [p["value"] for p in points]
+        range_52w = calculate_52w_range(points)
         logo_meta = tradingview_logo_meta(symbol, meta)
         local_meta = _local_logo_meta(symbol)
 
@@ -426,8 +461,8 @@ def fetch_group(group: dict) -> dict:
             "change_3m_pct": changes.get("3m"),
             "change_ytd_pct": changes.get("ytd"),
             "change_1y_pct": changes.get("1y"),
-            "high_52w": round(max(values), 4),
-            "low_52w": round(min(values), 4),
+            "high_52w": range_52w["high_52w"],
+            "low_52w": range_52w["low_52w"],
             "data": points
         }
         # Yerel logo varsa ekle
