@@ -249,6 +249,7 @@ function makeChart(canvasId,series,opts){
     var c=document.getElementById(canvasId);if(!c||!series||!series.data||!series.data.length)return null;
     opts=opts||{};var color=opts.color||COLORS[0];
     var filtered=filterPeriod(series.data,opts.period||'all');
+    if(!filtered || filtered.length < 2) filtered = series.data;
     filtered=downsample(filtered,300);
     var labels=filtered.map(function(d){return d.date});var vals=filtered.map(function(d){return d.value});
     var dark=document.documentElement.getAttribute('data-theme')!=='light';
@@ -599,14 +600,41 @@ function showAssetModal(series, opts){
 
     el.classList.add('show');
     el.setAttribute('aria-hidden','false');
-    // Mini chart
-    setTimeout(function(){
-        if(_assetModalChart){try{_assetModalChart.destroy()}catch(e){}}
-        if(series.data && series.data.length){
-            _assetModalChart = makeChart('assetModalChart', series, {color:'#3b82f6', period:'1y'});
-        }
-    }, 30);
+    renderAssetModalChart(series);
 }
+
+function renderAssetModalChart(series){
+    var wrap = document.querySelector('.asset-modal-chart');
+    if(!wrap) return;
+    if(_assetModalChart){try{_assetModalChart.destroy()}catch(e){} _assetModalChart=null}
+
+    var chartData = (series && series.data && series.data.length) ? series.data : ((series && series.spark && series.spark.length) ? series.spark : []);
+    if(!chartData || chartData.length < 2){
+        wrap.innerHTML = '<div class="asset-modal-chart-empty">Grafik için yeterli veri yok.</div>';
+        return;
+    }
+
+    // Chart.js canvas state can stick to a previous modal render; recreate it every time.
+    wrap.innerHTML = '<canvas id="assetModalChart" aria-label="Varlık fiyat grafiği" role="img"></canvas><div class="asset-modal-chart-status">Grafik yükleniyor…</div>';
+    var status = wrap.querySelector('.asset-modal-chart-status');
+    var chartSeries = Object.assign({}, series, { data: chartData });
+
+    ensureChartJs().then(function(){
+        requestAnimationFrame(function(){
+            if(!_assetModalEl || !_assetModalEl.classList.contains('show')) return;
+            if(status) status.remove();
+            _assetModalChart = makeChart('assetModalChart', chartSeries, {color:'#3b82f6', period:'1y'});
+            if(!_assetModalChart){
+                wrap.innerHTML = '<div class="asset-modal-chart-empty">Grafik oluşturulamadı.</div>';
+            } else if(_assetModalChart.resize) {
+                _assetModalChart.resize();
+            }
+        });
+    }).catch(function(){
+        wrap.innerHTML = '<div class="asset-modal-chart-empty">Grafik kütüphanesi yüklenemedi.</div>';
+    });
+}
+
 function openAssetFromUrl(data){
     if(!data || !data.series) return false;
     try{
