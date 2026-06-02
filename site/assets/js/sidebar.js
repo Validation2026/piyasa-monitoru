@@ -192,6 +192,7 @@ setInterval(tick,1000);tick();
             return fetch('data/'+d.file+'?t='+Date.now(), {cache:'no-store'})
                 .then(function(r){return r.json()})
                 .then(function(json){
+                    if(window.PMFilterActiveData) json = PMFilterActiveData(d.file, json);
                     if(!json || !json.series) return;
                     json.series.forEach(function(s){
                         if(!s || !s.name) return;

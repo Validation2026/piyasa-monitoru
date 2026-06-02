@@ -78,6 +78,7 @@
 </style>
 </head>
 <body>
+<script src="assets/js/active-assets.js"></script>
 <script src="assets/js/sidebar.js"></script>
 <div class="page">
 <div class="page-spacer"></div>
@@ -347,10 +348,10 @@ function corrColor(v) {
 function buildPerfTable(seriesList) {
     var el = document.getElementById('perfTable');
     if (!seriesList.length) { el.innerHTML = ''; return; }
-    var html = '<table class="perf-table"><thead><tr><th>Varlık</th><th>Fiyat</th><th>1G</th><th>1H</th><th>1A</th><th>YTD</th><th>1Y</th><th>52H Aralık</th></tr></thead><tbody>';
+    var html = '<table class="perf-table"><thead><tr><th>Varlık</th><th>Fiyat</th><th>1G</th><th>1H</th><th>1A</th><th>3A</th><th>YTD</th><th>1Y</th><th>52H Aralık</th></tr></thead><tbody>';
     seriesList.forEach(function(s) {
         function cv(p) { if (p == null) return '<td class="d" style="color:var(--t3)">—</td>'; return '<td class="' + (p >= 0 ? 'u' : 'd') + '">' + (p >= 0 ? '+' : '') + p.toFixed(2) + '%</td>'; }
-        html += '<tr><td>' + s.name + '</td><td style="font-family:var(--mono)">' + PM.fp(s.current) + ' ' + (s.unit || '') + '</td>' + cv(s.change_1d_pct) + cv(s.change_1w_pct) + cv(s.change_1m_pct) + cv(s.change_ytd_pct) + cv(s.change_1y_pct) + '<td style="font-family:var(--mono);font-size:.7rem;color:var(--t3)">' + (s.low_52w != null ? PM.fp(s.low_52w) + ' — ' + PM.fp(s.high_52w) : '—') + '</td></tr>';
+        html += '<tr><td>' + s.name + '</td><td style="font-family:var(--mono)">' + PM.fp(s.current) + ' ' + (s.unit || '') + '</td>' + cv(s.change_1d_pct) + cv(s.change_1w_pct) + cv(s.change_1m_pct) + cv(s.change_3m_pct) + cv(s.change_ytd_pct) + cv(s.change_1y_pct) + '<td style="font-family:var(--mono);font-size:.7rem;color:var(--t3)">' + (s.low_52w != null ? PM.fp(s.low_52w) + ' — ' + PM.fp(s.high_52w) : '—') + '</td></tr>';
     });
     html += '</tbody></table>';
     el.innerHTML = html;
