@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Sanayi & Hammadde",
-    "updated_at": "2026-06-03T05:01:29Z",
+    "updated_at": "2026-06-03T05:54:58Z",
     "symbol_count": 21,
     "errors": []
   },
@@ -17,14 +17,14 @@
         "https://s3-symbol-logo.tradingview.com/hg.svg",
         "https://s3-symbol-logo.tradingview.com/hg--big.svg"
       ],
-      "current": 6.656,
-      "change_1d_pct": 0.1,
-      "change_1w_pct": 5.57,
-      "change_1m_pct": 12.2,
-      "change_3m_pct": 10.85,
-      "change_ytd_pct": 18.22,
-      "change_1y_pct": 48.64,
-      "high_52w": 6.656,
+      "current": 6.6455,
+      "change_1d_pct": -0.06,
+      "change_1w_pct": 5.4,
+      "change_1m_pct": 12.03,
+      "change_3m_pct": 10.68,
+      "change_ytd_pct": 18.04,
+      "change_1y_pct": 48.4,
+      "high_52w": 6.6495,
       "low_52w": 4.3305,
       "data": [
         {
@@ -5061,7 +5061,7 @@
         },
         {
           "date": "2026-06-03",
-          "value": 6.656
+          "value": 6.6455
         }
       ]
     },
@@ -5075,13 +5075,13 @@
         "https://s3-symbol-logo.tradingview.com/ali.svg",
         "https://s3-symbol-logo.tradingview.com/ali--big.svg"
       ],
-      "current": 3778.5,
-      "change_1d_pct": -6.8,
-      "change_1w_pct": -9.93,
-      "change_1m_pct": 8.07,
-      "change_3m_pct": 24.12,
-      "change_ytd_pct": 30.01,
-      "change_1y_pct": 52.31,
+      "current": 3778.0,
+      "change_1d_pct": -6.81,
+      "change_1w_pct": -9.94,
+      "change_1m_pct": 8.06,
+      "change_3m_pct": 24.1,
+      "change_ytd_pct": 30.0,
+      "change_1y_pct": 52.29,
       "high_52w": 4195.0,
       "low_52w": 2365.75,
       "data": [
@@ -10108,6 +10108,10 @@
         {
           "date": "2026-06-02",
           "value": 4054.25
+        },
+        {
+          "date": "2026-06-03",
+          "value": 3778.0
         }
       ]
     },
@@ -10121,13 +10125,13 @@
         "https://s3-symbol-logo.tradingview.com/znc.svg",
         "https://s3-symbol-logo.tradingview.com/znc--big.svg"
       ],
-      "current": 109.6562,
-      "change_1d_pct": -0.27,
-      "change_1w_pct": -0.23,
-      "change_1m_pct": -0.89,
-      "change_3m_pct": -3.69,
-      "change_ytd_pct": -2.47,
-      "change_1y_pct": -1.74,
+      "current": 109.6094,
+      "change_1d_pct": -0.31,
+      "change_1w_pct": -0.27,
+      "change_1m_pct": -0.93,
+      "change_3m_pct": -3.73,
+      "change_ytd_pct": -2.52,
+      "change_1y_pct": -1.78,
       "high_52w": 113.8594,
       "low_52w": 108.7031,
       "data": [
@@ -15165,7 +15169,7 @@
         },
         {
           "date": "2026-06-03",
-          "value": 109.6562
+          "value": 109.6094
         }
       ]
     },
