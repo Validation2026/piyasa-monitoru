@@ -1,296 +1,605 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" data-theme="light">
 <head>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex, nofollow">
-<title>Admin</title>
+    <meta name="theme-color" content="#3b82f6">
+<title>İran Risk Monitörü — Risk Monitörü</title>
+<meta name="description" content="İran-İsrail gerilimi canlı risk takibi — jeopolitik harita, risk skorları ve piyasa etki analizi">
+<meta property="og:title" content="İran Risk Monitörü — Risk Monitörü">
+<meta property="og:description" content="İran-İsrail gerilimi canlı risk takibi — jeopolitik harita, risk skorları ve piyasa etki analizi">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="tr_TR">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔴</text></svg>">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23dc2626'/><text x='50' y='70' font-size='60' text-anchor='middle' fill='white'>🔴</text></svg>">
+<link rel="preconnect" href="https://unpkg.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',system-ui;background:#f0f4f8;color:#0f172a;padding:20px}
-.c{max-width:700px;margin:0 auto} 
-h1{font-size:1.2rem;font-weight:800;margin-bottom:14px}
-.card{background:#fff;border:1px solid #dde4ed;border-radius:10px;padding:14px;margin-bottom:12px}
-.ct{font-size:.65rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
-label{font-size:.68rem;font-weight:600;color:#64748b;display:block;margin-bottom:3px}
-input,select,textarea{width:100%;border:1px solid #dde4ed;border-radius:6px;padding:7px 9px;font-size:.82rem;outline:none;background:#f8fafc;margin-bottom:6px;font-family:inherit}
-input:focus,select:focus,textarea:focus{border-color:#3b82f6}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-textarea{min-height:74px;resize:vertical;line-height:1.35}
-.btn{background:#ff4757;color:#fff;border:none;border-radius:8px;padding:11px;font-weight:800;font-size:.82rem;cursor:pointer;width:100%;margin-top:6px}
-.btn:hover{background:#e83e4e}
-.btn-sm{background:#64748b;color:#fff;border:none;border-radius:4px;padding:4px 8px;font-size:.62rem;font-weight:700;cursor:pointer}
-.btn-del{background:#fee2e2;color:#dc2626;border:none;border-radius:4px;padding:5px 7px;cursor:pointer;font-weight:700;font-size:.8rem}
-.status{text-align:center;margin-top:8px;font-size:.75rem;color:#64748b}
+.war-banner{background:linear-gradient(135deg,#1a0000,#330000);border:2px solid #660000;border-radius:12px;padding:14px 10px;text-align:center;margin-bottom:16px}
+.war-day{font-size:2.5rem;font-weight:900;font-family:'JetBrains Mono',monospace;color:#ff4757;line-height:1}
+.war-label{font-size:.6rem;color:#ff6b6b;text-transform:uppercase;letter-spacing:1px;margin-top:4px;word-break:break-word}
+.top-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.g-card{background:#fff;border:1px solid #dde4ed;border-radius:12px;padding:16px;text-align:center}
+.g-score{font-size:2.5rem;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1}
+.g-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-top:4px;color:#64748b}
+.g-bar{height:6px;border-radius:3px;background:#e2e8f0;margin-top:10px;overflow:hidden}
+.g-fill{height:100%;border-radius:3px;transition:width 1.5s cubic-bezier(0.22, 1, 0.36, 1);} 
+.hz-card{background:#fff;border:1px solid #dde4ed;border-radius:12px;padding:16px;display:flex;align-items:center;gap:12px}
+.hz-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0}
+.hz-txt{font-size:.95rem;font-weight:800}
 
-/* 3'lü Sadeleştirilmiş Fiyat Giriş Tablosu */
-.price-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 6px; }
-.item-box { background:#f8fafc; border:1px solid #dde4ed; border-radius:6px; padding:10px; margin-bottom:10px; }
-.item-title { font-weight:700; font-size:.85rem; color:#0f172a; margin-bottom:4px; border-bottom:1px solid #e2e8f0; padding-bottom:4px; }
-@media(max-width:600px){ .price-grid{grid-template-columns: 1fr;} }
+/* Sıkılaştırılmış AI Kutusu Tasarımı */
+/* Sıkılaştırılmış AI Kutusu Tasarımı */
+.ai-box {background:var(--card); border:1px solid var(--border); border-radius:var(--r); padding:10px 12px !important; margin-bottom:14px !important; border-top:3px solid var(--purple)}
+.ai-header {display:flex; align-items:center; gap:8px; margin-bottom:5px !important}
+.ai-header span {font-size:.8rem; font-weight:700}
+.ai-badge {font-size:.55rem; font-family:var(--mono); font-weight:700; background:rgba(167,139,250,.15); color:var(--purple); padding:2px 6px; border-radius:4px}
+.ai-body {font-size:.74rem; color:var(--t2); line-height:1.25 !important; word-wrap:break-word}
+.ai-body > div {margin-bottom: 5px !important; text-align:justify}
+.ai-body > div:last-child {margin-bottom: 0 !important;}
+    .brief-warning{display:none;margin:0 0 8px;padding:7px 9px;border-radius:8px;background:#fff7ed;border:1px solid #fdba74;color:#c2410c;font-size:.68rem;font-weight:700}
+    .brief-meta{font-size:.62rem;color:#94a3b8;margin-top:2px;font-family:var(--mono)}
+    .brief-sources{margin-top:6px;padding-top:5px;border-top:1px solid var(--border);font-size:.62rem;color:#94a3b8}
+    .brief-sources a{color:#3b82f6;text-decoration:none;font-weight:700}
+
+.cm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:7px;margin-bottom:16px}
+.cm{background:#fff;border:1px solid #dde4ed;border-radius:8px;padding:9px;text-align:center}
+.cm-n{font-size:.62rem;color:#94a3b8;font-weight:700;text-transform:uppercase}.cm-v{font-size:.9rem;font-family:'JetBrains Mono',monospace;font-weight:700;margin:4px 0}
+.cm-c{font-size:.67rem;font-family:'JetBrains Mono',monospace;font-weight:700}
+.cm-c.u{color:#00d68f}.cm-c.d{color:#ff4757}
+.cm-extra{display:flex;justify-content:center;gap:8px;margin-top:4px;font-size:.55rem;font-family:'JetBrains Mono',monospace;font-weight:700}
+.cm-extra .lbl{color:#94a3b8;font-weight:600}
+.cm-extra .v.u{color:#00d68f}.cm-extra .v.d{color:#ff4757}.cm-extra .v.n{color:#94a3b8}
+.cm-war{font-size:.58rem;font-family:'JetBrains Mono',monospace;font-weight:700;margin-top:3px;padding:2px 4px;border-radius:3px;background:rgba(255,71,87,.08)}
+.cm-war.u{color:#ff4757}.cm-war.d{color:#00d68f}
+.map-box{background:#fff;border:1px solid #dde4ed;border-radius:12px;overflow:hidden;margin-bottom:16px}
+.map-box h3{padding:12px 16px 6px;font-size:.88rem;font-weight:700}
+.map-leg{padding:2px 16px 8px;display:flex;gap:12px;flex-wrap:wrap;font-size:.62rem;color:#94a3b8}
+.map-leg span{display:flex;align-items:center;gap:4px}
+.ld{width:9px;height:9px;border-radius:50%;display:inline-block}
+#warMap{height:450px;z-index:1}
+.news-box{background:#fff;border:1px solid #dde4ed;border-radius:12px;padding:14px 16px;margin-bottom:16px;max-height:380px;overflow-y:auto}
+.nw{padding:7px 0;border-bottom:1px solid #e8edf2;font-size:.77rem}
+.nw:last-child{border-bottom:none}
+.nw a{color:#0f172a;text-decoration:none}.nw a:hover{color:#3b82f6}
+.nw-t{font-size:.6rem;color:#94a3b8;margin-top:1px}
+.tl-f{background:#fff;border:1px solid #dde4ed;border-radius:5px;padding:4px 10px;font-size:.67rem;font-weight:600;cursor:pointer;color:#64748b;transition:.2s}
+.tl-f:hover,.tl-f.on{background:#3b82f6;color:#fff;border-color:#3b82f6}
+#tlBox::before{content:'';position:absolute;left:6px;top:0;bottom:0;width:2px;background:#dde4ed}
+.tl-i{position:relative;margin-bottom:14px}
+.tl-d{position:absolute;left:-20px;top:3px;width:10px;height:10px;border-radius:50%;border:2px solid #fff}
+.tl-d.red{background:#ff4757}.tl-d.orange{background:#f97316}.tl-d.blue{background:#3b82f6}.tl-d.purple{background:#a78bfa}
+.tl-dt{font-size:.65rem;font-family:'JetBrains Mono',monospace;font-weight:700;color:#94a3b8}
+.tl-tt{font-size:.8rem;font-weight:700;color:#0f172a;margin:1px 0}
+.tl-ds{font-size:.72rem;color:#64748b;line-height:1.4}
+.tl-tg{display:inline-block;font-size:.55rem;font-weight:700;padding:1px 5px;border-radius:3px;margin-top:3px;text-transform:uppercase}
+.tg-mil{background:#fee2e2;color:#dc2626}.tg-dip{background:#dbeafe;color:#2563eb}.tg-eco{background:#fef3c7;color:#d97706}.tg-nuk{background:#f3e8ff;color:#7c3aed}
+
+/* MOBİL GÖRÜNÜM GÜNCELLEMESİ (cm-grid ikişerli yapıldı) */
+@media(max-width:768px){
+    .top-row{grid-template-columns:1fr}
+    #warMap{height:300px}
+    .cm-grid{grid-template-columns:repeat(2,1fr) !important;} /* MOBİLDE İKİŞER KART */
+    .war-day{font-size:2rem}
+    .war-label{font-size:.55rem;letter-spacing:.5px}
+}
+
+/* ══════════════════════════════════════════
+   HARİTA VE PREMIUM ANİMASYONLAR (YENİ AKIŞ EKLENDİ)
+   ══════════════════════════════════════════ */
+   
+/* 1. Şelale (Cascade) Giriş Animasyonu */
+@keyframes slideUpFade { 
+    from { opacity: 0; transform: translateY(20px); } 
+    to { opacity: 1; transform: translateY(0); } 
+}
+
+/* Sayfa elemanları sırayla düşsün */
+.page-head { opacity: 0; animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; animation-delay: 0.1s; }
+.war-banner { opacity: 0; animation: slideUpFade 0.5s ease-out forwards; animation-delay: 0.2s; }
+.top-row { opacity: 0; animation: slideUpFade 0.5s ease-out forwards; animation-delay: 0.3s; }
+.ai-box { opacity: 0; animation: slideUpFade 0.5s ease-out forwards; animation-delay: 0.4s; }
+.sec-title, .cm-grid { opacity: 0; animation: slideUpFade 0.5s ease-out forwards; animation-delay: 0.5s; }
+.map-box { opacity: 0; animation: slideUpFade 0.5s ease-out forwards; animation-delay: 0.6s; }
+#tlFilter, #tlBox { opacity: 0; animation: slideUpFade 0.5s ease-out forwards; animation-delay: 0.7s; }
+.news-box, .footer { opacity: 0; animation: slideUpFade 0.5s ease-out forwards; animation-delay: 0.8s; }
+
+/* 2. Saldırı (Radar) Şok Dalgası */
+.strike-pulse { animation: radarPulse 1.5s ease-out infinite; }
+@keyframes radarPulse { 0% { stroke-width: 2; stroke-opacity: 0.8; } 100% { stroke-width: 35; stroke-opacity: 0; } }
+
+/* 3. Kart Şelale (Cascade) Giriş Efekti */
+.cm {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+    animation: cardPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+@keyframes cardPop {
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* 4. Timeline (Zaman Çizelgesi) Sinyal Efekti */
+.tl-d.red { animation: pulseRed 2s infinite; }
+@keyframes pulseRed { 0% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.6); } 70% { box-shadow: 0 0 0 8px rgba(255, 71, 87, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0); } }
+
+.tl-d.blue { animation: pulseBlue 2s infinite; }
+@keyframes pulseBlue { 0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.6); } 70% { box-shadow: 0 0 0 8px rgba(59, 130, 246, 0); } 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); } }
+
+.tl-d.orange { animation: pulseOrange 2s infinite; }
+@keyframes pulseOrange { 0% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.6); } 70% { box-shadow: 0 0 0 8px rgba(249, 115, 22, 0); } 100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0); } }
+
+.tl-d.purple { animation: pulsePurple 2s infinite; }
+@keyframes pulsePurple { 0% { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.6); } 70% { box-shadow: 0 0 0 8px rgba(167, 139, 250, 0); } 100% { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0); } }
+
+/* 5. Nefes Alan AI Rozeti */
+@keyframes breathBadge { 
+    0% { box-shadow: 0 0 0 0 rgba(167,139,250,0.4); } 
+    70% { box-shadow: 0 0 0 6px rgba(167,139,250,0); } 
+    100% { box-shadow: 0 0 0 0 rgba(167,139,250,0); } 
+}
+.ai-breath { animation: breathBadge 2s infinite; }
+
+/* 6. HAREKETLİ SINIR ÇİZGİSİ */
+.animated-border { stroke-dasharray: 8, 8 !important; animation: borderFlow 3s linear infinite; }
+@keyframes borderFlow { to { stroke-dashoffset: -32; } }
+
 </style>
 </head>
 <body>
-<div class="c">
-<h1>⚙️ İran Risk — Admin</h1>
-
-<div class="card">
-<label>PIN</label>
-<input type="password" id="pin" placeholder="PIN">
+<script src="assets/js/active-assets.js"></script>
+<script src="assets/js/sidebar.js"></script>
+<script src="assets/js/app.js"></script>
+<div class="page">
+<div class="page-spacer"></div>
+<div class="page-head"><h1>🔴 İran Risk Monitörü</h1>
 </div>
 
-<div class="card">
-<div class="ct">Risk Ayarları</div>
-<div class="row">
-<div><label>Risk Skoru (0-100)</label><input type="number" id="risk" min="0" max="100" value="50"></div>
-<div><label>Hürmüz Durumu</label><select id="hurmuz"><option value="AÇIK / GÜVENLİ">🟢 AÇIK</option><option value="RİSKLİ">🟡 RİSKLİ</option><option value="KISMEN KAPALI">🟠 KISMEN KAPALI</option><option value="KAPALI">🔴 KAPALI</option></select></div>
-</div>
+<div class="war-banner" id="adminWarBanner" style="display:block;background:linear-gradient(135deg,#b45309,#c2410c); border-color:#fdba74;">
+<div id="briefHeadline" style="color:#fb923c;font-size:1.5rem;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1.2;margin-bottom:8px">İran risk bannerı yükleniyor...</div>
+<div id="briefSummary" style="font-size:.85rem;color:#fed7aa;font-weight:500;">Admin panelindeki banner yazısı bekleniyor.</div>
 </div>
 
-<div class="card">
-<div class="ct">🟠 Ortak İran Banner Yazısı</div>
-<div style="font-size:.65rem;color:#64748b;margin-bottom:8px">Buraya yazdığın başlık ve açıklama hem index sayfasındaki İran bannerında hem de İran sayfasının en üstündeki war bannerda aynı şekilde görünür.</div>
-<label>Banner Başlığı</label>
-<input type="text" id="bannerHeadline" placeholder="Örn: Ateşkes kırılgan, Hürmüz riski yüksek">
-<label>Banner Alt Yazısı</label>
-<textarea id="bannerSummary" placeholder="Örn: Güncel risk notu ve piyasa etkisi kısa açıklaması"></textarea>
+<div class="top-row">
+<div class="g-card"><div class="g-label" id="rLabel">RİSK SEVİYESİ</div><div class="g-score" id="rScore">0</div><div class="g-bar"><div class="g-fill" id="rFill" style="width: 0%;"></div></div></div>
+<div class="hz-card"><div class="hz-dot" id="hDot" style="background:#00d68f"></div><div><div class="hz-txt" id="hTxt">Yükleniyor...</div><div style="font-size:.68rem;color:#94a3b8;margin-top:2px">Hürmüz Boğazı — Dünya petrolünün %20'si</div></div></div>
 </div>
 
-<div class="card">
-<div class="ct">Emtia Override (Otomatik Yüzde)</div>
-<div style="font-size:.65rem;color:#64748b;margin-bottom:8px">Sadece Eski Fiyatı girin, yüzde değişimini sistem kendi hesaplar. Boş bırakırsanız otomatik veriyi kullanır.</div>
-<div id="comms"></div>
+<div class="ai-box">
+    <div class="ai-header">
+        <span>📌 Piyasa Analizi</span>
+        <span class="ai-badge ai-breath">AI</span>
+    </div>
+    
+    <div class="brief-warning" id="briefWarning">⚠️ Jeopolitik özet güncel olmayabilir</div>
+    <div class="ai-body" id="aiBox">
+        <div class="ai-section">Jeopolitik özet ve piyasa etkileri yükleniyor...</div>
+    </div>
 </div>
 
-<div class="card">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-<div class="ct" style="margin:0">Özel Veri Ekle</div>
-<button class="btn-sm" id="addBtn">+ Ekle</button>
+<div class="sec-title">⛽ Seçilmiş Risk Göstergeleri</div>
+<div class="cm-grid" id="cmGrid"></div>
+
+<div class="map-box">
+<h3>🗺️ Çatışma Haritası</h3>
+<div class="map-leg">
+<span><div class="ld" style="background:#2ed573"></div> İran Üssü</span>
+<span><div class="ld" style="background:#3b82f6"></div> ABD/Koalisyon</span>
+<span><div class="ld" style="background:#fbbf24"></div> İsrail</span>
+<span><div class="ld" style="background:#ff4757"></div> Saldırı Noktası</span>
+<span><div class="ld" style="background:#a78bfa"></div> Kritik Geçiş</span>
 </div>
-<div id="customs"></div>
+<div id="warMap"></div>
 </div>
 
-<div class="card">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-<div class="ct" style="margin:0">⏱️ Zaman Çizelgesi</div>
-<button class="btn-sm" id="addTlBtn">+ Olay Ekle</button>
+<div class="sec-title">⏱️ Savaş Zaman Çizelgesi</div>
+<div style="display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap" id="tlFilter">
+<button class="tl-f on" data-f="all">Tümü</button>
+<button class="tl-f" data-f="mil">🔴 Askeri</button>
+<button class="tl-f" data-f="dip">🔵 Diplomatik</button>
+<button class="tl-f" data-f="eco">🟡 Ekonomik</button>
+<button class="tl-f" data-f="nuk">🟣 Nükleer</button>
 </div>
-<div id="tlEvents"></div>
-</div>
+<div id="tlBox" style="position:relative;padding-left:24px;margin-bottom:18px"></div>
 
-<div class="card">
-<div class="ct">🌐 Ülke Risk Profilleri</div>
-<div id="crEditors" style="max-height:400px;overflow-y:auto"></div>
-</div>
+<div class="sec-title">📰 Son Haberler</div>
+<div class="news-box" id="newsBox"><div class="nw">Haberler yükleniyor...</div></div>
 
-<button class="btn" id="saveBtn">💾 KAYDET</button>
-<div class="status" id="status"></div>
-
-<div class="card" style="margin-top:16px;text-align:center">
-<div class="ct">Diğer Admin Panelleri</div>
-<a href="admin-data.html" style="display:inline-block;background:#3b82f6;color:#fff;padding:8px 16px;border-radius:6px;text-decoration:none;font-size:.75rem;font-weight:700">📊 Veri Admin (Tüm Sayfalar)</a>
-</div>
+<div class="footer">Risk Monitörü © 2026</div>
 </div>
 
 <script>
-var COMMS=[['BZ=F','BZ (Brent)'],['CL=F','CL (WTI)'],['NG=F','NG (Doğalgaz)'],['TTF=F','TTF (Avrupa Gaz)'],['HO=F','HO (Isıtma Yağı)'],['RB=F','RB (Benzin)'],['GC=F','XAU (Altın)'],['SI=F','XAG (Gümüş)'],['HG=F','HG (Bakır)'],['ALI=F','ALI (Alüminyum)'],['LBR=F','LBR (Kereste)']];
+(function(){
 
-var ce=document.getElementById('comms');
-COMMS.forEach(function(c){
-    var id=c[0].replace(/[^a-zA-Z0-9]/g,'_');
-    ce.innerHTML+='<div class="item-box"><div class="item-title">'+c[1]+'</div><div class="price-grid">'+
-    '<div><label>Güncel Fiyat</label><input type="number" step="any" id="cv_'+id+'"></div>'+
-    '<div><label>Savaş Öncesi Fiyat</label><input type="number" step="any" id="cpre_'+id+'"></div>'+
-    '<div><label>YTD Eski Fiyat</label><input type="number" step="any" id="cytd_'+id+'"></div>'+
-    '</div></div>';
+fetch('/api/iran-state').then(function(r){return r.json()}).then(function(S){
+    var score=S.riskScore||50;
+    var hurmuz=S.hurmuzStatus||'AÇIK / GÜVENLİ';
+
+    let startTimestamp = null;
+    const duration = 1500;
+    const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+        document.getElementById('rScore').textContent = Math.floor(easeOut * score);
+        if (progress < 1) window.requestAnimationFrame(step);
+        else document.getElementById('rScore').textContent = score;
+    };
+    window.requestAnimationFrame(step);
+
+    setTimeout(() => { document.getElementById('rFill').style.width=score+'%'; }, 100);
+    
+    var el=document.getElementById('rScore'),lb=document.getElementById('rLabel'),fl=document.getElementById('rFill');
+    if(score>75){fl.style.background='#ff4757';el.style.color='#ff4757';lb.textContent='🚨 KRİTİK'}
+    else if(score>50){fl.style.background='#fbbf24';el.style.color='#f59e0b';lb.textContent='⚠️ YÜKSEK RİSK'}
+    else if(score>25){fl.style.background='#22d3ee';el.style.color='#0ea5e9';lb.textContent='ℹ️ ORTA RİSK'}
+    else{fl.style.background='#00d68f';el.style.color='#00d68f';lb.textContent='✅ DÜŞÜK RİSK'}
+
+    var colors={'AÇIK / GÜVENLİ':'#00d68f','RİSKLİ':'#fbbf24','KISMEN KAPALI':'#f97316','KAPALI':'#ff4757'};
+    document.getElementById('hDot').style.background=colors[hurmuz]||'#00d68f';
+    document.getElementById('hTxt').textContent=hurmuz;
+
+    window._iranState = S;
+    applyTopAdminBanner(window._iranState);
+    loadCommodities();
+}).catch(function(){
+    window._iranState = {};
+    applyTopAdminBanner(window._iranState);
+    loadCommodities();
 });
 
-function addRow(n,u,v,cpre,cytd){
-    var d=document.createElement('div');d.className='item-box';
-    d.innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr auto;gap:6px;margin-bottom:6px"><div><label>İsim</label><input type="text" class="cn" value="'+(n||'')+'"></div><div><label>Birim</label><input type="text" class="cu" value="'+(u||'')+'"></div><button class="btn-del" onclick="this.parentElement.parentElement.remove()" style="height:32px;align-self:end">✕</button></div>'+
-    '<div class="price-grid">'+
-    '<div><label>Güncel Fiyat</label><input type="number" step="any" class="cv" value="'+(v||'')+'"></div>'+
-    '<div><label>Savaş Öncesi</label><input type="number" step="any" class="cpre" value="'+(cpre||'')+'"></div>'+
-    '<div><label>YTD Eski</label><input type="number" step="any" class="cytd" value="'+(cytd||'')+'"></div>'+
-    '</div>';
-    document.getElementById('customs').appendChild(d);
-}
-document.getElementById('addBtn').onclick=function(){addRow()};
-
-// Timeline olay ekleme
-// Timeline olay ekleme
-function addTlRow(date,title,desc,tag){
-    var d=document.createElement('div');
-    d.className = 'tl-item'; // Silme işleminde referans almak için class ekledik
-    d.style.cssText='background:#f8fafc;border:1px solid #dde4ed;border-radius:6px;padding:8px;margin-bottom:6px';
-    var today=date||new Date().toISOString().slice(0,10);
-    d.innerHTML='<div class="row" style="margin-bottom:4px"><div><label>Tarih</label><input type="date" class="tl-date" value="'+today+'"></div><div><label>Kategori</label><select class="tl-tag" style="width:100%;border:1px solid #dde4ed;border-radius:6px;padding:7px 9px;font-size:.82rem;background:#f8fafc"><option value="mil" '+(tag==='mil'?'selected':'')+'>🔴 Askeri</option><option value="dip" '+(tag==='dip'?'selected':'')+'>🔵 Diplomatik</option><option value="eco" '+(tag==='eco'?'selected':'')+'>🟡 Ekonomik</option><option value="nuk" '+(tag==='nuk'?'selected':'')+'>🟣 Nükleer</option></select></div></div>'+
-    '<div style="margin-bottom:4px"><label>Başlık</label><input type="text" class="tl-title" value="'+(title||'')+'" placeholder="Kısa olay başlığı"></div>'+
-    '<div style="margin-bottom:4px"><label>Açıklama</label><input type="text" class="tl-desc" value="'+(desc||'')+'" placeholder="1 cümle detay"></div>'+
-    '<div style="text-align:right"><button class="btn-del" onclick="this.closest(\'.tl-item\').remove()">✕ Sil</button></div>'; // Seçiciyi .tl-item olarak değiştirdik
-    document.getElementById('tlEvents').appendChild(d);
-}
-document.getElementById('addTlBtn').onclick=function(){addTlRow()};
-
-// Ülke Risk Profilleri
-var CR_DEFAULTS=[
-{id:'TR',flag:'🇹🇷',name:'Türkiye',sp:'BB- (Stabil)',fitch:'BB- (Pozitif)',moodys:'Ba3 (Stabil)',cds:'~280',inflation:'31.5%',interest:'7% (sabit)',debt:'25.4%',growth:'2.2%',risk:'ORTA-YÜKSEK',note:'Fitch Ocak 2026 pozitife yükseltti. TCMB 22 Nisan artış bekleniyor.'},
-{id:'US',flag:'🇺🇸',name:'ABD',sp:'AA+ (Stabil)',fitch:'AA+ (Stabil)',moodys:'Aaa (Stabil)',cds:'~18',inflation:'2.8%',interest:'4.75%',debt:'123%',growth:'2.3%',risk:'DÜŞÜK',note:'Dolar rezerv para avantajı.'},
-{id:'IL',flag:'🇮🇱',name:'İsrail',sp:'A (Stabil)',fitch:'A (Negatif izleme)',moodys:'Baa1 (Stabil→?)',cds:'~150',inflation:'3.5%',interest:'4.5%',debt:'68%',growth:'5%',risk:'YÜKSEK (Savaş)',note:'Şubat savaşı sonrası yeni indirim riski.'},
-{id:'IR',flag:'🇮🇷',name:'İran',sp:'—',fitch:'—',moodys:'—',cds:'—',inflation:'~45%+',interest:'—',debt:'—',growth:'—',risk:'ÇOK YÜKSEK',note:'Yaptırım altında, derecelendirilmemiş.'},
-{id:'EU',flag:'🇪🇺',name:'Euro Bölgesi',sp:'AAA',fitch:'AAA',moodys:'Aaa',cds:'~15',inflation:'2.4%',interest:'3.75%',debt:'63%',growth:'0.8%',risk:'DÜŞÜK',note:'Almanya referans.'},
-{id:'GB',flag:'🇬🇧',name:'İngiltere',sp:'AA',fitch:'AA-',moodys:'Aa3',cds:'~25',inflation:'2.6%',interest:'4.25%',debt:'98%',growth:'1.2%',risk:'DÜŞÜK-ORTA',note:'BoE temkinli faiz indirimi.'},
-{id:'JP',flag:'🇯🇵',name:'Japonya',sp:'A+',fitch:'A',moodys:'A1',cds:'~30',inflation:'2.2%',interest:'0.5%',debt:'255%',growth:'1.0%',risk:'ORTA',note:'En yüksek borç/GSYİH.'},
-{id:'CN',flag:'🇨🇳',name:'Çin',sp:'A+',fitch:'A+',moodys:'A1 (Negatif)',cds:'~65',inflation:'0.3%',interest:'3.1%',debt:'83%',growth:'4.5%',risk:'ORTA',note:'Emlak krizi, deflasyon riski.'},
-{id:'SA',flag:'🇸🇦',name:'S.Arabistan',sp:'A',fitch:'A+',moodys:'A1 (Pozitif)',cds:'~55',inflation:'1.8%',interest:'5.75%',debt:'26%',growth:'3.5%',risk:'ORTA',note:'Petrol bağımlılığı, Vision 2030.'},
-{id:'RU',flag:'🇷🇺',name:'Rusya',sp:'—',fitch:'—',moodys:'Ca (çekildi)',cds:'—',inflation:'8.5%',interest:'21%',debt:'18%',growth:'2.6%',risk:'ÇOK YÜKSEK',note:'Yaptırım, notlar çekildi.'},
+var COMMS=[
+    {id:'BZ=F',f:'commodities_energy.json',n:'BZ (Brent)',w:'İran petrol ihracatı'},
+    {id:'CL=F',f:'commodities_energy.json',n:'CL (WTI)',w:'Küresel arz'},
+    {id:'NG=F',f:'commodities_energy.json',n:'NG (Doğalgaz)',w:'LNG rotaları'},
+    {id:'TTF=F',f:'commodities_energy.json',n:'TTF (Avrupa Gaz)',w:'Enerji güvenliği'},
+    {id:'HO=F',f:'commodities_energy.json',n:'HO (Isıtma Yağı)',w:'Rafineri'},
+    {id:'RB=F',f:'commodities_energy.json',n:'RB (Benzin)',w:'Rafineri'},
+    {id:'GC=F',f:'commodities_metals.json',n:'XAU (Altın)',w:'Güvenli liman'},
+    {id:'SI=F',f:'commodities_metals.json',n:'XAG (Gümüş)',w:'Güvenli liman'},
+    {id:'HG=F',f:'commodities_metals.json',n:'HG (Bakır)',w:'Sanayi'},
+    {id:'^VIX',f:'indices.json',n:'VIX',w:'Korku Endeksi'},
+    {id:'URA',f:'commodities_energy.json',n:'URA (Uranyum)',w:'Kimyasal'},
+    {id:'ALI=F',f:'commodities_metals.json',n:'ALI (Alüminyum)',w:'Metal'}
+    
 ];
 
-function renderCREditors(data){
-    var el=document.getElementById('crEditors');
-    var countries=data||CR_DEFAULTS;
-    el.innerHTML=countries.map(function(c,i){
-        return '<div style="background:#f8fafc;border:1px solid #dde4ed;border-radius:6px;padding:8px;margin-bottom:6px"><div style="font-weight:700;font-size:.8rem;margin-bottom:6px">'+c.flag+' '+c.name+'</div>'+
-        '<div class="row" style="margin-bottom:3px"><div><label>S&P</label><input type="text" class="cr-sp" value="'+c.sp+'"></div><div><label>Fitch</label><input type="text" class="cr-fitch" value="'+c.fitch+'"></div></div>'+
-        '<div class="row" style="margin-bottom:3px"><div><label>Moody\'s</label><input type="text" class="cr-moodys" value="'+c.moodys+'"></div><div><label>CDS</label><input type="text" class="cr-cds" value="'+c.cds+'"></div></div>'+
-        '<div class="row" style="margin-bottom:3px"><div><label>Enflasyon</label><input type="text" class="cr-inf" value="'+c.inflation+'"></div><div><label>Faiz</label><input type="text" class="cr-int" value="'+c.interest+'"></div></div>'+
-        '<div class="row" style="margin-bottom:3px"><div><label>Borç/GSYİH</label><input type="text" class="cr-debt" value="'+c.debt+'"></div><div><label>Büyüme</label><input type="text" class="cr-grow" value="'+c.growth+'"></div></div>'+
-        '<div class="row" style="margin-bottom:3px"><div><label>Risk</label><input type="text" class="cr-risk" value="'+c.risk+'"></div><div><label>Not</label><input type="text" class="cr-note" value="'+c.note+'"></div></div>'+
-        '<input type="hidden" class="cr-id" value="'+c.id+'"><input type="hidden" class="cr-flag" value="'+c.flag+'"><input type="hidden" class="cr-name" value="'+c.name+'"></div>';
-    }).join('');
+function fp(v){if(v==null)return'—';return Number(v).toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function fs(d,id){if(!d||!d.series)return null;for(var i=0;i<d.series.length;i++)if(d.series[i].id===id)return d.series[i];return null}
+
+var D='data/';
+function fj(f){return fetch(D+f+'?t='+Date.now()).then(function(r){return r.json()}).catch(function(){return null})}
+
+function loadCommodities(){
+var S=window._iranState||{};
+Promise.all([fj('commodities_energy.json'),fj('commodities_metals.json'),fj('indices.json'),fj('commodities_agriculture.json'),fj('industrial.json')]).then(function(r){
+    var datasets=r;
+    var g=document.getElementById('cmGrid');
+    var mc=S.manualCommodities||{};
+    var html='';
+    
+    function pp(p){if(p==null)return'<span class="v n">—</span>';var k=p>=0?'u':'d';var sn=p>=0?'+':'';return'<span class="v '+k+'">'+sn+p.toFixed(2)+'%</span>'}
+    
+    COMMS.forEach(function(c, index){
+        var s=null;
+        for(var i=0;i<datasets.length;i++){s=fs(datasets[i],c.id);if(s)break}
+        
+        var isManual = (mc[c.id] && mc[c.id].value != null);
+        var val = s ? s.current : 0;
+
+        if (isManual) {
+            val = mc[c.id].value;
+            var prewar = mc[c.id].past_prewar != null ? ((val - mc[c.id].past_prewar) / Math.abs(mc[c.id].past_prewar)) * 100 : null;
+            var ytd = mc[c.id].past_ytd != null ? ((val - mc[c.id].past_ytd) / Math.abs(mc[c.id].past_ytd)) * 100 : null;
+            
+            var extra='<div class="cm-extra"><span><span class="lbl">SAVAŞ ÖNCESİ (28.02) </span>'+pp(prewar)+'</span><span><span class="lbl">YTD </span>'+pp(ytd)+'</span></div>';
+            html+='<div class="cm" title="'+c.w+'" style="animation-delay:'+(index * 0.05)+'s"><div class="cm-n">'+c.n+'</div><div class="cm-v" style="margin-bottom:6px">'+fp(val)+'</div>'+extra+'</div>';
+        } else {
+            var chg = s ? s.change_1d_pct : null;
+            var m1 = s ? s.change_1m_pct : null;
+            var ytd = s ? s.change_ytd_pct : null;
+            var y1 = s ? s.change_1y_pct : null;
+            
+            var cls = chg!=null ? (chg>=0 ? 'u' : 'd') : '';
+            var sign = chg!=null ? (chg>=0 ? '+' : '') : '';
+            
+            var extra='<div class="cm-extra"><span><span class="lbl">1A </span>'+pp(m1)+'</span><span><span class="lbl">YTD </span>'+pp(ytd)+'</span><span><span class="lbl">1Y </span>'+pp(y1)+'</span></div>';
+            html+='<div class="cm" title="'+c.w+'" style="animation-delay:'+(index * 0.05)+'s"><div class="cm-n">'+c.n+'</div><div class="cm-v">'+fp(val)+'</div><div class="cm-c '+cls+'">'+sign+(chg!=null?chg.toFixed(2)+'%':'—')+'</div>'+extra+'</div>';
+        }
+    });
+    
+    // CUSTOM METRICS (Her zaman Manuel Veri gibi işlenir)
+    (S.customMetrics||[]).forEach(function(m, idx){
+        var val = m.value;
+        var prewar = m.past_prewar != null ? ((val - m.past_prewar) / Math.abs(m.past_prewar)) * 100 : null;
+        var ytd = m.past_ytd != null ? ((val - m.past_ytd) / Math.abs(m.past_ytd)) * 100 : null;
+
+        var extra='<div class="cm-extra"><span><span class="lbl">SAVAŞ ÖNCESİ (28.02) </span>'+pp(prewar)+'</span><span><span class="lbl">YTD </span>'+pp(ytd)+'</span></div>';
+
+        var delay = (COMMS.length + idx) * 0.05;
+        html+='<div class="cm" style="border-color:#a78bfa; animation-delay:'+delay+'s"><div class="cm-n">'+m.name+(m.unit?' ('+m.unit+')':'')+'</div><div class="cm-v" style="margin-bottom:6px">'+fp(m.value)+'</div>'+extra+'</div>';
+    });
+    g.innerHTML=html;
+    loadRiskBrief(datasets);
+});
 }
 
+function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]})}
+function getSeriesFromDatasets(datasets,id){
+    for(var i=0;i<datasets.length;i++){var s=fs(datasets[i],id);if(s)return s}
+    return null;
+}
+function metricText(s){
+    if(!s||s.current==null)return 'veri yok';
+    var unit=s.unit?' '+s.unit:'';
+    var txt=fp(s.current)+unit;
+    if(s.change_1d_pct!=null){txt+=' ('+(s.change_1d_pct>=0?'+':'')+s.change_1d_pct.toFixed(2)+'% günlük)'}
+    return txt;
+}
+function renderTemplate(text,metrics){
+    return esc(text).replace(/\{\{(brent|gold|freight)\}\}/g,function(_,key){return '<strong>'+esc(metrics[key]||'veri yok')+'</strong>'});
+}
+function fmtDate(iso){
+    var d=new Date(iso);
+    if(isNaN(d.getTime()))return 'tarih yok';
+    return d.toLocaleString('tr-TR',{dateStyle:'short',timeStyle:'short'});
+}
 
-var LAST_LOADED_BANNER={headline:'',summary:''};
-// Banner için kesin kural: Hazır analiz / CURRENT_IRAN_BRIEF / briefHeadline alanları kullanılmaz.
-// Tek kaynak admin tarafından kaydedilen bannerBrief / iranBanner / adminBanner / bannerHeadline / bannerSummary alanlarıdır.
+// Üst banner kesinlikle hazır piyasa analizi metninden beslenmez. Tek kaynak admin banner alanlarıdır.
 function cleanBannerText(v){return String(v==null?'':v).trim();}
-function getAdminBannerFromState(s){
-    s=s||{};
-    var bb=s.bannerBrief||s.iranBanner||s.adminBanner||{};
-    return {
-        headline: cleanBannerText(bb.headline || bb.title || s.bannerHeadline),
-        summary: cleanBannerText(bb.summary || bb.text || s.bannerSummary)
-    };
-}
 function readCachedAdminBanner(){
     try{return JSON.parse(localStorage.getItem('iranAdminBannerBrief')||'{}')||{}}catch(e){return {}}
 }
-function writeCachedAdminBanner(bb){
-    try{localStorage.setItem('iranAdminBannerBrief', JSON.stringify(bb||{}))}catch(e){}
+function getAdminBannerFromState(state){
+    state=state||{};
+    var bb=state.bannerBrief||state.iranBanner||state.adminBanner||{};
+    return {
+        headline:cleanBannerText(bb.headline||bb.title||state.bannerHeadline),
+        summary:cleanBannerText(bb.summary||bb.text||state.bannerSummary)
+    };
 }
-function fillBannerInputs(bb){
-    bb=bb||{};
-    document.getElementById('bannerHeadline').value=cleanBannerText(bb.headline);
-    document.getElementById('bannerSummary').value=cleanBannerText(bb.summary);
-}
-var bannerTouched=false;
-['bannerHeadline','bannerSummary'].forEach(function(id){
-    var el=document.getElementById(id);
-    if(el){el.addEventListener('input',function(){bannerTouched=true;});}
-});
-fillBannerInputs(readCachedAdminBanner());
-
-// Load from API — admin alanını ASLA boşaltma
-fetch('/api/iran-state?t='+Date.now(), {cache:'no-store'}).then(function(r){return r.json()}).then(function(s){
-    document.getElementById('risk').value=s.riskScore||50;
-    document.getElementById('hurmuz').value=s.hurmuzStatus||'AÇIK / GÜVENLİ';
-    var bb=getAdminBannerFromState(s);
-    var cached=readCachedAdminBanner();
-    if(!bb.headline && !bb.summary) bb={headline:cleanBannerText(cached.headline),summary:cleanBannerText(cached.summary)};
-    if(bb.headline || bb.summary){
-        LAST_LOADED_BANNER={headline:bb.headline,summary:bb.summary};
-        writeCachedAdminBanner(LAST_LOADED_BANNER);
+function applyTopAdminBanner(state){
+    var bb=getAdminBannerFromState(state);
+    if(!bb.headline && !bb.summary){
+        var cached=readCachedAdminBanner();
+        bb={headline:cleanBannerText(cached.headline),summary:cleanBannerText(cached.summary)};
     }
-    if(!bannerTouched && (bb.headline || bb.summary)) fillBannerInputs(bb);
-    if(s.manualCommodities){
-        COMMS.forEach(function(c){
-            var id=c[0].replace(/[^a-zA-Z0-9]/g,'_');
-            if(s.manualCommodities[c[0]]){
-                document.getElementById('cv_'+id).value=s.manualCommodities[c[0]].value||'';
-                if(s.manualCommodities[c[0]].past_prewar != null) document.getElementById('cpre_'+id).value=s.manualCommodities[c[0]].past_prewar;
-                if(s.manualCommodities[c[0]].past_ytd != null) document.getElementById('cytd_'+id).value=s.manualCommodities[c[0]].past_ytd;
-            }
+    var banner=document.getElementById('adminWarBanner');
+    var h=document.getElementById('briefHeadline');
+    var s=document.getElementById('briefSummary');
+    var headline=cleanBannerText(bb.headline);
+    var summary=cleanBannerText(bb.summary);
+    if(headline && h) h.textContent=headline;
+    if(summary && s) s.textContent=summary;
+    if(banner) banner.style.display='block';
+}
+
+applyTopAdminBanner(null);
+const CURRENT_IRAN_BRIEF = {
+    headline: 'Ateşkes kırılgan, Hürmüz riski yüksek, piyasa stresi yeniden artıyor',
+    summary: '1 Haziran 2026 itibarıyla İran-ABD-İsrail hattında diplomasi tamamen kopmuş değil; ancak ABD saldırıları, İran’ın karşı hamleleri ve İsrail-Hizbullah cephesindeki tırmanma ateşkes zeminini zayıflatıyor. Hürmüz Boğazı’ndaki kısıtlı geçiş ve enerji arzı belirsizliği petrol, gaz, navlun ve güvenli liman varlıklarında risk primini canlı tutuyor.',
+    updated_at: '2026-06-01T14:00:00+03:00',
+    sections: {
+        status: 'İran-ABD-İsrail krizinde görünüm kontrollü fakat kırılgan tırmanma aşamasındadır. İran tarafı, ABD’nin çelişkili tutumlarının ve İsrail’in Lübnan’daki operasyonlarının diplomatik ilerlemeyi geciktirdiğini belirtirken; ABD’nin İran’daki askeri hedefleri vurması ve İran’ın Körfez’deki ABD unsurlarına karşı hamleleri ateşkes zemininin zayıf kaldığını göstermektedir. Bu nedenle mevcut tablo tam ölçekli bölgesel savaştan ziyade, diplomasi ile askeri baskının aynı anda sürdüğü yüksek riskli bir dengeye işaret ediyor.',
+        ecopolitical: 'Ekopolitik riskin ana kanalı enerji arzı, taşımacılık ve enflasyon beklentileridir. Hürmüz Boğazı trafiğinin savaş öncesi seviyenin altında kalması petrol, LNG, navlun ve sigorta maliyetlerinde risk primini canlı tutmaktadır. Çin ve Asya enerji ithalatçıları açısından rota güvenliği ve tedarik süreleri daha kritik hale gelirken, Avrupa tarafında gaz ve elektrik maliyetleri yeniden hassaslaşmaktadır. Enerji ve hammadde maliyetlerindeki oynaklık, şirketlerin fiyatlama davranışlarını bozarak küresel dezenflasyon sürecini kırılgan hale getirmektedir.',
+        geopolitical: 'Jeopolitik risk yüksek seviyede kalmaktadır. Krizin merkezinde Hürmüz Boğazı, İran’ın nükleer programı, ABD askeri varlığı ve İsrail-Hizbullah/Lübnan hattı yer alıyor. Ateşkesi uzatma, Hürmüz geçişini rahatlatma ve yaptırımları kısmen gevşetme yönünde diplomatik temaslar bulunsa da henüz kesinleşmiş bir anlaşma zemini yoktur. İsrail’in Lübnan hattındaki operasyonları ve İran’ın ABD/İsrail eylemlerini tek güvenlik cephesi olarak görmesi, krizin tek dosyadan çıkıp çok cepheli bir bölgesel güvenlik krizine dönüşme riskini artırıyor.'
+    },
+    sources: [
+        {title:'Reuters — İran diplomasiyi geciktiren unsurları açıkladı', link:'https://www.reuters.com/world/middle-east/'},
+        {title:'Reuters — Petrol ve Hürmüz risk primi', link:'https://www.reuters.com/business/energy/'},
+        {title:'AP News — ABD-İran-İsrail ateşkes ve saldırı gelişmeleri', link:'https://apnews.com/hub/iran'}
+    ]
+};
+
+function normalizeBrief(apiBrief){
+    var brief = Object.assign({}, CURRENT_IRAN_BRIEF, apiBrief || {});
+    brief.sections = Object.assign({}, CURRENT_IRAN_BRIEF.sections, (apiBrief && apiBrief.sections) ? apiBrief.sections : {});
+    if(!brief.updated_at) brief.updated_at = CURRENT_IRAN_BRIEF.updated_at;
+    return brief;
+}
+
+function paintRiskBrief(rawBrief, datasets){
+    applyTopAdminBanner(window._iranState);
+
+    // Alttaki Piyasa Analizi kutusu sabit analiz metnini kullanabilir; bu metin üst banner değildir.
+    var brief = normalizeBrief(rawBrief || CURRENT_IRAN_BRIEF);
+    datasets = datasets || [];
+    var metrics={
+        brent:metricText(getSeriesFromDatasets(datasets,'BZ=F')),
+        gold:metricText(getSeriesFromDatasets(datasets,'GC=F')),
+        freight:metricText(getSeriesFromDatasets(datasets,'BDRY'))
+    };
+
+    document.getElementById('briefWarning').style.display = 'none';
+
+    var sections = brief.sections;
+    document.getElementById('aiBox').innerHTML =
+        '<div class="ai-section"><strong style="color: var(--t1);">📌 Durum Analizi:</strong> ' + renderTemplate(sections.status, metrics) + '</div>' +
+        '<div class="ai-section"><strong style="color: var(--t1);">🌍 Ekopolitik Risk:</strong> ' + renderTemplate(sections.ecopolitical, metrics) + '</div>' +
+        '<div class="ai-section"><strong style="color: var(--t1);">🛡️ Jeopolitik Risk:</strong> ' + renderTemplate(sections.geopolitical, metrics) + '</div>';
+
+    var sources = (brief.sources || []).map(function(src){
+        var label = esc(src.title || src.name || src.url || 'Kaynak');
+        var date = src.date ? ' <span>(' + esc(src.date) + ')</span>' : '';
+        return src.link
+            ? '<a href="' + esc(src.link) + '" target="_blank" rel="noopener">' + label + '</a>' + date
+            : (src.url ? '<a href="' + esc(src.url) + '" target="_blank" rel="noopener">' + label + '</a>' + date : label + date);
+    }).join(' · ');
+
+    if(sources){
+        document.getElementById('aiBox').insertAdjacentHTML('beforeend','<div class="brief-sources">Kaynaklar: ' + sources + '</div>');
+    }
+}
+
+function loadRiskBrief(datasets){
+    // Hazır analiz metni sabit kalır; sadece üst banner admin state'ten güncellenir.
+    paintRiskBrief(CURRENT_IRAN_BRIEF, datasets);
+}
+
+// MAP
+var map=L.map('warMap',{scrollWheelZoom:false}).setView([30,50],5);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{maxZoom:12}).addTo(map);
+
+L.polygon([[39.78,44.77],[39.4,47.8],[38.41,48.87],[37.33,49.11],[36.65,52.76],[37.36,54.83],[37.07,57.37],[35.14,61.16],[31.3,61.7],[29.86,60.87],[26.12,61.6],[25.06,61.5],[25.38,57.79],[26.36,55.34],[27.09,56.18],[26.56,56.34],[26.65,55.07],[27.82,52],[29.24,50.08],[30.98,48.01],[32.47,45.44],[35.82,45.83],[37.15,44.56],[38.27,44.28],[39.78,44.77]],{
+    color:'#ff4757',
+    weight:2,
+    fillColor:'#ff4757',
+    fillOpacity:.06,
+    className: 'animated-border'
+}).addTo(map);
+
+var bases=[
+{lat:35.68,lon:51.38,n:'Tahran',t:'iran'},{lat:32.65,lon:51.66,n:'Isfahan',t:'iran'},{lat:33.97,lon:51.92,n:'Natanz',t:'iran'},{lat:28.83,lon:50.84,n:'Buşehr',t:'iran'},{lat:27.15,lon:56.28,n:'Bandar Abbas',t:'iran'},{lat:36.26,lon:59.61,n:'Meşhed',t:'iran'},{lat:30.28,lon:48.25,n:'Abadan',t:'iran'},{lat:29.47,lon:60.84,n:'Çahbahar',t:'iran'},
+{lat:25.29,lon:51.34,n:'Al Udeid (ABD)',t:'us'},{lat:25.12,lon:56.33,n:'Al Dhafra (ABD)',t:'us'},{lat:29.23,lon:47.97,n:'Ali Al Salem (ABD)',t:'us'},{lat:25.93,lon:50.59,n:'İsa (ABD 5. Filo)',t:'us'},{lat:36.19,lon:44.01,n:'Erbil (ABD)',t:'us'},{lat:33.31,lon:44.36,n:'Bağdat (ABD)',t:'us'},{lat:21.43,lon:39.17,n:'Cidde (ABD)',t:'us'},
+{lat:32.08,lon:34.78,n:'Tel Aviv',t:'il'},{lat:31.76,lon:35.21,n:'Kudüs',t:'il'},{lat:30.62,lon:34.82,n:'Nevatim',t:'il'},{lat:31.29,lon:34.27,n:'Hatzerim',t:'il'},
+{lat:26.56,lon:56.24,n:'Hürmüz Boğazı',t:'cr'},{lat:12.58,lon:43.33,n:'Bab el-Mandeb',t:'cr'},{lat:30.45,lon:32.35,n:'Süveyş Kanalı',t:'cr'}
+];
+var tc={iran:'#2ed573',us:'#3b82f6',il:'#fbbf24',cr:'#a78bfa'};
+bases.forEach(function(b){L.circleMarker([b.lat,b.lon],{radius:b.t==='cr'?10:7,color:tc[b.t],fillColor:tc[b.t],fillOpacity:.7,weight:2}).addTo(map).bindPopup('<b>'+b.n+'</b>')});
+
+var strikeLayer=L.layerGroup().addTo(map);
+var KW={'tahran':[35.68,51.38],'isfahan':[32.65,51.66],'natanz':[33.97,51.92],'iran':[35.68,51.38],'tel aviv':[32.08,34.78],'kudüs':[31.76,35.21],'haifa':[32.79,34.99],'israil':[31.5,34.8],'beyrut':[33.89,35.5],'lübnan':[33.89,35.5],'hizbullah':[33.89,35.5],'şam':[33.51,36.29],'halep':[36.2,37.13],'suriye':[33.51,36.29],'bağdat':[33.31,44.36],'erbil':[36.19,44.01],'irak':[33.31,44.36],'sanaa':[15.36,44.19],'yemen':[15.36,44.19],'husi':[14.79,42.95],'kızıldeniz':[15,41.5],'hürmüz':[26.56,56.24],'bandar abbas':[27.15,56.28],'golan':[33.01,35.75],'gazze':[31.5,34.47],'cidde':[21.43,39.17],'nevatim':[30.62,34.82],'hayfa':[32.79,34.99],'füze':[32.08,34.78],'saldırı':[35.68,51.38]};
+
+var queries=['İran savaş','İran İsrail saldırı','Hürmüz Boğazı','Orta Doğu füze','Yemen Husi','petrol İran ekonomi','enerji piyasası Orta Doğu','altın güvenli liman savaş'];
+var BLOCKED=['rudaw','kurdistan','kürdistan','rojava','ypg','pkk','pyd'];
+var allNews=[];var loaded=0;
+
+queries.forEach(function(q,i){
+    setTimeout(function(){
+        fetch('/api/rss-proxy?q='+encodeURIComponent(q)).then(function(r){return r.json()}).then(function(d){
+            (d.items||[]).forEach(function(it){
+                var dominated=false;
+                var low=(it.title||'').toLowerCase()+(it.link||'').toLowerCase();
+                for(var b=0;b<BLOCKED.length;b++){if(low.indexOf(BLOCKED[b])>-1){dominated=true;break}}
+                if(!dominated)allNews.push(it);
+            });
+        }).catch(function(){}).finally(function(){
+            loaded++;
+            if(loaded>=queries.length)renderAll();
         });
-    }
-    (s.customMetrics||[]).forEach(function(m){addRow(m.name,m.unit,m.value,m.past_prewar,m.past_ytd)});
-    (s.timeline||[]).forEach(function(e){addTlRow(e.date,e.title,e.desc,e.tag)});
-    renderCREditors(s.countryRisk||CR_DEFAULTS);
-}).catch(function(){
-    fillBannerInputs(readCachedAdminBanner());
-    renderCREditors(CR_DEFAULTS)
+    },i*600);
 });
 
-// Save to API
-document.getElementById('saveBtn').onclick=function(){
-    var pin=document.getElementById('pin').value;
-    if(!pin){alert('PIN girin!');return}
-    var mc={};
-    COMMS.forEach(function(c){
-        var id=c[0].replace(/[^a-zA-Z0-9]/g,'_');
-        var v=parseFloat(document.getElementById('cv_'+id).value);
-        var ppre=parseFloat(document.getElementById('cpre_'+id).value);
-        var pytd=parseFloat(document.getElementById('cytd_'+id).value);
-        
-        if(!isNaN(v)){
-            mc[c[0]]={
-                value: v,
-                past_prewar: !isNaN(ppre) ? ppre : null,
-                past_ytd: !isNaN(pytd) ? pytd : null
-            };
+function renderAll(){
+    var seen={},uniq=[];
+    allNews.sort(function(a,b){return new Date(b.date)-new Date(a.date)});
+    allNews.forEach(function(n){if(!seen[n.title]){seen[n.title]=1;uniq.push(n)}});
+
+    strikeLayer.clearLayers();
+    var struck={};
+    uniq.forEach(function(n){
+        var low=n.title.toLowerCase();
+        for(var kw in KW){
+            if(low.indexOf(kw)>-1){
+                var key=KW[kw][0]+','+KW[kw][1];
+                if(!struck[key]){
+                    struck[key]=1;
+                    var jlat=KW[kw][0]+(Math.random()*.1-.05);
+                    var jlon=KW[kw][1]+(Math.random()*.1-.05);
+                    
+                    L.circleMarker([jlat,jlon],{
+                        radius:10,color:'#ff4757',fillColor:'#ff4757',fillOpacity:.8,weight:2
+                    }).addTo(strikeLayer).bindPopup('<b style="color:#ff4757">🔴 SALDIRI</b><br><small>'+n.title.substring(0,80)+'...</small>');
+                    
+                    L.circleMarker([jlat,jlon],{
+                        radius:10,color:'#ff4757',fillOpacity:0,className: 'strike-pulse'
+                    }).addTo(strikeLayer);
+                }
+            }
         }
     });
-    var cm=[];
-    document.querySelectorAll('#customs > .item-box').forEach(function(r){
-        var n=r.querySelector('.cn').value.trim();if(!n)return;
-        var ppre=parseFloat(r.querySelector('.cpre').value);
-        var pytd=parseFloat(r.querySelector('.cytd').value);
-        cm.push({
-            name:n,
-            unit:r.querySelector('.cu').value.trim(),
-            value:parseFloat(r.querySelector('.cv').value)||0,
-            past_prewar: !isNaN(ppre) ? ppre : null,
-            past_ytd: !isNaN(pytd) ? pytd : null
+
+    var nb=document.getElementById('newsBox');
+    nb.innerHTML=uniq.slice(0,15).map(function(n){
+        var h=Math.floor((Date.now()-new Date(n.date).getTime())/36e5);
+        var t=h<1?'az önce':h<24?h+' saat önce':Math.floor(h/24)+' gün önce';
+        return'<div class="nw"><a href="'+n.link+'" target="_blank">'+n.title+'</a><div class="nw-t">'+t+'</div></div>';
+    }).join('')||'<div class="nw">Haber bulunamadı</div>';
+}
+
+var STATIC_TLE=[
+{d:'28.02',t:'İran-İsrail doğrudan çatışma başladı',ds:'İsrail nükleer tesislere hava operasyonu, İran balistik füze karşılığı',tag:'mil',dot:'red'},
+{d:'28.02',t:'BMGK acil toplantı',ds:'ABD ve Rusya veto kullandı',tag:'dip',dot:'blue'},
+{d:'01.03',t:'Enerji risk primi yükseldi',ds:'Kaynak notu (01.03.2026): Hürmüz riski enerji ve güvenli liman varlıklarında oynaklığı artırdı.',tag:'eco',dot:'orange'},
+{d:'02.03',t:'Natanz tesisi vuruldu',ds:'İsrail F-35 operasyonu, IAEA acil açıklama',tag:'nuk',dot:'purple'},
+{d:'03.03',t:'Hürmüz trafiği aksadı',ds:'Kaynak notu (03.03.2026): tatbikat haberleri deniz sigortası ve navlun stresini artırdı.',tag:'eco',dot:'orange'},
+{d:'05.03',t:'ABD 5. Filo tam konuşlanma',ds:'İki uçak gemisi grubu Basra Körfezi\'nde',tag:'mil',dot:'red'},
+{d:'07.03',t:'Hizbullah kuzey İsrail\'i vurdu',ds:'200+ roket, İsrail Beyrut\'u bombaladı',tag:'mil',dot:'red'},
+{d:'08.03',t:'Isfahan ikinci kez vuruldu',ds:'İran orantısız yanıt sözü verdi',tag:'nuk',dot:'purple'},
+{d:'10.03',t:'Çin-Hindistan arabuluculuk',ds:'Diplomatik temas turları başladı',tag:'dip',dot:'blue'},
+{d:'12.03',t:'Husiler Kızıldeniz\'de tanker vurdu',ds:'Kaynak notu (12.03.2026): Bab el-Mandeb güvenlik riski rota ve navlun baskısını artırdı.',tag:'mil',dot:'red'},
+{d:'14.03',t:'OPEC+ acil üretim artışı',ds:'Günlük 500K varil ek üretim kararı',tag:'eco',dot:'orange'},
+{d:'16.03',t:'Buşehr reaktörü kapatıldı',ds:'Güvenlik gerekçesiyle geçici devre dışı',tag:'nuk',dot:'purple'},
+{d:'18.03',t:'İsrail kara harekatı sinyali',ds:'Lübnan sınırında 50.000 yedek asker',tag:'mil',dot:'red'},
+{d:'20.03',t:'Nevruz ateşkes teklifi',ds:'İran 72 saat önerdi, İsrail reddetti',tag:'dip',dot:'blue'},
+{d:'22.03',t:'Süveyş trafiği %30 düştü',ds:'Gemiler Ümit Burnu rotasına yöneldi',tag:'eco',dot:'orange'},
+{d:'25.03',t:'ABD İran\'a tam petrol ambargosu',ds:'Günlük 500K varil ihracat durduruldu',tag:'eco',dot:'orange'},
+{d:'28.03',t:'İran hipersonik füze ile Demir Kubbe\'yi aştı',ds:'Tel Aviv yakınlarına isabet',tag:'mil',dot:'red'},
+{d:'30.03',t:'G7 ateşkes çağrısı',ds:'İnsani yardım koridoru talebi',tag:'dip',dot:'blue'},
+{d:'01.04',t:'İran çelik tesisleri vuruldu',ds:'İsrail: Üretim kapasitesinin %70\'i yok edildi',tag:'mil',dot:'red'},
+{d:'02.04',t:'Stratejik köprü saldırısı',ds:'İran kırmızı çizgi aşıldı açıklaması',tag:'mil',dot:'red'},
+{d:'03.04',t:'Trump: Henüz başlamadık bile',ds:'Hürmüz gerilimi tırmandı',tag:'dip',dot:'blue'},
+];
+var TLE=STATIC_TLE.slice();
+var tagNames={mil:'Askeri',dip:'Diplomatik',eco:'Ekonomik',nuk:'Nükleer'};
+var dotMap={mil:'red',dip:'blue',eco:'orange',nuk:'purple'};
+
+// Timeline render güvenliği: başlık/açıklama içindeki özel karakterler HTML'i bozmasın
+function tlEscHtml(v){
+    return String(v == null ? '' : v)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+function renderTL(f){
+    var box=document.getElementById('tlBox');
+    var items=f==='all'?TLE:TLE.filter(function(e){return e.tag===f});
+    box.innerHTML=items.slice().reverse().map(function(e){
+        return '<div class="tl-i">' +
+            '<div class="tl-d '+tlEscHtml(e.dot)+'"></div>' +
+            '<div class="tl-dt">'+tlEscHtml(e.d)+'.2026</div>' +
+            '<div class="tl-tt">'+tlEscHtml(e.t)+'</div>' +
+            '<div class="tl-ds">'+tlEscHtml(e.ds)+'</div>' +
+            '<span class="tl-tg tg-'+tlEscHtml(e.tag)+'">'+tlEscHtml(tagNames[e.tag] || '')+'</span>' +
+        '</div>';
+    }).join('');
+}
+renderTL('all');
+
+fetch('/api/iran-state').then(function(r){return r.json()}).then(function(s){
+    if(s.timeline && s.timeline.length>0){
+        var adminEvents=s.timeline.map(function(e){
+            var parts=e.date.split('-');
+            var dd=parts[2]||'01',mm=parts[1]||'01';
+            return{d:dd+'.'+mm,t:e.title,ds:e.desc||'',tag:e.tag||'mil',dot:dotMap[e.tag]||'red'};
         });
-    });
-    var tl=[];
-    document.querySelectorAll('#tlEvents > div').forEach(function(r){
-        var title=r.querySelector('.tl-title').value.trim();if(!title)return;
-        tl.push({date:r.querySelector('.tl-date').value,title:title,desc:r.querySelector('.tl-desc').value.trim(),tag:r.querySelector('.tl-tag').value});
-    });
-    var cr=[];
-    document.querySelectorAll('#crEditors > div').forEach(function(r){
-        cr.push({id:r.querySelector('.cr-id').value,flag:r.querySelector('.cr-flag').value,name:r.querySelector('.cr-name').value,sp:r.querySelector('.cr-sp').value,fitch:r.querySelector('.cr-fitch').value,moodys:r.querySelector('.cr-moodys').value,cds:r.querySelector('.cr-cds').value,inflation:r.querySelector('.cr-inf').value,interest:r.querySelector('.cr-int').value,debt:r.querySelector('.cr-debt').value,growth:r.querySelector('.cr-grow').value,risk:r.querySelector('.cr-risk').value,note:r.querySelector('.cr-note').value});
-    });
-    var typedBanner={
-        headline:cleanBannerText(document.getElementById('bannerHeadline').value),
-        summary:cleanBannerText(document.getElementById('bannerSummary').value)
-    };
-    var cachedBanner=readCachedAdminBanner();
-    var bannerBrief={
-        headline:typedBanner.headline || LAST_LOADED_BANNER.headline || cleanBannerText(cachedBanner.headline),
-        summary:typedBanner.summary || LAST_LOADED_BANNER.summary || cleanBannerText(cachedBanner.summary)
-    };
-    fillBannerInputs(bannerBrief);
-    if(bannerBrief.headline || bannerBrief.summary) writeCachedAdminBanner(bannerBrief);
-    var data={
-        riskScore:parseInt(document.getElementById('risk').value)||50,
-        hurmuzStatus:document.getElementById('hurmuz').value,
-        bannerBrief:bannerBrief,
-        // Aynı admin yazısını farklı anahtarlarla da gönderiyoruz; backend eski/katı şema kullanıyorsa bile kaybolmasın.
-        iranBanner:bannerBrief,
-        adminBanner:bannerBrief,
-        bannerHeadline:bannerBrief.headline,
-        bannerSummary:bannerBrief.summary,
-        manualCommodities:mc,customMetrics:cm,timeline:tl,countryRisk:cr
-    };
-    var payload={pin:pin,data:data};
-    document.getElementById('status').textContent='Kaydediliyor...';
-    fetch('/api/iran-state',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).then(function(r){return r.json()}).then(function(d){
-        if(d.success){writeCachedAdminBanner(bannerBrief);document.getElementById('bannerHeadline').value=bannerBrief.headline;document.getElementById('bannerSummary').value=bannerBrief.summary;document.getElementById('status').textContent='✅ Kaydedildi! Banner artık admin yazısından okunacak.';}
-        else document.getElementById('status').textContent='❌ Hata: '+(d.error||'Bilinmeyen');
-    }).catch(function(e){document.getElementById('status').textContent='❌ Bağlantı hatası: '+e.message});
-};
+        TLE=STATIC_TLE.concat(adminEvents);
+        TLE.sort(function(a,b){
+            var pa=a.d.split('.'),pb=b.d.split('.');
+            return(parseInt(pa[1])*100+parseInt(pa[0]))-(parseInt(pb[1])*100+parseInt(pb[0]));
+        });
+        renderTL('all');
+    }
+}).catch(function(){});
+document.getElementById('tlFilter').addEventListener('click',function(ev){
+    if(!ev.target.classList.contains('tl-f'))return;
+    document.querySelectorAll('.tl-f').forEach(function(b){b.classList.remove('on')});
+    ev.target.classList.add('on');
+    renderTL(ev.target.getAttribute('data-f'));
+});
+
+})();
+if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').then(function(reg){reg.update()});}
 </script>
 </body>
 </html>
