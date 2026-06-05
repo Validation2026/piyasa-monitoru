@@ -551,11 +551,27 @@ var STATIC_TLE=[
 var TLE=STATIC_TLE.slice();
 var tagNames={mil:'Askeri',dip:'Diplomatik',eco:'Ekonomik',nuk:'Nükleer'};
 var dotMap={mil:'red',dip:'blue',eco:'orange',nuk:'purple'};
+
+// Timeline render güvenliği: başlık/açıklama içindeki özel karakterler HTML'i bozmasın
+function tlEscHtml(v){
+    return String(v == null ? '' : v)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
 function renderTL(f){
     var box=document.getElementById('tlBox');
     var items=f==='all'?TLE:TLE.filter(function(e){return e.tag===f});
     box.innerHTML=items.slice().reverse().map(function(e){
-        return'<div class="tl-i"><div class="tl-d '+e.dot+'"></div><div class="tl-dt">'+e.d+'.2026</div><div class="tl-tt">'+e.t+'</div><div class="tl-ds">'+e.ds+'</div><span class="tl-tg tg-'+e.tag+'">'+tagNames[e.tag]+'</span></div>';
+        return '<div class="tl-i">' +
+            '<div class="tl-d '+tlEscHtml(e.dot)+'"></div>' +
+            '<div class="tl-dt">'+tlEscHtml(e.d)+'.2026</div>' +
+            '<div class="tl-tt">'+tlEscHtml(e.t)+'</div>' +
+            '<div class="tl-ds">'+tlEscHtml(e.ds)+'</div>' +
+            '<span class="tl-tg tg-'+tlEscHtml(e.tag)+'">'+tlEscHtml(tagNames[e.tag] || '')+'</span>' +
+        '</div>';
     }).join('');
 }
 renderTL('all');
