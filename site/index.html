@@ -97,6 +97,143 @@
             100% { box-shadow: 0 0 0 0 rgba(167,139,250,0); } 
         }
         .ai-breath { animation: breathBadge 2s infinite; }
+
+
+        /* TÜFE Beklenti Tablosu */
+        .inflation-expect-box{
+            background:var(--card);
+            border:1px solid var(--border);
+            border-radius:14px;
+            padding:14px;
+            margin-bottom:16px;
+            position:relative;
+            overflow:hidden;
+            box-shadow:0 10px 30px rgba(15,23,42,.06);
+        }
+
+        .inflation-expect-box::before{
+            content:"";
+            position:absolute;
+            top:0;
+            left:0;
+            right:0;
+            height:3px;
+            background:linear-gradient(90deg,#ef4444,#f97316,#3b82f6,#22c55e);
+        }
+
+        .inflation-expect-head{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:10px;
+            margin-bottom:12px;
+        }
+
+        .inflation-expect-title{
+            font-size:.86rem;
+            font-weight:800;
+            color:var(--t1);
+        }
+
+        .inflation-expect-sub{
+            font-size:.66rem;
+            color:var(--t3);
+            margin-top:2px;
+        }
+
+        .inflation-expect-badge{
+            font-size:.62rem;
+            font-family:var(--mono);
+            font-weight:800;
+            color:#60a5fa;
+            background:rgba(59,130,246,.12);
+            border:1px solid rgba(59,130,246,.28);
+            padding:5px 9px;
+            border-radius:999px;
+            white-space:nowrap;
+        }
+
+        .inflation-table-wrap{
+            overflow-x:auto;
+            border-radius:10px;
+            border:1px solid var(--border2);
+        }
+
+        .inflation-expect-table{
+            width:100%;
+            border-collapse:separate;
+            border-spacing:0;
+            font-size:.78rem;
+            overflow:hidden;
+        }
+
+        .inflation-expect-table th{
+            background:var(--bg2);
+            color:var(--t2);
+            font-size:.66rem;
+            text-transform:uppercase;
+            letter-spacing:.5px;
+            padding:9px 12px;
+            text-align:left;
+            border-bottom:1px solid var(--border2);
+        }
+
+        .inflation-expect-table th:last-child{
+            text-align:right;
+        }
+
+        .inflation-expect-table td{
+            padding:10px 12px;
+            border-bottom:1px solid var(--border2);
+            color:var(--t1);
+            font-weight:700;
+        }
+
+        .inflation-expect-table tr:last-child td{
+            border-bottom:none;
+        }
+
+        .inflation-expect-table td:last-child{
+            text-align:right;
+            font-family:var(--mono);
+            font-weight:800;
+            color:var(--t1);
+        }
+
+        .inflation-expect-table tr{
+            transition:.18s ease;
+        }
+
+        .inflation-expect-table tr:hover{
+            background:rgba(59,130,246,.06);
+        }
+
+        .inflation-expect-table td:first-child{
+            border-left:4px solid transparent;
+        }
+
+        .inflation-expect-table .source-tuik td:first-child{border-left-color:#ef4444;}
+        .inflation-expect-table .source-tufeai td:first-child{border-left-color:#f59e0b;}
+        .inflation-expect-table .source-webtufe td:first-child{border-left-color:#3b82f6;}
+        .inflation-expect-table .source-bloomberg td:first-child{border-left-color:#22c55e;}
+        .inflation-expect-table .source-anket td:first-child{border-left-color:#eab308;}
+        .inflation-expect-table .source-ito td:first-child{border-left-color:#94a3b8;}
+
+        @media(max-width:480px){
+            .inflation-expect-head{
+                align-items:flex-start;
+                flex-direction:column;
+            }
+
+            .inflation-expect-table{
+                font-size:.74rem;
+            }
+
+            .inflation-expect-table th,
+            .inflation-expect-table td{
+                padding:9px 10px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -151,6 +288,55 @@
         <div style="font-size:.65rem;color:#3b82f6;font-weight:600">AÇ →</div>
     </div>
 </a>
+
+<!-- TÜFE Beklenti Tablosu -->
+<div class="inflation-expect-box">
+    <div class="inflation-expect-head">
+        <div>
+            <div class="inflation-expect-title">📊 Mayıs TÜFE Beklenti Tablosu</div>
+            <div class="inflation-expect-sub">Farklı kaynaklardan aylık TÜFE beklentileri</div>
+        </div>
+        <div class="inflation-expect-badge">Beklenti</div>
+    </div>
+
+    <div class="inflation-table-wrap">
+        <table class="inflation-expect-table">
+            <thead>
+                <tr>
+                    <th>Kaynak</th>
+                    <th>Beklenti</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="source-tuik">
+                    <td>TÜİK</td>
+                    <td>1,71</td>
+                </tr>
+                <tr class="source-tufeai">
+                    <td>Tüfe.AI</td>
+                    <td>1,66</td>
+                </tr>
+                <tr class="source-webtufe">
+                    <td>Web Tüfe</td>
+                    <td>1,55</td>
+                </tr>
+                <tr class="source-bloomberg">
+                    <td>Bloomberg</td>
+                    <td>1,59</td>
+                </tr>
+                <tr class="source-anket">
+                    <td>Piyasa Katılımcıları Anketi</td>
+                    <td>1,89</td>
+                </tr>
+                <tr class="source-ito">
+                    <td>İTO</td>
+                    <td>1,53</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
 
 
 <div class="ai-compact index-ai-box" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:20px;position:relative;overflow:hidden">
