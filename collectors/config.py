@@ -630,7 +630,7 @@ STOCKS = {
         # ═══════════════════════════════════════
         "EKGYO.IS":  {"name": "Emlak Konut GYO",   "unit": "TRY"},
         "ISGYO.IS":  {"name": "İş GYO",            "unit": "TRY"},
-        "TURSG.IS":  {"name": "Türkiye Sigorta",   "unit": "TRY"},
+        # inactive: "TURSG.IS":  {"name": "Türkiye Sigorta",   "unit": "TRY"},
         "KONTR.IS":  {"name": "Kontrolmatik",      "unit": "TRY"},
         "ASTOR.IS":  {"name": "Astor Enerji",      "unit": "TRY"},
         "SMRTG.IS":  {"name": "Smart Güneş",       "unit": "TRY"},
