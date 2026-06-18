@@ -94,6 +94,91 @@ async function readEvents(store) {
   return Array.isArray(data) ? data : [];
 }
 
+async function readVisitors(store) {
+  const data = await store.get('visitors', { type: 'json' });
+  if (!data || typeof data !== 'object' || Array.isArray(data)) {
+    return { nextNumber: 1, byId: {} };
+  }
+  return {
+    nextNumber: Math.max(1, parseInt(data.nextNumber, 10) || 1),
+    byId: data.byId && typeof data.byId === 'object' && !Array.isArray(data.byId) ? data.byId : {}
+  };
+}
+
+function visitorLabel(number) {
+  return `Anonim Ziyaretçi #${number}`;
+}
+
+function normalizeVisitorEntry(entry, fallbackNumber) {
+  const number = Math.max(1, parseInt(entry && entry.number, 10) || fallbackNumber);
+  return {
+    number,
+    label: cleanText((entry && entry.label) || visitorLabel(number), 80),
+    firstSeenAt: cleanText(entry && entry.firstSeenAt, 40),
+    lastSeenAt: cleanText(entry && entry.lastSeenAt, 40),
+    visits: Math.max(0, parseInt(entry && entry.visits, 10) || 0)
+  };
+}
+
+function getOrCreateVisitor(visitors, visitorId, now) {
+  const byId = visitors.byId;
+  if (byId[visitorId]) {
+    const existing = normalizeVisitorEntry(byId[visitorId], visitors.nextNumber);
+    existing.lastSeenAt = now;
+    existing.visits += 1;
+    byId[visitorId] = existing;
+    return existing;
+  }
+
+  const number = visitors.nextNumber;
+  const created = {
+    number,
+    label: visitorLabel(number),
+    firstSeenAt: now,
+    lastSeenAt: now,
+    visits: 1
+  };
+  byId[visitorId] = created;
+  visitors.nextNumber = number + 1;
+  return created;
+}
+
+async function ensureVisitorLabels(store, events) {
+  const visitors = await readVisitors(store);
+  let changed = false;
+  const chronological = events.slice().sort((a, b) => String(a.visitedAt || '').localeCompare(String(b.visitedAt || '')));
+
+  chronological.forEach((event) => {
+    const visitorId = safeVisitorId(event.visitorId) || 'anonim';
+    const seenAt = cleanText(event.visitedAt || new Date().toISOString(), 40);
+    if (!visitors.byId[visitorId]) {
+      const number = visitors.nextNumber;
+      visitors.byId[visitorId] = {
+        number,
+        label: visitorLabel(number),
+        firstSeenAt: seenAt,
+        lastSeenAt: seenAt,
+        visits: 0
+      };
+      visitors.nextNumber = number + 1;
+      changed = true;
+    }
+    const entry = normalizeVisitorEntry(visitors.byId[visitorId], visitors.nextNumber);
+    if (!entry.firstSeenAt || seenAt < entry.firstSeenAt) entry.firstSeenAt = seenAt;
+    if (!entry.lastSeenAt || seenAt > entry.lastSeenAt) entry.lastSeenAt = seenAt;
+    visitors.byId[visitorId] = entry;
+  });
+
+  const enriched = events.map((event) => {
+    const visitorId = safeVisitorId(event.visitorId) || 'anonim';
+    const entry = visitors.byId[visitorId];
+    return { ...event, visitorNumber: entry.number, visitorLabel: entry.label };
+  });
+
+  if (changed) await store.setJSON('visitors', visitors);
+  return { events: enriched, visitors };
+}
+
 exports.handler = async function(event) {
   connectLambda(event);
 
@@ -107,7 +192,9 @@ exports.handler = async function(event) {
       if (pin !== PIN) return json(403, { success: false, error: 'Yanlis PIN' });
 
       const limit = Math.max(1, Math.min(parseInt(event.queryStringParameters.limit || '100', 10) || 100, MAX_EVENTS));
-      const events = (await readEvents(store)).slice(-limit).reverse();
+      const allEvents = await readEvents(store);
+      const labeled = await ensureVisitorLabels(store, allEvents);
+      const events = labeled.events.slice(-limit).reverse();
       return json(200, { success: true, count: events.length, events });
     }
 
@@ -120,10 +207,16 @@ exports.handler = async function(event) {
 
     const geo = countryCity(event);
     const now = new Date().toISOString();
+    const visitorId = safeVisitorId(body.visitorId) || 'anonim';
+    const visitors = await readVisitors(store);
+    const visitor = getOrCreateVisitor(visitors, visitorId, now);
+
     const record = {
       id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
       visitedAt: now,
-      visitorId: safeVisitorId(body.visitorId) || 'anonim',
+      visitorId,
+      visitorNumber: visitor.number,
+      visitorLabel: visitor.label,
       page: cleanText(body.page || '/', 180),
       title: cleanText(body.title || '', 180),
       referrer: cleanText(body.referrer || '', 300),
@@ -138,8 +231,9 @@ exports.handler = async function(event) {
     events.push(record);
     const trimmed = events.slice(-MAX_EVENTS);
     await store.setJSON('events', trimmed);
+    await store.setJSON('visitors', visitors);
 
-    return json(200, { success: true, id: record.id });
+    return json(200, { success: true, id: record.id, visitorLabel: record.visitorLabel });
   } catch (error) {
     return json(500, { success: false, error: error.message });
   }
