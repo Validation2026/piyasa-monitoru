@@ -84,6 +84,33 @@ function parseBody(event) {
   try { return JSON.parse(payload); } catch (_) { return {}; }
 }
 
+
+function cleanBoolean(value) {
+  return value === true;
+}
+
+function fallbackDeviceType(userAgent) {
+  const ua = String(userAgent || '').toLowerCase();
+  if (/ipad|tablet|kindle|silk|playbook/.test(ua)) return 'Tablet';
+  if (/mobi|android|iphone|ipod|blackberry|iemobile|opera mini/.test(ua)) return 'Mobil';
+  return 'Masaüstü';
+}
+
+function normalizeDevice(value, userAgent) {
+  const device = value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+  return {
+    deviceType: cleanText(device.deviceType || fallbackDeviceType(userAgent), 40),
+    platform: cleanText(device.platform || '', 80),
+    language: cleanText(device.language || '', 80),
+    screen: cleanText(device.screen || '', 40),
+    viewport: cleanText(device.viewport || '', 40),
+    timezone: cleanText(device.timezone || '', 80),
+    touch: cleanBoolean(device.touch),
+    cookies: cleanBoolean(device.cookies),
+    connection: cleanText(device.connection || '', 40)
+  };
+}
+
 function safeVisitorId(value) {
   const id = cleanText(value, 80);
   return /^[a-zA-Z0-9._:-]{8,80}$/.test(id) ? id : '';
@@ -206,6 +233,8 @@ exports.handler = async function(event) {
     }
 
     const geo = countryCity(event);
+    const userAgent = cleanText(getHeader(event.headers, 'user-agent'), 300);
+    const device = normalizeDevice(body.device, userAgent);
     const now = new Date().toISOString();
     const visitorId = safeVisitorId(body.visitorId) || 'anonim';
     const visitors = await readVisitors(store);
@@ -220,8 +249,16 @@ exports.handler = async function(event) {
       page: cleanText(body.page || '/', 180),
       title: cleanText(body.title || '', 180),
       referrer: cleanText(body.referrer || '', 300),
-      userAgent: cleanText(getHeader(event.headers, 'user-agent'), 300),
-      language: cleanText(getHeader(event.headers, 'accept-language'), 120),
+      userAgent,
+      language: cleanText(device.language || getHeader(event.headers, 'accept-language'), 120),
+      deviceType: device.deviceType,
+      platform: device.platform,
+      screen: device.screen,
+      viewport: device.viewport,
+      timezone: device.timezone,
+      touch: device.touch,
+      cookies: device.cookies,
+      connection: device.connection,
       ip: clientIp(event),
       country: geo.country,
       city: geo.city
