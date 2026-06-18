@@ -4,6 +4,28 @@
   var CONSENT_KEY = 'pmAnalyticsConsent';
   var VISITOR_KEY = 'pmVisitorId';
 
+  var UMAMI_WEBSITE_ID = '225a22e7-ab30-4bf1-bf98-97a49841e69b';
+  var UMAMI_HOST = 'https://umami.validasyon.net';
+
+  var UMAMI_SCRIPTS = [
+    {
+      id: 'pmUmamiAnalyticsScript',
+      src: UMAMI_HOST + '/script.js',
+      attrs: {
+        'data-website-id': UMAMI_WEBSITE_ID
+      }
+    },
+    {
+      id: 'pmUmamiRecorderScript',
+      src: UMAMI_HOST + '/recorder.js',
+      attrs: {
+        'data-website-id': UMAMI_WEBSITE_ID,
+        'data-sample-rate': '0.15',
+        'data-mask-level': 'moderate',
+        'data-max-duration': '300000'
+      }
+    }
+  ];
   function getConsent(){
     try { return localStorage.getItem(CONSENT_KEY) || ''; } catch(e) { return ''; }
   }
@@ -21,8 +43,32 @@
       return 'pmv-session-' + Math.random().toString(36).slice(2, 10);
     }
   }
+  function loadScript(config){
+    if (document.getElementById(config.id)) return;
+
+    var script = document.createElement('script');
+    script.id = config.id;
+    script.src = config.src;
+    script.defer = true;
+    script.async = false;
+
+    Object.keys(config.attrs || {}).forEach(function(key){
+      script.setAttribute(key, config.attrs[key]);
+    });
+
+    document.head.appendChild(script);
+  }
+
+  function loadUmami(){
+    if (getConsent() !== 'accepted') return;
+    if (window.PM_UMAMI_LOADED) return;
+
+    window.PM_UMAMI_LOADED = true;
+    UMAMI_SCRIPTS.forEach(loadScript);
+  }
   function track(){
     if (getConsent() !== 'accepted') return;
+    loadUmami();
     try {
       fetch('/api/track', {
         method: 'POST',
