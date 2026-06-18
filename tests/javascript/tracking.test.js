@@ -27,6 +27,8 @@ describe('Umami tracking integration', () => {
     expect(trackingJs).toContain("var UMAMI_HOST = 'https://umami.validasyon.net';");
     expect(trackingJs).toContain("src: UMAMI_HOST + '/script.js'");
     expect(trackingJs).toContain("src: UMAMI_HOST + '/recorder.js'");
+    expect(trackingJs).toContain('device: deviceInfo()');
+    expect(trackingJs).toContain("if (getConsent() !== 'accepted') return;");
     expect((trackingJs.match(/'data-website-id': UMAMI_WEBSITE_ID/g) || []).length).toBe(2);
   });
 });
