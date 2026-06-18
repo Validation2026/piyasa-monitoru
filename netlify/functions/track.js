@@ -30,11 +30,51 @@ function clientIp(event) {
   return cleanText(raw.split(',')[0], 80);
 }
 
+function looseGeoFromText(value) {
+  const text = String(value || '');
+  const city = text.match(/\"city\"\s*:\s*\"([^\"]+)\"/);
+  const countryName = text.match(/\"name\"\s*:\s*\"([^\"]+)\"/);
+  const countryCode = text.match(/\"code\"\s*:\s*\"([^\"]+)\"/);
+  if (!city && !countryName && !countryCode) return null;
+  return {
+    city: city ? city[1] : '',
+    country: { name: countryName ? countryName[1] : '', code: countryCode ? countryCode[1] : '' }
+  };
+}
+
+function parseJsonMaybe(value) {
+  const raw = cleanText(value, 1000);
+  if (!raw) return null;
+
+  const candidates = [raw];
+  if (/^[A-Za-z0-9+/=_-]+$/.test(raw)) {
+    try { candidates.push(Buffer.from(raw.replace(/-/g, '+').replace(/_/g, '/'), 'base64').toString('utf8')); } catch (_) {}
+  }
+
+  for (const candidate of candidates) {
+    try {
+      const parsed = JSON.parse(candidate);
+      if (parsed && typeof parsed === 'object') return parsed;
+    } catch (_) {
+      const loose = looseGeoFromText(candidate);
+      if (loose) return loose;
+    }
+  }
+  return null;
+}
+
+function countryName(value) {
+  if (!value) return '';
+  if (typeof value === 'string') return value;
+  return value.name || value.code || '';
+}
+
 function countryCity(event) {
   const h = event.headers || {};
+  const nfGeo = parseJsonMaybe(getHeader(h, 'x-nf-geo')) || {};
   return {
-    country: cleanText(getHeader(h, 'x-nf-geo') || getHeader(h, 'x-country') || getHeader(h, 'cf-ipcountry'), 80),
-    city: cleanText(getHeader(h, 'x-nf-city') || getHeader(h, 'x-city'), 80)
+    country: cleanText(countryName(nfGeo.country) || getHeader(h, 'x-country') || getHeader(h, 'cf-ipcountry'), 80),
+    city: cleanText(nfGeo.city || getHeader(h, 'x-nf-city') || getHeader(h, 'x-city'), 80)
   };
 }
 
