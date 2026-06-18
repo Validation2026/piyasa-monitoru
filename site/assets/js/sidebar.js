@@ -339,4 +339,14 @@ setInterval(tick,1000);tick();
     setTimeout(check, 1500);
 })();
 
+
+
+// Consentli ziyaretçi analitiği: public sayfalarda tek kez yükle.
+if (!window.PM_TRACKING_LOADED) {
+    window.PM_TRACKING_LOADED = true;
+    var trackingScript = document.createElement('script');
+    trackingScript.src = 'assets/js/tracking.js';
+    trackingScript.defer = true;
+    document.head.appendChild(trackingScript);
+}
 })();

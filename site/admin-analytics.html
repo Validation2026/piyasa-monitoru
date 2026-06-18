@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Ziyaretçi Analitiği</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui;background:#f0f4f8;color:#0f172a;padding:20px}
+.c{max-width:1050px;margin:0 auto}
+h1{font-size:1.25rem;font-weight:800;margin-bottom:14px}
+.card{background:#fff;border:1px solid #dde4ed;border-radius:10px;padding:14px;margin-bottom:12px}
+.ct{font-size:.65rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+label{font-size:.68rem;font-weight:600;color:#64748b;display:block;margin-bottom:3px}
+input,select{width:100%;border:1px solid #dde4ed;border-radius:6px;padding:8px 9px;font-size:.82rem;outline:none;background:#f8fafc;margin-bottom:6px}
+.btn{background:#3b82f6;color:#fff;border:none;border-radius:8px;padding:10px 14px;font-weight:800;font-size:.82rem;cursor:pointer;text-decoration:none;display:inline-block}
+.btn:hover{background:#2563eb}.btn-back{background:#64748b}.btn-back:hover{background:#475569}
+.row{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:end}.status{font-size:.75rem;color:#64748b;margin-top:8px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}.stat{background:#fff;border:1px solid #dde4ed;border-radius:10px;padding:12px}.stat b{display:block;font-size:1.4rem}.stat span{font-size:.68rem;color:#64748b;font-weight:700;text-transform:uppercase}
+.table-wrap{overflow:auto;border:1px solid #dde4ed;border-radius:10px;background:#fff}table{width:100%;border-collapse:collapse;min-width:980px}th,td{padding:9px;border-bottom:1px solid #e2e8f0;text-align:left;font-size:.76rem;vertical-align:top}th{background:#f8fafc;color:#64748b;font-size:.66rem;text-transform:uppercase;letter-spacing:.4px}.visitor-badge{display:inline-flex;align-items:center;border-radius:999px;background:#e0f2fe;color:#0369a1;border:1px solid #bae6fd;padding:5px 9px;font-weight:900;white-space:nowrap}.muted{color:#94a3b8}.ua{max-width:280px;white-space:normal;line-height:1.3}@media(max-width:700px){.row,.stats{grid-template-columns:1fr}.c{max-width:100%}}
+</style>
+</head>
+<body>
+<div class="c">
+<a href="admin.html" class="btn btn-back" style="margin-bottom:14px">← Admin</a>
+<h1>👥 Ziyaretçi Analitiği</h1>
+<div class="card">
+  <div class="ct">Kayıtları getir</div>
+  <div class="row">
+    <div><label>PIN</label><input type="password" id="pin" placeholder="PIN girin"></div>
+    <div><label>Limit</label><select id="limit"><option>50</option><option selected>100</option><option>250</option><option>500</option></select></div>
+    <button class="btn" id="loadBtn">Yükle</button>
+  </div>
+  <div class="status" id="status">Çerez kabul eden kullanıcıların sayfa girişleri burada listelenir.</div>
+</div>
+<div class="stats" id="stats" style="display:none"></div>
+<div class="table-wrap"><table><thead><tr><th>Kullanıcı</th><th>Giriş saati</th><th>Sayfa</th><th>Nereden</th><th>Konum</th><th>Tarayıcı</th></tr></thead><tbody id="rows"><tr><td colspan="6" class="muted">Henüz veri yüklenmedi.</td></tr></tbody></table></div>
+</div>
+<script>
+function esc(v){return String(v==null?'':v).replace(/[&<>'"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c];});}
+function fmtDate(v){try{return new Date(v).toLocaleString('tr-TR',{dateStyle:'short',timeStyle:'medium'});}catch(e){return v||'—';}}
+function host(v){try{return v?new URL(v).hostname:'Direkt giriş';}catch(e){return v||'Direkt giriş';}}
+function pageName(v){return v||'/';}
+function visitorName(e){return e.visitorLabel||('Anonim Ziyaretçi #'+(e.visitorNumber||'?'));}
+function renderStats(events){
+  var unique={}; var pages={}; var countries={};
+  events.forEach(function(e){unique[e.visitorId]=true; pages[e.page]=(pages[e.page]||0)+1; countries[e.country||'Bilinmiyor']=(countries[e.country||'Bilinmiyor']||0)+1;});
+  var topPage=Object.keys(pages).sort(function(a,b){return pages[b]-pages[a];})[0]||'—';
+  var topCountry=Object.keys(countries).sort(function(a,b){return countries[b]-countries[a];})[0]||'—';
+  document.getElementById('stats').style.display='grid';
+  document.getElementById('stats').innerHTML='<div class="stat"><b>'+events.length+'</b><span>Giriş kaydı</span></div><div class="stat"><b>'+Object.keys(unique).length+'</b><span>Anonim kullanıcı</span></div><div class="stat"><b>'+esc(topPage)+'</b><span>En yoğun sayfa</span></div><div class="stat"><b>'+esc(topCountry)+'</b><span>En yoğun konum</span></div>';
+}
+function render(events){
+  renderStats(events);
+  if(!events.length){document.getElementById('rows').innerHTML='<tr><td colspan="6" class="muted">Kayıt bulunamadı.</td></tr>';return;}
+  document.getElementById('rows').innerHTML=events.map(function(e){
+    var id=e.visitorId||'anonim';
+    var location=[e.city,e.country].filter(Boolean).join(', ')||'—';
+    return '<tr><td><span class="visitor-badge" title="Ham anonim ID: '+esc(id)+'">'+esc(visitorName(e))+'</span></td><td>'+esc(fmtDate(e.visitedAt))+'</td><td><b>'+esc(pageName(e.page))+'</b><br><span class="muted">'+esc(e.title||'')+'</span></td><td>'+esc(host(e.referrer))+'</td><td>'+esc(location)+'</td><td class="ua">'+esc(e.userAgent||'—')+'</td></tr>';
+  }).join('');
+}
+document.getElementById('loadBtn').onclick=function(){
+  var pin=document.getElementById('pin').value;
+  var limit=document.getElementById('limit').value;
+  if(!pin){alert('PIN girin');return;}
+  document.getElementById('status').textContent='Yükleniyor...';
+  fetch('/api/track?pin='+encodeURIComponent(pin)+'&limit='+encodeURIComponent(limit),{cache:'no-store'})
+    .then(function(r){return r.json();})
+    .then(function(d){if(!d.success) throw new Error(d.error||'Bilinmeyen hata'); document.getElementById('status').textContent='Son '+d.count+' kayıt yüklendi.'; render(d.events||[]);})
+    .catch(function(e){document.getElementById('status').textContent='❌ Hata: '+e.message;});
+};
+</script>
+</body>
+</html>
