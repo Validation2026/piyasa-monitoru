@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Endeksler",
-    "updated_at": "2026-06-20T04:02:42Z",
+    "updated_at": "2026-06-20T05:02:53Z",
     "symbol_count": 25,
     "errors": []
   },
@@ -95080,12 +95080,12 @@
         "https://s3-symbol-logo.tradingview.com/vix--big.svg"
       ],
       "current": 16.78,
-      "change_1d_pct": 0.0,
-      "change_1w_pct": -5.09,
-      "change_1m_pct": -3.78,
-      "change_3m_pct": -33.12,
+      "change_1d_pct": -9.0,
+      "change_1w_pct": -13.68,
+      "change_1m_pct": -7.09,
+      "change_3m_pct": -24.99,
       "change_ytd_pct": 12.24,
-      "change_1y_pct": 9.67,
+      "change_1y_pct": 2.63,
       "high_52w": 31.05,
       "low_52w": 13.47,
       "data": [
@@ -100108,10 +100108,6 @@
         {
           "date": "2026-06-17",
           "value": 18.44
-        },
-        {
-          "date": "2026-06-19",
-          "value": 16.78
         }
       ]
     },
