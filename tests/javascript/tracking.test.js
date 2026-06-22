@@ -31,4 +31,15 @@ describe('Umami tracking integration', () => {
     expect(trackingJs).toContain("if (getConsent() !== 'accepted') return;");
     expect((trackingJs.match(/'data-website-id': UMAMI_WEBSITE_ID/g) || []).length).toBe(2);
   });
+
+  test('tracking script does not render an accept/reject cookie popup', () => {
+    const trackingJs = fs.readFileSync(path.join(siteDir, 'assets/js/tracking.js'), 'utf8');
+
+    expect(trackingJs).not.toContain('pmCookieAccept');
+    expect(trackingJs).not.toContain('pmCookieReject');
+    expect(trackingJs).not.toContain('Kabul et');
+    expect(trackingJs).not.toContain('Reddet');
+    expect(trackingJs).not.toContain('showBanner');
+    expect(trackingJs).toContain('removeLegacyBanner');
+  });
 });
