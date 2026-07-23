@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Sanayi & Hammadde",
-    "updated_at": "2026-07-23T04:01:55Z",
+    "updated_at": "2026-07-23T06:19:30Z",
     "symbol_count": 21,
     "errors": []
   },
@@ -17,13 +17,13 @@
         "https://s3-symbol-logo.tradingview.com/hg.svg",
         "https://s3-symbol-logo.tradingview.com/hg--big.svg"
       ],
-      "current": 6.529,
-      "change_1d_pct": 1.21,
-      "change_1w_pct": 3.7,
-      "change_1m_pct": 2.71,
-      "change_3m_pct": 6.97,
-      "change_ytd_pct": 15.97,
-      "change_1y_pct": 29.08,
+      "current": 6.503,
+      "change_1d_pct": 0.81,
+      "change_1w_pct": 3.29,
+      "change_1m_pct": 2.3,
+      "change_3m_pct": 6.55,
+      "change_ytd_pct": 15.51,
+      "change_1y_pct": 28.57,
       "high_52w": 6.6495,
       "low_52w": 4.3305,
       "data": [
@@ -5054,6 +5054,10 @@
         {
           "date": "2026-07-22",
           "value": 6.451
+        },
+        {
+          "date": "2026-07-23",
+          "value": 6.503
         }
       ]
     },
@@ -5067,13 +5071,13 @@
         "https://s3-symbol-logo.tradingview.com/ali.svg",
         "https://s3-symbol-logo.tradingview.com/ali--big.svg"
       ],
-      "current": 3456.0,
-      "change_1d_pct": -2.91,
-      "change_1w_pct": -0.85,
-      "change_1m_pct": -10.48,
-      "change_3m_pct": -3.91,
-      "change_ytd_pct": 18.92,
-      "change_1y_pct": 32.27,
+      "current": 3469.0,
+      "change_1d_pct": -2.54,
+      "change_1w_pct": -0.47,
+      "change_1m_pct": -10.15,
+      "change_3m_pct": -3.55,
+      "change_ytd_pct": 19.36,
+      "change_1y_pct": 32.77,
       "high_52w": 4195.0,
       "low_52w": 2427.0,
       "data": [
@@ -10096,6 +10100,10 @@
         {
           "date": "2026-07-22",
           "value": 3559.5
+        },
+        {
+          "date": "2026-07-23",
+          "value": 3469.0
         }
       ]
     },
@@ -10109,13 +10117,13 @@
         "https://s3-symbol-logo.tradingview.com/znc.svg",
         "https://s3-symbol-logo.tradingview.com/znc--big.svg"
       ],
-      "current": 108.4062,
-      "change_1d_pct": -0.01,
-      "change_1w_pct": -0.67,
-      "change_1m_pct": -0.76,
-      "change_3m_pct": -2.97,
-      "change_ytd_pct": -3.59,
-      "change_1y_pct": -3.79,
+      "current": 108.4219,
+      "change_1d_pct": 0.0,
+      "change_1w_pct": -0.66,
+      "change_1m_pct": -0.74,
+      "change_3m_pct": -2.95,
+      "change_ytd_pct": -3.57,
+      "change_1y_pct": -3.77,
       "high_52w": 113.8594,
       "low_52w": 108.4219,
       "data": [
@@ -15145,6 +15153,10 @@
         },
         {
           "date": "2026-07-22",
+          "value": 108.4219
+        },
+        {
+          "date": "2026-07-23",
           "value": 108.4219
         }
       ]
