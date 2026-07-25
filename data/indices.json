@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Endeksler",
-    "updated_at": "2026-07-25T04:02:39Z",
+    "updated_at": "2026-07-25T08:05:53Z",
     "symbol_count": 25,
     "errors": []
   },
@@ -95104,12 +95104,12 @@
         "https://s3-symbol-logo.tradingview.com/vix--big.svg"
       ],
       "current": 18.58,
-      "change_1d_pct": 0.0,
-      "change_1w_pct": -0.38,
-      "change_1m_pct": -0.27,
-      "change_3m_pct": -1.8,
+      "change_1d_pct": -0.64,
+      "change_1w_pct": -1.01,
+      "change_1m_pct": -4.67,
+      "change_3m_pct": -4.72,
       "change_ytd_pct": 24.28,
-      "change_1y_pct": 13.99,
+      "change_1y_pct": 7.77,
       "high_52w": 31.05,
       "low_52w": 13.47,
       "data": [
@@ -100132,10 +100132,6 @@
         {
           "date": "2026-07-23",
           "value": 18.7
-        },
-        {
-          "date": "2026-07-24",
-          "value": 18.58
         }
       ]
     },
@@ -120194,14 +120190,14 @@
         "https://s3-symbol-logo.tradingview.com/mxx--big.svg"
       ],
       "current": 66383.26,
-      "change_1d_pct": 0.0,
-      "change_1w_pct": 0.39,
-      "change_1m_pct": -1.53,
-      "change_3m_pct": -3.28,
+      "change_1d_pct": 0.18,
+      "change_1w_pct": -0.38,
+      "change_1m_pct": 0.16,
+      "change_3m_pct": -3.56,
       "change_ytd_pct": 3.23,
-      "change_1y_pct": 10.24,
+      "change_1y_pct": 9.9,
       "high_52w": 71601.3516,
-      "low_52w": 56650.2617,
+      "low_52w": 56478.8984,
       "data": [
         {
           "date": "2021-07-26",
@@ -125230,10 +125226,6 @@
         {
           "date": "2026-07-23",
           "value": 66266.0078
-        },
-        {
-          "date": "2026-07-24",
-          "value": 66383.2578
         }
       ]
     }
