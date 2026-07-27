@@ -1,0 +1,512 @@
+{
+  "instruments": [
+    {
+      "series_id": "BZ=F",
+      "name": "Brent",
+      "url": "https://tr.tradingview.com/symbols/UKOIL/",
+      "files": [
+        "commodities_energy.json"
+      ],
+      "override_mode": "persistent"
+    },
+    {
+      "series_id": "CL=F",
+      "name": "WTI",
+      "url": "https://tr.tradingview.com/symbols/USOIL/",
+      "files": [
+        "commodities_energy.json"
+      ],
+      "override_mode": "persistent"
+    },
+    {
+      "series_id": "NG=F",
+      "name": "Doğalgaz",
+      "url": "https://tr.tradingview.com/symbols/NG/",
+      "files": [
+        "commodities_energy.json"
+      ],
+      "override_mode": "persistent"
+    },
+    {
+      "series_id": "TTF=F",
+      "name": "TTF",
+      "url": "https://tr.tradingview.com/symbols/NYMEX-TTF1!/",
+      "files": [
+        "commodities_energy.json"
+      ],
+      "override_mode": "persistent"
+    },
+    {
+      "series_id": "HO=F",
+      "name": "Isıtma Yağı",
+      "url": "https://tr.tradingview.com/symbols/HEATINGOIL/",
+      "files": [
+        "commodities_energy.json"
+      ],
+      "override_mode": "persistent"
+    },
+    {
+      "series_id": "RB=F",
+      "name": "Benzin",
+      "url": "https://www.tradingview.com/symbols/GASOLINE/",
+      "files": [
+        "commodities_energy.json"
+      ],
+      "override_mode": "persistent"
+    },
+    {
+      "series_id": "URA",
+      "name": "URA",
+      "url": "https://www.tradingview.com/symbols/AMEX-URA/",
+      "files": [
+        "commodities_energy.json"
+      ],
+      "override_mode": "persistent"
+    },
+    {
+      "series_id": "GC=F",
+      "name": "Altın",
+      "url": "https://www.tradingview.com/symbols/XAUUSD/",
+      "files": [
+        "commodities_metals.json"
+      ],
+      "override_mode": "persistent"
+    },
+    {
+      "series_id": "SI=F",
+      "name": "Gümüş",
+      "url": "https://www.tradingview.com/symbols/XAGUSD/",
+      "files": [
+        "commodities_metals.json"
+      ],
+      "override_mode": "persistent"
+    },
+    {
+      "series_id": "HG=F",
+      "name": "Bakır",
+      "url": "https://www.tradingview.com/symbols/COMEX-HG1!/",
+      "files": [
+        "commodities_metals.json"
+      ],
+      "override_mode": "persistent"
+    },
+    {
+      "series_id": "ALI=F",
+      "name": "Alüminyum",
+      "url": "https://www.tradingview.com/symbols/ALUMINIUM/",
+      "files": [
+        "commodities_metals.json"
+      ],
+      "override_mode": "persistent"
+    },
+    {
+      "series_id": "^VIX",
+      "name": "VIX",
+      "url": "https://www.tradingview.com/symbols/TVC-VIX/",
+      "files": [
+        "indices.json"
+      ],
+      "override_mode": "persistent"
+    },
+    {
+      "series_id": "USDTRY=X",
+      "name": "USD/TRY",
+      "url": "https://www.tradingview.com/symbols/USDTRY/",
+      "files": [
+        "currencies.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "EURTRY=X",
+      "name": "EUR/TRY",
+      "url": "https://www.tradingview.com/symbols/EURTRY/",
+      "files": [
+        "currencies.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "GBPTRY=X",
+      "name": "GBP/TRY",
+      "url": "https://www.tradingview.com/symbols/GBPTRY/",
+      "files": [
+        "currencies.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "CHFTRY=X",
+      "name": "CHF/TRY",
+      "url": "https://www.tradingview.com/symbols/CHFTRY/",
+      "files": [
+        "currencies.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "EURUSD=X",
+      "name": "EUR/USD",
+      "url": "https://www.tradingview.com/symbols/EURUSD/",
+      "files": [
+        "currencies.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "GBPUSD=X",
+      "name": "GBP/USD",
+      "url": "https://www.tradingview.com/symbols/GBPUSD/",
+      "files": [
+        "currencies.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "USDJPY=X",
+      "name": "USD/JPY",
+      "url": "https://www.tradingview.com/symbols/USDJPY/",
+      "files": [
+        "currencies.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "USDCHF=X",
+      "name": "USD/CHF",
+      "url": "https://www.tradingview.com/symbols/USDCHF/",
+      "files": [
+        "currencies.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "AUDUSD=X",
+      "name": "AUD/USD",
+      "url": "https://www.tradingview.com/symbols/AUDUSD/",
+      "files": [
+        "currencies.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "USDCAD=X",
+      "name": "USD/CAD",
+      "url": "https://www.tradingview.com/symbols/USDCAD/",
+      "files": [
+        "currencies.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "NZDUSD=X",
+      "name": "NZD/USD",
+      "url": "https://www.tradingview.com/symbols/NZDUSD/",
+      "files": [
+        "currencies.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "USDCNY=X",
+      "name": "USD/CNY",
+      "url": "https://www.tradingview.com/symbols/USDCNY/",
+      "files": [
+        "currencies.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "USDBRL=X",
+      "name": "USD/BRL",
+      "url": "https://www.tradingview.com/symbols/USDBRL/",
+      "files": [
+        "currencies.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "USDMXN=X",
+      "name": "USD/MXN",
+      "url": "https://www.tradingview.com/symbols/USDMXN/",
+      "files": [
+        "currencies.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "USDINR=X",
+      "name": "USD/INR",
+      "url": "https://www.tradingview.com/symbols/USDINR/",
+      "files": [
+        "currencies.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "USDZAR=X",
+      "name": "USD/ZAR",
+      "url": "https://www.tradingview.com/symbols/USDZAR/",
+      "files": [
+        "currencies.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "USDSGD=X",
+      "name": "USD/SGD",
+      "url": "https://www.tradingview.com/symbols/USDSGD/",
+      "files": [
+        "currencies.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "USDTHB=X",
+      "name": "USD/THB",
+      "url": "https://www.tradingview.com/symbols/USDTHB/",
+      "files": [
+        "currencies.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "USDKRW=X",
+      "name": "USD/KRW",
+      "url": "https://www.tradingview.com/symbols/USDKRW/",
+      "files": [
+        "currencies.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "EURGBP=X",
+      "name": "EUR/GBP",
+      "url": "https://www.tradingview.com/symbols/EURGBP/",
+      "files": [
+        "currencies.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "EURCHF=X",
+      "name": "EUR/CHF",
+      "url": "https://www.tradingview.com/symbols/EURCHF/",
+      "files": [
+        "currencies.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "EURJPY=X",
+      "name": "EUR/JPY",
+      "url": "https://www.tradingview.com/symbols/EURJPY/",
+      "files": [
+        "currencies.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "GBPJPY=X",
+      "name": "GBP/JPY",
+      "url": "https://www.tradingview.com/symbols/GBPJPY/",
+      "files": [
+        "currencies.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "DX-Y.NYB",
+      "name": "Dolar Endeksi (DXY)",
+      "url": "https://www.tradingview.com/symbols/TVC-DXY/",
+      "files": [
+        "currencies.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "BTC-USD",
+      "name": "BTC/USD",
+      "url": "https://www.tradingview.com/symbols/BTCUSD/",
+      "files": [
+        "crypto.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "ETH-USD",
+      "name": "ETH/USD",
+      "url": "https://www.tradingview.com/symbols/ETHUSD/",
+      "files": [
+        "crypto.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "BNB-USD",
+      "name": "BNB/USD",
+      "url": "https://www.tradingview.com/symbols/BNBUSD/",
+      "files": [
+        "crypto.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "SOL-USD",
+      "name": "SOL/USD",
+      "url": "https://www.tradingview.com/symbols/SOLUSD/",
+      "files": [
+        "crypto.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "XRP-USD",
+      "name": "XRP/USD",
+      "url": "https://www.tradingview.com/symbols/XRPUSD/",
+      "files": [
+        "crypto.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "ADA-USD",
+      "name": "ADA/USD",
+      "url": "https://www.tradingview.com/symbols/ADAUSD/",
+      "files": [
+        "crypto.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "DOGE-USD",
+      "name": "DOGE/USD",
+      "url": "https://www.tradingview.com/symbols/DOGEUSD/",
+      "files": [
+        "crypto.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "AVAX-USD",
+      "name": "AVAX/USD",
+      "url": "https://www.tradingview.com/symbols/AVAXUSD/",
+      "files": [
+        "crypto.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "DOT-USD",
+      "name": "DOT/USD",
+      "url": "https://www.tradingview.com/symbols/DOTUSD/",
+      "files": [
+        "crypto.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "LINK-USD",
+      "name": "LINK/USD",
+      "url": "https://www.tradingview.com/symbols/LINKUSD/",
+      "files": [
+        "crypto.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "POL-USD",
+      "name": "POL/USD",
+      "url": "https://www.tradingview.com/symbols/POLUSD/",
+      "files": [
+        "crypto.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "TRX-USD",
+      "name": "TRX/USD",
+      "url": "https://www.tradingview.com/symbols/TRXUSD/",
+      "files": [
+        "crypto.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "BCH-USD",
+      "name": "BCH/USD",
+      "url": "https://www.tradingview.com/symbols/BCHUSD/",
+      "files": [
+        "crypto.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "LTC-USD",
+      "name": "LTC/USD",
+      "url": "https://www.tradingview.com/symbols/LTCUSD/",
+      "files": [
+        "crypto.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "UNI7083-USD",
+      "name": "UNI/USD",
+      "url": "https://www.tradingview.com/symbols/UNIUSD/",
+      "files": [
+        "crypto.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    },
+    {
+      "series_id": "NEAR-USD",
+      "name": "NEAR/USD",
+      "url": "https://www.tradingview.com/symbols/NEARUSD/",
+      "files": [
+        "crypto.json"
+      ],
+      "override_mode": "fresh_only",
+      "max_age_hours": 36
+    }
+  ]
+}
