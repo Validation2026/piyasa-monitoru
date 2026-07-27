@@ -1,6 +1,14 @@
 name: Update TradingView Snapshots
 
 on:
+  # Workflow henüz main'e alınmadan feature branch üzerinde doğrulanabilsin.
+  # Snapshot'ın oluşturduğu yalnızca data/ değişiklikleri yeni bir çalışmayı
+  # tetiklemez; böylece bot commit'i sonsuz döngü oluşturmaz.
+  push:
+    paths:
+      - '.github/workflows/update-tradingview-snapshots.yml'
+      - 'collectors/tradingview_snapshot.py'
+      - 'collectors/requirements.txt'
   schedule:
     # Türkiye UTC+3 kullanır; 04:00 UTC her gün 07:00 Türkiye saatidir.
     - cron: '0 4 * * *'
