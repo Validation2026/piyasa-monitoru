@@ -4,7 +4,8 @@
     "category": "Kıymetli Madenler & Metaller",
     "updated_at": "2026-07-27T06:55:06Z",
     "symbol_count": 17,
-    "errors": []
+    "errors": [],
+    "tradingview_snapshot_at": "2026-07-27T08:54:58.312083Z"
   },
   "series": [
     {
@@ -17,8 +18,8 @@
         "https://s3-symbol-logo.tradingview.com/xauusd.svg",
         "https://s3-symbol-logo.tradingview.com/xauusd--big.svg"
       ],
-      "current": 4100.5,
-      "change_1d_pct": 0.81,
+      "current": 4093.24,
+      "change_1d_pct": 1.0,
       "change_1w_pct": 2.25,
       "change_1m_pct": 2.76,
       "change_3m_pct": -12.73,
@@ -5055,7 +5056,10 @@
           "date": "2026-07-27",
           "value": 4100.5
         }
-      ]
+      ],
+      "live_source": "TradingView page snapshot",
+      "price_timestamp": "2026-07-27T08:53:36.233245Z",
+      "source_url": "https://www.tradingview.com/symbols/XAUUSD/"
     },
     {
       "id": "SI=F",
@@ -5067,8 +5071,8 @@
         "https://s3-symbol-logo.tradingview.com/xagusd.svg",
         "https://s3-symbol-logo.tradingview.com/xagusd--big.svg"
       ],
-      "current": 59.775,
-      "change_1d_pct": 1.91,
+      "current": 59.38,
+      "change_1d_pct": 2.02,
       "change_1w_pct": 5.23,
       "change_1m_pct": 2.97,
       "change_3m_pct": -21.77,
@@ -10105,7 +10109,10 @@
           "date": "2026-07-27",
           "value": 59.775
         }
-      ]
+      ],
+      "live_source": "TradingView page snapshot",
+      "price_timestamp": "2026-07-27T08:53:56.809741Z",
+      "source_url": "https://www.tradingview.com/symbols/XAGUSD/"
     },
     {
       "id": "PL=F",
@@ -20213,8 +20220,8 @@
         "https://s3-symbol-logo.tradingview.com/hg.svg",
         "https://s3-symbol-logo.tradingview.com/hg--big.svg"
       ],
-      "current": 6.367,
-      "change_1d_pct": 0.74,
+      "current": 6.38,
+      "change_1d_pct": 0.31,
       "change_1w_pct": 1.08,
       "change_1m_pct": 7.13,
       "change_3m_pct": 6.09,
@@ -25255,7 +25262,10 @@
           "date": "2026-07-27",
           "value": 6.367
         }
-      ]
+      ],
+      "live_source": "TradingView page snapshot",
+      "price_timestamp": "2026-07-27T08:54:17.281092Z",
+      "source_url": "https://www.tradingview.com/symbols/COMEX-HG1!/"
     },
     {
       "id": "ALI=F",
@@ -25267,8 +25277,8 @@
         "https://s3-symbol-logo.tradingview.com/ali.svg",
         "https://s3-symbol-logo.tradingview.com/ali--big.svg"
       ],
-      "current": 3451.5,
-      "change_1d_pct": -2.17,
+      "current": 3177.18,
+      "change_1d_pct": 0.41,
       "change_1w_pct": -2.3,
       "change_1m_pct": -3.74,
       "change_3m_pct": -2.92,
@@ -30301,7 +30311,10 @@
           "date": "2026-07-27",
           "value": 3451.5
         }
-      ]
+      ],
+      "live_source": "TradingView page snapshot",
+      "price_timestamp": "2026-07-27T08:54:37.763459Z",
+      "source_url": "https://www.tradingview.com/symbols/ALUMINIUM/"
     },
     {
       "id": "GLD",
