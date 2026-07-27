@@ -4,7 +4,8 @@
     "category": "Döviz Kurları",
     "updated_at": "2026-07-27T06:55:40Z",
     "symbol_count": 24,
-    "errors": []
+    "errors": [],
+    "tradingview_snapshot_at": "2026-07-27T12:19:06.791516Z"
   },
   "series": [
     {
@@ -20,8 +21,8 @@
         "https://s3-symbol-logo.tradingview.com/usdtry.svg",
         "https://s3-symbol-logo.tradingview.com/usdtry--big.svg"
       ],
-      "current": 47.28,
-      "change_1d_pct": -0.08,
+      "current": 47.36,
+      "change_1d_pct": 0.21,
       "change_1w_pct": 0.29,
       "change_1m_pct": 1.67,
       "change_3m_pct": 5.12,
@@ -5230,7 +5231,10 @@
           "date": "2026-07-27",
           "value": 47.28
         }
-      ]
+      ],
+      "live_source": "TradingView page snapshot",
+      "price_timestamp": "2026-07-27T12:05:48.438402Z",
+      "source_url": "https://www.tradingview.com/symbols/USDTRY/"
     },
     {
       "id": "EURTRY=X",
@@ -5245,8 +5249,8 @@
         "https://s3-symbol-logo.tradingview.com/eurtry.svg",
         "https://s3-symbol-logo.tradingview.com/eurtry--big.svg"
       ],
-      "current": 54.0528,
-      "change_1d_pct": 0.6,
+      "current": 53.97,
+      "change_1d_pct": 0.32,
       "change_1w_pct": 0.28,
       "change_1m_pct": 2.17,
       "change_3m_pct": 3.04,
@@ -10455,7 +10459,10 @@
           "date": "2026-07-27",
           "value": 54.0528
         }
-      ]
+      ],
+      "live_source": "TradingView page snapshot",
+      "price_timestamp": "2026-07-27T12:06:09.003523Z",
+      "source_url": "https://www.tradingview.com/symbols/EURTRY/"
     },
     {
       "id": "GBPTRY=X",
@@ -10470,8 +10477,8 @@
         "https://s3-symbol-logo.tradingview.com/gbptry.svg",
         "https://s3-symbol-logo.tradingview.com/gbptry--big.svg"
       ],
-      "current": 63.2262,
-      "change_1d_pct": 0.56,
+      "current": 63.11,
+      "change_1d_pct": -0.05,
       "change_1w_pct": -0.3,
       "change_1m_pct": 3.1,
       "change_3m_pct": 4.58,
@@ -15680,7 +15687,10 @@
           "date": "2026-07-27",
           "value": 63.2262
         }
-      ]
+      ],
+      "live_source": "TradingView page snapshot",
+      "price_timestamp": "2026-07-27T12:06:29.475152Z",
+      "source_url": "https://www.tradingview.com/symbols/GBPTRY/"
     },
     {
       "id": "CHFTRY=X",
@@ -15695,8 +15705,8 @@
         "https://s3-symbol-logo.tradingview.com/chftry.svg",
         "https://s3-symbol-logo.tradingview.com/chftry--big.svg"
       ],
-      "current": 58.1287,
-      "change_1d_pct": 0.55,
+      "current": 58.14,
+      "change_1d_pct": 0.33,
       "change_1w_pct": -0.37,
       "change_1m_pct": 1.38,
       "change_3m_pct": 1.8,
@@ -20905,7 +20915,10 @@
           "date": "2026-07-27",
           "value": 58.1287
         }
-      ]
+      ],
+      "live_source": "TradingView page snapshot",
+      "price_timestamp": "2026-07-27T12:06:49.938979Z",
+      "source_url": "https://www.tradingview.com/symbols/CHFTRY/"
     },
     {
       "id": "EURUSD=X",
@@ -20920,8 +20933,8 @@
         "https://s3-symbol-logo.tradingview.com/eurusd.svg",
         "https://s3-symbol-logo.tradingview.com/eurusd--big.svg"
       ],
-      "current": 1.1412,
-      "change_1d_pct": 0.31,
+      "current": 1.14,
+      "change_1d_pct": 0.17,
       "change_1w_pct": -0.14,
       "change_1m_pct": 0.51,
       "change_3m_pct": -2.33,
@@ -26130,7 +26143,10 @@
           "date": "2026-07-27",
           "value": 1.1412
         }
-      ]
+      ],
+      "live_source": "TradingView page snapshot",
+      "price_timestamp": "2026-07-27T12:07:10.428602Z",
+      "source_url": "https://www.tradingview.com/symbols/EURUSD/"
     },
     {
       "id": "GBPUSD=X",
@@ -26145,8 +26161,8 @@
         "https://s3-symbol-logo.tradingview.com/gbpusd.svg",
         "https://s3-symbol-logo.tradingview.com/gbpusd--big.svg"
       ],
-      "current": 1.3351,
-      "change_1d_pct": 0.29,
+      "current": 1.33,
+      "change_1d_pct": -0.05,
       "change_1w_pct": -0.71,
       "change_1m_pct": 1.4,
       "change_3m_pct": -0.85,
@@ -31355,7 +31371,10 @@
           "date": "2026-07-27",
           "value": 1.3351
         }
-      ]
+      ],
+      "live_source": "TradingView page snapshot",
+      "price_timestamp": "2026-07-27T12:07:30.913465Z",
+      "source_url": "https://www.tradingview.com/symbols/GBPUSD/"
     },
     {
       "id": "USDJPY=X",
@@ -31370,8 +31389,8 @@
         "https://s3-symbol-logo.tradingview.com/usdjpy.svg",
         "https://s3-symbol-logo.tradingview.com/usdjpy--big.svg"
       ],
-      "current": 163.549,
-      "change_1d_pct": -0.17,
+      "current": 163.63,
+      "change_1d_pct": -0.12,
       "change_1w_pct": 0.64,
       "change_1m_pct": 1.1,
       "change_3m_pct": 2.38,
@@ -36580,7 +36599,10 @@
           "date": "2026-07-27",
           "value": 163.549
         }
-      ]
+      ],
+      "live_source": "TradingView page snapshot",
+      "price_timestamp": "2026-07-27T12:07:51.406945Z",
+      "source_url": "https://www.tradingview.com/symbols/USDJPY/"
     },
     {
       "id": "USDCHF=X",
@@ -36595,8 +36617,8 @@
         "https://s3-symbol-logo.tradingview.com/usdchf.svg",
         "https://s3-symbol-logo.tradingview.com/usdchf--big.svg"
       ],
-      "current": 0.8147,
-      "change_1d_pct": -0.27,
+      "current": 0.82,
+      "change_1d_pct": -0.39,
       "change_1w_pct": 0.78,
       "change_1m_pct": 0.26,
       "change_3m_pct": 3.63,
@@ -41805,7 +41827,10 @@
           "date": "2026-07-27",
           "value": 0.8147
         }
-      ]
+      ],
+      "live_source": "TradingView page snapshot",
+      "price_timestamp": "2026-07-27T12:08:11.875613Z",
+      "source_url": "https://www.tradingview.com/symbols/USDCHF/"
     },
     {
       "id": "AUDUSD=X",
@@ -41820,8 +41845,8 @@
         "https://s3-symbol-logo.tradingview.com/audusd.svg",
         "https://s3-symbol-logo.tradingview.com/audusd--big.svg"
       ],
-      "current": 0.7009,
-      "change_1d_pct": 0.6,
+      "current": 0.7,
+      "change_1d_pct": 0.23,
       "change_1w_pct": 0.43,
       "change_1m_pct": 1.58,
       "change_3m_pct": -1.7,
@@ -47030,7 +47055,10 @@
           "date": "2026-07-27",
           "value": 0.7009
         }
-      ]
+      ],
+      "live_source": "TradingView page snapshot",
+      "price_timestamp": "2026-07-27T12:08:32.344942Z",
+      "source_url": "https://www.tradingview.com/symbols/AUDUSD/"
     },
     {
       "id": "USDCAD=X",
@@ -47045,8 +47073,8 @@
         "https://s3-symbol-logo.tradingview.com/usdcad.svg",
         "https://s3-symbol-logo.tradingview.com/usdcad--big.svg"
       ],
-      "current": 1.4098,
-      "change_1d_pct": 0.09,
+      "current": 1.41,
+      "change_1d_pct": 0.08,
       "change_1w_pct": 0.56,
       "change_1m_pct": -0.96,
       "change_3m_pct": 2.92,
@@ -52255,7 +52283,10 @@
           "date": "2026-07-27",
           "value": 1.4098
         }
-      ]
+      ],
+      "live_source": "TradingView page snapshot",
+      "price_timestamp": "2026-07-27T12:08:52.807269Z",
+      "source_url": "https://www.tradingview.com/symbols/USDCAD/"
     },
     {
       "id": "NZDUSD=X",
@@ -52270,8 +52301,8 @@
         "https://s3-symbol-logo.tradingview.com/nzdusd.svg",
         "https://s3-symbol-logo.tradingview.com/nzdusd--big.svg"
       ],
-      "current": 0.5806,
-      "change_1d_pct": 0.55,
+      "current": 0.58,
+      "change_1d_pct": 0.02,
       "change_1w_pct": -0.58,
       "change_1m_pct": 2.85,
       "change_3m_pct": -0.82,
@@ -57480,7 +57511,10 @@
           "date": "2026-07-27",
           "value": 0.5806
         }
-      ]
+      ],
+      "live_source": "TradingView page snapshot",
+      "price_timestamp": "2026-07-27T12:09:13.320295Z",
+      "source_url": "https://www.tradingview.com/symbols/NZDUSD/"
     },
     {
       "id": "USDCNY=X",
@@ -57495,7 +57529,7 @@
         "https://s3-symbol-logo.tradingview.com/usdcny.svg",
         "https://s3-symbol-logo.tradingview.com/usdcny--big.svg"
       ],
-      "current": 6.7668,
+      "current": 6.77,
       "change_1d_pct": -0.08,
       "change_1w_pct": -0.08,
       "change_1m_pct": -0.34,
@@ -62705,7 +62739,10 @@
           "date": "2026-07-27",
           "value": 6.7668
         }
-      ]
+      ],
+      "live_source": "TradingView page snapshot",
+      "price_timestamp": "2026-07-27T12:09:33.757977Z",
+      "source_url": "https://www.tradingview.com/symbols/USDCNY/"
     },
     {
       "id": "USDBRL=X",
@@ -62720,8 +62757,8 @@
         "https://s3-symbol-logo.tradingview.com/usdbrl.svg",
         "https://s3-symbol-logo.tradingview.com/usdbrl--big.svg"
       ],
-      "current": 5.087,
-      "change_1d_pct": -0.19,
+      "current": 5.08,
+      "change_1d_pct": -0.09,
       "change_1w_pct": -0.78,
       "change_1m_pct": -2.31,
       "change_3m_pct": 1.12,
@@ -67930,7 +67967,10 @@
           "date": "2026-07-27",
           "value": 5.087
         }
-      ]
+      ],
+      "live_source": "TradingView page snapshot",
+      "price_timestamp": "2026-07-27T12:09:54.305609Z",
+      "source_url": "https://www.tradingview.com/symbols/USDBRL/"
     },
     {
       "id": "USDMXN=X",
@@ -67945,8 +67985,8 @@
         "https://s3-symbol-logo.tradingview.com/usdmxn.svg",
         "https://s3-symbol-logo.tradingview.com/usdmxn--big.svg"
       ],
-      "current": 17.4202,
-      "change_1d_pct": -0.53,
+      "current": 17.46,
+      "change_1d_pct": -0.13,
       "change_1w_pct": -0.69,
       "change_1m_pct": -1.14,
       "change_3m_pct": 0.03,
@@ -73155,7 +73195,10 @@
           "date": "2026-07-27",
           "value": 17.4202
         }
-      ]
+      ],
+      "live_source": "TradingView page snapshot",
+      "price_timestamp": "2026-07-27T12:10:14.756061Z",
+      "source_url": "https://www.tradingview.com/symbols/USDMXN/"
     },
     {
       "id": "USDINR=X",
@@ -73170,8 +73213,8 @@
         "https://s3-symbol-logo.tradingview.com/usdinr.svg",
         "https://s3-symbol-logo.tradingview.com/usdinr--big.svg"
       ],
-      "current": 96.1575,
-      "change_1d_pct": -0.74,
+      "current": 95.9,
+      "change_1d_pct": -0.68,
       "change_1w_pct": -0.13,
       "change_1m_pct": 1.82,
       "change_3m_pct": 2.17,
@@ -78380,7 +78423,10 @@
           "date": "2026-07-27",
           "value": 96.1575
         }
-      ]
+      ],
+      "live_source": "TradingView page snapshot",
+      "price_timestamp": "2026-07-27T12:10:35.171407Z",
+      "source_url": "https://www.tradingview.com/symbols/USDINR/"
     },
     {
       "id": "USDZAR=X",
@@ -78395,8 +78441,8 @@
         "https://s3-symbol-logo.tradingview.com/usdzar.svg",
         "https://s3-symbol-logo.tradingview.com/usdzar--big.svg"
       ],
-      "current": 16.6716,
-      "change_1d_pct": -0.86,
+      "current": 16.74,
+      "change_1d_pct": -0.4,
       "change_1w_pct": 0.71,
       "change_1m_pct": 0.65,
       "change_3m_pct": 0.27,
@@ -83605,7 +83651,10 @@
           "date": "2026-07-27",
           "value": 16.6677
         }
-      ]
+      ],
+      "live_source": "TradingView page snapshot",
+      "price_timestamp": "2026-07-27T12:10:55.538665Z",
+      "source_url": "https://www.tradingview.com/symbols/USDZAR/"
     },
     {
       "id": "USDSGD=X",
@@ -83620,8 +83669,8 @@
         "https://s3-symbol-logo.tradingview.com/usdsgd.svg",
         "https://s3-symbol-logo.tradingview.com/usdsgd--big.svg"
       ],
-      "current": 1.2898,
-      "change_1d_pct": -0.23,
+      "current": 1.29,
+      "change_1d_pct": 0.01,
       "change_1w_pct": -0.18,
       "change_1m_pct": -0.59,
       "change_3m_pct": 0.94,
@@ -88830,7 +88879,10 @@
           "date": "2026-07-27",
           "value": 1.2898
         }
-      ]
+      ],
+      "live_source": "TradingView page snapshot",
+      "price_timestamp": "2026-07-27T12:11:15.969639Z",
+      "source_url": "https://www.tradingview.com/symbols/USDSGD/"
     },
     {
       "id": "USDTHB=X",
@@ -88845,8 +88897,8 @@
         "https://s3-symbol-logo.tradingview.com/usdthb.svg",
         "https://s3-symbol-logo.tradingview.com/usdthb--big.svg"
       ],
-      "current": 33.52,
-      "change_1d_pct": -0.92,
+      "current": 33.6,
+      "change_1d_pct": -0.33,
       "change_1w_pct": -0.39,
       "change_1m_pct": 0.44,
       "change_3m_pct": 3.2,
@@ -94055,7 +94107,10 @@
           "date": "2026-07-27",
           "value": 33.52
         }
-      ]
+      ],
+      "live_source": "TradingView page snapshot",
+      "price_timestamp": "2026-07-27T12:11:36.430739Z",
+      "source_url": "https://www.tradingview.com/symbols/USDTHB/"
     },
     {
       "id": "USDKRW=X",
@@ -94070,8 +94125,8 @@
         "https://s3-symbol-logo.tradingview.com/usdkrw.svg",
         "https://s3-symbol-logo.tradingview.com/usdkrw--big.svg"
       ],
-      "current": 1469.19,
-      "change_1d_pct": -0.33,
+      "current": 1470.4,
+      "change_1d_pct": 0.73,
       "change_1w_pct": -1.22,
       "change_1m_pct": -4.77,
       "change_3m_pct": -0.73,
@@ -99280,7 +99335,10 @@
           "date": "2026-07-27",
           "value": 1469.1899
         }
-      ]
+      ],
+      "live_source": "TradingView page snapshot",
+      "price_timestamp": "2026-07-27T12:11:56.863886Z",
+      "source_url": "https://www.tradingview.com/symbols/USDKRW/"
     },
     {
       "id": "DX-Y.NYB",
@@ -99292,8 +99350,8 @@
         "https://s3-symbol-logo.tradingview.com/dxy.svg",
         "https://s3-symbol-logo.tradingview.com/dxy--big.svg"
       ],
-      "current": 101.141,
-      "change_1d_pct": -0.32,
+      "current": 101.38,
+      "change_1d_pct": -0.08,
       "change_1w_pct": 0.15,
       "change_1m_pct": -0.46,
       "change_3m_pct": 2.78,
@@ -104330,7 +104388,10 @@
           "date": "2026-07-27",
           "value": 101.141
         }
-      ]
+      ],
+      "live_source": "TradingView page snapshot",
+      "price_timestamp": "2026-07-27T12:13:39.239970Z",
+      "source_url": "https://www.tradingview.com/symbols/TVC-DXY/"
     },
     {
       "id": "EURGBP=X",
@@ -104345,8 +104406,8 @@
         "https://s3-symbol-logo.tradingview.com/eurgbp.svg",
         "https://s3-symbol-logo.tradingview.com/eurgbp--big.svg"
       ],
-      "current": 0.8545,
-      "change_1d_pct": -0.01,
+      "current": 0.86,
+      "change_1d_pct": 0.22,
       "change_1w_pct": 0.54,
       "change_1m_pct": -0.93,
       "change_3m_pct": -1.51,
@@ -109555,7 +109616,10 @@
           "date": "2026-07-27",
           "value": 0.8545
         }
-      ]
+      ],
+      "live_source": "TradingView page snapshot",
+      "price_timestamp": "2026-07-27T12:12:17.270202Z",
+      "source_url": "https://www.tradingview.com/symbols/EURGBP/"
     },
     {
       "id": "EURCHF=X",
@@ -109570,8 +109634,8 @@
         "https://s3-symbol-logo.tradingview.com/eurchf.svg",
         "https://s3-symbol-logo.tradingview.com/eurchf--big.svg"
       ],
-      "current": 0.9294,
-      "change_1d_pct": 0.01,
+      "current": 0.93,
+      "change_1d_pct": -0.21,
       "change_1w_pct": 0.61,
       "change_1m_pct": 0.74,
       "change_3m_pct": 1.18,
@@ -114780,7 +114844,10 @@
           "date": "2026-07-27",
           "value": 0.9294
         }
-      ]
+      ],
+      "live_source": "TradingView page snapshot",
+      "price_timestamp": "2026-07-27T12:12:37.720868Z",
+      "source_url": "https://www.tradingview.com/symbols/EURCHF/"
     },
     {
       "id": "EURJPY=X",
@@ -114795,8 +114862,8 @@
         "https://s3-symbol-logo.tradingview.com/eurjpy.svg",
         "https://s3-symbol-logo.tradingview.com/eurjpy--big.svg"
       ],
-      "current": 186.562,
-      "change_1d_pct": 0.09,
+      "current": 186.35,
+      "change_1d_pct": 0.02,
       "change_1w_pct": 0.46,
       "change_1m_pct": 1.57,
       "change_3m_pct": -0.05,
@@ -120005,7 +120072,10 @@
           "date": "2026-07-27",
           "value": 186.562
         }
-      ]
+      ],
+      "live_source": "TradingView page snapshot",
+      "price_timestamp": "2026-07-27T12:12:58.239047Z",
+      "source_url": "https://www.tradingview.com/symbols/EURJPY/"
     },
     {
       "id": "GBPJPY=X",
@@ -120020,8 +120090,8 @@
         "https://s3-symbol-logo.tradingview.com/gbpjpy.svg",
         "https://s3-symbol-logo.tradingview.com/gbpjpy--big.svg"
       ],
-      "current": 218.297,
-      "change_1d_pct": 0.09,
+      "current": 217.87,
+      "change_1d_pct": -0.21,
       "change_1w_pct": -0.09,
       "change_1m_pct": 2.51,
       "change_3m_pct": 1.48,
@@ -125230,7 +125300,10 @@
           "date": "2026-07-27",
           "value": 218.297
         }
-      ]
+      ],
+      "live_source": "TradingView page snapshot",
+      "price_timestamp": "2026-07-27T12:13:18.706636Z",
+      "source_url": "https://www.tradingview.com/symbols/GBPJPY/"
     }
   ]
 }
