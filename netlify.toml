@@ -1,3 +1,9 @@
+[build]
+  # Statik uygulamanın index.html dosyası repo kökünde değil site/ altındadır.
+  # Bu ayar UI'daki site ayarından bağımsız olarak main ve branch deploy'larında
+  # aynı yayın klasörünün kullanılmasını sağlar.
+  publish = "site"
+
 [functions]
   directory = "netlify/functions"
 
