@@ -24,6 +24,7 @@ except ImportError:
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from config import ALL_YF_GROUPS, DATA_DIR, FOREX_COUNTRY_MAP, tradingview_logo_meta
+from tradingview_snapshot import load_snapshot_store, overlay_series_entry
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
 LOGO_DIR = ROOT_DIR / "site" / "assets" / "logos"
@@ -368,7 +369,7 @@ def calculate_52w_range(data_points: list) -> dict:
 #  Grup Fetch — Her sembol: önce API, sonra yfinance
 # ═══════════════════════════════════════════════════════════
 
-def fetch_group(group: dict) -> dict:
+def fetch_group(group: dict, tradingview_snapshots: dict | None = None) -> dict:
     symbols = list(group["symbols"].keys())
     symbol_meta = group["symbols"]
 
@@ -470,6 +471,10 @@ def fetch_group(group: dict) -> dict:
             entry["logo_local"] = local_meta["logo_local"]
         if local_meta.get("logo_pair_local"):
             entry["logo_pair_local"] = local_meta["logo_pair_local"]
+
+        # Sabah alınmış bir TradingView snapshot'ı varsa Yahoo yalnızca tarihsel
+        # alanları yeniler; kartın fiyatı ve 1G değişimi TradingView'da kalır.
+        overlay_series_entry(entry, tradingview_snapshots or {})
 
         series_list.append(entry)
 
@@ -577,10 +582,12 @@ def main():
 
     total = 0
     all_results = []
+    tradingview_snapshots = load_snapshot_store()
+    print(f"   TradingView override: {len(tradingview_snapshots)} sembol")
 
     for group in ALL_YF_GROUPS:
         try:
-            result = fetch_group(group)
+            result = fetch_group(group, tradingview_snapshots)
 
             total += result["meta"]["symbol_count"]
             all_results.append(result)
