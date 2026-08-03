@@ -2,10 +2,9 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Enerji",
-    "updated_at": "2026-08-02T03:50:48Z",
+    "updated_at": "2026-08-03T03:50:42Z",
     "symbol_count": 13,
-    "errors": [],
-    "tradingview_snapshot_at": "2026-08-02T06:37:12.103558Z"
+    "errors": []
   },
   "series": [
     {
@@ -5077,11 +5076,11 @@
       ],
       "current": 86.79,
       "change_1d_pct": 3.38,
-      "change_1w_pct": 2.49,
-      "change_1m_pct": 23.46,
-      "change_3m_pct": -15.27,
-      "change_ytd_pct": 47.46,
-      "change_1y_pct": 44.24,
+      "change_1w_pct": -3.16,
+      "change_1m_pct": 16.65,
+      "change_3m_pct": -19.94,
+      "change_ytd_pct": 39.32,
+      "change_1y_pct": 36.29,
       "high_52w": 112.95,
       "low_52w": 55.27,
       "data": [
@@ -10112,6 +10111,10 @@
         {
           "date": "2026-07-31",
           "value": 84.67
+        },
+        {
+          "date": "2026-08-03",
+          "value": 80.0
         }
       ],
       "live_source": "TradingView page snapshot",
@@ -10130,11 +10133,11 @@
       ],
       "current": 2.79,
       "change_1d_pct": 1.64,
-      "change_1w_pct": -0.72,
-      "change_1m_pct": -14.69,
-      "change_3m_pct": 7.35,
-      "change_ytd_pct": -25.47,
-      "change_1y_pct": -9.28,
+      "change_1w_pct": -0.4,
+      "change_1m_pct": -14.41,
+      "change_3m_pct": 7.7,
+      "change_ytd_pct": -25.23,
+      "change_1y_pct": -8.98,
       "high_52w": 7.46,
       "low_52w": 2.523,
       "data": [
@@ -15169,6 +15172,10 @@
         {
           "date": "2026-07-31",
           "value": 2.747
+        },
+        {
+          "date": "2026-08-03",
+          "value": 2.756
         }
       ],
       "live_source": "TradingView page snapshot",
@@ -20240,11 +20247,11 @@
       ],
       "current": 4.17,
       "change_1d_pct": 1.56,
-      "change_1w_pct": -0.39,
-      "change_1m_pct": 27.27,
-      "change_3m_pct": 3.13,
-      "change_ytd_pct": 93.13,
-      "change_1y_pct": 86.36,
+      "change_1w_pct": -2.34,
+      "change_1m_pct": 24.78,
+      "change_3m_pct": 1.11,
+      "change_ytd_pct": 89.34,
+      "change_1y_pct": 82.71,
       "high_52w": 4.6084,
       "low_52w": 2.0567,
       "data": [
@@ -25279,6 +25286,10 @@
         {
           "date": "2026-07-31",
           "value": 4.1215
+        },
+        {
+          "date": "2026-08-03",
+          "value": 4.0152
         }
       ],
       "live_source": "TradingView page snapshot",
@@ -25297,11 +25308,11 @@
       ],
       "current": 3.11,
       "change_1d_pct": 0.52,
-      "change_1w_pct": -6.4,
-      "change_1m_pct": 5.74,
-      "change_3m_pct": -12.53,
-      "change_ytd_pct": 82.61,
-      "change_1y_pct": 70.31,
+      "change_1w_pct": -9.34,
+      "change_1m_pct": 2.42,
+      "change_3m_pct": -15.28,
+      "change_ytd_pct": 76.87,
+      "change_1y_pct": 64.96,
       "high_52w": 3.7715,
       "low_52w": 1.6809,
       "data": [
@@ -30336,6 +30347,10 @@
         {
           "date": "2026-07-31",
           "value": 3.2216
+        },
+        {
+          "date": "2026-08-03",
+          "value": 3.0164
         }
       ],
       "live_source": "TradingView page snapshot",
