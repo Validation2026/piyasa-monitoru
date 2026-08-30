@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Sanayi & Hammadde",
-    "updated_at": "2026-08-29T03:51:29Z",
+    "updated_at": "2026-08-30T03:51:08Z",
     "symbol_count": 21,
     "errors": []
   },
@@ -17,13 +17,13 @@
         "https://s3-symbol-logo.tradingview.com/hg.svg",
         "https://s3-symbol-logo.tradingview.com/hg--big.svg"
       ],
-      "current": 6.68,
-      "change_1d_pct": 1.39,
-      "change_1w_pct": 0.62,
-      "change_1m_pct": 3.03,
-      "change_3m_pct": 5.31,
-      "change_ytd_pct": 17.94,
-      "change_1y_pct": 31.52,
+      "current": 6.66,
+      "change_1d_pct": 1.05,
+      "change_1w_pct": 0.91,
+      "change_1m_pct": 3.33,
+      "change_3m_pct": 5.61,
+      "change_ytd_pct": 18.28,
+      "change_1y_pct": 31.9,
       "high_52w": 6.7095,
       "low_52w": 4.4635,
       "data": [
@@ -5057,11 +5057,11 @@
         },
         {
           "date": "2026-08-28",
-          "value": 6.64
+          "value": 6.562
         }
       ],
       "live_source": "TradingView page snapshot",
-      "price_timestamp": "2026-08-28T15:57:34.915419Z",
+      "price_timestamp": "2026-08-29T10:49:35.791833Z",
       "source_url": "https://www.tradingview.com/symbols/COMEX-HG1!/"
     },
     {
@@ -5074,13 +5074,13 @@
         "https://s3-symbol-logo.tradingview.com/ali.svg",
         "https://s3-symbol-logo.tradingview.com/ali--big.svg"
       ],
-      "current": 3236.0,
-      "change_1d_pct": 0.93,
-      "change_1w_pct": -0.52,
-      "change_1m_pct": 0.67,
-      "change_3m_pct": -19.23,
-      "change_ytd_pct": 16.58,
-      "change_1y_pct": 21.62,
+      "current": 3241.05,
+      "change_1d_pct": 1.09,
+      "change_1w_pct": -2.14,
+      "change_1m_pct": -1.36,
+      "change_3m_pct": -15.77,
+      "change_ytd_pct": 17.26,
+      "change_1y_pct": 21.58,
       "high_52w": 4195.0,
       "low_52w": 2488.75,
       "data": [
@@ -10103,14 +10103,10 @@
         {
           "date": "2026-08-27",
           "value": 3357.5
-        },
-        {
-          "date": "2026-08-28",
-          "value": 3388.25
         }
       ],
       "live_source": "TradingView page snapshot",
-      "price_timestamp": "2026-08-28T15:57:55.441789Z",
+      "price_timestamp": "2026-08-29T10:49:56.242216Z",
       "source_url": "https://www.tradingview.com/symbols/ALUMINIUM/"
     },
     {
@@ -10123,15 +10119,15 @@
         "https://s3-symbol-logo.tradingview.com/znc.svg",
         "https://s3-symbol-logo.tradingview.com/znc--big.svg"
       ],
-      "current": 107.8906,
-      "change_1d_pct": 0.0,
-      "change_1w_pct": -0.52,
-      "change_1m_pct": -0.6,
-      "change_3m_pct": -1.83,
-      "change_ytd_pct": -4.04,
-      "change_1y_pct": -4.55,
+      "current": 107.875,
+      "change_1d_pct": -0.22,
+      "change_1w_pct": -0.53,
+      "change_1m_pct": -0.62,
+      "change_3m_pct": -1.85,
+      "change_ytd_pct": -4.06,
+      "change_1y_pct": -4.56,
       "high_52w": 113.8594,
-      "low_52w": 107.8906,
+      "low_52w": 108.0,
       "data": [
         {
           "date": "2021-08-30",
@@ -15163,7 +15159,7 @@
         },
         {
           "date": "2026-08-28",
-          "value": 107.8906
+          "value": 108.1094
         }
       ]
     },
@@ -15177,13 +15173,13 @@
         "https://s3-symbol-logo.tradingview.com/lbr.svg",
         "https://s3-symbol-logo.tradingview.com/lbr--big.svg"
       ],
-      "current": 553.0,
-      "change_1d_pct": 0.0,
-      "change_1w_pct": -3.74,
-      "change_1m_pct": -11.52,
-      "change_3m_pct": -5.95,
-      "change_ytd_pct": 2.69,
-      "change_1y_pct": 9.07,
+      "current": 556.0,
+      "change_1d_pct": -2.03,
+      "change_1w_pct": -3.22,
+      "change_1m_pct": -11.04,
+      "change_3m_pct": -5.44,
+      "change_ytd_pct": 3.25,
+      "change_1y_pct": 9.66,
       "high_52w": 659.0,
       "low_52w": 507.0,
       "data": [
@@ -19269,7 +19265,7 @@
         },
         {
           "date": "2026-08-28",
-          "value": 553.0
+          "value": 567.5
         }
       ]
     },
@@ -74731,7 +74727,7 @@
         },
         {
           "date": "2026-08-28",
-          "value": 72.1362
+          "value": 72.14
         }
       ]
     },
