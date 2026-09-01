@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Tahvil Faizleri",
-    "updated_at": "2026-09-01T03:52:06Z",
+    "updated_at": "2026-09-01T06:22:25Z",
     "symbol_count": 16,
     "errors": []
   },
@@ -5065,10 +5065,6 @@
       "high_52w": 4.349,
       "low_52w": 3.376,
       "data": [
-        {
-          "date": "2021-08-31",
-          "value": 0.204
-        },
         {
           "date": "2021-09-01",
           "value": 0.23
@@ -55421,11 +55417,11 @@
       ],
       "current": 72.292,
       "change_1d_pct": 0.07,
-      "change_1w_pct": -0.11,
-      "change_1m_pct": -0.18,
-      "change_3m_pct": -1.35,
+      "change_1w_pct": -0.52,
+      "change_1m_pct": 0.09,
+      "change_3m_pct": -1.54,
       "change_ytd_pct": -2.4,
-      "change_1y_pct": -2.99,
+      "change_1y_pct": -2.95,
       "high_52w": 75.17,
       "low_52w": 72.15,
       "data": [
@@ -60438,6 +60434,10 @@
           "value": 72.54
         },
         {
+          "date": "2026-08-28",
+          "value": 72.31
+        },
+        {
           "date": "2026-08-31",
           "value": 72.24
         }
@@ -60455,11 +60455,11 @@
       ],
       "current": 97.33,
       "change_1d_pct": -0.08,
-      "change_1w_pct": -0.23,
-      "change_1m_pct": -0.3,
-      "change_3m_pct": -1.49,
+      "change_1w_pct": -0.69,
+      "change_1m_pct": -0.04,
+      "change_3m_pct": -1.69,
       "change_ytd_pct": -2.55,
-      "change_1y_pct": -3.12,
+      "change_1y_pct": -3.08,
       "high_52w": 101.4,
       "low_52w": 97.24,
       "data": [
@@ -65470,6 +65470,10 @@
         {
           "date": "2026-08-27",
           "value": 97.83
+        },
+        {
+          "date": "2026-08-28",
+          "value": 97.49
         },
         {
           "date": "2026-08-31",
