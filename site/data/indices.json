@@ -2,10 +2,9 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Endeksler",
-    "updated_at": "2026-09-02T06:11:19Z",
+    "updated_at": "2026-09-02T13:58:44Z",
     "symbol_count": 25,
-    "errors": [],
-    "tradingview_snapshot_at": "2026-09-02T08:27:07.015356Z"
+    "errors": []
   },
   "series": [
     {
@@ -20,20 +19,16 @@
         "https://s3-symbol-logo.tradingview.com/xu100.svg",
         "https://s3-symbol-logo.tradingview.com/xu100--big.svg"
       ],
-      "current": 14229.01,
-      "change_1d_pct": 0.0,
-      "change_1w_pct": -1.69,
-      "change_1m_pct": 5.73,
-      "change_3m_pct": 4.14,
-      "change_ytd_pct": 26.35,
-      "change_1y_pct": 34.53,
+      "current": 14044.56,
+      "change_1d_pct": -1.3,
+      "change_1w_pct": -3.88,
+      "change_1m_pct": 4.73,
+      "change_3m_pct": 2.49,
+      "change_ytd_pct": 24.71,
+      "change_1y_pct": 31.99,
       "high_52w": 15133.5,
       "low_52w": 10208.7998,
       "data": [
-        {
-          "date": "2021-09-01",
-          "value": 1474.1
-        },
         {
           "date": "2021-09-02",
           "value": 1479.1
@@ -5023,12 +5018,20 @@
           "value": 14575.5
         },
         {
+          "date": "2026-08-28",
+          "value": 14641.5996
+        },
+        {
           "date": "2026-08-31",
           "value": 14334.0996
         },
         {
           "date": "2026-09-01",
           "value": 14229.0
+        },
+        {
+          "date": "2026-09-02",
+          "value": 14045.1201
         }
       ]
     },
@@ -5044,20 +5047,16 @@
         "https://s3-symbol-logo.tradingview.com/xu030.svg",
         "https://s3-symbol-logo.tradingview.com/xu030--big.svg"
       ],
-      "current": 16489.34,
-      "change_1d_pct": 0.0,
-      "change_1w_pct": -1.3,
-      "change_1m_pct": 8.14,
-      "change_3m_pct": 6.43,
-      "change_ytd_pct": 34.9,
-      "change_1y_pct": 44.21,
+      "current": 16328.93,
+      "change_1d_pct": -0.97,
+      "change_1w_pct": -2.26,
+      "change_1m_pct": 7.09,
+      "change_3m_pct": 5.39,
+      "change_ytd_pct": 33.59,
+      "change_1y_pct": 42.8,
       "high_52w": 17272.3008,
       "low_52w": 11063.0,
       "data": [
-        {
-          "date": "2021-09-01",
-          "value": 1587.0
-        },
         {
           "date": "2021-09-02",
           "value": 1591.7
@@ -10045,6 +10044,10 @@
         {
           "date": "2026-09-01",
           "value": 16489.3008
+        },
+        {
+          "date": "2026-09-02",
+          "value": 16328.9297
         }
       ]
     },
@@ -10058,13 +10061,13 @@
         "https://s3-symbol-logo.tradingview.com/spx.svg",
         "https://s3-symbol-logo.tradingview.com/spx--big.svg"
       ],
-      "current": 7631.47,
-      "change_1d_pct": -0.0,
-      "change_1w_pct": -0.6,
-      "change_1m_pct": 1.89,
-      "change_3m_pct": 0.9,
-      "change_ytd_pct": 11.48,
-      "change_1y_pct": 11.39,
+      "current": 7643.06,
+      "change_1d_pct": 0.15,
+      "change_1w_pct": -0.45,
+      "change_1m_pct": 2.05,
+      "change_3m_pct": 1.05,
+      "change_ytd_pct": 11.65,
+      "change_1y_pct": 11.56,
       "high_52w": 7798.9902,
       "low_52w": 6343.7202,
       "data": [
@@ -15079,6 +15082,10 @@
         {
           "date": "2026-09-01",
           "value": 7631.4702
+        },
+        {
+          "date": "2026-09-02",
+          "value": 7643.25
         }
       ]
     },
@@ -15092,13 +15099,13 @@
         "https://s3-symbol-logo.tradingview.com/dji.svg",
         "https://s3-symbol-logo.tradingview.com/dji--big.svg"
       ],
-      "current": 52766.88,
-      "change_1d_pct": 0.0,
-      "change_1w_pct": -1.51,
-      "change_1m_pct": 0.54,
-      "change_3m_pct": 4.14,
-      "change_ytd_pct": 9.79,
-      "change_1y_pct": 9.35,
+      "current": 53039.12,
+      "change_1d_pct": 0.52,
+      "change_1w_pct": -1.0,
+      "change_1m_pct": 1.06,
+      "change_3m_pct": 4.68,
+      "change_ytd_pct": 10.35,
+      "change_1y_pct": 9.91,
       "high_52w": 54349.1211,
       "low_52w": 45166.6406,
       "data": [
@@ -20113,6 +20120,10 @@
         {
           "date": "2026-09-01",
           "value": 52766.8789
+        },
+        {
+          "date": "2026-09-02",
+          "value": 53039.1211
         }
       ]
     },
@@ -20126,13 +20137,13 @@
         "https://s3-symbol-logo.tradingview.com/ndx.svg",
         "https://s3-symbol-logo.tradingview.com/ndx--big.svg"
       ],
-      "current": 26099.773,
-      "change_1d_pct": 0.0,
-      "change_1w_pct": -0.2,
-      "change_1m_pct": 2.86,
-      "change_3m_pct": -3.04,
-      "change_ytd_pct": 12.3,
-      "change_1y_pct": 11.51,
+      "current": 26091.658,
+      "change_1d_pct": -0.03,
+      "change_1w_pct": -0.15,
+      "change_1m_pct": 0.69,
+      "change_3m_pct": -3.27,
+      "change_ytd_pct": 12.26,
+      "change_1y_pct": 14.09,
       "high_52w": 27093.9004,
       "low_52w": 20794.6406,
       "data": [
@@ -25141,12 +25152,20 @@
           "value": 26541.3496
         },
         {
+          "date": "2026-08-28",
+          "value": 26402.4199
+        },
+        {
           "date": "2026-08-31",
           "value": 26370.8906
         },
         {
           "date": "2026-09-01",
           "value": 26099.7695
+        },
+        {
+          "date": "2026-09-02",
+          "value": 26091.6582
         }
       ]
     },
@@ -25160,13 +25179,13 @@
         "https://s3-symbol-logo.tradingview.com/rut.svg",
         "https://s3-symbol-logo.tradingview.com/rut--big.svg"
       ],
-      "current": 2920.132,
-      "change_1d_pct": 0.0,
-      "change_1w_pct": -2.99,
-      "change_1m_pct": -0.38,
-      "change_3m_pct": -0.56,
-      "change_ytd_pct": 17.66,
-      "change_1y_pct": 19.15,
+      "current": 2940.8984,
+      "change_1d_pct": 0.71,
+      "change_1w_pct": -2.16,
+      "change_1m_pct": -1.38,
+      "change_3m_pct": 0.74,
+      "change_ytd_pct": 18.49,
+      "change_1y_pct": 23.41,
       "high_52w": 3068.4199,
       "low_52w": 2305.1101,
       "data": [
@@ -30175,12 +30194,20 @@
           "value": 3014.3401
         },
         {
+          "date": "2026-08-28",
+          "value": 2972.3701
+        },
+        {
           "date": "2026-08-31",
           "value": 2956.45
         },
         {
           "date": "2026-09-01",
           "value": 2920.1299
+        },
+        {
+          "date": "2026-09-02",
+          "value": 2940.8984
         }
       ]
     },
@@ -30194,20 +30221,16 @@
         "https://s3-symbol-logo.tradingview.com/sx5e.svg",
         "https://s3-symbol-logo.tradingview.com/sx5e--big.svg"
       ],
-      "current": 6368.98,
-      "change_1d_pct": 0.0,
-      "change_1w_pct": -1.34,
-      "change_1m_pct": 0.17,
-      "change_3m_pct": 5.53,
-      "change_ytd_pct": 9.88,
-      "change_1y_pct": 12.44,
+      "current": 6361.18,
+      "change_1d_pct": -0.12,
+      "change_1w_pct": -1.46,
+      "change_1m_pct": 0.05,
+      "change_3m_pct": 5.41,
+      "change_ytd_pct": 9.75,
+      "change_1y_pct": 12.3,
       "high_52w": 6551.2202,
       "low_52w": 5291.04,
       "data": [
-        {
-          "date": "2021-09-01",
-          "value": 4227.27
-        },
         {
           "date": "2021-09-02",
           "value": 4232.1001
@@ -35227,6 +35250,10 @@
         {
           "date": "2026-09-01",
           "value": 6368.98
+        },
+        {
+          "date": "2026-09-02",
+          "value": 6361.1802
         }
       ]
     },
@@ -35240,20 +35267,16 @@
         "https://s3-symbol-logo.tradingview.com/ukx.svg",
         "https://s3-symbol-logo.tradingview.com/ukx--big.svg"
       ],
-      "current": 10789.28,
-      "change_1d_pct": -0.0,
-      "change_1w_pct": -0.6,
-      "change_1m_pct": -0.99,
-      "change_3m_pct": 3.65,
-      "change_ytd_pct": 8.64,
-      "change_1y_pct": 10.01,
+      "current": 10762.48,
+      "change_1d_pct": -0.25,
+      "change_1w_pct": -0.85,
+      "change_1m_pct": -1.24,
+      "change_3m_pct": 3.39,
+      "change_ytd_pct": 8.37,
+      "change_1y_pct": 9.74,
       "high_52w": 10910.5996,
       "low_52w": 9116.7002,
       "data": [
-        {
-          "date": "2021-09-01",
-          "value": 7149.7998
-        },
         {
           "date": "2021-09-02",
           "value": 7163.8999
@@ -40293,6 +40316,10 @@
         {
           "date": "2026-09-01",
           "value": 10789.2998
+        },
+        {
+          "date": "2026-09-02",
+          "value": 10762.4805
         }
       ]
     },
@@ -40306,13 +40333,13 @@
         "https://s3-symbol-logo.tradingview.com/dax.svg",
         "https://s3-symbol-logo.tradingview.com/dax--big.svg"
       ],
-      "current": 25970.11,
-      "change_1d_pct": 0.0,
-      "change_1w_pct": -1.13,
-      "change_1m_pct": 1.33,
-      "change_3m_pct": 3.87,
-      "change_ytd_pct": 6.04,
-      "change_1y_pct": 8.02,
+      "current": 25850.69,
+      "change_1d_pct": -0.46,
+      "change_1w_pct": -1.58,
+      "change_1m_pct": 0.86,
+      "change_3m_pct": 3.39,
+      "change_ytd_pct": 5.55,
+      "change_1y_pct": 7.52,
       "high_52w": 26440.3105,
       "low_52w": 22300.75,
       "data": [
@@ -45407,6 +45434,10 @@
         {
           "date": "2026-09-01",
           "value": 25970.1094
+        },
+        {
+          "date": "2026-09-02",
+          "value": 25850.6895
         }
       ]
     },
@@ -45420,20 +45451,16 @@
         "https://s3-symbol-logo.tradingview.com/px1.svg",
         "https://s3-symbol-logo.tradingview.com/px1--big.svg"
       ],
-      "current": 8301.85,
-      "change_1d_pct": 0.0,
-      "change_1w_pct": -1.63,
-      "change_1m_pct": -2.44,
-      "change_3m_pct": 1.91,
-      "change_ytd_pct": 1.87,
-      "change_1y_pct": 2.25,
+      "current": 8290.28,
+      "change_1d_pct": -0.14,
+      "change_1w_pct": -1.76,
+      "change_1m_pct": -2.58,
+      "change_3m_pct": 1.76,
+      "change_ytd_pct": 1.73,
+      "change_1y_pct": 2.11,
       "high_52w": 8726.0303,
       "low_52w": 7654.25,
       "data": [
-        {
-          "date": "2021-09-01",
-          "value": 6758.6899
-        },
         {
           "date": "2021-09-02",
           "value": 6763.0801
@@ -50549,6 +50576,10 @@
         {
           "date": "2026-09-01",
           "value": 8301.8496
+        },
+        {
+          "date": "2026-09-02",
+          "value": 8290.2803
         }
       ]
     },
@@ -50562,13 +50593,13 @@
         "https://s3-symbol-logo.tradingview.com/ni225.svg",
         "https://s3-symbol-logo.tradingview.com/ni225--big.svg"
       ],
-      "current": 64458.39,
-      "change_1d_pct": -2.65,
-      "change_1w_pct": -2.12,
-      "change_1m_pct": 4.19,
-      "change_3m_pct": -0.36,
-      "change_ytd_pct": 28.05,
-      "change_1y_pct": 28.37,
+      "current": 64325.64,
+      "change_1d_pct": -2.85,
+      "change_1w_pct": -2.92,
+      "change_1m_pct": -0.06,
+      "change_3m_pct": -3.02,
+      "change_ytd_pct": 27.78,
+      "change_1y_pct": 26.42,
       "high_52w": 72366.3438,
       "low_52w": 41938.8906,
       "data": [
@@ -55449,6 +55480,10 @@
           "value": 66131.9766
         },
         {
+          "date": "2026-08-28",
+          "value": 66405.5625
+        },
+        {
           "date": "2026-08-31",
           "value": 66311.9297
         },
@@ -55458,7 +55493,7 @@
         },
         {
           "date": "2026-09-02",
-          "value": 64458.3906
+          "value": 64325.6406
         }
       ]
     },
@@ -55472,13 +55507,13 @@
         "https://s3-symbol-logo.tradingview.com/hsi.svg",
         "https://s3-symbol-logo.tradingview.com/hsi--big.svg"
       ],
-      "current": 25225.13,
-      "change_1d_pct": -0.41,
-      "change_1w_pct": -1.12,
-      "change_1m_pct": -2.55,
-      "change_3m_pct": 0.88,
-      "change_ytd_pct": -1.58,
-      "change_1y_pct": -4.76,
+      "current": 25311.21,
+      "change_1d_pct": -0.07,
+      "change_1w_pct": -0.78,
+      "change_1m_pct": -2.21,
+      "change_3m_pct": 1.22,
+      "change_ytd_pct": -1.25,
+      "change_1y_pct": -4.44,
       "high_52w": 27968.0898,
       "low_52w": 22671.8594,
       "data": [
@@ -60384,7 +60419,7 @@
         },
         {
           "date": "2026-09-02",
-          "value": 25225.1309
+          "value": 25311.2109
         }
       ]
     },
@@ -60398,13 +60433,13 @@
         "https://s3-symbol-logo.tradingview.com/shcomp.svg",
         "https://s3-symbol-logo.tradingview.com/shcomp--big.svg"
       ],
-      "current": 3953.079,
-      "change_1d_pct": -0.67,
-      "change_1w_pct": 1.64,
-      "change_1m_pct": 3.15,
-      "change_3m_pct": -2.84,
-      "change_ytd_pct": -0.4,
-      "change_1y_pct": -1.36,
+      "current": 3941.386,
+      "change_1d_pct": -0.97,
+      "change_1w_pct": 1.34,
+      "change_1m_pct": 2.85,
+      "change_3m_pct": -3.13,
+      "change_ytd_pct": -0.69,
+      "change_1y_pct": -1.66,
       "high_52w": 4242.5718,
       "low_52w": 3764.155,
       "data": [
@@ -65246,7 +65281,7 @@
         },
         {
           "date": "2026-09-02",
-          "value": 3953.0786
+          "value": 3941.3862
         }
       ]
     },
@@ -65260,13 +65295,13 @@
         "https://s3-symbol-logo.tradingview.com/sensex.svg",
         "https://s3-symbol-logo.tradingview.com/sensex--big.svg"
       ],
-      "current": 76298.65,
-      "change_1d_pct": -0.84,
-      "change_1w_pct": -1.75,
-      "change_1m_pct": -2.3,
-      "change_3m_pct": 2.04,
-      "change_ytd_pct": -10.47,
-      "change_1y_pct": -8.66,
+      "current": 76570.35,
+      "change_1d_pct": -0.49,
+      "change_1w_pct": -1.17,
+      "change_1m_pct": -2.63,
+      "change_3m_pct": 3.1,
+      "change_ytd_pct": -10.15,
+      "change_1y_pct": -8.7,
       "high_52w": 85762.0078,
       "low_52w": 71947.5469,
       "data": [
@@ -70191,6 +70226,10 @@
           "value": 76933.5938
         },
         {
+          "date": "2026-08-28",
+          "value": 77264.5078
+        },
+        {
           "date": "2026-08-31",
           "value": 76957.2734
         },
@@ -70200,7 +70239,7 @@
         },
         {
           "date": "2026-09-02",
-          "value": 76298.6484
+          "value": 76570.3516
         }
       ]
     },
@@ -70214,13 +70253,13 @@
         "https://s3-symbol-logo.tradingview.com/kospi.svg",
         "https://s3-symbol-logo.tradingview.com/kospi--big.svg"
       ],
-      "current": 6598.12,
-      "change_1d_pct": -3.48,
-      "change_1w_pct": -2.14,
-      "change_1m_pct": 17.96,
-      "change_3m_pct": -19.82,
-      "change_ytd_pct": 56.57,
-      "change_1y_pct": 63.87,
+      "current": 6562.72,
+      "change_1d_pct": -3.99,
+      "change_1w_pct": -2.67,
+      "change_1m_pct": 17.33,
+      "change_3m_pct": -20.25,
+      "change_ytd_pct": 55.73,
+      "change_1y_pct": 62.99,
       "high_52w": 9114.5498,
       "low_52w": 3172.3501,
       "data": [
@@ -75098,7 +75137,7 @@
         },
         {
           "date": "2026-09-02",
-          "value": 6598.1201
+          "value": 6562.7202
         }
       ]
     },
@@ -79988,18 +80027,14 @@
       ],
       "current": 3049454.5,
       "change_1d_pct": -0.0,
-      "change_1w_pct": 1.34,
-      "change_1m_pct": -7.73,
-      "change_3m_pct": -0.73,
+      "change_1w_pct": 0.81,
+      "change_1m_pct": -7.35,
+      "change_3m_pct": -1.3,
       "change_ytd_pct": -0.07,
-      "change_1y_pct": -1.01,
+      "change_1y_pct": 0.04,
       "high_52w": 3379772.0,
       "low_52w": 1683960.0,
       "data": [
-        {
-          "date": "2021-09-01",
-          "value": 75233.0
-        },
         {
           "date": "2021-09-02",
           "value": 75115.0
@@ -84865,12 +84900,20 @@
           "value": 3001209.0
         },
         {
+          "date": "2026-08-28",
+          "value": 2979472.0
+        },
+        {
           "date": "2026-08-31",
           "value": 3033848.0
         },
         {
           "date": "2026-09-01",
           "value": 3049455.0
+        },
+        {
+          "date": "2026-09-02",
+          "value": 3049454.5
         }
       ]
     },
@@ -84884,13 +84927,13 @@
         "https://s3-symbol-logo.tradingview.com/xjo.svg",
         "https://s3-symbol-logo.tradingview.com/xjo--big.svg"
       ],
-      "current": 8979.4,
-      "change_1d_pct": -0.96,
-      "change_1w_pct": -2.02,
-      "change_1m_pct": 0.03,
-      "change_3m_pct": 2.84,
-      "change_ytd_pct": 3.04,
-      "change_1y_pct": 3.99,
+      "current": 8978.4,
+      "change_1d_pct": -0.97,
+      "change_1w_pct": -2.03,
+      "change_1m_pct": 0.02,
+      "change_3m_pct": 2.83,
+      "change_ytd_pct": 3.03,
+      "change_1y_pct": 3.98,
       "high_52w": 9271.5996,
       "low_52w": 8365.9004,
       "data": [
@@ -89948,7 +89991,7 @@
         },
         {
           "date": "2026-09-02",
-          "value": 8979.4004
+          "value": 8978.4004
         }
       ]
     },
@@ -89962,20 +90005,16 @@
         "https://s3-symbol-logo.tradingview.com/ibc.svg",
         "https://s3-symbol-logo.tradingview.com/ibc--big.svg"
       ],
-      "current": 19824.0,
-      "change_1d_pct": 0.0,
-      "change_1w_pct": -1.16,
-      "change_1m_pct": 0.21,
-      "change_3m_pct": 9.01,
-      "change_ytd_pct": 14.54,
-      "change_1y_pct": 22.58,
+      "current": 19814.9,
+      "change_1d_pct": -0.05,
+      "change_1w_pct": -1.21,
+      "change_1m_pct": 0.16,
+      "change_3m_pct": 8.96,
+      "change_ytd_pct": 14.49,
+      "change_1y_pct": 22.52,
       "high_52w": 20213.5996,
       "low_52w": 14704.2002,
       "data": [
-        {
-          "date": "2021-09-01",
-          "value": 8991.5
-        },
         {
           "date": "2021-09-02",
           "value": 8981.4004
@@ -95083,6 +95122,10 @@
         {
           "date": "2026-09-01",
           "value": 19824.0
+        },
+        {
+          "date": "2026-09-02",
+          "value": 19814.9004
         }
       ]
     },
@@ -95098,18 +95141,14 @@
       ],
       "current": 16.48,
       "change_1d_pct": 0.92,
-      "change_1w_pct": 5.76,
-      "change_1m_pct": 2.19,
-      "change_3m_pct": 3.81,
-      "change_ytd_pct": 9.3,
-      "change_1y_pct": -18.3,
+      "change_1w_pct": 3.3,
+      "change_1m_pct": -0.19,
+      "change_3m_pct": 1.4,
+      "change_ytd_pct": 6.76,
+      "change_1y_pct": -20.2,
       "high_52w": 31.05,
       "low_52w": 13.47,
       "data": [
-        {
-          "date": "2021-09-01",
-          "value": 16.11
-        },
         {
           "date": "2021-09-02",
           "value": 16.41
@@ -100125,6 +100164,10 @@
         {
           "date": "2026-09-01",
           "value": 16.34
+        },
+        {
+          "date": "2026-09-02",
+          "value": 15.96
         }
       ],
       "live_source": "TradingView page snapshot",
@@ -100141,20 +100184,16 @@
         "https://s3-symbol-logo.tradingview.com/bvsp.svg",
         "https://s3-symbol-logo.tradingview.com/bvsp--big.svg"
       ],
-      "current": 179722.48,
-      "change_1d_pct": -0.0,
-      "change_1w_pct": 2.95,
-      "change_1m_pct": 0.97,
-      "change_3m_pct": 3.41,
-      "change_ytd_pct": 11.54,
-      "change_1y_pct": 15.76,
+      "current": 182980.86,
+      "change_1d_pct": 1.81,
+      "change_1w_pct": 4.81,
+      "change_1m_pct": 2.8,
+      "change_3m_pct": 5.29,
+      "change_ytd_pct": 13.56,
+      "change_1y_pct": 17.86,
       "high_52w": 198657.0,
       "low_52w": 139864.0,
       "data": [
-        {
-          "date": "2021-09-01",
-          "value": 119396.0
-        },
         {
           "date": "2021-09-02",
           "value": 116677.0
@@ -105138,6 +105177,10 @@
         {
           "date": "2026-09-01",
           "value": 179723.0
+        },
+        {
+          "date": "2026-09-02",
+          "value": 182980.8594
         }
       ]
     },
@@ -105151,13 +105194,13 @@
         "https://s3-symbol-logo.tradingview.com/nsei.svg",
         "https://s3-symbol-logo.tradingview.com/nsei--big.svg"
       ],
-      "current": 23814.4,
-      "change_1d_pct": -1.0,
-      "change_1w_pct": -2.14,
-      "change_1m_pct": -2.33,
-      "change_3m_pct": 1.13,
-      "change_ytd_pct": -8.86,
-      "change_1y_pct": -6.88,
+      "current": 23914.45,
+      "change_1d_pct": -0.59,
+      "change_1w_pct": -1.73,
+      "change_1m_pct": -1.92,
+      "change_3m_pct": 1.56,
+      "change_ytd_pct": -8.48,
+      "change_1y_pct": -6.49,
       "high_52w": 26328.5508,
       "low_52w": 22331.4004,
       "data": [
@@ -110099,7 +110142,7 @@
         },
         {
           "date": "2026-09-02",
-          "value": 23814.4004
+          "value": 23914.4492
         }
       ]
     },
@@ -110113,20 +110156,16 @@
         "https://s3-symbol-logo.tradingview.com/gsptse.svg",
         "https://s3-symbol-logo.tradingview.com/gsptse--big.svg"
       ],
-      "current": 35825.73,
-      "change_1d_pct": 0.0,
-      "change_1w_pct": -3.06,
-      "change_1m_pct": 0.9,
-      "change_3m_pct": 3.79,
-      "change_ytd_pct": 12.97,
-      "change_1y_pct": 18.42,
+      "current": 36021.35,
+      "change_1d_pct": 0.55,
+      "change_1w_pct": -2.53,
+      "change_1m_pct": 1.45,
+      "change_3m_pct": 4.36,
+      "change_ytd_pct": 13.59,
+      "change_1y_pct": 19.06,
       "high_52w": 36957.6016,
       "low_52w": 28615.5996,
       "data": [
-        {
-          "date": "2021-09-01",
-          "value": 20689.5996
-        },
         {
           "date": "2021-09-02",
           "value": 20795.0996
@@ -115138,6 +115177,10 @@
         {
           "date": "2026-09-01",
           "value": 35825.6992
+        },
+        {
+          "date": "2026-09-02",
+          "value": 36021.3516
         }
       ]
     },
@@ -115151,13 +115194,13 @@
         "https://s3-symbol-logo.tradingview.com/ndx.svg",
         "https://s3-symbol-logo.tradingview.com/ndx--big.svg"
       ],
-      "current": 29077.22,
-      "change_1d_pct": -0.0,
-      "change_1w_pct": -0.45,
-      "change_1m_pct": 2.84,
-      "change_3m_pct": -3.79,
-      "change_ytd_pct": 15.16,
-      "change_1y_pct": 13.95,
+      "current": 28995.85,
+      "change_1d_pct": -0.28,
+      "change_1w_pct": -0.73,
+      "change_1m_pct": 2.55,
+      "change_3m_pct": -4.06,
+      "change_ytd_pct": 14.84,
+      "change_1y_pct": 13.63,
       "high_52w": 30660.5996,
       "low_52w": 22953.3809,
       "data": [
@@ -120172,6 +120215,10 @@
         {
           "date": "2026-09-01",
           "value": 29077.2207
+        },
+        {
+          "date": "2026-09-02",
+          "value": 28995.8496
         }
       ]
     },
@@ -120185,20 +120232,16 @@
         "https://s3-symbol-logo.tradingview.com/mxx.svg",
         "https://s3-symbol-logo.tradingview.com/mxx--big.svg"
       ],
-      "current": 64514.25,
-      "change_1d_pct": 0.0,
-      "change_1w_pct": -2.68,
-      "change_1m_pct": -3.62,
-      "change_3m_pct": -5.32,
-      "change_ytd_pct": 0.32,
-      "change_1y_pct": 2.09,
+      "current": 64407.72,
+      "change_1d_pct": -0.17,
+      "change_1w_pct": -2.84,
+      "change_1m_pct": -3.78,
+      "change_3m_pct": -5.47,
+      "change_ytd_pct": 0.15,
+      "change_1y_pct": 1.93,
       "high_52w": 71601.3516,
-      "low_52w": 58865.0312,
+      "low_52w": 59651.5703,
       "data": [
-        {
-          "date": "2021-09-01",
-          "value": 52215.5391
-        },
         {
           "date": "2021-09-02",
           "value": 52087.4688
@@ -125222,6 +125265,10 @@
         {
           "date": "2026-09-01",
           "value": 64514.25
+        },
+        {
+          "date": "2026-09-02",
+          "value": 64407.7188
         }
       ]
     }
