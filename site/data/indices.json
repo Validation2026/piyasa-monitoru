@@ -4,7 +4,8 @@
     "category": "Endeksler",
     "updated_at": "2026-09-23T03:52:04Z",
     "symbol_count": 25,
-    "errors": []
+    "errors": [],
+    "tradingview_snapshot_at": "2026-09-23T04:05:40.459459Z"
   },
   "series": [
     {
@@ -95147,8 +95148,8 @@
         "https://s3-symbol-logo.tradingview.com/vix.svg",
         "https://s3-symbol-logo.tradingview.com/vix--big.svg"
       ],
-      "current": 14.88,
-      "change_1d_pct": 0.13,
+      "current": 14.22,
+      "change_1d_pct": -4.31,
       "change_1w_pct": -19.76,
       "change_1m_pct": -10.35,
       "change_3m_pct": -17.77,
@@ -100187,7 +100188,7 @@
         }
       ],
       "live_source": "TradingView page snapshot",
-      "price_timestamp": "2026-09-22T09:04:30.766866Z",
+      "price_timestamp": "2026-09-23T04:05:40.459459Z",
       "source_url": "https://www.tradingview.com/symbols/TVC-VIX/"
     },
     {
