@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Sanayi & Hammadde",
-    "updated_at": "2026-10-25T11:39:46Z",
+    "updated_at": "2026-10-26T03:51:20Z",
     "symbol_count": 21,
     "errors": []
   },
@@ -19,11 +19,11 @@
       ],
       "current": 6.51,
       "change_1d_pct": 1.71,
-      "change_1w_pct": -0.46,
-      "change_1m_pct": -3.13,
-      "change_3m_pct": 3.22,
-      "change_ytd_pct": 15.6,
-      "change_1y_pct": 13.25,
+      "change_1w_pct": -0.99,
+      "change_1m_pct": -3.65,
+      "change_3m_pct": 2.67,
+      "change_ytd_pct": 14.98,
+      "change_1y_pct": 12.65,
       "high_52w": 6.8035,
       "low_52w": 4.926,
       "data": [
@@ -5057,7 +5057,11 @@
         },
         {
           "date": "2026-10-23",
-          "value": 6.5075
+          "value": 6.476
+        },
+        {
+          "date": "2026-10-26",
+          "value": 6.4735
         }
       ],
       "live_source": "TradingView page snapshot",
@@ -5076,11 +5080,11 @@
       ],
       "current": 3043.85,
       "change_1d_pct": 1.87,
-      "change_1w_pct": -0.37,
-      "change_1m_pct": -8.46,
-      "change_3m_pct": -12.0,
-      "change_ytd_pct": 7.93,
-      "change_1y_pct": 4.51,
+      "change_1w_pct": -0.32,
+      "change_1m_pct": -8.41,
+      "change_3m_pct": -11.95,
+      "change_ytd_pct": 7.99,
+      "change_1y_pct": 4.57,
       "high_52w": 4195.0,
       "low_52w": 2684.0,
       "data": [
@@ -10106,7 +10110,11 @@
         },
         {
           "date": "2026-10-23",
-          "value": 3136.75
+          "value": 3268.5
+        },
+        {
+          "date": "2026-10-26",
+          "value": 3138.5
         }
       ],
       "live_source": "TradingView page snapshot",
@@ -10123,13 +10131,13 @@
         "https://s3-symbol-logo.tradingview.com/znc.svg",
         "https://s3-symbol-logo.tradingview.com/znc--big.svg"
       ],
-      "current": 106.1562,
-      "change_1d_pct": 0.0,
-      "change_1w_pct": 0.86,
-      "change_1m_pct": 1.24,
-      "change_3m_pct": -1.79,
-      "change_ytd_pct": -5.59,
-      "change_1y_pct": -5.43,
+      "current": 106.3125,
+      "change_1d_pct": 0.15,
+      "change_1w_pct": 1.01,
+      "change_1m_pct": 1.39,
+      "change_3m_pct": -1.65,
+      "change_ytd_pct": -5.45,
+      "change_1y_pct": -5.29,
       "high_52w": 113.8594,
       "low_52w": 104.2031,
       "data": [
@@ -15164,6 +15172,10 @@
         {
           "date": "2026-10-23",
           "value": 106.1562
+        },
+        {
+          "date": "2026-10-26",
+          "value": 106.3125
         }
       ]
     },
