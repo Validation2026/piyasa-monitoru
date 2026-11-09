@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Hisse Senetleri",
-    "updated_at": "2026-11-08T03:54:15Z",
+    "updated_at": "2026-11-09T03:53:34Z",
     "symbol_count": 180,
     "errors": []
   },
@@ -823109,20 +823109,16 @@
         "https://s3-symbol-logo.tradingview.com/005930.svg",
         "https://s3-symbol-logo.tradingview.com/005930--big.svg"
       ],
-      "current": 188700.0,
-      "change_1d_pct": 0.0,
-      "change_1w_pct": -17.6,
-      "change_1m_pct": -29.72,
-      "change_3m_pct": -28.11,
-      "change_ytd_pct": 57.38,
-      "change_1y_pct": 37.14,
+      "current": 193650.0,
+      "change_1d_pct": 2.62,
+      "change_1w_pct": -15.44,
+      "change_1m_pct": -27.88,
+      "change_3m_pct": -26.23,
+      "change_ytd_pct": 61.51,
+      "change_1y_pct": 40.73,
       "high_52w": 362500.0,
       "low_52w": 94800.0,
       "data": [
-        {
-          "date": "2021-11-08",
-          "value": 70600.0
-        },
         {
           "date": "2021-11-09",
           "value": 70500.0
@@ -827998,6 +827994,10 @@
         {
           "date": "2026-11-06",
           "value": 188700.0
+        },
+        {
+          "date": "2026-11-09",
+          "value": 193700.0
         }
       ]
     },
