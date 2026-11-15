@@ -2,10 +2,9 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Endeksler",
-    "updated_at": "2026-11-14T03:52:10Z",
+    "updated_at": "2026-11-15T03:51:43Z",
     "symbol_count": 25,
-    "errors": [],
-    "tradingview_snapshot_at": "2026-11-14T11:17:07.608838Z"
+    "errors": []
   },
   "series": [
     {
@@ -20151,7 +20150,7 @@
         "https://s3-symbol-logo.tradingview.com/ndx--big.svg"
       ],
       "current": 25136.273,
-      "change_1d_pct": -0.0,
+      "change_1d_pct": 0.0,
       "change_1w_pct": -0.46,
       "change_1m_pct": -5.9,
       "change_3m_pct": -6.22,
@@ -25178,7 +25177,7 @@
         },
         {
           "date": "2026-11-13",
-          "value": 25136.2734
+          "value": 25136.2695
         }
       ]
     },
@@ -25192,7 +25191,7 @@
         "https://s3-symbol-logo.tradingview.com/rut.svg",
         "https://s3-symbol-logo.tradingview.com/rut--big.svg"
       ],
-      "current": 2790.4895,
+      "current": 2790.49,
       "change_1d_pct": 0.0,
       "change_1w_pct": -1.77,
       "change_1m_pct": 0.84,
@@ -30220,7 +30219,7 @@
         },
         {
           "date": "2026-11-13",
-          "value": 2790.4895
+          "value": 2790.49
         }
       ]
     },
@@ -90572,9 +90571,9 @@
       "change_1d_pct": 3.21,
       "change_1w_pct": -3.11,
       "change_1m_pct": 17.25,
-      "change_3m_pct": 31.92,
+      "change_3m_pct": 35.44,
       "change_ytd_pct": 29.1,
-      "change_1y_pct": 10.67,
+      "change_1y_pct": 7.22,
       "high_52w": 31.05,
       "low_52w": 13.47,
       "data": [
@@ -95115,6 +95114,10 @@
           "value": 16.7
         },
         {
+          "date": "2026-05-25",
+          "value": 16.59
+        },
+        {
           "date": "2026-05-26",
           "value": 17.01
         },
@@ -95401,6 +95404,10 @@
         {
           "date": "2026-09-04",
           "value": 14.53
+        },
+        {
+          "date": "2026-09-07",
+          "value": 15.3
         },
         {
           "date": "2026-09-08",
@@ -115659,7 +115666,7 @@
         },
         {
           "date": "2026-11-13",
-          "value": 27943.7363
+          "value": 27943.7402
         }
       ]
     },
