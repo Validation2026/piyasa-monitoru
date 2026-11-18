@@ -208,12 +208,6 @@
 <button class="tl-f" data-f="eco">🟡 Ekonomik</button>
 <button class="tl-f" data-f="nuk">🟣 Nükleer</button>
 </div>
-<div id="tlOriginFilter" style="display:flex;gap:5px;margin:0 0 8px;flex-wrap:wrap">
-<button class="tl-f on" data-origin="all">🔄 Güncel</button>
-<button class="tl-f" data-origin="manual">✍️ Admin kayıtları</button>
-<button class="tl-f" data-origin="auto">📰 Otomatik haberler</button>
-<button class="tl-f" data-origin="archive">🗃️ Eski sabit arşiv</button>
-</div>
 <div id="tlAutoStatus" style="font-size:.67rem;color:#64748b;margin-bottom:10px">Otomatik haber akışı yükleniyor…</div>
 <div id="tlBox" style="position:relative;padding-left:24px;margin-bottom:18px"></div>
 
@@ -675,13 +669,6 @@ document.getElementById('tlFilter').addEventListener('click',function(ev){
     document.querySelectorAll('#tlFilter .tl-f').forEach(function(b){b.classList.remove('on')});
     ev.target.classList.add('on');
     tlCategory=ev.target.getAttribute('data-f');
-    renderTL();
-});
-document.getElementById('tlOriginFilter').addEventListener('click',function(ev){
-    if(!ev.target.classList.contains('tl-f'))return;
-    document.querySelectorAll('#tlOriginFilter .tl-f').forEach(function(b){b.classList.remove('on')});
-    ev.target.classList.add('on');
-    tlOrigin=ev.target.getAttribute('data-origin');
     renderTL();
 });
 // Açık sekmede 30 dakikada bir yeni haberleri getir; admin Blob verisini değiştirme.
