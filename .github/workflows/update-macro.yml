@@ -25,6 +25,8 @@ jobs:
         run: pip install -r collectors/requirements.txt
 
       - name: Run TCMB EVDS collector
+        id: macro_collect
+        continue-on-error: true # Persist safe no-data status, then report run as failed.
         env:
           TCMB_API_KEY: ${{ secrets.TCMB_API_KEY }}
           TCMB_EVDS_KEY: ${{ secrets.TCMB_EVDS_KEY }}
@@ -33,12 +35,18 @@ jobs:
       - name: Copy data to site
         run: |
           mkdir -p site/data
-          cp data/*.json site/data/
+          cp data/turkiye_makro.json site/data/turkiye_makro.json
 
       - name: Commit & Push
         run: |
           git config user.name "Market Data Bot"
           git config user.email "bot@piyasa-monitoru.dev"
-          git add data/ site/data/
+          git add data/turkiye_makro.json site/data/turkiye_makro.json
           git diff --staged --quiet || git commit -m "🏦 TCMB makro verileri güncellendi [$(date -u +%Y-%m-%d)]"
           git push
+
+      - name: Fail job when live TCMB collection failed
+        if: steps.macro_collect.outcome == 'failure'
+        run: |
+          echo 'TCMB EVDS canlı verisi alınamadı. Yapay veri oluşturulmadı; son doğrulanmış gözlem / veri yok durumları kaydedildi.'
+          exit 1
