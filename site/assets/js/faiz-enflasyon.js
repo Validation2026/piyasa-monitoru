@@ -2,11 +2,11 @@
  * Küresel Faiz & Enflasyon Haritası
  * 50 ülke için politika faizi, enflasyon, reel faiz, 2Y ve 10Y tahvil
  * Leaflet tabanlı circle marker heatmap
- * Veriler: 14 Temmuz 2026 — merkez bankası açıklamaları, ulusal istatistik kurumları & piyasa verileri
+ * Baz veri: 14 Temmuz 2026; doğrulanabilen oranlar 18 Kasım 2026 taramasıyla kısmen güncellendi. Kalan değerler tarihsel kalır.
  */
 (function(){'use strict';
 
-// ─── ÜLKE VERİLERİ (50 ülke) — 14 Temmuz 2026 güncel verileri ───
+// ─── 50 ülkelik 14 Temmuz 2026 tarihsel baz veri; doğrulananlar aşağıdaki resmi duyurulardan güncellenir ───
 // rate: politika faizi, infl: TÜFE YoY, m2y/m10y: tahvil getirisi, cb: merkez bankası, move: son karar (hike/cut/hold)
 var COUNTRIES = [
     // G7
@@ -72,8 +72,38 @@ var COUNTRIES = [
     {n:'Etiyopya',     flag:'🇪🇹', lat:9.03,  lng:38.74,  rate:15.00,infl:10.2, m2y:13.85,m10y:13.15,cb:'NBE',        move:'hold'}
 ];
 
-// Reel faiz hesapla
-COUNTRIES.forEach(function(c){ c.real = +(c.rate - c.infl).toFixed(2) });
+// 18 Kasım 2026'ya kadar doğrulanmış RESMİ veriler.
+// Faiz ve TÜFE tarihleri bağımsızdır; eksik doğrulama tarihsel Temmuz 2026 olarak etiketlenir.
+// Fed hedef aralığının orta noktası kullanılır: %3,75–4,00 => %3,875.
+// ABD Ekim 2026 TÜFE yıllık değişimi, Ekim 2025 endeksi eksik olduğundan BLS tarafından yayımlanmadı.
+// Bu nedenle ABD'de son yayımlanmış Eylül 2026 yıllık %3,7 değeri kullanılır.
+var VERIFIED_UPDATES = {
+    'Türkiye':     {rate:36,    infl:29.77, move:'cut', rateDate:'22.10.2026',inflDate:'Ekim 2026',rateUrl:'https://www.tcmb.gov.tr/wps/wcm/connect/tr/tcmb+tr/main+menu/duyurular/basin/2026/duy2026-45',inflUrl:'https://veriportali.tuik.gov.tr/tr/press/58291'},
+    'ABD':         {rate:3.875, infl:3.7,   move:'hold',rateDate:'28.10.2026',inflDate:'Eylül 2026',rateUrl:'https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm',inflUrl:'https://www.bls.gov/cpi/'},
+    'Euro Bölgesi':{rate:2.5,   infl:4.0,   move:'hold',rateDate:'29.10.2026',inflDate:'Ekim 2026 (öncü)',rateUrl:'https://www.ecb.europa.eu/press/pr/date/2026/html/ecb.mp261029~9a493adf17.en.html',inflUrl:'https://ec.europa.eu/eurostat/en/web/products-euro-indicators/w/2-04112026-ap'},
+    'Almanya':     {rate:2.5,   infl:2.8,   move:'hold',rateDate:'29.10.2026 (ECB)',inflDate:'Ekim 2026',rateUrl:'https://www.ecb.europa.eu/press/pr/date/2026/html/ecb.mp261029~9a493adf17.en.html',inflUrl:'https://www.destatis.de/EN/Press/2026/11/PE26_392_611.html'},
+    'Fransa':      {rate:2.5,   infl:3.4,   move:'hold',rateDate:'29.10.2026 (ECB)',inflDate:'Ekim 2026',rateUrl:'https://www.ecb.europa.eu/press/pr/date/2026/html/ecb.mp261029~9a493adf17.en.html',inflUrl:'https://www.insee.fr/en/statistiques/9131375'},
+    'İtalya':      {rate:2.5,   infl:5.5,   move:'hold',rateDate:'29.10.2026 (ECB)',inflDate:'Ekim 2026',rateUrl:'https://www.ecb.europa.eu/press/pr/date/2026/html/ecb.mp261029~9a493adf17.en.html',inflUrl:'https://www.istat.it/en/press-release/consumer-prices-october-2026/'},
+    'İngiltere':   {rate:4.0,   infl:3.6,   move:'hike',rateDate:'05.11.2026',inflDate:'Ekim 2026',rateUrl:'https://www.bankofengland.co.uk/monetary-policy-summary-and-minutes/2026/november-2026/',inflUrl:'https://www.ons.gov.uk/releases/consumerpriceinflationukoctober2026'},
+    'Kanada':      {rate:2.5,   infl:3.1,   move:'hike',rateDate:'28.10.2026',inflDate:'Ekim 2026',rateUrl:'https://www.bankofcanada.ca/2026/10/fad-press-release-2026-10-28/',inflUrl:'https://www150.statcan.gc.ca/n1/daily-quotidien/261116/dq261116a-eng.htm'},
+    'Japonya':     {rate:1.25,             move:'hold',rateDate:'30.10.2026',rateUrl:'https://www.boj.or.jp/en/index.htm'},
+    'Avustralya':  {rate:4.85,             move:'hike',rateDate:'03.11.2026',rateUrl:'https://www.rba.gov.au/media-releases/2026/mr-26-30.html'},
+    'İsviçre':     {rate:0,                move:'hold',rateDate:'24.09.2026',rateUrl:'https://www.snb.ch/en/publications/communication/press-releases-restricted/pre_20260924'},
+    'Hindistan':   {rate:5.5,              move:'hike',rateDate:'07.10.2026',rateUrl:'https://rbi.org.in/scriptS/BS_PressReleaseDisplay.aspx?prid=63742'},
+    'Çin':         {infl:0.7,              inflDate:'Ekim 2026',inflUrl:'https://www.stats.gov.cn/english/PressRelease/202611/t20261111_1965808.html'},
+    'Brezilya':    {rate:13.75,infl:4.63,  move:'hold',rateDate:'04.11.2026',inflDate:'Ekim 2026',rateUrl:'https://www.bcb.gov.br/en/monetarypolicy/copomstatements',inflUrl:'https://www.ibge.gov.br/en/indicators'}
+};
+COUNTRIES.forEach(function(c){
+    var p=VERIFIED_UPDATES[c.n]||{};
+    ['rate','infl','move'].forEach(function(k){if(p[k]!==undefined)c[k]=p[k]});
+    c.rateDate=p.rateDate||'14.07.2026 (eski)';
+    c.inflDate=p.inflDate||'14.07.2026 (eski)';
+    c.rateUrl=p.rateUrl||'';
+    c.inflUrl=p.inflUrl||'';
+    c.bondDate='14.07.2026 (tarihsel)';
+    // Bu basit faiz-enflasyon farkı geriye dönük yaklaşımdır; ex-ante reel faiz değildir.
+    c.real=+(c.rate-c.infl).toFixed(2);
+});
 
 // ─── Renk skalası ───
 function heatColor(v, domain){
@@ -221,7 +251,8 @@ function renderMap(){
             '<div style="min-width:160px"><b style="font-size:.85rem">'+c.flag+' '+c.n+'</b><br>'+
             '<small style="color:#2563eb"><b>'+D.METRICS[metric].label+': '+(v||0).toFixed(2)+'%</b></small><br>'+
             '<small style="color:#64748b">Faiz '+c.rate.toFixed(2)+'% · Enfl '+c.infl.toFixed(1)+'% · Reel '+(c.real>=0?'+':'')+c.real.toFixed(2)+'%</small><br>'+
-            '<small style="color:#64748b">10Y '+c.m10y.toFixed(2)+'% · '+c.cb+'</small></div>',
+            '<small style="color:#64748b">10Y '+c.m10y.toFixed(2)+'% (Tem 2026) · '+c.cb+'</small><br>'+
+            '<small style="color:#64748b">Faiz: '+c.rateDate+' | TÜFE: '+c.inflDate+'</small></div>',
             {direction:'top', opacity:1}
         );
         m.on('click', function(){ map.flyTo([c.lat, c.lng], 4, {duration:0.7}) });
@@ -362,7 +393,8 @@ function renderTable(){
         var pinned = state.pins[c.n];
         return '<tr'+(pinned?' class="pinned-row"':'')+'>'+
             '<td class="fe-pin-col"><button type="button" class="fe-pin-btn'+(pinned?' pinned':'')+'" data-pin="'+c.n+'" title="'+(pinned?'Favorilerden çıkar':'Favorilere ekle')+'">'+(pinned?'⭐':'☆')+'</button></td>'+
-            '<td><div class="flag-cell"><span class="fcf">'+c.flag+'</span><span>'+c.n+'</span></div></td>'+
+            '<td><div class="flag-cell"><span class="fcf">'+c.flag+'</span><span>'+c.n+'</span></div>'+
+            '<small style="display:block;color:#94a3b8;font-size:.58rem">Faiz: '+c.rateDate+' · TÜFE: '+c.inflDate+'</small></td>'+
             '<td class="num">'+c.rate.toFixed(2)+'</td>'+
             '<td class="num">'+c.infl.toFixed(1)+'</td>'+
             '<td class="num" style="color:'+(c.real>=0?'#16a34a':'#dc2626')+'">'+(c.real>=0?'+':'')+c.real.toFixed(2)+'</td>'+
@@ -390,11 +422,11 @@ function exportCsv(){
     var sheets=[];
     sheets.push({
         name:'Özet',
-        headerRow:['Bayrak','Ülke','Merkez Bankası','Politika Faizi %','Enflasyon %','Reel Faiz %','2Y Tahvil %','10Y Tahvil %','Son Hareket'],
+        headerRow:['Bayrak','Ülke','Merkez Bankası','Politika Faizi %','Enflasyon %','Faiz - TÜFE Farkı %','2Y Tahvil % (Temmuz 2026)','10Y Tahvil % (Temmuz 2026)','Son Hareket','Faiz Tarihi','TÜFE Dönemi','Faiz Kaynağı','Enflasyon Kaynağı'],
         dataRows: rows.map(function(c){return [
             c.flag, c.n, c.cb,
             Number(c.rate.toFixed(2)), Number(c.infl.toFixed(2)), Number(c.real.toFixed(2)),
-            Number(c.m2y.toFixed(2)), Number(c.m10y.toFixed(2)), c.move
+            Number(c.m2y.toFixed(2)), Number(c.m10y.toFixed(2)), c.move, c.rateDate, c.inflDate, c.rateUrl, c.inflUrl
         ]})
     });
     var metricDefs = [
