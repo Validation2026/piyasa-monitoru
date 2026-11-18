@@ -6,6 +6,8 @@
 
 [functions]
   directory = "netlify/functions"
+  # The Turkey risk API reads this snapshot at runtime; include it in the deploy bundle.
+  included_files = ["site/data/turkiye_makro.json"]
 
 [[redirects]]
   from = "/api/*"
