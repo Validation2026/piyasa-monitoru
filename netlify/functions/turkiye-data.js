@@ -27,7 +27,7 @@ function headers() {
 function todayTR() { return new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Istanbul' }).format(new Date()); }
 function strip(v) { return String(v || '').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&[^;]+;/g, ' ').replace(/\s+/g, ' ').trim(); }
 function cleanTitle(v) { return strip(v).replace(/\s+[-–—]\s+[^-–—|:]{2,90}$/u, '').replace(/\s+\|\s+[^|]{2,90}$/u, '').trim(); }
-function num(v) { const n = Number(String(v ?? '').replace(',', '.')); return Number.isFinite(n) ? n : null; }
+function num(v) { if (v === null || v === undefined || String(v).trim() === '') return null; const n = Number(String(v).replace(',', '.')); return Number.isFinite(n) ? n : null; }
 function lastNumber(arr) { if (!Array.isArray(arr)) return null; for (let i = arr.length - 1; i >= 0; i--) { const n = num(arr[i]); if (n !== null) return n; } return null; }
 function fmtNumber(value, digits = 2) { if (!Number.isFinite(Number(value))) return 'Veri yok'; return Number(value).toLocaleString('tr-TR', { minimumFractionDigits: digits, maximumFractionDigits: digits }); }
 function fmtPrice(value, unit = '', digits = 2) {
@@ -131,15 +131,32 @@ async function fetchYahooMarkets() {
 }
 
 function readMacroSnapshot() {
-  const raw = JSON.parse(fs.readFileSync(MACRO_FILE, 'utf8'));
-  const items = Array.isArray(raw.series) ? raw.series : (Array.isArray(raw.data) ? raw.data : []);
-  return items.map(item => {
-    const points = Array.isArray(item.data) ? item.data : (Array.isArray(item.values) ? item.values : []);
-    const last = points[points.length - 1] || null;
-    const value = num(item.current) ?? num(last?.value);
-    const digits = item.unit === '%' ? 2 : 2;
-    return { name: item.name, unit: item.unit || '', value, display: value === null ? 'Veri yok' : `${fmtNumber(value, digits)}${item.unit === '%' ? '%' : item.unit ? ` ${item.unit}` : ''}`, date: last?.date || raw.meta?.last_updated || todayTR(), source: item.source || raw.meta?.source || 'Yerel makro veri' };
-  }).filter(x => x.name && x.value !== null).slice(0, 8);
+  // Kaynak doğrulama: Seed, synthetic veya kaynağı belirsiz veri asla sayısal değer üretmez.
+  // Dosyanın üretilme tarihi değil, her gözlemin kendi tarihi gösterilir.
+  try {
+    const raw = JSON.parse(fs.readFileSync(MACRO_FILE, 'utf8'));
+    const items = Array.isArray(raw.series) ? raw.series : (Array.isArray(raw.data) ? raw.data : []);
+    const trusted = new Set(['TCMB EVDS','TÜİK (resmî duyuru)','TCMB PPK (resmî duyuru)']);
+    return items.map(item => {
+      const source = String(item.source || '').trim();
+      const safe = trusted.has(source) && item.status !== 'unavailable';
+      const points = safe && Array.isArray(item.data) ? item.data : [];
+      const last = points[points.length - 1] || null;
+      const value = safe ? (num(item.current) ?? num(last?.value)) : null;
+      const date = safe ? String(item.latest_date || last?.date || '') : '';
+      // Eski kaynaklarda gözlem tarihi eksikse değeri güncelmiş gibi sunmayız.
+      const hasValidDate = /^\d{4}-\d{2}-\d{2}$/.test(date) && Number.isFinite(Date.parse(date));
+      const resultValue = hasValidDate ? value : null;
+      const digits = 2;
+      return { name: item.name, unit: item.unit || '', value: resultValue,
+        display: resultValue === null ? 'Veri yok' : `${fmtNumber(resultValue, digits)}${item.unit === '%' ? '%' : item.unit ? ' ' + item.unit : ''}`,
+        date: hasValidDate ? date : '', source: safe ? source : 'Doğrulanmış kaynak yok',
+        status: resultValue === null ? 'unavailable' : item.status || 'verified' };
+    }).filter(x => x.name && x.value !== null).slice(0, 8);
+  } catch(e) {
+    console.warn('Türkiye makro dosyası okunamadı:', e.message);
+    return [];
+  }
 }
 function sentimentFromNews(news) {
   const badWords = ['risk', 'gerilim', 'baskı', 'kayıp', 'enflasyon', 'savaş', 'yaptırım', 'kriz', 'sert', 'zayıf', 'arttı', 'yükseldi'];
