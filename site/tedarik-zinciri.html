@@ -92,7 +92,7 @@
 <div class="shock-box">
 <div>
 <h4>⚠️ Şok Simülasyonu</h4>
-<p>Bir senaryo seç, darboğaz etkisini ve rota gecikmesini harita + tablo üzerinde canlı gör.</p>
+<p>Bir senaryo seç; darboğazın varsayımsal etkisini harita ve tabloda incele. <b>Gecikme, maliyet ve sigorta etkileri simülasyondur; gerçekleşmiş piyasa verisi değildir.</b></p>
 </div>
 <select id="shockScenario" class="shock-select" aria-label="Şok senaryosu">
 <option value="hormuz">Hürmüz Gerilimi (Enerji Şoku)</option>
@@ -119,17 +119,18 @@
 <div class="sec-title">🏭 Kim Ne Üretiyor?</div>
 <div class="prod-grid" id="prodGrid"></div>
 
-<div class="sec-title">🚢 Kritik Deniz Rotaları</div>
+<div class="sec-title">🚢 Kritik Deniz Rotaları — Temsili Risk Senaryosu</div>
+<div style="font-size:.68rem;color:var(--t3);margin-bottom:8px">Bu bölümde anlık sevkiyat tonajı veya canlı risk puanı entegrasyonu bulunmuyor. Önceki sabit hacimler doğrulanmış güncel veri olarak sunulmaması için kaldırıldı.</div>
 <div class="route-table">
 <table>
-<thead><tr><th>Rota</th><th>Geçiş Noktası</th><th>Günlük Hacim</th><th>Taşınan</th><th>Risk</th></tr></thead>
+<thead><tr><th>Rota</th><th>Geçiş Noktası</th><th>Güncel Hacim</th><th>Taşınan</th><th>Risk</th></tr></thead>
 <tbody>
-<tr data-route-key="hormuz"><td>Basra Körfezi → Asya</td><td>Hürmüz Boğazı</td><td>21M varil petrol</td><td>Ham petrol, LNG</td><td class="risk-high">🔴 YÜKSEK</td></tr>
-<tr data-route-key="suez"><td>Akdeniz → Hint Okyanusu</td><td>Süveyş Kanalı</td><td>5.5M varil eşdeğer</td><td>Konteyner, petrol</td><td class="risk-med">🟡 ORTA</td></tr>
-<tr><td>Kızıldeniz → Aden</td><td>Bab el-Mandeb</td><td>6.2M varil</td><td>Petrol, LNG, konteyner</td><td class="risk-high">🔴 YÜKSEK</td></tr>
-<tr data-route-key="malakka"><td>Güney Çin Denizi</td><td>Malakka Boğazı</td><td>16M varil</td><td>Ham petrol, LNG, mal</td><td class="risk-low">🟢 DÜŞÜK</td></tr>
-<tr><td>Panama Kanalı</td><td>Panama</td><td>1M varil eşdeğer</td><td>Konteyner, tahıl, LNG</td><td class="risk-low">🟢 DÜŞÜK (Kuraklık)</td></tr>
-<tr><td>Türk Boğazları</td><td>İstanbul/Çanakkale</td><td>3M varil</td><td>Karadeniz petrolü, tahıl</td><td class="risk-med">🟡 ORTA</td></tr>
+<tr data-route-key="hormuz"><td>Basra Körfezi → Asya</td><td>Hürmüz Boğazı</td><td>— (anlık veri yok)</td><td>Ham petrol, LNG</td><td class="risk-high">🔴 YÜKSEK</td></tr>
+<tr data-route-key="suez"><td>Akdeniz → Hint Okyanusu</td><td>Süveyş Kanalı</td><td>— (anlık veri yok)</td><td>Konteyner, petrol</td><td class="risk-med">🟡 ORTA</td></tr>
+<tr><td>Kızıldeniz → Aden</td><td>Bab el-Mandeb</td><td>— (anlık veri yok)</td><td>Petrol, LNG, konteyner</td><td class="risk-high">🔴 YÜKSEK</td></tr>
+<tr data-route-key="malakka"><td>Güney Çin Denizi</td><td>Malakka Boğazı</td><td>— (anlık veri yok)</td><td>Ham petrol, LNG, mal</td><td class="risk-low">🟢 DÜŞÜK</td></tr>
+<tr><td>Panama Kanalı</td><td>Panama</td><td>— (anlık veri yok)</td><td>Konteyner, tahıl, LNG</td><td class="risk-low">🟢 DÜŞÜK (Kuraklık)</td></tr>
+<tr><td>Türk Boğazları</td><td>İstanbul/Çanakkale</td><td>— (anlık veri yok)</td><td>Karadeniz petrolü, tahıl</td><td class="risk-med">🟡 ORTA</td></tr>
 </tbody>
 </table>
 </div>
@@ -143,12 +144,12 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:10,attribu
 
 // Kritik geçiş noktaları
 var chokes=[
-    {lat:26.56,lon:56.24,n:'Hürmüz Boğazı',info:'21M varil/gün — Dünya petrolünün %20\'si',risk:'high'},
-    {lat:30.45,lon:32.35,n:'Süveyş Kanalı',info:'5.5M varil eşdeğer/gün — Avrupa-Asya',risk:'med'},
-    {lat:12.58,lon:43.33,n:'Bab el-Mandeb',info:'6.2M varil/gün — Kızıldeniz girişi',risk:'high'},
-    {lat:1.35,lon:103.8,n:'Malakka Boğazı',info:'16M varil/gün — Asya enerji koridoru',risk:'low'},
-    {lat:9.0,lon:-79.5,n:'Panama Kanalı',info:'1M varil eşdeğer — Amerika arası',risk:'low'},
-    {lat:41.0,lon:29.0,n:'Türk Boğazları',info:'3M varil — Karadeniz çıkışı',risk:'med'},
+    {lat:26.56,lon:56.24,n:'Hürmüz Boğazı',info:'Ham petrol ve LNG için stratejik geçiş; değerler güncel tonajı göstermez',risk:'high'},
+    {lat:30.45,lon:32.35,n:'Süveyş Kanalı',info:'Avrupa-Asya deniz ticareti için stratejik kanal (temsili risk)',risk:'med'},
+    {lat:12.58,lon:43.33,n:'Bab el-Mandeb',info:'Kızıldeniz girişi (temsili risk)',risk:'high'},
+    {lat:1.35,lon:103.8,n:'Malakka Boğazı',info:'Asya enerji koridoru (temsili risk)',risk:'low'},
+    {lat:9.0,lon:-79.5,n:'Panama Kanalı',info:'Amerika kıtaları arası geçiş (temsili risk)',risk:'low'},
+    {lat:41.0,lon:29.0,n:'Türk Boğazları',info:'Karadeniz çıkışı (temsili risk)',risk:'med'},
     {lat:35.0,lon:-5.5,n:'Cebelitarık Boğazı',info:'Akdeniz-Atlantik geçişi',risk:'low'},
 ];
 var rColors={high:'#ff4757',med:'#fbbf24',low:'#00d68f'};
