@@ -53,6 +53,7 @@
     <div class="page-head">
         <h1>📅 Ekonomik Takvim</h1>
         <div class="sub">Merkez bankası kararları, TÜFE açıklamaları, önemli ekonomik veriler</div>
+        <div style="margin-top:8px;font-size:.68rem;color:var(--t3);line-height:1.55">18 Kasım 2026 tarihli takvim kontrolü. 2027 için yalnızca resmî takvimde doğrulanan toplantılar eklenmiştir; diğer 2026 tarihleri eski planlı takvim arşividir. Toplantı tarihleri değişebilir. <a href="https://www.federalreserve.gov/newsevents/pressreleases/monetary20261112a.htm" target="_blank" rel="noopener noreferrer">Fed 2027</a> · <a href="https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates" target="_blank" rel="noopener noreferrer">BoE 2027</a> · <a href="https://www.tcmb.gov.tr/wps/wcm/connect/TR/TCMB+TR/Main+Menu/Temel+Faaliyetler/Para+Politikasi/PPK/2027" target="_blank" rel="noopener noreferrer">TCMB 2027</a> · <a href="https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html" target="_blank" rel="noopener noreferrer">ECB takvimi</a>.</div>
         <div style="margin-top:10px"><button type="button" class="tbl-csv-btn" id="calExcel" title="Tüm ekonomik takvim olaylarını Excel'e indir">⬇ Excel</button></div>
     </div>
 
@@ -64,7 +65,7 @@
     </div>
 
     <div class="cal-card">
-        <div class="cal-header">🏛️ Merkez Bankası Faiz Kararları — 2026</div>
+        <div class="cal-header">🏛️ Merkez Bankası Faiz Kararları — 2026–2027</div>
         <div id="cbEvents"></div>
     </div>
 
@@ -128,7 +129,32 @@ var cbDates = [
     {date:'2026-07-31',name:'BoJ Faiz Kararı',desc:'Japonya Merkez Bankası',impact:'med'},
     {date:'2026-09-18',name:'BoJ Faiz Kararı',desc:'Japonya Merkez Bankası',impact:'med'},
     {date:'2026-10-30',name:'BoJ Faiz Kararı',desc:'Japonya Merkez Bankası',impact:'med'},
-    {date:'2026-12-18',name:'BoJ Faiz Kararı',desc:'Japonya Merkez Bankası',impact:'med'}
+    {date:'2026-12-18',name:'BoJ Faiz Kararı',desc:'Japonya Merkez Bankası',impact:'med'},
+    // 2027 RESMİ / teyitli takvim - Fed 12 Kasım 2026 tarihinde revize etti.
+    {date:'2027-01-27',name:'Fed Faiz Kararı',desc:'FOMC 26–27 Ocak 2027',impact:'high'},
+    {date:'2027-03-17',name:'Fed Faiz Kararı',desc:'FOMC 16–17 Mart 2027',impact:'high'},
+    {date:'2027-04-28',name:'Fed Faiz Kararı',desc:'FOMC 27–28 Nisan 2027',impact:'high'},
+    {date:'2027-06-09',name:'Fed Faiz Kararı',desc:'FOMC 8–9 Haziran 2027',impact:'high'},
+    {date:'2027-07-28',name:'Fed Faiz Kararı',desc:'FOMC 27–28 Temmuz 2027',impact:'high'},
+    {date:'2027-09-15',name:'Fed Faiz Kararı',desc:'FOMC 14–15 Eylül 2027',impact:'high'},
+    {date:'2027-10-27',name:'Fed Para Politikası Strateji Toplantısı',desc:'FOMC 26–27 Ekim: olağan faiz kararı planlanmıyor',impact:'med'},
+    {date:'2027-11-17',name:'Fed Faiz Kararı',desc:'FOMC 16–17 Kasım 2027',impact:'high'},
+    // BoE 2027 resmî MPC günleri.
+    {date:'2027-02-04',name:'BoE Faiz Kararı',desc:'BoE MPC',impact:'med'},
+    {date:'2027-03-18',name:'BoE Faiz Kararı',desc:'BoE MPC',impact:'med'},
+    {date:'2027-04-29',name:'BoE Faiz Kararı',desc:'BoE MPC',impact:'med'},
+    {date:'2027-06-17',name:'BoE Faiz Kararı',desc:'BoE MPC',impact:'med'},
+    {date:'2027-07-29',name:'BoE Faiz Kararı',desc:'BoE MPC',impact:'med'},
+    {date:'2027-09-16',name:'BoE Faiz Kararı',desc:'BoE MPC',impact:'med'},
+    {date:'2027-11-04',name:'BoE Faiz Kararı',desc:'BoE MPC',impact:'med'},
+    {date:'2027-12-16',name:'BoE Faiz Kararı',desc:'BoE MPC',impact:'med'},
+    // TCMB 2027 için resmen yayımlanan ilk üç toplantı.
+    {date:'2027-01-21',name:'TCMB Faiz Kararı',desc:'Resmî PPK takvimi',impact:'high'},
+    {date:'2027-03-18',name:'TCMB Faiz Kararı',desc:'Resmî PPK takvimi',impact:'high'},
+    {date:'2027-04-22',name:'TCMB Faiz Kararı',desc:'Resmî PPK takvimi',impact:'high'},
+    // ECB 2027 resmî takviminde doğrulanan toplantılar.
+    {date:'2027-02-03',name:'ECB Faiz Kararı',desc:'ECB Para Politikası Kurulu takvimi',impact:'high'},
+    {date:'2027-06-10',name:'ECB Faiz Kararı',desc:'ECB Para Politikası Kurulu takvimi',impact:'high'}
 ];
 
 var ecoEvents = [
@@ -156,7 +182,7 @@ var ecoEvents = [
     {date:'2026-08-12',name:'ABD TÜFE (Temmuz)',desc:'Enflasyon verisi',impact:'high'},
     {date:'2026-09-11',name:'ABD TÜFE (Ağustos)',desc:'Enflasyon verisi',impact:'high'},
     {date:'2026-10-13',name:'ABD TÜFE (Eylül)',desc:'Enflasyon verisi',impact:'high'},
-    {date:'2026-11-12',name:'ABD TÜFE (Ekim)',desc:'Enflasyon verisi',impact:'high'},
+    {date:'2026-11-10',name:'ABD TÜFE (Ekim)',desc:'BLS 10 Kasım yayımlanma tarihi; Ekim 2025 eksik olduğundan Ekim 2026 yıllık değişim mevcut değil',impact:'high'},
     {date:'2026-12-10',name:'ABD TÜFE (Kasım)',desc:'Enflasyon verisi',impact:'high'},
     // Türkiye TÜFE (her ayın 3'ü)
     {date:'2026-01-05',name:'Türkiye TÜFE (Aralık)',desc:'TÜİK enflasyon',impact:'high'},
@@ -274,7 +300,7 @@ if(calBtn){
             {name:'Merkez Bankası Kararları', headerRow:['Tarih','Olay','Açıklama','Etki'], dataRows:cbRows},
             {name:'Ekonomik Veriler', headerRow:['Tarih','Olay','Açıklama','Etki'], dataRows:ecoRows}
         ];
-        PM.downloadExcel(sheets, 'ekonomik-takvim-2026');
+        PM.downloadExcel(sheets, 'ekonomik-takvim-2026-2027');
     });
 }
 })();
