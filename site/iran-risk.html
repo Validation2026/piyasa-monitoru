@@ -643,7 +643,7 @@ function renderTL(){
     });
     box.innerHTML=items.slice(0,80).map(function(e){
         var p=e.date.split('-'),date=(p[2]||'??')+'.'+(p[1]||'??')+'.'+(p[0]||'');
-        var badge=e.origin==='auto'?'📰 Otomatik haber':e.origin==='archive'?'🗃️ Eski, kaynaksız sabit kayıt':'✍️ Admin kaydı';
+
         var href=tlCleanLink(e.link),source=e.origin==='auto'
             ?'<div class="tl-ds" style="margin-top:3px">'+tlEscHtml(e.source)+' • <a href="'+tlEscHtml(href)+'" target="_blank" rel="noopener noreferrer">Haberi aç / doğrula</a></div>':'';
         return '<div class="tl-i"><div class="tl-d '+tlEscHtml(e.dot)+'"></div>'+
@@ -651,7 +651,7 @@ function renderTL(){
             '<div class="tl-tt">'+tlEscHtml(e.t)+'</div>'+
             '<div class="tl-ds">'+tlEscHtml(e.ds||'')+'</div>'+source+
             '<span class="tl-tg tg-'+tlEscHtml(e.tag)+'">'+tlEscHtml(tagNames[e.tag]||'')+'</span>'+
-            '<span style="font-size:.58rem;color:#64748b;margin-left:6px">'+tlEscHtml(badge)+'</span></div>';
+            '</div>';
     }).join('')||'<div class="tl-ds" style="padding:12px 0">Bu filtre için kayıt bulunamadı.</div>';
 }
 rebuildTimeline();
