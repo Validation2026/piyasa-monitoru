@@ -194,7 +194,7 @@
 <span><div class="ld" style="background:#2ed573"></div> İran Üssü</span>
 <span><div class="ld" style="background:#3b82f6"></div> ABD/Koalisyon</span>
 <span><div class="ld" style="background:#fbbf24"></div> İsrail</span>
-<span><div class="ld" style="background:#ff4757"></div> Saldırı Noktası</span>
+<span><div class="ld" style="background:#ff4757"></div> Haberlerde geçen konum (teyitsiz)</span>
 <span><div class="ld" style="background:#a78bfa"></div> Kritik Geçiş</span>
 </div>
 <div id="warMap"></div>
@@ -508,18 +508,18 @@ function renderAll(){
     strikeLayer.clearLayers();
     var struck={};
     uniq.forEach(function(n){
-        var low=n.title.toLowerCase();
+        var low=n.title.toLocaleLowerCase('tr-TR');
         for(var kw in KW){
-            if(low.indexOf(kw)>-1){
+            if(['iran','israil','füze','saldırı'].indexOf(kw)<0 && low.indexOf(kw)>-1){
                 var key=KW[kw][0]+','+KW[kw][1];
                 if(!struck[key]){
                     struck[key]=1;
-                    var jlat=KW[kw][0]+(Math.random()*.1-.05);
-                    var jlon=KW[kw][1]+(Math.random()*.1-.05);
+                    var jlat=KW[kw][0];
+                    var jlon=KW[kw][1];
                     
                     L.circleMarker([jlat,jlon],{
                         radius:10,color:'#ff4757',fillColor:'#ff4757',fillOpacity:.8,weight:2
-                    }).addTo(strikeLayer).bindPopup('<b style="color:#ff4757">🔴 SALDIRI</b><br><small>'+n.title.substring(0,80)+'...</small>');
+                    }).addTo(strikeLayer).bindPopup('<b style="color:#ff4757">📰 HABERDE GEÇEN YER</b><br><small>'+tlEscHtml(n.title.substring(0,100))+'</small><br><small>Bu işaret doğrulanmış saldırı konumu değildir.</small>');
                     
                     L.circleMarker([jlat,jlon],{
                         radius:10,color:'#ff4757',fillOpacity:0,className: 'strike-pulse'
@@ -602,7 +602,7 @@ function updateAutomaticTimeline(items){
         var tag=tlClassify(title);
         if(!tag)return;
         // Yalnızca bölgeyle ilişkili başlıklar; arama sonucundan alakasız haberleri ayıkla.
-        if(!/(iran|ir an|israil|isra[ië]l|israel|hürmüz|hurmuz|hormuz|orta doğu|middle east|kızıldeniz|red sea|lübnan|lebanon|hizbullah|hezbollah|yemen|hus[iî]|tahran|tehran|natanz)/i.test(title))return;
+        if(!/(iran|israil|israel|hürmüz|hurmuz|hormuz|orta doğu|middle east|kızıldeniz|red sea|lübnan|lebanon|hizbullah|hezbollah|yemen|husi|tahran|tehran|natanz)/i.test(title.toLocaleLowerCase('tr-TR')))return;
         var link=tlCleanLink(n.link);
         if(!link)return;
         var key=title.toLocaleLowerCase('tr-TR').replace(/[^\p{L}\p{N} ]/gu,'').replace(/\s+/g,' ').slice(0,95);
