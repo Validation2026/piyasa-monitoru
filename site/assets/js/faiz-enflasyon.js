@@ -160,15 +160,13 @@ var map, markerLayer, pulseLayer, labelLayer, flagLayer;
 
 function initMap(){
     map = L.map('feMap', {
-        zoomControl:true, attributionControl:false, worldCopyJump:true,
+        zoomControl:true, attributionControl:true, worldCopyJump:true,
         preferCanvas:true
     }).setView([39, 35], 2);
-    // Light (Positron) tile layer
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
-        subdomains:'abcd', maxZoom:10, minZoom:2
-    }).addTo(map);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png', {
-        subdomains:'abcd', maxZoom:10, minZoom:2, pane:'shadowPane', opacity:0.85
+    // OpenStreetMap standard tiles (no API key needed); retain required attribution.
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom:10, minZoom:2,
+        attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
     markerLayer = L.layerGroup().addTo(map);
     pulseLayer = L.layerGroup().addTo(map);
