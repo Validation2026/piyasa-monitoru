@@ -32,12 +32,13 @@ function readMacroQuality() {
     return {
       total: m.symbol_count || 0, live: m.live_count || 0,
       lastVerified: m.last_verified_count || 0,
+      stale: m.stale_count || 0,
       unavailable: m.unavailable_count || 0,
       updatedAt: m.updated_at || null,
       note: 'Veri tarihi, dosya güncelleme tarihinden farklıdır.'
     };
   } catch (e) {
-    return { total:0, live:0, lastVerified:0, unavailable:0, updatedAt:null, error:e.message };
+    return { total:0, live:0, lastVerified:0, stale:0, unavailable:0, updatedAt:null, error:e.message };
   }
 }
 
@@ -174,7 +175,7 @@ function readMacroSnapshot() {
       const digits = 2;
       return { name: item.name, unit: item.unit || '', value: resultValue,
         display: resultValue === null ? 'Veri yok' : `${fmtNumber(resultValue, digits)}${item.unit === '%' ? '%' : item.unit ? ' ' + item.unit : ''}`,
-        date: hasValidDate ? date : '', source: safe ? source : 'Doğrulanmış kaynak yok',
+        date: hasValidDate ? date : '', source: safe ? (source + (item.status === 'stale' ? ' (eski gözlem)' : '')) : 'Doğrulanmış kaynak yok',
         status: resultValue === null ? 'unavailable' : item.status || 'verified' };
     }).filter(x => x.name && x.value !== null).slice(0, 8);
   } catch(e) {
