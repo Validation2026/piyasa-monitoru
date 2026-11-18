@@ -10,6 +10,10 @@ on:
     - cron: '30 7 * * 1-5'  # Hafta içi her gün 10:30 TR (07:30 UTC)
   workflow_dispatch:
 
+concurrency:
+  group: tcmb-macro-update
+  cancel-in-progress: false
+
 jobs:
   update-evds:
     runs-on: ubuntu-latest
@@ -48,7 +52,19 @@ jobs:
           git config user.email "bot@piyasa-monitoru.dev"
           git add data/turkiye_makro.json site/data/turkiye_makro.json
           git diff --staged --quiet || git commit -m "🏦 TCMB makro verileri güncellendi [$(date -u +%Y-%m-%d)]"
-          git push || (git pull --rebase && git push)
+          # Other market-data workflows may push while this collector is running.
+          # Retry with a fresh main ref; never force-push.
+          for attempt in 1 2 3 4 5 6; do
+            git fetch --no-tags origin main
+            git rebase FETCH_HEAD
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            echo "Main ilerledi; yeniden deneme: $attempt"
+            sleep 2
+          done
+          echo "Güncel veri commit'i 6 denemeden sonra yayınlanamadı."
+          exit 1
 
       - name: Fail job when live TCMB collection failed
         if: steps.macro_collect.outcome == 'failure'
