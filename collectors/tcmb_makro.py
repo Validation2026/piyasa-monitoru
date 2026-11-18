@@ -4,8 +4,8 @@ Türkiye Makro Collector — TCMB EVDS + TÜİK + BDDK
 Otomatik: TCMB EVDS v2 API'den veri çeker (aylık frekans).
 Gerekli env var: TCMB_EVDS_KEY  (https://evds2.tcmb.gov.tr/index.php?/evds/login)
 
-Env var YOKSA: realistic seed data ile minimal 24-aylık seri üretir
-(sayfa boş görünmesin diye).
+EVDS bağlantısı başarısızsa sentetik veri üretmez; yalnızca kaynaklı gözlem saklar.
+EVDS3 öncelikli, EVDS2 geriye dönük denemedir.
 
 Kullanım:
     python collectors/tcmb_makro.py
@@ -13,7 +13,6 @@ Kullanım:
 
 import json
 import os
-import random
 import sys
 import time
 from datetime import datetime, timedelta, timezone
@@ -26,7 +25,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from config import DATA_DIR
 
 EVDS_KEY = (os.environ.get("TCMB_EVDS_KEY") or os.environ.get("TCMB_API_KEY") or "").strip()
-EVDS_BASE = "https://evds2.tcmb.gov.tr/service/evds/"
+EVDS3_BASE = "https://evds3.tcmb.gov.tr/igmevdsms-dis/"
+EVDS2_BASE = "https://evds2.tcmb.gov.tr/service/evds/"
 
 # Kategori kodları
 CAT_TCMB = "tcmb"   # Para politikası & döviz
@@ -42,12 +42,12 @@ CAT_BDDK = "bddk"   # Bankacılık
 # ══════════════════════════════════════════════════════════════
 SERIES = {
     # TCMB — Para Politikası & Döviz
-    "TP.FG.J0":          {"name": "TÜFE (Yıllık %)",            "unit": "%",       "cat": CAT_TUIK,   "freq": 5,  "formul": 0},
-    "TP.FG.J2":          {"name": "Yİ-ÜFE (Yıllık %)",          "unit": "%",       "cat": CAT_TUIK,   "freq": 5,  "formul": 0},
+    "TP.FG.J0":          {"name": "TÜFE (Yıllık %)",            "unit": "%",       "cat": CAT_TUIK,   "freq": 5,  "api_code": "TP.TUKFIY2025.GENEL", "transform": "yoy_index"},
+    "TP.FG.J2":          {"name": "Yİ-ÜFE (Yıllık %)",          "unit": "%",       "cat": CAT_TUIK,   "freq": 5,  "api_code": "TP.TUFE1YI.T1", "transform": "yoy_index"},
     "TP.DK.USD.A.YTL":   {"name": "USD/TRY (TCMB Alış)",        "unit": "TRY",     "cat": CAT_TCMB,   "freq": 1,  "formul": 0},
     "TP.DK.EUR.A.YTL":   {"name": "EUR/TRY (TCMB Alış)",        "unit": "TRY",     "cat": CAT_TCMB,   "freq": 1,  "formul": 0},
     "TP.DK.GBP.A.YTL":   {"name": "GBP/TRY (TCMB Alış)",        "unit": "TRY",     "cat": CAT_TCMB,   "freq": 1,  "formul": 0},
-    "TP.APIFON4":        {"name": "TCMB Politika Faizi",        "unit": "%",       "cat": CAT_TCMB,   "freq": 1,  "formul": 0},
+    "TCMB.PPK.POLICY":   {"name": "TCMB Politika Faizi",        "unit": "%",       "cat": CAT_TCMB,   "freq": 1,  "api_code": None},
     "TP.AB.B1.A":        {"name": "Brüt Uluslararası Rezerv",   "unit": "Mn USD",  "cat": CAT_TCMB,   "freq": 5,  "formul": 0},
     "TP.PR.M2YTL":       {"name": "M2 Para Arzı",               "unit": "Mn TL",   "cat": CAT_TCMB,   "freq": 5,  "formul": 0},
     "TP.ODEMGZS.BDTGE":  {"name": "Cari Denge",                 "unit": "Mn USD",  "cat": CAT_TCMB,   "freq": 5,  "formul": 0},
@@ -70,124 +70,141 @@ SERIES = {
     "TP.BANKA.A01":      {"name": "Sektör Toplam Aktif",        "unit": "Mn TL",   "cat": CAT_BDDK,   "freq": 5,  "formul": 0},
     "TP.BANKA.K01":      {"name": "Toplam Kredi Hacmi",         "unit": "Mn TL",   "cat": CAT_BDDK,   "freq": 5,  "formul": 0},
     "TP.BANKA.M01":      {"name": "Toplam Mevduat",             "unit": "Mn TL",   "cat": CAT_BDDK,   "freq": 5,  "formul": 0},
-    "TP.BANKA.T01":      {"name": "Takipteki Krediler (NPL)",   "unit": "%",       "cat": CAT_BDDK,   "freq": 5,  "formul": 0},
-    "TP.BANKA.S01":      {"name": "Sermaye Yeterlilik Oranı",   "unit": "%",       "cat": CAT_BDDK,   "freq": 5,  "formul": 0},
+    "TP.BANKA.T01":      {"name": "Takipteki Krediler (NPL)",   "unit": "%",       "cat# AOFM (TP.APIFON4), politika faizinden farklıdır; bu nedenle politika
+# faizini o EVDS serisinden okumuyoruz. Yalnızca resmî PPK kararını kullanıyoruz.
+# Resmî kontrol: 18 Kasım 2026. Yeni karar yayımlanınca kaynaklı kayıt güncellenmeli.
+OFFICIAL_SNAPSHOTS = {
+    "TP.FG.J0": {
+        "date": "2026-10-01", "value": 29.77, "source": "TÜİK (resmî duyuru)",
+        "url": "https://veriportali.tuik.gov.tr/tr/press/58291/metadata",
+    },
+    "TCMB.PPK.POLICY": {
+        "date": "2026-10-22", "value": 36.0, "source": "TCMB PPK (resmî duyuru)",
+        "url": "https://www.tcmb.gov.tr/wps/wcm/connect/tr/tcmb+tr/main+menu/duyurular/basin/2026/duy2026-45",
+    },
 }
+TRUSTED_SOURCES = {"TCMB EVDS", "TÜİK (resmî duyuru)", "TCMB PPK (resmî duyuru)"}
 
-# ══════════════════════════════════════════════════════════════
-# Seed (API yoksa / başarısız olursa) — Nisan 2026 gerçek verilerle kalibre
-# Kaynaklar: TÜİK, TCMB, BDDK, Hazine (Mart-Nisan 2026 açıklamaları)
-# prev24 = Nisan 2024 civarı gerçek veriler
-# ══════════════════════════════════════════════════════════════
-SEED = {
-    # TÜİK — Mart 2026: TÜFE yıllık %30.87, Yİ-ÜFE yıllık %28.08
-    "TP.FG.J0":         {"cur": 30.87,      "prev24": 69.80},   # TÜFE yıllık (Nis 2024: ~%69.8)
-    "TP.FG.J2":         {"cur": 28.08,      "prev24": 55.70},   # Yİ-ÜFE yıllık (Nis 2024: ~%55.7)
-    # TCMB — Nisan 2026 kur ve faiz
-    "TP.DK.USD.A.YTL":  {"cur": 44.75,      "prev24": 32.40},   # USD/TRY 15 Nisan 2026
-    "TP.DK.EUR.A.YTL":  {"cur": 52.86,      "prev24": 34.80},   # EUR/TRY 15 Nisan 2026
-    "TP.DK.GBP.A.YTL":  {"cur": 60.39,      "prev24": 40.50},   # GBP/TRY 15 Nisan 2026
-    "TP.APIFON4":       {"cur": 37.0,       "prev24": 50.0},    # Politika faizi %37 (Nis 2024: %50)
-    "TP.AB.B1.A":       {"cur": 161600,     "prev24": 128000},  # Brüt rezerv 161.6 milyar USD (9 Nis 2026)
-    "TP.PR.M2YTL":      {"cur": 25686000,   "prev24": 15800000},# M2 para arzı Şubat 2026: 25.69 trilyon TL
-    "TP.ODEMGZS.BDTGE": {"cur": -7500,      "prev24": -5220},   # Cari denge Şubat 2026: -7.5 milyar USD
-    # TÜİK — İstihdam ve güven
-    "TP.TIG08":         {"cur": 8.5,        "prev24": 8.7},     # İşsizlik Şubat 2026: %8.5
-    "TP.KKO.G1":        {"cur": 73.3,       "prev24": 76.1},    # KKO Mart 2026: %73.3
-    "TP.TG2.Y01":       {"cur": 85.0,       "prev24": 79.6},    # Tüketici güven Mart 2026: 85.0
-    "TP.RSKS.G1":       {"cur": 103.0,      "prev24": 102.5},   # Reel sektör güven ~103
-    "TP.SANURA.S1":     {"cur": 139.5,      "prev24": 131.2},   # Sanayi üretim (Şubat 2026 yıllık %2.2 artış)
-    "TP.PRGOS.G1":      {"cur": 165.0,      "prev24": 142.0},   # Perakende satış (Şubat 2026 yıllık %15.6 artış)
-    # Hazine — Kamu maliyesi
-    "TP.BUTCEA.Y18":    {"cur": -285000,    "prev24": -180000},  # Bütçe dengesi ~-285 milyar TL
-    "TP.BUTCEA.Y19":    {"cur": -42000,     "prev24": -28000},   # Faiz dışı denge ~-42 milyar TL
-    "TP.KTF10":         {"cur": 10200000,   "prev24": 5200000},  # İç borç ~10.2 trilyon TL (Q1 2026 borçlanma ile)
-    "TP.KTF11":         {"cur": 565000,     "prev24": 476000},   # Dış borç ~565 milyar USD
-    # BDDK — Bankacılık (Şubat 2026 aylık bülten)
-    "TP.BANKA.A01":     {"cur": 48870000,   "prev24": 25200000}, # Toplam aktif 48.87 trilyon TL
-    "TP.BANKA.K01":     {"cur": 23646000,   "prev24": 13500000}, # Toplam kredi 23.65 trilyon TL
-    "TP.BANKA.M01":     {"cur": 28295000,   "prev24": 15800000}, # Toplam mevduat 28.3 trilyon TL
-    "TP.BANKA.T01":     {"cur": 2.57,       "prev24": 1.87},    # NPL Ocak 2026: %2.57
-    "TP.BANKA.S01":     {"cur": 17.0,       "prev24": 18.4},    # SYR ~%17 (Ocak 2026)
-}
-
-
-# ══════════════════════════════════════════════════════════════
-# EVDS API çağrısı
-# ══════════════════════════════════════════════════════════════
-def fetch_evds(code: str, start: str, end: str, freq: int = 5) -> list | None:
-    """TCMB EVDS'den seri çek. key header'da gider."""
+def fetch_evds(code: str, start: str, end: str, freq: int = 5):
+    """Try the currently documented EVDS3 service, then legacy EVDS2.
+    The API key is sent only as a header; never logged.
+    """
     if not EVDS_KEY:
         return None
-    params = {
-        "series": code,
-        "startDate": start,
-        "endDate": end,
-        "type": "json",
-        "frequency": freq,
-    }
-    url = EVDS_BASE + urlencode(params)
-    try:
-        resp = requests.get(url, headers={"key": EVDS_KEY}, timeout=20)
-        if resp.status_code != 200:
-            return None
-        data = resp.json()
-        return data.get("items", []) or None
-    except Exception:
-        return None
-
+    params = {"series": code, "startDate": start, "endDate": end,
+              "type": "json", "frequency": freq}
+    encoded = urlencode(params)
+    urls = [EVDS3_BASE + encoded, EVDS2_BASE + "?" + encoded]
+    for url in urls:
+        try:
+            resp = requests.get(url, headers={"key": EVDS_KEY},
+                                timeout=(5, 12))
+            if resp.status_code != 200:
+                print(f"   EVDS cevap HTTP {resp.status_code}: {code}")
+                continue
+            payload = resp.json()
+            items = payload.get("items") if isinstance(payload, dict) else None
+            if isinstance(items, list) and items:
+                return items
+            print(f"   EVDS boş veri: {code}")
+        except (requests.RequestException, ValueError, TypeError) as exc:
+            print(f"   EVDS bağlantı/veri hatası ({code}): {type(exc).__name__}")
+    return None
 
 def parse_evds(items: list, code: str) -> list:
-    """EVDS item'larını [{date, value}] formatına çevir."""
-    col = code.replace(".", "_")
-    points = []
-    for it in items:
-        date_raw = (it.get("Tarih") or "").strip()
-        val_raw = it.get(col)
-        if val_raw in (None, "null", ""):
+    """Turn EVDS month/day fields into sorted, unique {date,value} observations."""
+    wanted = [code.replace(".", "_"), code]
+    points = {}
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+        raw_date = str(item.get("Tarih") or item.get("DATE") or "").strip()
+        if not raw_date:
             continue
         try:
-            v = float(val_raw)
-        except (TypeError, ValueError):
+            if len(raw_date) == 10 and raw_date[2] == "-":
+                dd, mm, yyyy = raw_date.split("-")
+                date = f"{yyyy}-{mm}-{dd}"
+            elif len(raw_date) == 10 and raw_date[4] == "-":
+                date = raw_date
+            elif len(raw_date) == 7 and raw_date[2] == "-":
+                mm, yyyy = raw_date.split("-")
+                date = f"{yyyy}-{mm}-01"
+            elif len(raw_date) == 7 and raw_date[4] == "-":
+                date = raw_date + "-01"
+            elif len(raw_date) == 4 and raw_date.isdigit():
+                date = raw_date + "-12-31"
+            else:
+                continue
+            datetime.strptime(date, "%Y-%m-%d")
+            value = next((item.get(k) for k in wanted if item.get(k) not in (None, "", "null")), None)
+            if value is None:
+                continue
+            number = float(str(value).replace(",", "."))
+            if not (-1e15 < number < 1e15):
+                continue
+            points[date] = {"date": date, "value": round(number, 4)}
+        except (ValueError, TypeError):
             continue
-        iso = None
+    return [points[d] for d in sorted(points)]
+
+def to_annual_inflation(index_points: list) -> list:
+    """A level index is NOT annual CPI/PPI inflation: compute matching-month YoY."""
+    months = {p["date"][:7]: p["value"] for p in index_points}
+    out = []
+    for key in sorted(months):
+        year, month = map(int, key.split("-"))
+        prev = f"{year - 1:04d}-{month:02d}"
+        current_value, base = months[key], months.get(prev)
+        if base is None or base <= 0 or current_value <= 0:
+            continue
+        out.append({"date": key + "-01",
+                    "value": round((current_value / base - 1) * 100, 4)})
+    return out
+
+def valid_existing_trusted(code: str):
+    """Reuse only genuine historical values, never legacy synthetic rows."""
+    paths = [DATA_DIR / "turkiye_makro.json",
+             DATA_DIR.parent / "site" / "data" / "turkiye_makro.json"]
+    for p in paths:
         try:
-            if len(date_raw) == 10 and date_raw[2] == "-":
-                dd, mm, yyyy = date_raw.split("-")
-                iso = f"{yyyy}-{mm}-{dd}"
-            elif len(date_raw) == 7 and date_raw[2] == "-":
-                mm, yyyy = date_raw.split("-")
-                iso = f"{yyyy}-{mm}-01"
-            elif len(date_raw) == 4:  # YYYY
-                iso = f"{date_raw}-12-31"
-        except Exception:
+            raw = json.loads(p.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
             continue
-        if iso:
-            points.append({"date": iso, "value": round(v, 4)})
-    points.sort(key=lambda p: p["date"])
-    return points
+        for entry in raw.get("series", []):
+            if entry.get("id") != code or entry.get("source") not in TRUSTED_SOURCES:
+                continue
+            if code in {"TP.FG.J0", "TP.FG.J2"} and entry.get("method") != "yoy_index" and entry.get("source") == "TCMB EVDS":
+                continue  # legacy index level might be mislabeled as annual inflation
+            points = entry.get("data")
+            date = entry.get("latest_date")
+            if isinstance(points, list) and points and isinstance(date, str) and len(date) == 10:
+                try:
+                    datetime.strptime(date, "%Y-%m-%d")
+                    if all(isinstance(q.get("value"), (int, float)) for q in points):
+                        return entry
+                except (ValueError, AttributeError, TypeError):
+                    pass
+    return None
 
+def build_row(code, meta, points, source, status, source_url="", method=""):
+    vals = [x["value"] for x in points]
+    current = vals[-1] if vals else None
+    changes = calc_changes(points) if points else {}
+    return {
+        "id": code, "name": meta["name"], "unit": meta["unit"],
+        "category": meta["cat"], "current": current,
+        "change_1d_pct": None, "change_1w_pct": None,
+        "change_1m_pct": changes.get("1m"), "change_3m_pct": changes.get("3m"),
+        "change_6m_pct": changes.get("6m"), "change_ytd_pct": changes.get("ytd"),
+        "change_1y_pct": changes.get("1y"), "high_52w": max(vals) if vals else None,
+        "low_52w": min(vals) if vals else None, "data": points,
+        "latest_date": points[-1]["date"] if points else None,
+        "source": source, "status": status, "source_url": source_url,
+        "method": method,
+    }
 
-# ══════════════════════════════════════════════════════════════
-# Seed synthetic series (fallback)
-# ══════════════════════════════════════════════════════════════
-def synth_series(code: str) -> list:
-    seed = SEED.get(code, {"cur": 100.0, "prev24": 95.0})
-    cur = seed["cur"]
-    prev = seed["prev24"]
-    rng = random.Random(hash(code) & 0xFFFFFFFF)
-    today = datetime.now().replace(day=1)
-    points = []
-    for i in range(24, -1, -1):
-        # Ayı hesapla
-        year = today.year
-        month = today.month - i
-        while month <= 0:
-            month += 12
-            year -= 1
-        t = (24 - i) / 24.0
-        val = prev + (cur - prev) * t
-        val *= 1 + rng.uniform(-0.02, 0.02)
+= 1 + rng.uniform(-0.02, 0.02)
         points.append({
             "date": f"{year:04d}-{month:02d}-01",
             "value": round(val, 4),
@@ -227,96 +244,87 @@ def calc_changes(points: list) -> dict:
 # Main
 # ══════════════════════════════════════════════════════════════
 def main():
-    print("=" * 60)
-    print("🇹🇷 Türkiye Makro Collector (TCMB EVDS + Seed)")
-    print("=" * 60)
-    if EVDS_KEY:
-        print(f"   ✅ TCMB_EVDS_KEY bulundu: ***{EVDS_KEY[-4:]}")
-    else:
-        print("   ⚠️  TCMB_EVDS_KEY yok → seed data kullanılacak.")
-        print("      Gerçek veri için: https://evds2.tcmb.gov.tr/ → giriş → API anahtarı")
-        print("      Sonra: export TCMB_EVDS_KEY='xxxx'")
+    print("🇹🇷 Türkiye Makro Collector — EVDS3 + doğrulanmış gözlem; SEED YOK")
+    if not EVDS_KEY:
+        print("UYARI: TCMB_EVDS_KEY/TCMB_API_KEY yok; doğrulanmış son kayıtlar korunacak.")
 
     today = datetime.now()
     start_d = (today - timedelta(days=800)).strftime("%d-%m-%Y")
     end_d = today.strftime("%d-%m-%Y")
-
-    series_list = []
-    errors = []
+    rows, errors = [], []
+    live_count = reused_count = official_count = 0
 
     for code, meta in SERIES.items():
-        points = None
-        source = None
-
-        if EVDS_KEY:
-            items = fetch_evds(code, start_d, end_d, freq=meta.get("freq", 5))
+        real_points = []
+        api_code = meta.get("api_code", code)
+        method = meta.get("transform", "")
+        if api_code and EVDS_KEY:
+            items = fetch_evds(api_code, start_d, end_d, freq=meta.get("freq", 5))
             if items:
-                parsed = parse_evds(items, code)
-                if len(parsed) >= 2:
-                    points = parsed
-                    source = "TCMB EVDS"
-            time.sleep(0.25)
+                parsed = parse_evds(items, api_code)
+                real_points = to_annual_inflation(parsed) if method == "yoy_index" else parsed
 
-        if not points:
-            points = synth_series(code)
-            source = "Seed"
+        chosen = None
+        if len(real_points) >= 1:
+            chosen = build_row(code, meta, real_points, "TCMB EVDS", "live",
+                               "https://evds3.tcmb.gov.tr/", method)
+
+        snapshot = OFFICIAL_SNAPSHOTS.get(code)
+        if snapshot:
+            manual = build_row(code, meta,
+                [{"date": snapshot["date"], "value": snapshot["value"]}],
+                snapshot["source"], "last_verified", snapshot["url"], "official")
+            if not chosen or manual["latest_date"] > chosen["latest_date"]:
+                chosen = manual
+
+        old = valid_existing_trusted(code)
+        if old and (not chosen or old["latest_date"] > chosen["latest_date"]):
+            chosen = build_row(code, meta, old["data"], old["source"], "last_verified",
+                               old.get("source_url", ""), old.get("method", ""))
+
+        if not chosen:
+            chosen = build_row(code, meta, [], "Unavailable", "unavailable")
             errors.append(code)
-
-        current = points[-1]["value"]
-        values = [p["value"] for p in points]
-        ch = calc_changes(points)
-
-        series_list.append({
-            "id": code,
-            "name": meta["name"],
-            "unit": meta["unit"],
-            "category": meta["cat"],
-            "current": current,
-            "change_1d_pct": None,
-            "change_1w_pct": None,
-            "change_1m_pct": ch.get("1m"),
-            "change_3m_pct": ch.get("3m"),
-            "change_6m_pct": ch.get("6m"),
-            "change_ytd_pct": ch.get("ytd"),
-            "change_1y_pct": ch.get("1y"),
-            "high_52w": round(max(values), 4),
-            "low_52w": round(min(values), 4),
-            "data": points,
-            "source": source,
-        })
-
-        icon = "✅" if source == "TCMB EVDS" else "🟡"
-        print(f"   {icon} [{meta['cat']:6s}] {meta['name']}: {current} {meta['unit']}")
+            print(f"   ❌ {meta['name']}: doğrulanmış veri yok")
+        elif chosen["source"] == "TCMB EVDS":
+            live_count += 1
+            print(f"   ✅ {meta['name']}: {chosen['current']} ({chosen['latest_date']})")
+        elif chosen["source"] in {"TÜİK (resmî duyuru)", "TCMB PPK (resmî duyuru)"}:
+            official_count += 1
+            print(f"   📋 {meta['name']}: {chosen['current']} ({chosen['latest_date']}, resmî son değer)")
+        else:
+            reused_count += 1
+            print(f"   🕓 {meta['name']}: {chosen['current']} ({chosen['latest_date']}, son kayıt)")
+        rows.append(chosen)
 
     now_utc = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     result = {
         "meta": {
-            "source": "TCMB EVDS" + (" (+ Seed fallback)" if errors else ""),
+            "source": "TCMB EVDS / resmî son gözlem",
             "category": "Türkiye Makro",
             "updated_at": now_utc,
-            "symbol_count": len(series_list),
+            "symbol_count": len(rows),
+            "live_count": live_count,
+            "last_verified_count": official_count + reused_count,
+            "unavailable_count": len(errors),
             "errors": errors,
             "has_live_key": bool(EVDS_KEY),
+            "integrity": "synthetic values prohibited",
         },
-        "series": series_list,
+        "series": rows,
     }
+    for out in [DATA_DIR / "turkiye_makro.json",
+                DATA_DIR.parent / "site" / "data" / "turkiye_makro.json"]:
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        print(f"💾 {out}")
 
-    # data/turkiye_makro.json
-    out = DATA_DIR / "turkiye_makro.json"
-    with open(out, "w", encoding="utf-8") as f:
-        json.dump(result, f, ensure_ascii=False, indent=2)
-
-    # site/data mirror
-    site_out = DATA_DIR.parent / "site" / "data" / "turkiye_makro.json"
-    site_out.parent.mkdir(parents=True, exist_ok=True)
-    with open(site_out, "w", encoding="utf-8") as f:
-        json.dump(result, f, ensure_ascii=False, indent=2)
-
-    print("-" * 60)
-    print(f"💾 {out}")
-    print(f"💾 {site_out}")
-    print(f"✅ Toplam {len(series_list)} seri kaydedildi ({len(series_list)-len(errors)} canlı, {len(errors)} seed)")
+    print(f"SONUÇ: {live_count} canlı EVDS; {official_count + reused_count} doğrulanmış son gözlem; {len(errors)} boş.")
+    if live_count == 0:
+        print("HATA: EVDS'den tek bir canlı veri alınamadı; GitHub Actions hata olarak işaretlenmeli.")
+        return 1
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
