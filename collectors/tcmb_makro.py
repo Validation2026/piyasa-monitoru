@@ -63,8 +63,8 @@ SERIES = {
     # Hazine — Kamu Maliyesi
     "TP.BUTCEA.Y18":     {"name": "Merkezi Bütçe Dengesi",      "unit": "Mn TL",   "cat": CAT_HAZINE, "freq": 5,  "formul": 0},
     "TP.BUTCEA.Y19":     {"name": "Faiz Dışı Denge",            "unit": "Mn TL",   "cat": CAT_HAZINE, "freq": 5,  "formul": 0},
-    "TP.KTF10":          {"name": "İç Borç Stoku",              "unit": "Mn TL",   "cat": CAT_HAZINE, "freq": 5,  "formul": 0},
-    "TP.KTF11":          {"name": "Dış Borç Stoku",             "unit": "Mn USD",  "cat": CAT_HAZINE, "freq": 5,  "formul": 0},
+    "TP.KTF10":          {"name": "İç Borç Stoku",              "unit": "Mn TL",   "cat": CAT_HAZINE, "freq": 5,  "api_code": None},  # kod/birim eşleşmesi teyit edilmeli
+    "TP.KTF11":          {"name": "Dış Borç Stoku",             "unit": "Mn USD",  "cat": CAT_HAZINE, "freq": 5,  "api_code": None}, # kod/birim eşleşmesi teyit edilmeli
 
     # BDDK — Bankacılık
     "TP.BANKA.A01":      {"name": "Sektör Toplam Aktif",        "unit": "Mn TL",   "cat": CAT_BDDK,   "freq": 5,  "formul": 0},
@@ -249,7 +249,7 @@ def main():
     start_d = (today - timedelta(days=800)).strftime("%d-%m-%Y")
     end_d = today.strftime("%d-%m-%Y")
     rows, errors = [], []
-    live_count = reused_count = official_count = 0
+    live_count = reused_count = official_count = stale_count = 0
 
     for code, meta in SERIES.items():
         real_points = []
@@ -263,7 +263,10 @@ def main():
 
         chosen = None
         if len(real_points) >= 1:
-            chosen = build_row(code, meta, real_points, "TCMB EVDS", "live",
+            latest = datetime.strptime(real_points[-1]["date"], "%Y-%m-%d")
+            age_days = (today - latest).days
+            status = "live" if 0 <= age_days <= 120 else "stale"
+            chosen = build_row(code, meta, real_points, "TCMB EVDS", status,
                                "https://evds3.tcmb.gov.tr/", method)
 
         snapshot = OFFICIAL_SNAPSHOTS.get(code)
@@ -283,9 +286,12 @@ def main():
             chosen = build_row(code, meta, [], "Unavailable", "unavailable")
             errors.append(code)
             print(f"   ❌ {meta['name']}: doğrulanmış veri yok")
-        elif chosen["source"] == "TCMB EVDS":
+        elif chosen["source"] == "TCMB EVDS" and chosen["status"] == "live":
             live_count += 1
             print(f"   ✅ {meta['name']}: {chosen['current']} ({chosen['latest_date']})")
+        elif chosen["source"] == "TCMB EVDS" and chosen["status"] == "stale":
+            stale_count += 1
+            print(f"   🕓 {meta['name']}: {chosen['current']} ({chosen['latest_date']}, EVDS eski gözlem)")
         elif chosen["source"] in {"TÜİK (resmî duyuru)", "TCMB PPK (resmî duyuru)"}:
             official_count += 1
             print(f"   📋 {meta['name']}: {chosen['current']} ({chosen['latest_date']}, resmî son değer)")
@@ -303,6 +309,7 @@ def main():
             "symbol_count": len(rows),
             "live_count": live_count,
             "last_verified_count": official_count + reused_count,
+            "stale_count": stale_count,
             "unavailable_count": len(errors),
             "errors": errors,
             "has_live_key": bool(EVDS_KEY),
@@ -316,7 +323,7 @@ def main():
         out.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         print(f"💾 {out}")
 
-    print(f"SONUÇ: {live_count} canlı EVDS; {official_count + reused_count} doğrulanmış son gözlem; {len(errors)} boş.")
+    print(f"SONUÇ: {live_count} güncel EVDS; {stale_count} eski EVDS; {official_count + reused_count} doğrulanmış son gözlem; {len(errors)} boş.")
     if live_count == 0:
         print("HATA: EVDS'den tek bir canlı veri alınamadı; GitHub Actions hata olarak işaretlenmeli.")
         return 1
