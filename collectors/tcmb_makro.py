@@ -70,7 +70,11 @@ SERIES = {
     "TP.BANKA.A01":      {"name": "Sektör Toplam Aktif",        "unit": "Mn TL",   "cat": CAT_BDDK,   "freq": 5,  "formul": 0},
     "TP.BANKA.K01":      {"name": "Toplam Kredi Hacmi",         "unit": "Mn TL",   "cat": CAT_BDDK,   "freq": 5,  "formul": 0},
     "TP.BANKA.M01":      {"name": "Toplam Mevduat",             "unit": "Mn TL",   "cat": CAT_BDDK,   "freq": 5,  "formul": 0},
-    "TP.BANKA.T01":      {"name": "Takipteki Krediler (NPL)",   "unit": "%",       "cat# AOFM (TP.APIFON4), politika faizinden farklıdır; bu nedenle politika
+    "TP.BANKA.T01":      {"name": "Takipteki Krediler (NPL)", "unit": "%",       "cat": CAT_BDDK, "freq": 5, "formul": 0},
+    "TP.BANKA.S01":      {"name": "Sermaye Yeterlilik Oranı", "unit": "%",       "cat": CAT_BDDK, "freq": 5, "formul": 0},
+}
+
+# AOFM (TP.APIFON4), politika faizinden farklıdır; bu nedenle politika
 # faizini o EVDS serisinden okumuyoruz. Yalnızca resmî PPK kararını kullanıyoruz.
 # Resmî kontrol: 18 Kasım 2026. Yeni karar yayımlanınca kaynaklı kayıt güncellenmeli.
 OFFICIAL_SNAPSHOTS = {
