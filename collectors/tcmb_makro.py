@@ -1,8 +1,8 @@
 """
 Türkiye Makro Collector — TCMB EVDS + TÜİK + BDDK
 
-Otomatik: TCMB EVDS v2 API'den veri çeker (aylık frekans).
-Gerekli env var: TCMB_EVDS_KEY  (https://evds2.tcmb.gov.tr/index.php?/evds/login)
+Otomatik: EVDS3 öncelikli; EVDS2 geriye dönük uyumluluk denemesidir.
+Gerekli env var: TCMB_EVDS_KEY veya TCMB_API_KEY (https://evds3.tcmb.gov.tr/)
 
 EVDS bağlantısı başarısızsa sentetik veri üretmez; yalnızca kaynaklı gözlem saklar.
 EVDS3 öncelikli, EVDS2 geriye dönük denemedir.
@@ -207,13 +207,6 @@ def build_row(code, meta, points, source, status, source_url="", method=""):
         "source": source, "status": status, "source_url": source_url,
         "method": method,
     }
-
-= 1 + rng.uniform(-0.02, 0.02)
-        points.append({
-            "date": f"{year:04d}-{month:02d}-01",
-            "value": round(val, 4),
-        })
-    return points
 
 
 # ══════════════════════════════════════════════════════════════
