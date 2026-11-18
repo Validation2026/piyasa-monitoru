@@ -83,8 +83,9 @@
 <div class="risk-grid" id="grid"></div>
 
 <div class="info-text" style="font-size:.68rem;color:var(--t3);margin-bottom:16px;line-height:1.5">
-* Kredi notları: S&P / Fitch / Moody's sırasıyla. Veriler 26 Mayıs 2026 itibarıyla güncellenmiştir. İran-İsrail savaşı (28 Şubat 2026) sonrası notlar henüz güncellenmemiş olabilir.<br>
-* CDS değerleri yaklaşık piyasa değerleridir ve anlık olarak değişebilir.<br>
+* Kredi notları ve eski borç/büyüme göstergeleri 26 Mayıs 2026 arşividir, <b>güncel teyit edilmiş değerler değildir</b>. Faiz ve enflasyon yalnızca resmî kaynakla doğrulanabilen ülkelerde 18 Kasım 2026 kontrolüyle güncellenmiştir. Admin panelinden ayrı kaydedilen ülke profilleri korunur.<br>
+* Kaynağı ve tarihi doğrulanmayan CDS rakamları kaldırıldı (—). Karma tarihli veriler doğrudan ülkeler arası güncel risk sıralaması için kullanılmamalı.<br>
+* Faiz/TÜFE resmî kaynaklar: <a href="https://www.tcmb.gov.tr/" target="_blank" rel="noopener noreferrer">TCMB</a>, <a href="https://www.tuik.gov.tr/" target="_blank" rel="noopener noreferrer">TÜİK</a>, <a href="https://www.federalreserve.gov/" target="_blank" rel="noopener noreferrer">Fed</a>, <a href="https://www.ecb.europa.eu/" target="_blank" rel="noopener noreferrer">ECB</a>, <a href="https://www.bankofengland.co.uk/" target="_blank" rel="noopener noreferrer">BoE</a>, <a href="https://www.boj.or.jp/en/" target="_blank" rel="noopener noreferrer">BoJ</a>.<br>
 ⚠️ Bu bilgilendirme amaçlıdır, yatırım tavsiyesi değildir.
 </div>
 
@@ -144,6 +145,27 @@ var C=[
  note:'2022 Ukrayna savaşı sonrası üç kuruluş da notlarını geri çekti. Kapsamlı Batı yaptırımları altında. SWIFT\'ten çıkarıldı.'},
 ];
 
+// Sadece statik ilk yükleme için: admin tarafından kaydedilen ülke risk profilini asla değiştirme.
+// Tarih/otorite teyidi olmayan CDS rakamlarını güncelmiş gibi göstermeyelim.
+var RISK_MACRO_VERIFIED = {
+ 'Türkiye': {inflation:'29,77% (Ekim 2026)',interest:'36,00% (22.10.2026)',note:'Resmî makro: TÜİK Ekim 2026 TÜFE %29,77; TCMB 22 Ekim 2026 politika faizi %36. Kredi notu/borç/büyüme tarihsel arşivdir.'},
+ 'ABD': {inflation:'3,7% (Eylül 2026)',interest:'3,75–4,00% (28.10.2026)',note:'Fed hedef aralığı 28 Ekim 2026 itibarıyla %3,75–4,00. Ekim 2025 CPI gözlemi eksik olduğundan BLS, Ekim 2026 yıllık TÜFE açıklamamıştır; Eylül %3,7 kullanıldı.'},
+ 'Euro Bölgesi (Almanya)': {inflation:'4,0% (Ekim 2026 öncü, Euro Alanı)',interest:'2,50% (ECB mevduat, 29.10.2026)',note:'Faiz ve TÜFE Euro Bölgesi içindir; kredi derecelendirme alanları Almanya içindir ve tarihsel veridir. Eurostat Ekim TÜFE %4,0 öncü tahmindir.'},
+ 'İngiltere': {inflation:'3,6% (Ekim 2026)',interest:'4,00% (05.11.2026)',note:'BoE 5 Kasım toplantısında politika faizini %4,00’e yükseltti; ONS Ekim 2026 yıllık TÜFE %3,6. Kredi notları tarihsel.'},
+ 'Japonya': {inflation:'—',interest:'1,25% (30.10.2026)',note:'BoJ 30 Ekim 2026 toplantısında politika faizini %1,25’te tuttu. Enflasyon ve kredi notları bu kontrolde güncel olarak doğrulanmadı.'},
+ 'Çin': {inflation:'0,7% (Ekim 2026)',interest:'—',note:'Çin Ulusal İstatistik Bürosu Ekim 2026 yıllık TÜFE’yi %0,7 açıkladı. Politika faizinin tanımı birden fazla olduğu için doğrulanmamış oran gösterilmiyor.'}
+};
+C.forEach(function(c){
+    c.cds='—';
+    var p=RISK_MACRO_VERIFIED[c.n];
+    if(p)Object.assign(c,p);
+    else if(c.n!=='İran'){
+        c.interest='—';
+        c.inflation='—';
+        c.note+=' Makro faiz ve enflasyon göstergeleri bu kontrolde resmî kaynakla teyit edilemedi; eski rakamlar kaldırıldı.';
+    }
+});
+
 var g=document.getElementById('grid');
 g.innerHTML=C.map(function(c, index){
     // Kartlara index'e bağlı gecikme ekledik
@@ -151,7 +173,7 @@ g.innerHTML=C.map(function(c, index){
     '<div class="rk-r"><span class="rk-l">S&P</span><span class="rat '+c.rcls+'">'+c.sp+'</span></div>'+
     '<div class="rk-r"><span class="rk-l">Fitch</span><span class="rat '+c.rcls+'">'+c.fitch+'</span></div>'+
     '<div class="rk-r"><span class="rk-l">Moody\'s</span><span class="rat '+c.rcls+'">'+c.moodys+'</span></div>'+
-    '<div class="rk-r"><span class="rk-l">CDS (5Y)</span><span class="rk-v">'+c.cds+' bps</span></div>'+
+    '<div class="rk-r"><span class="rk-l">CDS (5Y)</span><span class="rk-v">'+(c.cds==='—'?'—':c.cds+' bps')+'</span></div>'+
     '<div class="rk-r"><span class="rk-l">Enflasyon</span><span class="rk-v">'+c.inflation+'</span></div>'+
     '<div class="rk-r"><span class="rk-l">Politika Faizi</span><span class="rk-v">'+c.interest+'</span></div>'+
     '<div class="rk-r"><span class="rk-l">Borç/GSYİH</span><span class="rk-v">'+c.debt+'</span></div>'+
@@ -171,7 +193,7 @@ fetch('/api/iran-state').then(function(r){return r.json()}).then(function(s){
             '<div class="rk-r"><span class="rk-l">S&P</span><span class="rat '+cls[1]+'">'+c.sp+'</span></div>'+
             '<div class="rk-r"><span class="rk-l">Fitch</span><span class="rat '+cls[1]+'">'+c.fitch+'</span></div>'+
             '<div class="rk-r"><span class="rk-l">Moody\'s</span><span class="rat '+cls[1]+'">'+c.moodys+'</span></div>'+
-            '<div class="rk-r"><span class="rk-l">CDS (5Y)</span><span class="rk-v">'+c.cds+' bps</span></div>'+
+            '<div class="rk-r"><span class="rk-l">CDS (5Y)</span><span class="rk-v">'+(c.cds==='—'?'—':c.cds+' bps')+'</span></div>'+
             '<div class="rk-r"><span class="rk-l">Enflasyon</span><span class="rk-v">'+c.inflation+'</span></div>'+
             '<div class="rk-r"><span class="rk-l">Politika Faizi</span><span class="rk-v">'+c.interest+'</span></div>'+
             '<div class="rk-r"><span class="rk-l">Borç/GSYİH</span><span class="rk-v">'+c.debt+'</span></div>'+
