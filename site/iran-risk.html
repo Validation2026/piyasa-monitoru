@@ -208,6 +208,13 @@
 <button class="tl-f" data-f="eco">🟡 Ekonomik</button>
 <button class="tl-f" data-f="nuk">🟣 Nükleer</button>
 </div>
+<div id="tlOriginFilter" style="display:flex;gap:5px;margin:0 0 8px;flex-wrap:wrap">
+<button class="tl-f on" data-origin="all">🔄 Güncel</button>
+<button class="tl-f" data-origin="manual">✍️ Admin kayıtları</button>
+<button class="tl-f" data-origin="auto">📰 Otomatik haberler</button>
+<button class="tl-f" data-origin="archive">🗃️ Eski sabit arşiv</button>
+</div>
+<div id="tlAutoStatus" style="font-size:.67rem;color:#64748b;margin-bottom:10px">Otomatik haber akışı yükleniyor…</div>
 <div id="tlBox" style="position:relative;padding-left:24px;margin-bottom:18px"></div>
 
 <div class="sec-title">📰 Son Haberler</div>
@@ -522,11 +529,14 @@ function renderAll(){
         }
     });
 
+    updateAutomaticTimeline(uniq);
+
     var nb=document.getElementById('newsBox');
     nb.innerHTML=uniq.slice(0,15).map(function(n){
-        var h=Math.floor((Date.now()-new Date(n.date).getTime())/36e5);
-        var t=h<1?'az önce':h<24?h+' saat önce':Math.floor(h/24)+' gün önce';
-        return'<div class="nw"><a href="'+n.link+'" target="_blank">'+n.title+'</a><div class="nw-t">'+t+'</div></div>';
+        var when=new Date(n.date), h=Math.floor((Date.now()-when.getTime())/36e5);
+        var t=!Number.isFinite(h)?'Tarih bilinmiyor':h<1?'az önce':h<24?h+' saat önce':Math.floor(h/24)+' gün önce';
+        var link=/^https?:\/\//i.test(n.link||'')?n.link:'#';
+        return '<div class="nw"><a href="'+tlEscHtml(link)+'" target="_blank" rel="noopener noreferrer">'+tlEscHtml(n.title)+'</a><div class="nw-t">'+tlEscHtml(n.source||'Haber kaynağı')+' • '+t+'</div></div>';
     }).join('')||'<div class="nw">Haber bulunamadı</div>';
 }
 
@@ -553,55 +563,137 @@ var STATIC_TLE=[
 {d:'02.04',t:'Stratejik köprü saldırısı',ds:'İran kırmızı çizgi aşıldı açıklaması',tag:'mil',dot:'red'},
 {d:'03.04',t:'Trump: Henüz başlamadık bile',ds:'Hürmüz gerilimi tırmandı',tag:'dip',dot:'blue'},
 ];
-var TLE=STATIC_TLE.slice();
+// Eski sabit girdiler saklanır ancak varsayılan görünümde doğrulanmış haber gibi sunulmaz.
+// Güncel çizelge = Netlify'da kalıcı admin kayıtları + kaynağı belirtilen RSS haber başlıkları.
+var MANUAL_TLE=[],AUTO_TLE=[],TLE=[];
+var tlCategory='all',tlOrigin='all';
 var tagNames={mil:'Askeri',dip:'Diplomatik',eco:'Ekonomik',nuk:'Nükleer'};
 var dotMap={mil:'red',dip:'blue',eco:'orange',nuk:'purple'};
 
-// Timeline render güvenliği: başlık/açıklama içindeki özel karakterler HTML'i bozmasın
 function tlEscHtml(v){
-    return String(v == null ? '' : v)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
+    return String(v == null ? '' : v).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
-function renderTL(f){
+function tlCleanLink(v){
+    return /^https?:\/\//i.test(String(v||'')) ? String(v) : '';
+}
+function tlDateString(v){
+    var d=new Date(v);
+    return Number.isFinite(d.getTime()) ? d.toISOString().slice(0,10) : '';
+}
+function tlClassify(title){
+    var s=String(title||'').toLocaleLowerCase('tr-TR');
+    if(/nükleer|nuclear|uranyum|reaktör|iaea|atom enerji/.test(s))return 'nuk';
+    if(/ateşkes|ceasefire|müzakere|görüşme|diploma|anlaşma|arabuluc|bmgk|birleşmiş millet|yaptırım|sanction|talks|negotiat/.test(s))return 'dip';
+    if(/petrol|hürmüz|hurmuz|hormuz|enerji|doğalgaz|doğal gaz|fiyat|enflasyon|navlun|borsa|ticaret|tanker|oil|gas prices|shipping/.test(s))return 'eco';
+    if(/saldırı|füze|bomb|çatışma|operasyon|asker|ordu|hava savunma|drone|iha|roket|savaş|vurdu|şehit|missile|strike|attack|war|military|air raid/.test(s))return 'mil';
+    return '';
+}
+function tlNewsTitle(v){
+    // Google News, bazı başlıklara "- Yayıncı" eki ekler.
+    return String(v||'').replace(/\s+[-–—]\s+[^-–—]{2,55}$/, '').trim();
+}
+function updateAutomaticTimeline(items){
+    var cutoff=Date.now()-14*864e5, seen={};
+    AUTO_TLE=[];
+    (items||[]).forEach(function(n){
+        var title=tlNewsTitle(n.title),date=new Date(n.date),dateMs=date.getTime();
+        if(!title || !Number.isFinite(dateMs) || dateMs<cutoff || dateMs>Date.now()+36e5)return;
+        var tag=tlClassify(title);
+        if(!tag)return;
+        // Yalnızca bölgeyle ilişkili başlıklar; arama sonucundan alakasız haberleri ayıkla.
+        if(!/(iran|ir an|israil|isra[ië]l|israel|hürmüz|hurmuz|hormuz|orta doğu|middle east|kızıldeniz|red sea|lübnan|lebanon|hizbullah|hezbollah|yemen|hus[iî]|tahran|tehran|natanz)/i.test(title))return;
+        var link=tlCleanLink(n.link);
+        if(!link)return;
+        var key=title.toLocaleLowerCase('tr-TR').replace(/[^\p{L}\p{N} ]/gu,'').replace(/\s+/g,' ').slice(0,95);
+        if(seen[key])return;
+        seen[key]=true;
+        AUTO_TLE.push({
+            date:tlDateString(date),t:title,ds:'Haber başlığı; bağımsız doğrulama değildir.',
+            tag:tag,dot:dotMap[tag],origin:'auto',source:String(n.source||'Google News'),
+            link:link
+        });
+    });
+    AUTO_TLE.sort(function(a,b){return b.date.localeCompare(a.date)});
+    AUTO_TLE=AUTO_TLE.slice(0,35);
+    var status=document.getElementById('tlAutoStatus');
+    if(status)status.textContent=AUTO_TLE.length
+        ?AUTO_TLE.length+' güncel haber başlığı eklendi • Son 14 gün • Kaynak bağlantılarıyla • Otomatik akış'
+        :'Son 14 gün için uygun haber bulunamadı; admin kayıtları etkilenmedi.';
+    rebuildTimeline();
+}
+function rebuildTimeline(){
+    var archived=STATIC_TLE.map(function(e){
+        var p=e.d.split('.');
+        return {date:'2026-'+(p[1]||'01')+'-'+(p[0]||'01'),t:e.t,ds:e.ds,tag:e.tag,dot:e.dot,origin:'archive'};
+    });
+    TLE=MANUAL_TLE.concat(AUTO_TLE,archived);
+    renderTL();
+}
+function renderTL(){
     var box=document.getElementById('tlBox');
-    var items=f==='all'?TLE:TLE.filter(function(e){return e.tag===f});
-    box.innerHTML=items.slice().reverse().map(function(e){
-        return '<div class="tl-i">' +
-            '<div class="tl-d '+tlEscHtml(e.dot)+'"></div>' +
-            '<div class="tl-dt">'+tlEscHtml(e.d)+'.2026</div>' +
-            '<div class="tl-tt">'+tlEscHtml(e.t)+'</div>' +
-            '<div class="tl-ds">'+tlEscHtml(e.ds)+'</div>' +
-            '<span class="tl-tg tg-'+tlEscHtml(e.tag)+'">'+tlEscHtml(tagNames[e.tag] || '')+'</span>' +
-        '</div>';
-    }).join('');
+    var items=TLE.filter(function(e){
+        return (tlCategory==='all'||e.tag===tlCategory) &&
+            (tlOrigin==='all'?e.origin!=='archive':e.origin===tlOrigin);
+    });
+    items.sort(function(a,b){
+        var c=b.date.localeCompare(a.date);
+        if(c)return c;
+        return ({manual:0,auto:1,archive:2}[a.origin]||0)-({manual:0,auto:1,archive:2}[b.origin]||0);
+    });
+    box.innerHTML=items.slice(0,80).map(function(e){
+        var p=e.date.split('-'),date=(p[2]||'??')+'.'+(p[1]||'??')+'.'+(p[0]||'');
+        var badge=e.origin==='auto'?'📰 Otomatik haber':e.origin==='archive'?'🗃️ Eski, kaynaksız sabit kayıt':'✍️ Admin kaydı';
+        var href=tlCleanLink(e.link),source=e.origin==='auto'
+            ?'<div class="tl-ds" style="margin-top:3px">'+tlEscHtml(e.source)+' • <a href="'+tlEscHtml(href)+'" target="_blank" rel="noopener noreferrer">Haberi aç / doğrula</a></div>':'';
+        return '<div class="tl-i"><div class="tl-d '+tlEscHtml(e.dot)+'"></div>'+
+            '<div class="tl-dt">'+tlEscHtml(date)+'</div>'+
+            '<div class="tl-tt">'+tlEscHtml(e.t)+'</div>'+
+            '<div class="tl-ds">'+tlEscHtml(e.ds||'')+'</div>'+source+
+            '<span class="tl-tg tg-'+tlEscHtml(e.tag)+'">'+tlEscHtml(tagNames[e.tag]||'')+'</span>'+
+            '<span style="font-size:.58rem;color:#64748b;margin-left:6px">'+tlEscHtml(badge)+'</span></div>';
+    }).join('')||'<div class="tl-ds" style="padding:12px 0">Bu filtre için kayıt bulunamadı.</div>';
 }
-renderTL('all');
-
-fetch('/api/iran-state').then(function(r){return r.json()}).then(function(s){
-    if(s.timeline && s.timeline.length>0){
-        var adminEvents=s.timeline.map(function(e){
-            var parts=e.date.split('-');
-            var dd=parts[2]||'01',mm=parts[1]||'01';
-            return{d:dd+'.'+mm,t:e.title,ds:e.desc||'',tag:e.tag||'mil',dot:dotMap[e.tag]||'red'};
-        });
-        TLE=STATIC_TLE.concat(adminEvents);
-        TLE.sort(function(a,b){
-            var pa=a.d.split('.'),pb=b.d.split('.');
-            return(parseInt(pa[1])*100+parseInt(pa[0]))-(parseInt(pb[1])*100+parseInt(pb[0]));
-        });
-        renderTL('all');
-    }
-}).catch(function(){});
+rebuildTimeline();
+fetch('/api/iran-state',{cache:'no-store'}).then(function(r){
+    if(!r.ok)throw new Error('Admin kayıtları okunamadı');
+    return r.json();
+}).then(function(s){
+    MANUAL_TLE=(Array.isArray(s.timeline)?s.timeline:[]).filter(function(e){
+        return e && e.title && /^\d{4}-\d{2}-\d{2}$/.test(String(e.date||''));
+    }).map(function(e){
+        var tag=dotMap[e.tag]?e.tag:'mil';
+        return {date:e.date,t:e.title,ds:e.desc||'',tag:tag,dot:dotMap[tag],origin:'manual'};
+    });
+    rebuildTimeline();
+}).catch(function(){
+    var status=document.getElementById('tlAutoStatus');
+    if(status)status.textContent+=' • Admin kayıtlarına geçici olarak erişilemiyor';
+});
 document.getElementById('tlFilter').addEventListener('click',function(ev){
     if(!ev.target.classList.contains('tl-f'))return;
-    document.querySelectorAll('.tl-f').forEach(function(b){b.classList.remove('on')});
+    document.querySelectorAll('#tlFilter .tl-f').forEach(function(b){b.classList.remove('on')});
     ev.target.classList.add('on');
-    renderTL(ev.target.getAttribute('data-f'));
+    tlCategory=ev.target.getAttribute('data-f');
+    renderTL();
 });
+document.getElementById('tlOriginFilter').addEventListener('click',function(ev){
+    if(!ev.target.classList.contains('tl-f'))return;
+    document.querySelectorAll('#tlOriginFilter .tl-f').forEach(function(b){b.classList.remove('on')});
+    ev.target.classList.add('on');
+    tlOrigin=ev.target.getAttribute('data-origin');
+    renderTL();
+});
+// Açık sekmede 30 dakikada bir yeni haberleri getir; admin Blob verisini değiştirme.
+setInterval(function(){
+    if(document.visibilityState!=='visible')return;
+    fetch('/api/rss-proxy?q='+encodeURIComponent('İran İsrail saldırı ateşkes Hürmüz'),{cache:'no-store'})
+        .then(function(r){if(!r.ok)throw new Error('RSS');return r.json()})
+        .then(function(data){
+            allNews=allNews.concat(Array.isArray(data.items)?data.items:[]);
+            renderAll();
+        }).catch(function(){});
+},30*60*1000);
 
 })();
 if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').then(function(reg){reg.update()});}
