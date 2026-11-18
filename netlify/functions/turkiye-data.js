@@ -15,7 +15,31 @@ const YAHOO_SYMBOLS = {
   us10y: { symbol: '^TNX', label: 'ABD 10Y', unit: '%', digits: 2, group: 'Tahvil' }
 };
 
-const MACRO_FILE = path.join(__dirname, '..', '..', 'site', 'data', 'turkiye_makro.json');
+const MACRO_FILES = [
+  path.join(__dirname, '..', '..', 'site', 'data', 'turkiye_makro.json'),
+  path.join(__dirname, 'site', 'data', 'turkiye_makro.json'),
+  path.join(process.cwd(), 'site', 'data', 'turkiye_makro.json')
+];
+function loadMacroFile() {
+  for (const file of MACRO_FILES) {
+    if (fs.existsSync(file)) return JSON.parse(fs.readFileSync(file, 'utf8'));
+  }
+  throw new Error('Bundled Turkey macro snapshot missing');
+}
+function readMacroQuality() {
+  try {
+    const m = loadMacroFile().meta || {};
+    return {
+      total: m.symbol_count || 0, live: m.live_count || 0,
+      lastVerified: m.last_verified_count || 0,
+      unavailable: m.unavailable_count || 0,
+      updatedAt: m.updated_at || null,
+      note: 'Veri tarihi, dosya güncelleme tarihinden farklıdır.'
+    };
+  } catch (e) {
+    return { total:0, live:0, lastVerified:0, unavailable:0, updatedAt:null, error:e.message };
+  }
+}
 
 function headers() {
   return {
@@ -134,7 +158,7 @@ function readMacroSnapshot() {
   // Kaynak doğrulama: Seed, synthetic veya kaynağı belirsiz veri asla sayısal değer üretmez.
   // Dosyanın üretilme tarihi değil, her gözlemin kendi tarihi gösterilir.
   try {
-    const raw = JSON.parse(fs.readFileSync(MACRO_FILE, 'utf8'));
+    const raw = loadMacroFile();
     const items = Array.isArray(raw.series) ? raw.series : (Array.isArray(raw.data) ? raw.data : []);
     const trusted = new Set(['TCMB EVDS','TÜİK (resmî duyuru)','TCMB PPK (resmî duyuru)']);
     return items.map(item => {
@@ -209,6 +233,7 @@ function buildData(news, yahoo, macro = readMacroSnapshot()) {
     yahooErrors: yahoo.errors || [],
     markets,
     macro,
+    macroQuality: readMacroQuality(),
     riskScore,
     sentiment,
     bonds: [
@@ -241,4 +266,4 @@ exports.handler = async function(event) {
   }
 };
 
-exports._test = { parseRss, buildData, riskScoreFromMarkets, readMacroSnapshot, fmtPrice };
+exports._test = { parseRss, buildData, riskScoreFromMarkets, readMacroSnapshot, readMacroQuality, fmtPrice };
