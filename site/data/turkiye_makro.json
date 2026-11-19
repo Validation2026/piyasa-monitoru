@@ -2,7 +2,7 @@
   "meta": {
     "source": "TCMB EVDS / resmî son gözlem",
     "category": "Türkiye Makro",
-    "updated_at": "2026-11-18T16:37:20Z",
+    "updated_at": "2026-11-19T16:41:03Z",
     "symbol_count": 24,
     "live_count": 6,
     "last_verified_count": 1,
@@ -113,21 +113,17 @@
       "name": "USD/TRY (TCMB Alış)",
       "unit": "TRY",
       "category": "tcmb",
-      "current": 50.3292,
+      "current": 50.3536,
       "change_1d_pct": null,
       "change_1w_pct": null,
       "change_1m_pct": 0.05,
       "change_3m_pct": 0.32,
-      "change_6m_pct": 0.48,
-      "change_ytd_pct": 17.47,
-      "change_1y_pct": 1.11,
-      "high_52w": 50.3292,
+      "change_6m_pct": 0.49,
+      "change_ytd_pct": 17.52,
+      "change_1y_pct": 0.94,
+      "high_52w": 50.3536,
       "low_52w": 33.8159,
       "data": [
-        {
-          "date": "2024-09-09",
-          "value": 33.8937
-        },
         {
           "date": "2024-09-10",
           "value": 33.9676
@@ -2331,9 +2327,13 @@
         {
           "date": "2026-11-18",
           "value": 50.3292
+        },
+        {
+          "date": "2026-11-19",
+          "value": 50.3536
         }
       ],
-      "latest_date": "2026-11-18",
+      "latest_date": "2026-11-19",
       "source": "TCMB EVDS",
       "status": "live",
       "source_url": "https://evds3.tcmb.gov.tr/",
@@ -2344,21 +2344,17 @@
       "name": "EUR/TRY (TCMB Alış)",
       "unit": "TRY",
       "category": "tcmb",
-      "current": 55.3449,
+      "current": 55.2451,
       "change_1d_pct": null,
       "change_1w_pct": null,
-      "change_1m_pct": -0.1,
-      "change_3m_pct": -0.52,
-      "change_6m_pct": -1.19,
-      "change_ytd_pct": 10.06,
-      "change_1y_pct": -0.66,
+      "change_1m_pct": -0.18,
+      "change_3m_pct": -0.47,
+      "change_6m_pct": -1.84,
+      "change_ytd_pct": 9.86,
+      "change_1y_pct": -1.16,
       "high_52w": 56.3113,
       "low_52w": 35.9849,
       "data": [
-        {
-          "date": "2024-09-09",
-          "value": 37.6683
-        },
         {
           "date": "2024-09-10",
           "value": 37.5419
@@ -4562,9 +4558,13 @@
         {
           "date": "2026-11-18",
           "value": 55.3449
+        },
+        {
+          "date": "2026-11-19",
+          "value": 55.2451
         }
       ],
-      "latest_date": "2026-11-18",
+      "latest_date": "2026-11-19",
       "source": "TCMB EVDS",
       "status": "live",
       "source_url": "https://evds3.tcmb.gov.tr/",
@@ -4575,21 +4575,17 @@
       "name": "GBP/TRY (TCMB Alış)",
       "unit": "TRY",
       "category": "tcmb",
-      "current": 66.2758,
+      "current": 66.2054,
       "change_1d_pct": null,
       "change_1w_pct": null,
-      "change_1m_pct": -0.01,
-      "change_3m_pct": -0.27,
-      "change_6m_pct": -1.13,
-      "change_ytd_pct": 15.24,
-      "change_1y_pct": -0.59,
+      "change_1m_pct": -0.11,
+      "change_3m_pct": -0.14,
+      "change_6m_pct": -1.52,
+      "change_ytd_pct": 15.12,
+      "change_1y_pct": -0.9,
       "high_52w": 67.2269,
       "low_52w": 42.8827,
       "data": [
-        {
-          "date": "2024-09-09",
-          "value": 44.5835
-        },
         {
           "date": "2024-09-10",
           "value": 44.3953
@@ -6793,9 +6789,13 @@
         {
           "date": "2026-11-18",
           "value": 66.2758
+        },
+        {
+          "date": "2026-11-19",
+          "value": 66.2054
         }
       ],
-      "latest_date": "2026-11-18",
+      "latest_date": "2026-11-19",
       "source": "TCMB EVDS",
       "status": "live",
       "source_url": "https://evds3.tcmb.gov.tr/",
