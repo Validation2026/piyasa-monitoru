@@ -1,6 +1,6 @@
 /**
  * Risk Monitörü — Sidebar v4
- * Mobilde: topbar yok, sadece üstte tab strip
+ * Mobilde: erişilebilir hamburger menü + üst sekmeler
  * Masaüstünde: sol sidebar
  */
 (function(){'use strict';
@@ -23,7 +23,7 @@ var links = [
     ['merkez-bankalari','🏛️','Merkez Bank.'],
     ['ulke-risk','🌐','Ülke Risk'],
 /*  ['operasyonel-risk','🛡️','Operasyonel Risk'],*/
-    {ext:'https://risk-lab.netlify.app/',icon:'🧮',label:'RiskLab}
+    {ext:'https://risk-lab.netlify.app/',icon:'🧮',label:'RiskLab'}
 ];
 function buildHref(l){
     if(l && l.ext) return l.ext;
@@ -112,7 +112,11 @@ var hb = document.getElementById('hamburger');
 function setSidebarOpen(isOpen){
     sb.classList.toggle('open', isOpen);
     ov.classList.toggle('open', isOpen);
-    if(hb) hb.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    if(hb){
+        hb.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        hb.setAttribute('aria-label', isOpen ? 'Menüyü kapat' : 'Menüyü aç');
+    }
+    document.body.classList.toggle('sidebar-open', isOpen);
 }
 function toggleSidebar(){
     setSidebarOpen(!sb.classList.contains('open'));
@@ -120,6 +124,16 @@ function toggleSidebar(){
 if(hb) hb.addEventListener('click', toggleSidebar);
 ov.addEventListener('click',function(){
     setSidebarOpen(false);
+});
+// Sayfa bağlantısı seçilirse menüyü de kapat.
+sb.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){ setSidebarOpen(false); });
+});
+// Masaüstüne geçişte açık kalmış mobil paneli kapat.
+window.addEventListener('resize', function(){
+    if(!window.matchMedia('(max-width: 900px), (max-width: 1366px) and (pointer: coarse)').matches){
+        setSidebarOpen(false);
+    }
 });
 // ESC ile sidebar kapansın
 document.addEventListener('keydown', function(e){
