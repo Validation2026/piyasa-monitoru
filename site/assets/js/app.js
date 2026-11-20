@@ -61,10 +61,14 @@ function filterActiveData(file,data){
     return data;
 }
 function fetchJson(file){
-    return fetch(D+file, { cache:'default' }).then(function(r){
+    return fetch(D+file+'?_='+Date.now(), {
+        cache: 'no-store'
+    }).then(function(r){
         if(!r.ok) throw new Error('HTTP '+r.status);
         return r.json();
-    }).then(function(data){ return filterActiveData(file,data); });
+    }).then(function(data){
+        return filterActiveData(file,data);
+    });
 }
 
 function fj(file,opts){
@@ -720,19 +724,37 @@ function loadOverrides(pageId) {
 
 var _lastMeta = null;
 var _lastData = null;
-function loadData(file, pageId) {
-    // Veri ve override'lari paralel yukle, override'lari uygula
-    return Promise.all([fj(file), loadOverrides(pageId)]).then(function(r){
+function loadData(file, pageId, opts) {
+    opts = opts || {};
+
+    return Promise.all([
+        fj(file, {force: opts.force === true}),
+        loadOverrides(pageId)
+    ]).then(function(r){
         var data = r[0], ov = r[1];
-        if (data && data.series && ov) applyOverrides(data.series, ov);
-        // Veri eski mi? (60 dk üstü)
-        if (data && data.meta && data.meta.updated_at) {
-            try { showStaleBanner(data.meta.updated_at, 60); } catch(e){}
-            _lastMeta = { updated_at: data.meta.updated_at, file: file, pageId: pageId };
+
+        if (data && data.series && ov) {
+            applyOverrides(data.series, ov);
         }
+
+        if (data && data.meta && data.meta.updated_at) {
+            try {
+                showStaleBanner(data.meta.updated_at, 60);
+            } catch(e){}
+
+            _lastMeta = {
+                updated_at: data.meta.updated_at,
+                file: file,
+                pageId: pageId
+            };
+        }
+
         _lastData = data;
-        // URL'de ?asset=ID varsa detay popup'ını otomatik aç
-        try { openAssetFromUrl(data); } catch(e){}
+
+        try {
+            openAssetFromUrl(data);
+        } catch(e){}
+
         return data;
     });
 }
