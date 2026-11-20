@@ -164,14 +164,43 @@
         else if(currentView==='heatmap')rebuildHeatmap();
     }
 
-    PM.loadData('commodities_metals.json','emtia-metaller').then(function(data){
-        if(!data||!data.series||!data.series.length){document.getElementById('summaryCards').innerHTML='<div class="scard"><div class="scard-name">Veri bulunamadı.</div></div>';renderPager(0);return}
-        allSeries=data.series;
-        var ui=document.getElementById('updateInfo');
-        if(ui&&data.meta)ui.textContent='Son güncelleme: '+new Date(data.meta.updated_at).toLocaleString('tr-TR')+' · '+data.meta.symbol_count+' seri';
-        setChartsExpanded(false);
-        rebuildCards();
+
+function refreshMetalsData(force) {
+    return PM.loadData(
+        'commodities_metals.json',
+        'emtia-metaller',
+        {force: force === true}
+    ).then(function(data){
+
+        if(!data || !data.series || !data.series.length) return;
+
+        allSeries = data.series;
+
+        var ui = document.getElementById('updateInfo');
+
+        if(ui && data.meta) {
+            ui.textContent =
+                'Son güncelleme: ' +
+                new Date(data.meta.updated_at).toLocaleString('tr-TR') +
+                ' · ' + data.meta.symbol_count + ' seri';
+        }
+
+        rebuildCurrent();
+
+    }).catch(function(err){
+        console.error('Emtia verisi güncellenemedi:', err);
     });
+}
+
+// İlk yükleme
+setChartsExpanded(false);
+refreshMetalsData(false);
+
+// Her 60 saniyede bir güncel JSON'u kontrol et
+setInterval(function(){
+    refreshMetalsData(true);
+}, 60000);
+
 
     var chartsBtn=document.getElementById('toggleChartsBtn');
     if(chartsBtn)chartsBtn.addEventListener('click',function(){
