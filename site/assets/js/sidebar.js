@@ -23,7 +23,7 @@ var links = [
     ['merkez-bankalari','🏛️','Merkez Bank.'],
     ['ulke-risk','🌐','Ülke Risk'],
 /*  ['operasyonel-risk','🛡️','Operasyonel Risk'],*/
-    {ext:'https://risk-lab.netlify.app/',icon:'🧮',label:'Risk-Lab}
+    {ext:'https://risk-lab.netlify.app/',icon:'🧮',label:'RiskLab}
 ];
 function buildHref(l){
     if(l && l.ext) return l.ext;
