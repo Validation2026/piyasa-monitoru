@@ -1630,3 +1630,33 @@ body{
     .ai-compact{padding:10px 12px!important}
     .ai-compact .ai-body{padding:7px 8px!important;font-size:.74rem!important}
 }
+
+
+/* Sidebar recovery — phone and touch-tablet navigation.
+   Keep desktop sidebar unchanged; restore a visible mobile menu trigger. */
+@media (max-width:900px), (max-width:1366px) and (pointer:coarse) {
+    .topbar{
+        display:flex;
+        top:0;left:0;width:100%;height:48px;
+        padding:0 12px;gap:12px;
+        z-index:180;
+    }
+    .topbar-hamburger{
+        display:inline-flex;align-items:center;justify-content:center;
+        width:40px;height:40px;flex:0 0 40px;
+        border:1px solid var(--border);border-radius:8px;
+        background:var(--card2);color:var(--t1);
+        font-size:1.3rem;cursor:pointer;
+        touch-action:manipulation;
+    }
+    .topbar-hamburger:focus-visible{
+        outline:2px solid var(--blue);outline-offset:2px;
+    }
+    .topbar-search{margin-left:auto;}
+    .topbar-clock{display:none;}
+    .mobile-nav{display:block;top:48px;}
+    .main{left:0;width:100%;padding-top:94px;}
+    .sidebar{z-index:220;}
+    .sb-overlay{z-index:210;}
+    body.sidebar-open{overflow:hidden;}
+}
