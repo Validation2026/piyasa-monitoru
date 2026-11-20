@@ -688,10 +688,15 @@ function buildComparisonChart(canvasId,seriesList,period){
     return new Chart(c,{type:'line',data:{labels:allLabels,datasets:datasets},options:{responsive:true,maintainAspectRatio:false,animation:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:true,position:'top',labels:{color:txt,font:{size:11,family:"'Outfit'"},boxWidth:12,padding:12}},tooltip:{backgroundColor:dark?'#1e293b':'#fff',titleColor:dark?'#e8edf5':'#0f172a',bodyColor:dark?'#8a99b2':'#475569',borderColor:dark?'#334155':'#dde4ed',borderWidth:1,padding:10,callbacks:{label:function(ctx){if(ctx.raw==null)return'';return ctx.dataset.label+': '+(ctx.raw>=0?'+':'')+ctx.raw.toFixed(2)+'%'}}}},scales:{x:{grid:{color:grid,drawBorder:false},ticks:{color:txt,font:{size:10,family:"'JetBrains Mono'"},maxTicksLimit:6,callback:function(v){var l=this.getLabelForValue(v);var p=l.split('-');if(p.length>=2)return MO[parseInt(p[1])-1]+' '+p[0].slice(2);return l}}},y:{grid:{color:grid,drawBorder:false},ticks:{color:txt,font:{size:10,family:"'JetBrains Mono'"},callback:function(v){return(v>=0?'+':'')+v.toFixed(0)+'%'}}}}}});
 }
 
-function applyOverrides(seriesList, overrides) {
+function applyOverrides(seriesList, overrides, overrideUpdatedAt, dataUpdatedAt) {
     if (!overrides || !seriesList) return seriesList;
+    var ovTs = overrideUpdatedAt ? new Date(overrideUpdatedAt).getTime() : NaN;
     seriesList.forEach(function(s) {
         if (!s || !overrides[s.id]) return;
+        // Override kaydedildikten sonra daha taze bir canlı fiyat geldiyse
+        // eski manuel değer canlı veriyi ezmesin.
+        var liveTs = new Date(s.price_timestamp || dataUpdatedAt || 0).getTime();
+        if (!isNaN(ovTs) && !isNaN(liveTs) && liveTs > ovTs) return;
         var ov = overrides[s.id];
         if (ov.value != null) s.current = ov.value;
         if (ov.change_1d != null) s.change_1d_pct = ov.change_1d;
@@ -703,6 +708,7 @@ function applyOverrides(seriesList, overrides) {
 var OVERRIDE_CACHE_TTL_MS=10000;
 var OVERRIDE_MEM_CACHE={};
 var OVERRIDE_INFLIGHT={};
+var OVERRIDE_UPDATED_AT={};                   
 
 function loadOverrides(pageId) {
     if(!pageId) return Promise.resolve({});
@@ -714,6 +720,7 @@ function loadOverrides(pageId) {
         .then(function(r) { return r.json(); })
         .then(function(d) {
             var ov=(d && d.overrides) ? d.overrides : {};
+            OVERRIDE_UPDATED_AT[pageId]=(d && d.updatedAt) || null;
             OVERRIDE_MEM_CACHE[pageId]={ts:nowTs(), data:ov};
             return ov;
         }).catch(function() { return {}; })
@@ -734,7 +741,7 @@ function loadData(file, pageId, opts) {
         var data = r[0], ov = r[1];
 
         if (data && data.series && ov) {
-            applyOverrides(data.series, ov);
+            applyOverrides(data.series, ov, OVERRIDE_UPDATED_AT[pageId], data.meta && data.meta.updated_at);
         }
 
         if (data && data.meta && data.meta.updated_at) {
