@@ -21,14 +21,14 @@ var COUNTRIES = [
 
     // Avrupa (non-EUR)
     {n:'İsviçre',      flag:'🇨🇭', lat:46.95, lng:7.45,   rate:0.00, infl:0.7,  m2y:0.12, m10y:0.68, cb:'SNB',        move:'hold'},
-    {n:'İsveç',        flag:'🇸🇪', lat:59.33, lng:18.07,  rate:1.75, infl:1.4,  m2y:2.08, m10y:2.78, cb:'Riksbank',   move:'hold'},
+    {n:'İsveç',        flag:'🇸🇪', lat:59.33, lng:18.07,  rate:2.00, infl:1.4,  m2y:2.08, m10y:2.78, cb:'Riksbank',   move:'hike'},
     {n:'Norveç',       flag:'🇳🇴', lat:59.91, lng:10.75,  rate:4.00, infl:3.3,  m2y:4.16, m10y:4.33, cb:'Norges',     move:'hold'},
     {n:'Danimarka',    flag:'🇩🇰', lat:55.68, lng:12.57,  rate:1.60, infl:1.9,  m2y:1.90, m10y:3.24, cb:'DNB',        move:'hold'},
     {n:'Polonya',      flag:'🇵🇱', lat:52.23, lng:21.01,  rate:3.75, infl:3.2,  m2y:4.70, m10y:5.42, cb:'NBP',        move:'hold'},
     {n:'Çekya',        flag:'🇨🇿', lat:50.08, lng:14.42,  rate:3.50, infl:2.7,  m2y:3.58, m10y:4.32, cb:'CNB',        move:'hold'},
     {n:'Macaristan',   flag:'🇭🇺', lat:47.50, lng:19.04,  rate:6.25, infl:5.1,  m2y:6.34, m10y:7.18, cb:'MNB',        move:'hold'},
     {n:'Romanya',      flag:'🇷🇴', lat:44.43, lng:26.10,  rate:6.50, infl:9.7,  m2y:7.04, m10y:7.82, cb:'BNR',        move:'hold'},
-    {n:'Rusya',        flag:'🇷🇺', lat:55.75, lng:37.62,  rate:15.00,infl:8.1,  m2y:15.85,m10y:14.12,cb:'CBR',        move:'cut'},
+    {n:'Rusya',        flag:'🇷🇺', lat:55.75, lng:37.62,  rate:14.00,infl:8.1,  m2y:15.85,m10y:14.12,cb:'CBR',        move:'cut'},
     {n:'Türkiye',      flag:'🇹🇷', lat:39.92, lng:32.85,  rate:37.00,infl:32.37,m2y:43.83,m10y:35.32,cb:'TCMB',       move:'hold'},
     {n:'İzlanda',      flag:'🇮🇸', lat:64.13, lng:-21.89, rate:7.50, infl:4.2,  m2y:7.38, m10y:7.08, cb:'Sedlabanki', move:'hold'},
 
@@ -65,7 +65,7 @@ var COUNTRIES = [
 
     // Afrika
     {n:'G. Afrika',    flag:'🇿🇦', lat:-25.75,lng:28.19,  rate:7.50, infl:3.8,  m2y:8.42, m10y:10.72,cb:'SARB',       move:'hold'},
-    {n:'Nijerya',      flag:'🇳🇬', lat:9.08,  lng:7.49,   rate:26.50,infl:16.0, m2y:23.20,m10y:21.35,cb:'CBN',        move:'cut'},
+    {n:'Nijerya',      flag:'🇳🇬', lat:9.08,  lng:7.49,   rate:23, infl:16.0, m2y:23.20,m10y:21.35,cb:'CBN',        move:'cut'},
     {n:'Kenya',        flag:'🇰🇪', lat:-1.29, lng:36.82,  rate:8.75, infl:4.1,  m2y:10.05,m10y:14.12,cb:'CBK',        move:'hold'},
     {n:'Fas',          flag:'🇲🇦', lat:34.02, lng:-6.84,  rate:2.25, infl:1.0,  m2y:2.48, m10y:3.58, cb:'BAM',        move:'hold'},
     {n:'Gana',         flag:'🇬🇭', lat:5.60,  lng:-0.19,  rate:14.00,infl:3.6,  m2y:15.90,m10y:17.95,cb:'BoG',        move:'cut'},
