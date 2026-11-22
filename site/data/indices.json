@@ -2,10 +2,9 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Endeksler",
-    "updated_at": "2026-11-21T03:52:04Z",
+    "updated_at": "2026-11-22T03:51:51Z",
     "symbol_count": 25,
-    "errors": [],
-    "tradingview_snapshot_at": "2026-11-21T12:10:10.253449Z"
+    "errors": []
   },
   "series": [
     {
@@ -20151,7 +20150,7 @@
         "https://s3-symbol-logo.tradingview.com/ndx--big.svg"
       ],
       "current": 22617.732,
-      "change_1d_pct": -0.0,
+      "change_1d_pct": 0.0,
       "change_1w_pct": -7.72,
       "change_1m_pct": -13.04,
       "change_3m_pct": -13.23,
@@ -25178,7 +25177,7 @@
         },
         {
           "date": "2026-11-20",
-          "value": 22617.7324
+          "value": 22617.7305
         }
       ]
     },
@@ -25192,7 +25191,7 @@
         "https://s3-symbol-logo.tradingview.com/rut.svg",
         "https://s3-symbol-logo.tradingview.com/rut--big.svg"
       ],
-      "current": 2581.7896,
+      "current": 2581.79,
       "change_1d_pct": 0.0,
       "change_1w_pct": -5.88,
       "change_1m_pct": -7.26,
@@ -30220,7 +30219,7 @@
         },
         {
           "date": "2026-11-20",
-          "value": 2581.7896
+          "value": 2581.79
         }
       ]
     },
@@ -90324,9 +90323,9 @@
       "change_1d_pct": 26.28,
       "change_1w_pct": 56.66,
       "change_1m_pct": 88.6,
-      "change_3m_pct": 124.17,
+      "change_3m_pct": 137.21,
       "change_ytd_pct": 140.07,
-      "change_1y_pct": 76.19,
+      "change_1y_pct": 101.74,
       "high_52w": 35.89,
       "low_52w": 13.47,
       "data": [
@@ -94847,6 +94846,10 @@
           "value": 16.7
         },
         {
+          "date": "2026-05-25",
+          "value": 16.59
+        },
+        {
           "date": "2026-05-26",
           "value": 17.01
         },
@@ -95133,6 +95136,10 @@
         {
           "date": "2026-09-04",
           "value": 14.53
+        },
+        {
+          "date": "2026-09-07",
+          "value": 15.3
         },
         {
           "date": "2026-09-08",
@@ -110377,7 +110384,7 @@
         },
         {
           "date": "2026-11-20",
-          "value": 33189.8516
+          "value": 33189.8984
         }
       ]
     },
@@ -110392,7 +110399,7 @@
         "https://s3-symbol-logo.tradingview.com/ndx--big.svg"
       ],
       "current": 25028.982,
-      "change_1d_pct": -0.0,
+      "change_1d_pct": 0.0,
       "change_1w_pct": -7.97,
       "change_1m_pct": -13.57,
       "change_3m_pct": -14.32,
@@ -115419,7 +115426,7 @@
         },
         {
           "date": "2026-11-20",
-          "value": 25028.9824
+          "value": 25028.9805
         }
       ]
     },
