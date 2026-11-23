@@ -2,7 +2,7 @@
   "meta": {
     "source": "TCMB EVDS / resmî son gözlem",
     "category": "Türkiye Makro",
-    "updated_at": "2026-11-20T16:16:17Z",
+    "updated_at": "2026-11-23T19:22:57Z",
     "symbol_count": 24,
     "live_count": 6,
     "last_verified_count": 1,
@@ -113,29 +113,17 @@
       "name": "USD/TRY (TCMB Alış)",
       "unit": "TRY",
       "category": "tcmb",
-      "current": 50.3786,
+      "current": 50.4028,
       "change_1d_pct": null,
       "change_1w_pct": null,
       "change_1m_pct": 0.05,
       "change_3m_pct": 0.15,
-      "change_6m_pct": 0.48,
-      "change_ytd_pct": 17.58,
-      "change_1y_pct": 0.94,
-      "high_52w": 50.3786,
+      "change_6m_pct": 0.47,
+      "change_ytd_pct": 17.64,
+      "change_1y_pct": 0.93,
+      "high_52w": 50.4028,
       "low_52w": 33.8159,
       "data": [
-        {
-          "date": "2024-09-11",
-          "value": 33.9904
-        },
-        {
-          "date": "2024-09-12",
-          "value": 33.9398
-        },
-        {
-          "date": "2024-09-13",
-          "value": 33.8984
-        },
         {
           "date": "2024-09-16",
           "value": 33.8159
@@ -2331,9 +2319,13 @@
         {
           "date": "2026-11-20",
           "value": 50.3786
+        },
+        {
+          "date": "2026-11-23",
+          "value": 50.4028
         }
       ],
-      "latest_date": "2026-11-20",
+      "latest_date": "2026-11-23",
       "source": "TCMB EVDS",
       "status": "live",
       "source_url": "https://evds3.tcmb.gov.tr/",
@@ -2344,29 +2336,17 @@
       "name": "EUR/TRY (TCMB Alış)",
       "unit": "TRY",
       "category": "tcmb",
-      "current": 55.3581,
+      "current": 55.2974,
       "change_1d_pct": null,
       "change_1w_pct": null,
-      "change_1m_pct": 0.2,
-      "change_3m_pct": -0.07,
-      "change_6m_pct": -0.93,
-      "change_ytd_pct": 10.09,
-      "change_1y_pct": -0.87,
+      "change_1m_pct": -0.11,
+      "change_3m_pct": -0.09,
+      "change_6m_pct": -0.61,
+      "change_ytd_pct": 9.97,
+      "change_1y_pct": -1.53,
       "high_52w": 56.3113,
       "low_52w": 35.9849,
       "data": [
-        {
-          "date": "2024-09-11",
-          "value": 37.5231
-        },
-        {
-          "date": "2024-09-12",
-          "value": 37.4837
-        },
-        {
-          "date": "2024-09-13",
-          "value": 37.3343
-        },
         {
           "date": "2024-09-16",
           "value": 37.4964
@@ -4562,9 +4542,13 @@
         {
           "date": "2026-11-20",
           "value": 55.3581
+        },
+        {
+          "date": "2026-11-23",
+          "value": 55.2974
         }
       ],
-      "latest_date": "2026-11-20",
+      "latest_date": "2026-11-23",
       "source": "TCMB EVDS",
       "status": "live",
       "source_url": "https://evds3.tcmb.gov.tr/",
@@ -4575,29 +4559,17 @@
       "name": "GBP/TRY (TCMB Alış)",
       "unit": "TRY",
       "category": "tcmb",
-      "current": 66.1557,
+      "current": 65.9363,
       "change_1d_pct": null,
       "change_1w_pct": null,
-      "change_1m_pct": -0.08,
-      "change_3m_pct": -0.19,
-      "change_6m_pct": -0.8,
-      "change_ytd_pct": 15.03,
-      "change_1y_pct": -1.03,
+      "change_1m_pct": -0.33,
+      "change_3m_pct": -0.51,
+      "change_6m_pct": -0.78,
+      "change_ytd_pct": 14.65,
+      "change_1y_pct": -1.87,
       "high_52w": 67.2269,
       "low_52w": 42.8827,
       "data": [
-        {
-          "date": "2024-09-11",
-          "value": 44.431
-        },
-        {
-          "date": "2024-09-12",
-          "value": 44.3404
-        },
-        {
-          "date": "2024-09-13",
-          "value": 44.1463
-        },
         {
           "date": "2024-09-16",
           "value": 44.3399
@@ -6793,9 +6765,13 @@
         {
           "date": "2026-11-20",
           "value": 66.1557
+        },
+        {
+          "date": "2026-11-23",
+          "value": 65.9363
         }
       ],
-      "latest_date": "2026-11-20",
+      "latest_date": "2026-11-23",
       "source": "TCMB EVDS",
       "status": "live",
       "source_url": "https://evds3.tcmb.gov.tr/",
