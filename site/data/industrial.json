@@ -2,7 +2,7 @@
   "meta": {
     "source": "Yahoo Finance",
     "category": "Sanayi & Hammadde",
-    "updated_at": "2026-11-24T03:51:14Z",
+    "updated_at": "2026-11-24T07:35:54Z",
     "symbol_count": 21,
     "errors": []
   },
@@ -17,20 +17,16 @@
         "https://s3-symbol-logo.tradingview.com/hg.svg",
         "https://s3-symbol-logo.tradingview.com/hg--big.svg"
       ],
-      "current": 5.45,
-      "change_1d_pct": -0.57,
-      "change_1w_pct": -7.78,
-      "change_1m_pct": -14.9,
-      "change_3m_pct": -16.24,
-      "change_ytd_pct": -2.11,
-      "change_1y_pct": -7.3,
+      "current": 5.5,
+      "change_1d_pct": -2.33,
+      "change_1w_pct": -7.51,
+      "change_1m_pct": -14.65,
+      "change_3m_pct": -16.0,
+      "change_ytd_pct": -1.83,
+      "change_1y_pct": -7.03,
       "high_52w": 6.8035,
       "low_52w": 4.962,
       "data": [
-        {
-          "date": "2021-11-23",
-          "value": 4.4235
-        },
         {
           "date": "2021-11-24",
           "value": 4.458
@@ -5061,11 +5057,11 @@
         },
         {
           "date": "2026-11-24",
-          "value": 5.5115
+          "value": 5.5265
         }
       ],
       "live_source": "TradingView page snapshot",
-      "price_timestamp": "2026-11-23T14:03:57.743745Z",
+      "price_timestamp": "2026-11-24T04:04:58.225247Z",
       "source_url": "https://www.tradingview.com/symbols/COMEX-HG1!/"
     },
     {
@@ -5078,8 +5074,8 @@
         "https://s3-symbol-logo.tradingview.com/ali.svg",
         "https://s3-symbol-logo.tradingview.com/ali--big.svg"
       ],
-      "current": 2854.25,
-      "change_1d_pct": 0.23,
+      "current": 2808.95,
+      "change_1d_pct": -1.25,
       "change_1w_pct": -9.07,
       "change_1m_pct": -15.4,
       "change_3m_pct": -20.6,
@@ -5088,10 +5084,6 @@
       "high_52w": 4195.0,
       "low_52w": 2725.0,
       "data": [
-        {
-          "date": "2021-11-23",
-          "value": 2648.0
-        },
         {
           "date": "2021-11-24",
           "value": 2664.5
@@ -10111,14 +10103,10 @@
         {
           "date": "2026-11-23",
           "value": 2897.5
-        },
-        {
-          "date": "2026-11-24",
-          "value": 2765.0
         }
       ],
       "live_source": "TradingView page snapshot",
-      "price_timestamp": "2026-11-23T14:04:18.187672Z",
+      "price_timestamp": "2026-11-24T04:05:18.649363Z",
       "source_url": "https://www.tradingview.com/symbols/ALUMINIUM/"
     },
     {
@@ -10131,20 +10119,16 @@
         "https://s3-symbol-logo.tradingview.com/znc.svg",
         "https://s3-symbol-logo.tradingview.com/znc--big.svg"
       ],
-      "current": 106.766,
-      "change_1d_pct": 0.01,
-      "change_1w_pct": 1.1,
-      "change_1m_pct": 0.57,
-      "change_3m_pct": -1.39,
-      "change_ytd_pct": -5.04,
-      "change_1y_pct": -4.83,
+      "current": 106.625,
+      "change_1d_pct": -0.12,
+      "change_1w_pct": 0.96,
+      "change_1m_pct": 0.44,
+      "change_3m_pct": -1.52,
+      "change_ytd_pct": -5.17,
+      "change_1y_pct": -4.96,
       "high_52w": 113.8594,
       "low_52w": 104.2031,
       "data": [
-        {
-          "date": "2021-11-23",
-          "value": 129.7812
-        },
         {
           "date": "2021-11-24",
           "value": 129.8281
@@ -15175,7 +15159,7 @@
         },
         {
           "date": "2026-11-24",
-          "value": 106.7656
+          "value": 106.625
         }
       ]
     },
@@ -15190,7 +15174,7 @@
         "https://s3-symbol-logo.tradingview.com/lbr--big.svg"
       ],
       "current": 540.0,
-      "change_1d_pct": 0.0,
+      "change_1d_pct": -0.18,
       "change_1w_pct": 2.37,
       "change_1m_pct": 4.15,
       "change_3m_pct": -5.92,
@@ -19521,7 +19505,7 @@
         },
         {
           "date": "2026-11-23",
-          "value": 540.0
+          "value": 541.0
         }
       ]
     },
