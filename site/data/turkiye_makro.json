@@ -2,11 +2,11 @@
   "meta": {
     "source": "TCMB EVDS / resmî son gözlem",
     "category": "Türkiye Makro",
-    "updated_at": "2026-11-26T17:49:29Z",
+    "updated_at": "2026-11-27T17:33:56Z",
     "symbol_count": 24,
     "live_count": 6,
-    "last_verified_count": 1,
-    "stale_count": 1,
+    "last_verified_count": 2,
+    "stale_count": 0,
     "unavailable_count": 16,
     "errors": [
       "TP.AB.B1.A",
@@ -113,21 +113,17 @@
       "name": "USD/TRY (TCMB Alış)",
       "unit": "TRY",
       "category": "tcmb",
-      "current": 50.5531,
+      "current": 50.5866,
       "change_1d_pct": null,
       "change_1w_pct": null,
-      "change_1m_pct": 0.03,
-      "change_3m_pct": 0.3,
-      "change_6m_pct": 0.44,
-      "change_ytd_pct": 17.99,
-      "change_1y_pct": 0.93,
-      "high_52w": 50.5531,
-      "low_52w": 33.8895,
+      "change_1m_pct": 0.07,
+      "change_3m_pct": 0.15,
+      "change_6m_pct": 0.46,
+      "change_ytd_pct": 18.07,
+      "change_1y_pct": 0.96,
+      "high_52w": 50.5866,
+      "low_52w": 33.9531,
       "data": [
-        {
-          "date": "2024-09-17",
-          "value": 33.8895
-        },
         {
           "date": "2024-09-18",
           "value": 33.9681
@@ -2331,9 +2327,13 @@
         {
           "date": "2026-11-26",
           "value": 50.5531
+        },
+        {
+          "date": "2026-11-27",
+          "value": 50.5866
         }
       ],
-      "latest_date": "2026-11-26",
+      "latest_date": "2026-11-27",
       "source": "TCMB EVDS",
       "status": "live",
       "source_url": "https://evds3.tcmb.gov.tr/",
@@ -2344,21 +2344,17 @@
       "name": "EUR/TRY (TCMB Alış)",
       "unit": "TRY",
       "category": "tcmb",
-      "current": 55.2971,
+      "current": 55.4968,
       "change_1d_pct": null,
       "change_1w_pct": null,
-      "change_1m_pct": 0.14,
-      "change_3m_pct": -0.0,
-      "change_6m_pct": -0.09,
-      "change_ytd_pct": 9.97,
-      "change_1y_pct": -1.28,
+      "change_1m_pct": 0.36,
+      "change_3m_pct": 0.06,
+      "change_6m_pct": 0.46,
+      "change_ytd_pct": 10.36,
+      "change_1y_pct": -1.39,
       "high_52w": 56.3113,
       "low_52w": 35.9849,
       "data": [
-        {
-          "date": "2024-09-17",
-          "value": 37.6852
-        },
         {
           "date": "2024-09-18",
           "value": 37.8255
@@ -4562,9 +4558,13 @@
         {
           "date": "2026-11-26",
           "value": 55.2971
+        },
+        {
+          "date": "2026-11-27",
+          "value": 55.4968
         }
       ],
-      "latest_date": "2026-11-26",
+      "latest_date": "2026-11-27",
       "source": "TCMB EVDS",
       "status": "live",
       "source_url": "https://evds3.tcmb.gov.tr/",
@@ -4575,21 +4575,17 @@
       "name": "GBP/TRY (TCMB Alış)",
       "unit": "TRY",
       "category": "tcmb",
-      "current": 65.9579,
+      "current": 66.186,
       "change_1d_pct": null,
       "change_1w_pct": null,
-      "change_1m_pct": 0.11,
-      "change_3m_pct": 0.03,
-      "change_6m_pct": -0.48,
-      "change_ytd_pct": 14.68,
-      "change_1y_pct": -1.61,
+      "change_1m_pct": 0.35,
+      "change_3m_pct": 0.05,
+      "change_6m_pct": -0.03,
+      "change_ytd_pct": 15.08,
+      "change_1y_pct": -1.55,
       "high_52w": 67.2269,
       "low_52w": 42.8827,
       "data": [
-        {
-          "date": "2024-09-17",
-          "value": 44.6085
-        },
         {
           "date": "2024-09-18",
           "value": 44.8209
@@ -6793,9 +6789,13 @@
         {
           "date": "2026-11-26",
           "value": 65.9579
+        },
+        {
+          "date": "2026-11-27",
+          "value": 66.186
         }
       ],
-      "latest_date": "2026-11-26",
+      "latest_date": "2026-11-27",
       "source": "TCMB EVDS",
       "status": "live",
       "source_url": "https://evds3.tcmb.gov.tr/",
@@ -6937,7 +6937,7 @@
       ],
       "latest_date": "2025-12-01",
       "source": "TCMB EVDS",
-      "status": "stale",
+      "status": "last_verified",
       "source_url": "https://evds3.tcmb.gov.tr/",
       "method": ""
     },
