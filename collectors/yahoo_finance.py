@@ -7,6 +7,7 @@ Kullanım:
 """
 
 import json
+import math
 import re
 import sys
 import time
@@ -64,7 +65,7 @@ def _local_logo_meta(symbol):
 
 def _scale_value(symbol: str, value: float | None) -> float | None:
     """Sembol bazlı fiyat ölçek düzeltmesi uygula."""
-    if value is None:
+    if value is None or not math.isfinite(float(value)):
         return None
     factor = SYMBOL_PRICE_SCALE.get(symbol, 1.0)
     return round(float(value) * factor, 4)
@@ -139,7 +140,7 @@ def fetch_yahoo_direct(symbol: str, range_str: str = "5y", interval: str = "1d")
 
         points = []
         for ts, val in zip(timestamps, closes):
-            if val is not None:
+            if val is not None and math.isfinite(float(val)):
                 dt = datetime.fromtimestamp(ts, tz=timezone.utc)
                 points.append({
                     "date": dt.strftime("%Y-%m-%d"),
@@ -204,14 +205,14 @@ def fetch_yahoo_intraday_latest(symbol: str) -> float | None:
         last_bar_price = None
         last_bar_time = None
         for t, c in zip(reversed(timestamps), reversed(closes)):
-            if c is not None:
+            if c is not None and math.isfinite(float(c)):
                 last_bar_price = c
                 last_bar_time = t
                 break
 
         # En taze timestamp hangisiyse onu kullan
         candidates = []
-        if meta_price is not None and meta_time is not None:
+        if meta_price is not None and meta_time is not None and math.isfinite(float(meta_price)):
             candidates.append((int(meta_time), float(meta_price)))
         if last_bar_price is not None and last_bar_time is not None:
             candidates.append((int(last_bar_time), float(last_bar_price)))
@@ -249,6 +250,8 @@ def fetch_yf_download(symbol: str) -> list | None:
             except Exception:
                 close_val = float(row["Close"])
 
+            if not math.isfinite(close_val):
+                continue
             points.append({
                 "date": pd.Timestamp(date).strftime("%Y-%m-%d"),
                 "value": round(close_val, 4)
@@ -560,6 +563,9 @@ def generate_summary(all_results: list) -> dict:
                 "low_52w": s.get("low_52w"),
                 "spark": spark_data
             }
+            for key in ("live_source", "price_timestamp", "source_url"):
+                if key in s:
+                    entry[key] = s[key]
             if s.get("logo_local"):
                 entry["logo_local"] = s["logo_local"]
             if s.get("logo_pair_local"):
@@ -574,45 +580,123 @@ def generate_summary(all_results: list) -> dict:
 #  Main
 # ═══════════════════════════════════════════════════════════
 
+
+def valid_market_entry(entry):
+    """Accept only finite JSON values and non-empty dated price history."""
+    if not isinstance(entry, dict):
+        return False
+    try:
+        current = entry.get("current")
+        if isinstance(current, bool) or not isinstance(current, (int, float)) or not math.isfinite(current):
+            return False
+        history = entry.get("data")
+        if not isinstance(history, list) or not history:
+            return False
+        for point in history:
+            date.fromisoformat(point["date"])
+            value = point["value"]
+            if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
+                return False
+        json.dumps(entry, allow_nan=False)
+        return True
+    except (TypeError, ValueError, KeyError, OverflowError):
+        return False
+
+
+def merge_market_group(group, previous, fresh):
+    """Preserve last valid configured symbols when Yahoo fails or truncates data."""
+    old = {s["id"]: s for s in previous.get("series", [])}
+    new = {s["id"]: s for s in fresh.get("series", [])}
+    merged, retained, missing = [], [], []
+    fresh_count = 0
+    for symbol in group["symbols"]:
+        prior = old.get(symbol)
+        candidate = new.get(symbol)
+        valid = valid_market_entry(candidate)
+        if valid and valid_market_entry(prior):
+            old_points, new_points = prior["data"], candidate["data"]
+            # Do not replace a long historical series with a partial API response.
+            valid = (len(new_points) >= 0.8 * len(old_points)
+                     and max(p["date"] for p in new_points) >= max(p["date"] for p in old_points))
+        if valid:
+            merged.append(candidate)
+            fresh_count += 1
+        elif valid_market_entry(prior):
+            merged.append(prior)
+            retained.append(symbol)
+        else:
+            missing.append(symbol)
+            if prior is not None:
+                raise ValueError(f"Cannot safely replace invalid existing data for {symbol}")
+    if not merged:
+        raise RuntimeError(f"No usable series in {group['category']}; refusing to publish")
+    meta = {**previous.get("meta", {}), **fresh.get("meta", {})}
+    meta.update(symbol_count=len(merged), errors=retained + missing,
+                retained_symbols=retained, missing_symbols=missing, fresh_count=fresh_count)
+    if not fresh_count and previous.get("meta", {}).get("updated_at"):
+        meta["updated_at"] = previous["meta"]["updated_at"]
+    result = {"meta": meta, "series": merged}
+    # No commit merely because the collection clock moved.
+    changed = (merged != previous.get("series", [])
+               or any(meta.get(key) != previous.get("meta", {}).get(key)
+                      for key in ("errors", "retained_symbols", "missing_symbols", "fresh_count")))
+    return (result if changed else previous), fresh_count, changed
+
+
+def write_market_json(path, payload, *, indent=None):
+    # Validate before atomic replacement; a failed run must not push partial data.
+    encoded = json.dumps(payload, ensure_ascii=False, indent=indent, allow_nan=False)
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    temporary.write_text(encoded, encoding="utf-8")
+    temporary.replace(path)
+
+
 def main():
-    print("🚀 Yahoo Finance Collector v3")
+    print("🚀 Yahoo Finance Collector v3 — safe refresh")
     print(f"   Veri dizini: {DATA_DIR}")
     print(f"   Zaman: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"   yfinance: {'v' + yf.__version__ if HAS_YF else 'yüklü değil (sadece API)'}")
 
-    total = 0
+    total_fresh = 0
     all_results = []
+    pending = []
     tradingview_snapshots = load_snapshot_store()
     print(f"   TradingView override: {len(tradingview_snapshots)} sembol")
 
     for group in ALL_YF_GROUPS:
+        output_file = DATA_DIR / group["file"]
+        previous = json.loads(output_file.read_text(encoding="utf-8")) if output_file.exists() else {}
         try:
-            result = fetch_group(group, tradingview_snapshots)
+            fresh = fetch_group(group, tradingview_snapshots)
+        except Exception as exc:
+            print(f"   Grup hatası ({group['category']}): {exc}")
+            fresh = {"meta": {"category": group["category"]}, "series": []}
+        result, fresh_count, changed = merge_market_group(group, previous, fresh)
+        all_results.append(result)
+        total_fresh += fresh_count
+        if changed:
+            pending.append((output_file, result))
+        print(f"   {output_file.name}: {fresh_count} yeni; "
+              f"{len(result['meta'].get('retained_symbols', []))} korunan; "
+              f"{len(result['meta'].get('missing_symbols', []))} eksik")
 
-            total += result["meta"]["symbol_count"]
-            all_results.append(result)
-
-            output_file = DATA_DIR / group["file"]
-            with open(output_file, "w", encoding="utf-8") as f:
-                json.dump(result, f, ensure_ascii=False, indent=2)
-
-            ok = result["meta"]["symbol_count"]
-            fail = len(result["meta"]["errors"])
-            print(f"   💾 {output_file.name}: {ok}✅ {fail}❌")
-
-        except Exception as e:
-            print(f"   ❌ Grup hatası ({group['category']}): {e}")
-
-    # Ana sayfa için hafif summary oluştur
-    summary = generate_summary(all_results)
+    if total_fresh == 0:
+        raise RuntimeError("No fresh market data; previous files remain untouched.")
     summary_file = DATA_DIR / "summary.json"
-    with open(summary_file, "w", encoding="utf-8") as f:
-        json.dump(summary, f, ensure_ascii=False)
-    print(f"   💾 summary.json: {summary['meta']['total_series']} seri (hafif)")
+    if not pending and summary_file.exists():
+        print("   Veri değişmedi; commit ve yayın gerekmiyor.")
+        return
 
+    # Build and validate all payloads before writing any file.
+    summary = generate_summary(all_results)
+    for _, payload in pending:
+        json.dumps(payload, allow_nan=False)
+    json.dumps(summary, allow_nan=False)
+    for output_file, result in pending:
+        write_market_json(output_file, result, indent=2)
+    write_market_json(summary_file, summary)
     update_activities()
-    print(f"\n{'='*60}")
-    print(f"✅ Toplam {total} seri kaydedildi!")
+    print(f"   {total_fresh} seri başarıyla alındı; {len(pending)} grup değişti.")
 
 
 if __name__ == "__main__":
