@@ -3,9 +3,16 @@ name: Update Market Data
 on:
   push:
     branches: [main]
+    paths:
+      - 'collectors/yahoo_finance.py'
+      - 'collectors/config.py'
+      - 'collectors/requirements.txt'
+      - '.github/workflows/update-market.yml'
   schedule:
-    # Her 10 dakikada bir tetiklenir; saat/gun filtresi script icinde TR saatine gore
-    - cron: '0 */10 * * *'
+    # TR (UTC+3): hafta ici 08:07–18:07, saat basi.
+    # Hafta sonu 08:07, 12:07, 16:07; API/yayin maliyetini sinirla.
+    - cron: '7 5-15 * * 1-5'
+    - cron: '7 5,9,13 * * 0,6'
   workflow_dispatch:
 
 concurrency:
@@ -15,68 +22,56 @@ concurrency:
 jobs:
   update-yahoo:
     runs-on: ubuntu-latest
+    timeout-minutes: 50
     permissions:
       contents: write
 
     steps:
-      - name: Time window check (TR saati 08-18)
-        id: window
-        if: github.event_name == 'schedule'
-        run: |
-          HOUR=$(TZ='Europe/Istanbul' date +%H)
-          DOW=$(TZ='Europe/Istanbul' date +%u)   # 1=Pzt ... 7=Pzr
-          MIN=$(TZ='Europe/Istanbul' date +%M)
-          echo "TR hour=$HOUR dow=$DOW min=$MIN"
-
-          # 08-18 disindaysa atla
-          if [ "$HOUR" -lt 8 ] || [ "$HOUR" -gt 18 ]; then
-            echo "Saat penceresi disinda. Atlaniyor."
-            echo "skip=true" >> $GITHUB_OUTPUT
-            exit 0
-          fi
-
-          # Hafta sonu (Cmt=6, Pzr=7): sadece 4 saatte bir (08, 12, 16) ve dakika < 11
-          if [ "$DOW" -ge 6 ]; then
-            REM=$(( (HOUR - 8) % 4 ))
-            if [ "$REM" -ne 0 ] || [ "$MIN" -ge 11 ]; then
-              echo "Hafta sonu 4 saatlik dilim disinda. Atlaniyor."
-              echo "skip=true" >> $GITHUB_OUTPUT
-              exit 0
-            fi
-          fi
-
-          echo "skip=false" >> $GITHUB_OUTPUT
-
       - name: Checkout repo
-        if: github.event_name != 'schedule' || steps.window.outputs.skip != 'true'
         uses: actions/checkout@v4
 
       - name: Setup Python
-        if: github.event_name != 'schedule' || steps.window.outputs.skip != 'true'
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
 
       - name: Install dependencies
-        if: github.event_name != 'schedule' || steps.window.outputs.skip != 'true'
         run: pip install -r collectors/requirements.txt
 
+      - name: Validate refresh safety before collection
+        run: python -m unittest discover -s tests/python -p test_market_safety.py
+
       - name: Run Yahoo Finance collector
-        if: github.event_name != 'schedule' || steps.window.outputs.skip != 'true'
         run: python collectors/yahoo_finance.py
 
-      - name: Copy data to site
-        if: github.event_name != 'schedule' || steps.window.outputs.skip != 'true'
+      - name: Copy only Yahoo market data to site
         run: |
           mkdir -p site/data
-          cp data/*.json site/data/
+          for name in commodities_energy commodities_metals commodities_agriculture industrial currencies bonds indices crypto stocks summary activities; do
+            cp "data/$name.json" "site/data/$name.json"
+            git add "data/$name.json" "site/data/$name.json"
+          done
 
       - name: Commit & Push
-        if: github.event_name != 'schedule' || steps.window.outputs.skip != 'true'
         run: |
           git config user.name "Market Data Bot"
           git config user.email "bot@piyasa-monitoru.dev"
-          git add data/ site/data/
-          git diff --staged --quiet || git commit -m "📊 Piyasa verileri güncellendi [$(TZ='Europe/Istanbul' date +%Y-%m-%d\ %H:%M)]"
-          git push
+          if git diff --staged --quiet; then
+            echo "No market data changes; no new deploy required."
+            exit 0
+          fi
+          git commit -m "📊 Piyasa verileri güncellendi [$(TZ='Europe/Istanbul' date '+%Y-%m-%d %H:%M')]"
+          # TCMB/snapshot/admin commits may arrive while collecting.
+          # Rebase only; do not force-push or resolve competing data automatically.
+          for attempt in 1 2 3 4 5 6; do
+            git fetch --no-tags origin main
+            git rebase FETCH_HEAD
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            echo "Main advanced; retry $attempt"
+            sleep 3
+          done
+          echo "Market update could not be published safely."
+          exit 1
