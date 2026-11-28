@@ -1,13 +1,13 @@
 {
   "meta": {
     "source": "TradingView page snapshot",
-    "updated_at": "2026-11-28T04:05:31.000181Z"
+    "updated_at": "2026-11-28T12:46:18.937319Z"
   },
   "snapshots": {
     "BZ=F": {
       "price": 90.78,
       "change_1d_pct": -0.99,
-      "captured_at": "2026-11-28T04:01:45.753422Z",
+      "captured_at": "2026-11-28T12:42:32.006707Z",
       "requested_url": "https://tr.tradingview.com/symbols/UKOIL/",
       "resolved_url": "https://tr.tradingview.com/symbols/UKOIL/",
       "price_selector": ".js-symbol-last",
@@ -16,7 +16,7 @@
     "CL=F": {
       "price": 83.32,
       "change_1d_pct": -1.0,
-      "captured_at": "2026-11-28T04:02:06.146196Z",
+      "captured_at": "2026-11-28T12:42:52.414978Z",
       "requested_url": "https://tr.tradingview.com/symbols/USOIL/",
       "resolved_url": "https://tr.tradingview.com/symbols/USOIL/",
       "price_selector": ".js-symbol-last",
@@ -25,7 +25,7 @@
     "NG=F": {
       "price": 3.11,
       "change_1d_pct": -2.75,
-      "captured_at": "2026-11-28T04:02:26.496520Z",
+      "captured_at": "2026-11-28T12:43:12.825636Z",
       "requested_url": "https://tr.tradingview.com/symbols/NG/",
       "resolved_url": "https://tr.tradingview.com/symbols/NG/",
       "price_selector": ".js-symbol-last",
@@ -34,7 +34,7 @@
     "TTF=F": {
       "price": 87.06,
       "change_1d_pct": 0.0,
-      "captured_at": "2026-11-28T04:02:47.000413Z",
+      "captured_at": "2026-11-28T12:43:33.385480Z",
       "requested_url": "https://tr.tradingview.com/symbols/NYMEX-TTF1!/",
       "resolved_url": "https://tr.tradingview.com/symbols/NYMEX-TTF1!/",
       "price_selector": ".js-symbol-last",
@@ -43,7 +43,7 @@
     "HO=F": {
       "price": 3.67,
       "change_1d_pct": -0.81,
-      "captured_at": "2026-11-28T04:03:07.339012Z",
+      "captured_at": "2026-11-28T12:43:54.681754Z",
       "requested_url": "https://tr.tradingview.com/symbols/HEATINGOIL/",
       "resolved_url": "https://tr.tradingview.com/symbols/HEATINGOIL/",
       "price_selector": ".js-symbol-last",
@@ -52,7 +52,7 @@
     "RB=F": {
       "price": 2.45,
       "change_1d_pct": 0.34,
-      "captured_at": "2026-11-28T04:03:27.831917Z",
+      "captured_at": "2026-11-28T12:44:16.166006Z",
       "requested_url": "https://www.tradingview.com/symbols/GASOLINE/",
       "resolved_url": "https://www.tradingview.com/symbols/GASOLINE/",
       "price_selector": ".js-symbol-last",
@@ -61,7 +61,7 @@
     "URA": {
       "price": 29.17,
       "change_1d_pct": 5.27,
-      "captured_at": "2026-11-28T04:03:48.373054Z",
+      "captured_at": "2026-11-28T12:44:36.721874Z",
       "requested_url": "https://www.tradingview.com/symbols/AMEX-URA/",
       "resolved_url": "https://www.tradingview.com/symbols/AMEX-URA/",
       "price_selector": ".js-symbol-last",
@@ -70,7 +70,7 @@
     "GC=F": {
       "price": 3653.55,
       "change_1d_pct": 2.44,
-      "captured_at": "2026-11-28T04:04:08.765062Z",
+      "captured_at": "2026-11-28T12:44:57.192780Z",
       "requested_url": "https://www.tradingview.com/symbols/XAUUSD/",
       "resolved_url": "https://www.tradingview.com/symbols/XAUUSD/",
       "price_selector": ".js-symbol-last",
@@ -79,7 +79,7 @@
     "SI=F": {
       "price": 43.73,
       "change_1d_pct": 5.28,
-      "captured_at": "2026-11-28T04:04:29.196280Z",
+      "captured_at": "2026-11-28T12:45:17.555983Z",
       "requested_url": "https://www.tradingview.com/symbols/XAGUSD/",
       "resolved_url": "https://www.tradingview.com/symbols/XAGUSD/",
       "price_selector": ".js-symbol-last",
@@ -88,7 +88,7 @@
     "HG=F": {
       "price": 5.6,
       "change_1d_pct": 4.95,
-      "captured_at": "2026-11-28T04:04:49.537885Z",
+      "captured_at": "2026-11-28T12:45:38.177440Z",
       "requested_url": "https://www.tradingview.com/symbols/COMEX-HG1!/",
       "resolved_url": "https://www.tradingview.com/symbols/COMEX-HG1!/",
       "price_selector": ".js-symbol-last",
@@ -97,7 +97,7 @@
     "ALI=F": {
       "price": 2767.7,
       "change_1d_pct": -0.49,
-      "captured_at": "2026-11-28T04:05:09.936432Z",
+      "captured_at": "2026-11-28T12:45:58.557577Z",
       "requested_url": "https://www.tradingview.com/symbols/ALUMINIUM/",
       "resolved_url": "https://www.tradingview.com/symbols/ALUMINIUM/",
       "price_selector": ".js-symbol-last",
@@ -106,7 +106,7 @@
     "^VIX": {
       "price": 23.81,
       "change_1d_pct": -11.19,
-      "captured_at": "2026-11-28T04:05:31.000181Z",
+      "captured_at": "2026-11-28T12:46:18.937319Z",
       "requested_url": "https://www.tradingview.com/symbols/TVC-VIX/",
       "resolved_url": "https://www.tradingview.com/symbols/TVC-VIX/",
       "price_selector": ".js-symbol-last",
